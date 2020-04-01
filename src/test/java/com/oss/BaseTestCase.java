@@ -29,7 +29,6 @@ public class BaseTestCase {
         options.addArguments("start-maximized");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
         driver = new ChromeDriver(options);
         webDriverWait = new WebDriverWait(driver, 50);
         LoginPage loginPage = new LoginPage(driver, BASIC_URL).open();
