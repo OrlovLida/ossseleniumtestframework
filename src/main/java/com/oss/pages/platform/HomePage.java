@@ -2,6 +2,7 @@ package com.oss.pages.platform;
 
 
 import com.oss.framework.components.portals.PopupV2;
+import com.oss.pages.languageservice.LanguageServicePage;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -90,5 +91,10 @@ public class HomePage extends BasePage {
     public HierarchyViewPage goToHierarchyViewPage(String url) {
         driver.get(url);
         return new HierarchyViewPage(driver);
+    }
+
+    public LanguageServicePage goToLanguageServicePage(String url) {
+        driver.get(url);
+        return new LanguageServicePage(driver);
     }
 }
