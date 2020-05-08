@@ -1,9 +1,12 @@
 package com.oss.pages.languageservice;
 
 import com.oss.pages.BasePage;
+import com.oss.pages.exportguiwizard.ExportGuiWizardPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
+import java.util.List;
 
 
 public class LanguageServicePage extends BasePage {
@@ -17,7 +20,7 @@ public class LanguageServicePage extends BasePage {
     @FindBy(id = "frameworkCustomButtonsGroup")
     private WebElement menu;
     @FindBy(id = "tableExportGUI")
-    private WebElement exportGui;
+    private List<WebElement> exportGui;
 
     private ExportGuiWizardPage exportGuiWizard;
 
@@ -29,15 +32,22 @@ public class LanguageServicePage extends BasePage {
 
     public ExportGuiWizardPage openExportGuiWizard() {
         expandMenu();
-        waitForVisibility(exportGui);
-        exportGui.click();
+        if (!existsElement(exportGui)) {
+        changeForAlphaMode();
+        expandMenu();
+        }
+        exportGui.get(0).click();
         return new ExportGuiWizardPage(driver);
     }
 
-    public LanguageServicePage clickOnLoginButton() {
+    private LanguageServicePage clickOnLoginButton() {
         waitForVisibility(loginButton);
         loginButton.click();
         return this;
+    }
+
+    private boolean existsElement(List<WebElement> element) {
+        return element.size() != 0;
     }
 
     public LanguageServicePage changeForAlphaMode() {
@@ -47,4 +57,6 @@ public class LanguageServicePage extends BasePage {
         clickOnLoginButton();
         return this;
     }
+
+
 }
