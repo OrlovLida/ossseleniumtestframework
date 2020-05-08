@@ -1,41 +1,51 @@
 package com.oss.pages.languageservice;
 
-import com.oss.framework.components.Checkbox;
+import com.oss.framework.components.*;
 import com.oss.pages.BasePage;
+import com.oss.pages.physical.LocationWizardPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class ExportGuiWizard extends BasePage {
+public class ExportGuiWizardPage extends BasePage {
 
     private Checkbox checkbox;
 
-public ExportGuiWizard (WebDriver driver) {super(driver);}
+public ExportGuiWizardPage(WebDriver driver) {super(driver);}
 
     @FindBy(xpath = "//label[contains (@for, 'exportgui-components-withheadercheckbox')]")
-    public static WebElement exportWithHeadersCheckbox;
+    private WebElement exportWithHeadersCheckbox;
     @FindBy(xpath = "//label[contains (@for, 'exportgui-components-generatepdfcheckbox')]")
-    public static WebElement generatePDFCheckbox;
+    private WebElement generatePDFCheckbox;
     @FindBy(xpath = "//label[contains (@for, 'exportgui-components-compressfilecheckbox')]")
-    public static WebElement compressFileCheckbox;
+    private WebElement compressFileCheckbox;
     @FindBy(xpath = "//label[contains (@for, 'exportgui-components-scheduleexportcheckbox')]")
-    public static WebElement scheduleExportCheckbox;
+    private WebElement scheduleExportCheckbox;
     @FindBy(xpath = "//label[contains (@for, 'exportgui-components-sendbyemailcheckbox')]")
-    public static WebElement sendByEmailCheckbox;
+    private WebElement sendByEmailCheckbox;
     @FindBy(xpath = "//label[contains (@for, 'exportgui-components-remoteuploadcheckbox')]")
-    public static WebElement remoteUploadCheckbox;
+    private WebElement remoteUploadCheckbox;
 
     private final String EXPORT_WITH_HEADERS = "exportgui-components-withheadercheckbox";
     private final String GENERATE_PDF = "exportgui-components-withheadercheckbox";
     private final String COMPRESS_FILE = "exportgui-components-compressfilecheckbox";
 
+    Combobox combobox;
+    SearchField searchField;
+    TextField textField;
+
     private WebElement getCheckbox(String path){
         return driver.findElement(checkbox.getCheckbox(path));
     }
 
-    public ExportGuiWizard checkTheCheckbox(WebElement element){
+    private ExportGuiWizardPage checkTheCheckbox(WebElement element){
         if(isChecked(element))
+            element.click();
+        return this;
+    }
+    private ExportGuiWizardPage uncheckTheCheckbox(WebElement element){
+        if(!isChecked(element))
             element.click();
         return this;
     }
@@ -45,10 +55,7 @@ public ExportGuiWizard (WebDriver driver) {super(driver);}
         return (checked.equals("true"));
     }
 
-
-
-    public void checkTheCheckbox() throws InterruptedException {
-        Thread.sleep(10000);
+    public void checkTheCheckbox()  {
         System.out.println(isChecked(generatePDFCheckbox));
         System.out.println(isChecked(exportWithHeadersCheckbox));
         System.out.println(isChecked(compressFileCheckbox));
