@@ -34,28 +34,16 @@ public ExportGuiWizard (WebDriver driver) {super(driver);}
         return driver.findElement(checkbox.getCheckbox(path));
     }
 
-    public ExportGuiWizard checkTheCheckbox(WebElement element){
-        if(isChecked(element))
-            element.click();
-        return this;
+    boolean isChecked(String path){
+        return getCheckbox(path).isSelected();
     }
 
     boolean isChecked(WebElement element){
-        String checked = element.findElement(By.xpath("./../input")).getAttribute("value");
-        return (checked.equals("true"));
+        return element.isSelected();
     }
-
-
 
     public void checkTheCheckbox() throws InterruptedException {
         Thread.sleep(10000);
-        System.out.println(isChecked(generatePDFCheckbox));
-        System.out.println(isChecked(exportWithHeadersCheckbox));
-        System.out.println(isChecked(compressFileCheckbox));
-        checkTheCheckbox(generatePDFCheckbox);
-        checkTheCheckbox(exportWithHeadersCheckbox);
-        checkTheCheckbox(compressFileCheckbox);
-        checkTheCheckbox(generatePDFCheckbox);
         System.out.println(isChecked(generatePDFCheckbox));
         System.out.println(isChecked(exportWithHeadersCheckbox));
         System.out.println(isChecked(compressFileCheckbox));
