@@ -1,13 +1,11 @@
 package com.oss;
 
-import com.oss.pages.languageservice.ExportGuiWizardPage;
+import com.oss.framework.widgets.tablewidget.TableWidget;
 import com.oss.pages.languageservice.LanguageServicePage;
-import org.assertj.core.api.Assertions;
-import org.openqa.selenium.WebDriver;
-import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.testng.asserts.Assertion;
+
+
 
 
 public class LanguageServiceTest extends BaseTestCase{
@@ -23,17 +21,12 @@ public class LanguageServiceTest extends BaseTestCase{
     @Test
     public void openExportGuiWizard() throws InterruptedException {
         languageServicePage
-                .changeForAlphaMode()
-                .openExportGuiWizard();
-    Thread.sleep(30000);
-    }
-
-    @Test
-    public void ExportCSVFile() throws InterruptedException {
-        languageServicePage
-                .changeForAlphaMode()
+                .clickOnLoginButton()
+                .changeMode()
+                .clickOnLoginButton()
+                .expandMenu()
                 .openExportGuiWizard()
                 .checkTheCheckbox();
+    Thread.sleep(30000);
     }
-
 }

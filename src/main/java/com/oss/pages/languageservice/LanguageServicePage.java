@@ -19,19 +19,18 @@ public class LanguageServicePage extends BasePage {
     @FindBy(id = "tableExportGUI")
     private WebElement exportGui;
 
-    private ExportGuiWizardPage exportGuiWizard;
+    private ExportGuiWizard exportGuiWizard;
 
-    private LanguageServicePage expandMenu() {
+    public LanguageServicePage expandMenu() {
         waitForVisibility(menu);
         menu.click();
         return this;
     }
 
-    public ExportGuiWizardPage openExportGuiWizard() {
-        expandMenu();
-        waitForVisibility(exportGui);
+    public ExportGuiWizard openExportGuiWizard() {
+        waitForVisibility(menu);
         exportGui.click();
-        return new ExportGuiWizardPage(driver);
+        return new ExportGuiWizard(driver);
     }
 
     public LanguageServicePage clickOnLoginButton() {
@@ -40,11 +39,9 @@ public class LanguageServicePage extends BasePage {
         return this;
     }
 
-    public LanguageServicePage changeForAlphaMode() {
-        clickOnLoginButton();
+    public LanguageServicePage changeMode() {
         waitForVisibility(alphaModeSwitcher);
         alphaModeSwitcher.click();
-        clickOnLoginButton();
         return this;
     }
 }
