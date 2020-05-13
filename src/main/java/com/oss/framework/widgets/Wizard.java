@@ -83,4 +83,5 @@ public class Wizard {
                 webElement.findElement(By.xpath(".//a[text()='Proceed']"));
         action.moveToElement(foundedElement).click().perform();
     }
+
 }
