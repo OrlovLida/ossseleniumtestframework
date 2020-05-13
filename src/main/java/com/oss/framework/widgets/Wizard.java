@@ -18,6 +18,7 @@ public class Wizard {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
+
     private final Map<String, Input> components = Maps.newHashMap();
 
     public static Wizard createWizard(WebDriver driver, WebDriverWait wait) {
