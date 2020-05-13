@@ -45,7 +45,6 @@ public class TableWidget extends Widget {
     private static final String activePageBtn = ".//li[@class='page active']";
     private static final String rowsCounter = ".//div[@class='rowsCounter']/span[last()]";
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
-    private static final String exportGUITable = ".//div[@id='tableExportGUI']";
 
     private AdvancedSearch advancedSearch;
     private ActionsContainer contextActions;
@@ -64,18 +63,8 @@ public class TableWidget extends Widget {
         this.paginationComponent = new PaginationComponent(this.webElement);
     }
 
-    public void openFromKebabMenu(String id){
-        clickOnKebabMenu();
-        DelayUtils.waitByXPath(webDriverWait, id);
-        clickOnExportGUI();
-    }
-
     public WebElement getKebabMenuBtn(){
         return this.webElement.findElement(By.xpath(kebabMenuBtn));
-    }
-
-    public WebElement getExportGUITable(){
-        return this.webElement.findElement(By.xpath(exportGUITable));
     }
 
     public WebElement getRowsCounter(){
@@ -120,7 +109,7 @@ public class TableWidget extends Widget {
         return this.webElement.findElements(By.xpath(headers)).stream()
                 .map(WebElement::getText).collect(Collectors.toList());
     }
-// publib void export action
+
     public String getActiveColumnLabel(int column) {
         List<String> columnLabels = getActiveColumns();
         return columnLabels.get(column);
@@ -284,10 +273,6 @@ public class TableWidget extends Widget {
 
     public void clickOnKebabMenu(){
         getKebabMenuBtn().click();
-    }
-
-    public void clickOnExportGUI(){
-        getExportGUITable().click();
     }
 
     public void clickOnAction(String actionName){
