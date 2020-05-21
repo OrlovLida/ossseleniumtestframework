@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Map;
@@ -44,8 +45,18 @@ public class Wizard {
     public void clickNext() {
         Actions action = new Actions(driver);
         WebElement foundedElement =
-                webElement.findElement(By.xpath(".//button[text()='Accept']"));
+                webElement.findElement(By.xpath(".//button[text()='Next']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         action.moveToElement(foundedElement).click().perform();
+    }
+
+    public void clickAccept() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath(".//button[text()='Accept']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+        action.moveToElement(foundedElement).click().perform();
+        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
     public void clickPrevious() {
