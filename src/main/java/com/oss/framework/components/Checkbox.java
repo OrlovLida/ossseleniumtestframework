@@ -27,26 +27,38 @@ public class Checkbox extends Input {
 
     @Override
     public void setValue(Data value) {
-
+        setCheckBoxValue(value);
     }
 
     @Override
     public void setValueContains(Data value) {
+        setCheckBoxValue(value);
+    }
 
+    private void setCheckBoxValue(Data value) {
+        Boolean valueToSet = Boolean.valueOf(value.getStringValue());
+        if(valueToSet && !isChecked()) {
+            this.webElement.findElement(By.className("checkbox-cont")).click();
+        }
+        if(!valueToSet && isChecked()) {
+            this.webElement.findElement(By.className("checkbox-cont")).click();
+        }
     }
 
     @Override
     public Data getValue() {
-        return null;
+        String value = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
+        return Data.createSingleData(value);
+    }
+
+    private boolean isChecked() {
+        String checked = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
+        return checked.equals("true");
     }
 
     @Override
     public void clear() {
-
-    }
-
-    public By getCheckbox(String checkbox1){
-        return By.xpath("//div[@class='checkbox-cont checkbox']//label[starts-with(@for,'"+checkbox1+"') and //input[@type='checkbox']]");
+        setCheckBoxValue(Data.createSingleData("false"));
     }
 }
 

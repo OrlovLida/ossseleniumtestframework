@@ -1,7 +1,7 @@
 package com.oss.framework.widgets.tablewidget;
 
 import com.google.common.collect.Multimap;
-import com.oss.framework.components.ActionsContainer;
+import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.AdvancedSearch;
 import com.oss.framework.components.Input;
 import com.oss.framework.components.Input.ComponentType;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class TableWidget extends Widget {
+public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
     public static final String PAGINATION_COMPONENT_CLASS = "OSSPagination";
 
@@ -256,6 +256,32 @@ public class TableWidget extends Widget {
         input.setSingleStringValueContains(value);
     }
 
+    @Override
+    public void selectRow(int row) {
+
+    }
+
+    @Override
+    public void selectRowByAttributeValue(String attributeId, String value) {
+
+    }
+
+    @Override
+    public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
+
+    }
+
+    @Override
+    public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
+
+    }
+
+    @Override
+    public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
+
+    }
+
+    @Override
     public void callAction(String actionLabel){
         if(contextActions == null) {
             this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
@@ -264,11 +290,22 @@ public class TableWidget extends Widget {
         this.contextActions = null;
     }
 
+    @Override
+    public void callActionByLabel(String actionLabel) {
+
+    }
+
+    @Override
     public void callAction(String groupId, String actionId){
         if(contextActions == null) {
             this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
         }
         contextActions.callAction(groupId, actionId);
+    }
+
+    @Override
+    public void callActionByLabel(String groupLabel, String actionLabel) {
+
     }
 
     public void clickOnKebabMenu(){

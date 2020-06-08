@@ -1,0 +1,61 @@
+package com.oss.framework.components.contextactions;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.utils.DelayUtils;
+
+public class OldActionsContainer implements ActionsInterface {
+
+    private static String WINDOW_TOOLBAR_CLASS = "windowToolbar";
+
+    public static ActionsInterface createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
+        WebElement toolbar = parent.findElement(By.className(WINDOW_TOOLBAR_CLASS));
+        return new OldActionsContainer(driver,wait, toolbar);
+    }
+
+    public static ActionsInterface createFromWidget(WebDriver driver, WebDriverWait wait, WebElement widget) {
+        DelayUtils.waitForNestedElements(wait, widget, "//div[contains(@class, '"+ WINDOW_TOOLBAR_CLASS +"')]");
+        WebElement toolbar = widget.findElement(By.xpath("./../..//div[contains(@class, '"+ WINDOW_TOOLBAR_CLASS +"')]"));
+        return new OldActionsContainer(driver,wait, toolbar);
+    }
+
+    private static ActionsInterface createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
+        DelayUtils.waitByXPath(wait, xpath);
+        WebElement toolbar = driver.findElement(By.xpath(xpath));
+        return new OldActionsContainer(driver, wait, toolbar);
+    }
+
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement toolbar;
+
+    private OldActionsContainer (WebDriver driver, WebDriverWait wait, WebElement toolbar) {
+        this.driver = driver;
+        this.wait = wait;
+        this.toolbar = toolbar;
+    }
+
+    @Override
+    public void callAction(String actionId) {
+        throw new RuntimeException("Method not implemented for the old actions container");
+    }
+
+    @Override
+    public void callActionByLabel(String label) {
+        WebElement action = this.toolbar.findElement(By.xpath(".//a[contains(text(),'"+label+"')]"));
+        action.click();
+    }
+
+    @Override
+    public void callAction(String groupId, String actionId) {
+        throw new RuntimeException("Method not implemented for the old actions container");
+    }
+
+    @Override
+    public void callActionByLabel(String groupLabel, String actionLabel) {
+        throw new RuntimeException("Not implemented yet");
+    }
+}

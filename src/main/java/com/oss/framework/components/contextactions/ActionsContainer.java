@@ -1,4 +1,4 @@
-package com.oss.framework.components;
+package com.oss.framework.components.contextactions;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
 
-public class ActionsContainer {
+public class ActionsContainer implements ActionsInterface {
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";
 
     private final WebElement webElement;
@@ -29,6 +29,11 @@ public class ActionsContainer {
         callAction(null, actionId);
     }
 
+    @Override
+    public void callActionByLabel(String label) {
+
+    }
+
     public void callAction(String groupId, String actionId) {
         if(groupId != null) {
             clickOnGroup(groupId);
@@ -37,6 +42,11 @@ public class ActionsContainer {
         } else {
             clickOnAction(actionId);
         }
+    }
+
+    @Override
+    public void callActionByLabel(String groupLabel, String actionLabel) {
+
     }
 
     private void clickOnGroup(String groupId) {

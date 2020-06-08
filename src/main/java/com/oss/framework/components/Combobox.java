@@ -40,15 +40,14 @@ public class Combobox extends Input {
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
 
-        DropdownList dropdownList = new DropdownList(driver);
-        LocatingUtils.waitUsingXpath("//div[@class='CustomSelectList-data']//div[text()='"+ value.getStringValue() +"']", webDriverWait);
+        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOption(value.getStringValue());
     }
 
     @Override
     public void setValueContains(Data value) {
         click();
-        DropdownList dropdownList = new DropdownList(driver);
+        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
     }
 
