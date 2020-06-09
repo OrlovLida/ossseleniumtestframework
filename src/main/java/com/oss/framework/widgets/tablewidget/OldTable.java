@@ -19,37 +19,25 @@ import com.oss.framework.utils.WidgetUtils;
 public class OldTable implements TableInterface {
 
     public static TableInterface createByWindowTitle(WebDriver driver, WebDriverWait wait, String windowTitle) {
+
+        DelayUtils.waitByXPath(wait,"//div[contains(text(), '"+ windowTitle +"')]");
+        WebElement window = driver.findElement(By.xpath("//div[contains(text(), '"+ windowTitle +"')]"));
         WebElement table =  WidgetUtils.findOldWidget(driver, wait, windowTitle, "OSSTableContainer");
-        return new OldTable(driver, wait, table);
-    }
-
-    public static TableInterface create(WebDriver driver, WebDriverWait wait, WebElement element) {
-        DelayUtils.waitByElement(wait, element);
-        return new OldTable(driver, wait, element);
-    }
-
-    public static TableInterface createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
-        DelayUtils.waitByElement(wait, parent.findElement(By.className("OSSTableContainer")));
-        WebElement table = parent.findElement(By.className("OSSTableContainer"));
-        return new OldTable(driver, wait, table);
-    }
-
-    public static TableInterface createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
-        DelayUtils.waitByXPath(wait, xpath);
-        WebElement element = driver.findElement(By.xpath(xpath));
-        return new OldTable(driver, wait, element);
+        return new OldTable(driver, wait, table, window);
     }
 
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement table;
+    private final WebElement window;
 
     private final Map<String, Column> columnFilters = Maps.newHashMap();
 
-    private OldTable(WebDriver driver, WebDriverWait wait, WebElement table) {
+    private OldTable(WebDriver driver, WebDriverWait wait, WebElement table, WebElement window) {
         this.driver = driver;
         this.wait = wait;
         this.table = table;
+        this.window = window;
     }
 
     @Override
@@ -96,7 +84,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public void callActionByLabel(String actionLabel) {
-        ActionsInterface actions = OldActionsContainer.createFromWidget(driver, wait, table);
+        ActionsInterface actions = OldActionsContainer.createFromWidget(driver, wait, window);
         actions.callActionByLabel(actionLabel);
     }
 
