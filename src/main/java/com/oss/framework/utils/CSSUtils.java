@@ -33,6 +33,12 @@ public class CSSUtils {
         });
         return attributes;
     }
+    public static List<String> getAllClasses (WebElement webElement) {
+        String aClass = webElement.getAttribute("class");
+        Iterable<String> classes = Splitter.on(" ").split(aClass);
+        return Lists.newArrayList(classes);
+
+    }
 
     public static int getTopValue(WebElement webElement) {
         return getIntegerValue(TOP_ATTRIBUTE, webElement);

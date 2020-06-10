@@ -51,11 +51,11 @@ public class Wizard {
     }
 
     public void clickAccept() {
-        Actions action = new Actions(driver);
+       DelayUtils.waitForNestedElements(wait,webElement,"//button[text()='Accept']");
         WebElement foundedElement =
-                webElement.findElement(By.xpath(".//button[text()='Accept']"));
+                webElement.findElement(By.xpath("//button[text()='Accept']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
-        action.moveToElement(foundedElement).click().perform();
+        foundedElement.click();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
