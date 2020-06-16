@@ -45,6 +45,7 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String label) {
+        DelayUtils.waitForNestedElements(wait, this.toolbar, ".//a[contains(text(),'"+label+"')]");
         WebElement action = this.toolbar.findElement(By.xpath(".//a[contains(text(),'"+label+"')]"));
         action.click();
     }

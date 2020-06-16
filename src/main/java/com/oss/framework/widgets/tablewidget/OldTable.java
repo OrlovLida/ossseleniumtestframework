@@ -2,13 +2,13 @@ package com.oss.framework.widgets.tablewidget;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.oss.framework.components.Input.ComponentType;
 import com.oss.framework.components.contextactions.ActionsInterface;
@@ -31,7 +31,7 @@ public class OldTable implements TableInterface {
     private final WebElement table;
     private final WebElement window;
 
-    private final Map<String, Column> columnFilters = Maps.newHashMap();
+    //private final Map<String, Column> columns = Maps.newHashMap();
 
     private OldTable(WebDriver driver, WebDriverWait wait, WebElement table, WebElement window) {
         this.driver = driver;
@@ -42,7 +42,9 @@ public class OldTable implements TableInterface {
 
     @Override
     public void selectRow(int row) {
-        //TODO; implement
+        Map<String, Column> columns = createColumnsFilters();
+        Lists.newArrayList(columns.values()).get(0).selectCell(0);
+
     }
 
     @Override
@@ -52,6 +54,10 @@ public class OldTable implements TableInterface {
 
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
+        Map<String, Column> columns = createColumnsFilters();
+
+        Column column = columns.get(attributeLabel);
+        column.selectCell(value);
 
     }
 
@@ -63,15 +69,13 @@ public class OldTable implements TableInterface {
 
     @Override
     public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
+
         if(componentType != ComponentType.TEXT_FIELD) {
             throw new RuntimeException("Old table widget supports" + ComponentType.TEXT_FIELD + "only");
         }
+        Map<String, Column> columns = createColumnsFilters();
 
-        if(!columnFilters.containsKey(attributeLabel)) {
-            createColumnsFilters();
-        }
-
-        Column column = columnFilters.get(attributeLabel);
+        Column column = columns.get(attributeLabel);
         column.clear();
         column.setValue(value);
 
@@ -98,26 +102,28 @@ public class OldTable implements TableInterface {
         throw new RuntimeException("Not implemented for the old table widget");
     }
 
-    private void createColumnsFilters() {
-        this.columnFilters.clear();
-
+    private Map<String, Column> createColumnsFilters() {
+        Map<String, Column> columns = Maps.newHashMap();
         DelayUtils.waitForNestedElements(wait, this.table,"//div[contains(@class, 'OSSTableComponent')]");
         WebElement tableBody = this.table.findElement(By.className("OSSTableComponent"));
-        List<WebElement> columns = tableBody.findElements(By.className("OSSTableColumn"));
-        for(WebElement element : columns) {
+        List<WebElement> columns2 = tableBody.findElements(By.className("OSSTableColumn"));
+        for(WebElement element : columns2) {
             DelayUtils.waitForNestedElements(wait,element,".//span");
             String label = element.findElement(By.xpath(".//span")).getText();
-            this.columnFilters.put(label, new Column(label, element));
+            columns.put(label, new Column(label, element, wait));
         }
+        return columns;
     }
 
     private static class Column {
         private final WebElement column;
         private final String label;
+        private final WebDriverWait wait;
 
-        private Column(String label, WebElement column) {
+        private Column(String label, WebElement column, WebDriverWait wait) {
             this.label = label;
             this.column = column;
+            this.wait=wait;
         }
 
         private String getLabel() {
@@ -125,6 +131,21 @@ public class OldTable implements TableInterface {
         }
 
         private void selectCell(String value) {
+            List<WebElement> cells=column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
+            for (WebElement cell: cells){
+                DelayUtils.waitForNestedElements(this.wait,cell,".//div[contains(@class, ' OSSRichText')]");
+                WebElement richText = cell.findElement(By.xpath(".//div[contains(@class, ' OSSRichText')]"));
+               if (richText.getText().equals(value)){
+                   cell.click();
+               }
+            }
+
+        }
+        public void selectCell(int index){
+            List<WebElement> cells=column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
+            WebElement cell = cells.get(index);
+            cell.click();
+
 
         }
 
