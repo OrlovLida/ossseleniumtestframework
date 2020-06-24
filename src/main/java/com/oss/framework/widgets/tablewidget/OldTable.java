@@ -133,8 +133,8 @@ public class OldTable implements TableInterface {
         private void selectCell(String value) {
             List<WebElement> cells=column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
             for (WebElement cell: cells){
-                DelayUtils.waitForNestedElements(this.wait,cell,".//div[contains(@class, ' OSSRichText')]");
-                WebElement richText = cell.findElement(By.xpath(".//div[contains(@class, ' OSSRichText')]"));
+                DelayUtils.waitForNestedElements(this.wait,cell,".//div[contains(@class, 'OSSRichText')]");
+                WebElement richText = cell.findElement(By.xpath(".//div[contains(@class, 'OSSRichText')]"));
                if (richText.getText().equals(value)){
                    cell.click();
                }

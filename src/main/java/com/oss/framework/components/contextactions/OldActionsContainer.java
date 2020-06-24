@@ -12,6 +12,7 @@ public class OldActionsContainer implements ActionsInterface {
     private static String WINDOW_TOOLBAR_CLASS = "windowToolbar";
 
     public static ActionsInterface createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
+        DelayUtils.waitForNestedElements(wait, parent, "//div[contains(@class, '"+ WINDOW_TOOLBAR_CLASS +"')]");
         WebElement toolbar = parent.findElement(By.className(WINDOW_TOOLBAR_CLASS));
         return new OldActionsContainer(driver,wait, toolbar);
     }
@@ -45,8 +46,8 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, this.toolbar, ".//a[contains(text(),'"+label+"')]");
-        WebElement action = this.toolbar.findElement(By.xpath(".//a[contains(text(),'"+label+"')]"));
+        DelayUtils.waitForNestedElements(wait, this.toolbar, ".//a[contains(text(),'"+label+"')] | .//i[contains(@aria-label,'"+label+"')]");
+        WebElement action = this.toolbar.findElement(By.xpath(".//a[contains(text(),'"+label+"')] | .//i[contains(@aria-label,'"+label+"')]"));
         action.click();
     }
 
