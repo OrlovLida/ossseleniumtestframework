@@ -1,6 +1,7 @@
 package com.oss.framework.components;
 
 import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.LocatingUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -29,6 +30,7 @@ public class SearchField extends Input {
     @Override
     public void setValue(Data value) {
         webElement.click();
+        DelayUtils.sleep();//wait for cursor
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
         LocatingUtils.waitUsingXpath(searchFirstResultXpath, webDriverWait);
         webElement.findElement(By.xpath(searchFirstResultXpath)).click();
@@ -41,7 +43,7 @@ public class SearchField extends Input {
 
     @Override
     public Data getValue() {
-        return Data.createSingleData(webElement.getAttribute("value"));
+        return Data.createSingleData(webElement.findElement(By.xpath(".//input")).getAttribute("value"));
     }
 
     @Override
