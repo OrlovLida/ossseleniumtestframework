@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.LocatingUtils;
 
 import static java.lang.Thread.sleep;
@@ -27,11 +28,9 @@ public class DropdownList {
     }
 
     public void selectOption(String option) {
-        Actions action = new Actions(driver);
-        LocatingUtils.waitUsingXpath("//div[@class='portal']//div[text()='"+ option +"']", wait);
         WebElement foundedElement =
                 driver.findElement(By.xpath("//div[@class='portal']//div[text()='"+option+"']"));
-        action.moveToElement(foundedElement).click().perform();
+        foundedElement.click();
     }
 
     public void selectOptionContains(String option) {

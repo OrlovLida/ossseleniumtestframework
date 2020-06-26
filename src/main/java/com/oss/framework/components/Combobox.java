@@ -2,8 +2,10 @@ package com.oss.framework.components;
 
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.LocatingUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -37,11 +39,12 @@ public class Combobox extends Input {
 
     @Override
     public void setValue(Data value) {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(webElement).click().build().perform();
+        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
+        WebElement input = webElement.findElement(By.xpath(".//input"));
+        input.sendKeys(value.getStringValue());
+        input.sendKeys(Keys.DOWN);
+        input.sendKeys(Keys.RETURN);
 
-        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
-        dropdownList.selectOption(value.getStringValue());
     }
 
     @Override
@@ -53,7 +56,7 @@ public class Combobox extends Input {
 
     @Override
     public Data getValue() {
-        WebElement input = webElement.findElement(By.xpath(".//input[contains(@class,'md-input-clickable')]"));
+        WebElement input = webElement.findElement(By.xpath(".//input[contains(@class,'md-input-clickable')] | .//input[contains(@id,'domain-combobox-input')]"));
         return Data.createSingleData(input.getAttribute("value"));
     }
 

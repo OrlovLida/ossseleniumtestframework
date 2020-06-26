@@ -45,7 +45,7 @@ public class Wizard {
     public void clickNext() {
         Actions action = new Actions(driver);
         WebElement foundedElement =
-                webElement.findElement(By.xpath(".//button[text()='Next']"));
+                webElement.findElement(By.xpath("//button[text()='Next']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         action.moveToElement(foundedElement).click().perform();
     }
@@ -56,7 +56,10 @@ public class Wizard {
                 webElement.findElement(By.xpath("//button[text()='Accept']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         foundedElement.click();
-        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+        //wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+    }
+    public void waitToClose(){
+        wait.until(ExpectedConditions.invisibilityOf(this.webElement));
     }
 
     public void clickPrevious() {
@@ -81,6 +84,12 @@ public class Wizard {
         Actions action = new Actions(driver);
         WebElement foundedElement =
                 webElement.findElement(By.xpath(".//a[text()='Proceed']"));
+        action.moveToElement(foundedElement).click().perform();
+    }
+    public void clickCreate() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath(".//a[text()='Create']"));
         action.moveToElement(foundedElement).click().perform();
     }
 }
