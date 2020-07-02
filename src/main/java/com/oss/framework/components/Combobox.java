@@ -41,6 +41,7 @@ public class Combobox extends Input {
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
         WebElement input = webElement.findElement(By.xpath(".//input"));
+        input.clear();
         input.sendKeys(value.getStringValue());
         input.sendKeys(Keys.DOWN);
         input.sendKeys(Keys.RETURN);
@@ -56,8 +57,9 @@ public class Combobox extends Input {
 
     @Override
     public Data getValue() {
-        WebElement input = webElement.findElement(By.xpath(".//input[contains(@class,'md-input-clickable')] | .//input[contains(@id,'domain-combobox-input')]"));
+        WebElement input = webElement.findElement(By.xpath(".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]"));
         return Data.createSingleData(input.getAttribute("value"));
+
     }
 
     public Data getSelectedValue() {

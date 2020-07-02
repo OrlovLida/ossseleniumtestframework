@@ -7,6 +7,7 @@
 package com.oss.framework.alerts;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -45,6 +46,11 @@ public class SystemMessageContainer {
         List<WebElement> messageItems = messageContainer.findElements(By.xpath("//div[contains(@class,'systemMessageItem')]"));
        return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
+    public Optional<Message> getFirstMessage(){
+
+            return getMessages().stream().findFirst();
+    }
+
     private Message toMessage(WebElement messageItem) {
         String text = messageItem.findElement(By.xpath(".//a")).getText();
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);

@@ -18,8 +18,8 @@ import com.oss.framework.utils.DelayUtils;
  */
 public class MainHeader {
     public static MainHeader create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, "//header[@class='oss-header']");
-        WebElement toolbar = driver.findElement(By.xpath("//header[@class='oss-header']"));
+        DelayUtils.waitByXPath(wait, "//div[@class='oss-header-cont']");
+        WebElement toolbar = driver.findElement(By.xpath("//div[@class='oss-header-cont']"));
         return new MainHeader(driver, wait, toolbar);
     }
     

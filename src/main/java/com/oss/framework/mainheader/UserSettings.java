@@ -11,6 +11,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.ComponentFactory;
+import com.oss.framework.components.Input;
+import com.oss.framework.prompts.ConfirmationBox;
+import com.oss.framework.prompts.ConfirmationBoxInterface;
 import com.oss.framework.utils.DelayUtils;
 
 /**
@@ -32,17 +36,18 @@ public class UserSettings {
         MainHeader toolbar = MainHeader.create(driver, wait);
         toolbar.callActionByLabel("loginButton");
         DelayUtils.waitByXPath(wait,"//div[@class='login-panel']");
-        WebElement loginPanel = driver.findElement(By.xpath("//div[@class='login-panel']"));
-
-
-
+        Input input = ComponentFactory.create("language-chooser", Input.ComponentType.COMBOBOX, driver, wait);
+        String currentLanguage = input.getStringValue();
+        if (!currentLanguage.equals(language)){
+            input.setSingleStringValue("English");
+            ConfirmationBoxInterface prompt= ConfirmationBox.create(driver, wait);
+            prompt.clickButtonByLabel("OK");
+        }
+        else {
+            toolbar.callActionByLabel("loginButton");
+        }
     }
 
-    private String checkLanguage(){
-        DelayUtils.waitByXPath(wait,"//div[@class='login-panel']");
-        WebElement loginPanel = driver.findElement(By.xpath("//div[@class='login-panel']"));
 
-        return null;
-    }
 
 }
