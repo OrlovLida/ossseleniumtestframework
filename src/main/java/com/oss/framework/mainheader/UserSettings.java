@@ -23,6 +23,9 @@ import com.oss.framework.utils.DelayUtils;
 public class UserSettings {
     private WebDriver driver;
     private WebDriverWait wait;
+    private final static String LOGIN_BUTTON= "loginButton";
+    private final static String XPATH_LOGIN_PANEL= "//div[@class='login-panel']";
+    private final static String LANGUAGE_CHOOSER= "language-chooser";
 
     public static UserSettings create (WebDriver driver, WebDriverWait wait){
         return new UserSettings(driver,wait);
@@ -34,17 +37,16 @@ public class UserSettings {
     }
     public void chooseLanguage(String language){
         MainHeader toolbar = MainHeader.create(driver, wait);
-        toolbar.callActionByLabel("loginButton");
-        DelayUtils.waitByXPath(wait,"//div[@class='login-panel']");
-        Input input = ComponentFactory.create("language-chooser", Input.ComponentType.COMBOBOX, driver, wait);
+        toolbar.callActionByLabel(LOGIN_BUTTON);
+        DelayUtils.waitByXPath(wait,XPATH_LOGIN_PANEL);
+        Input input = ComponentFactory.create(LANGUAGE_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
         String currentLanguage = input.getStringValue();
         if (!currentLanguage.equals(language)){
-            input.setSingleStringValue("English");
+            input.setSingleStringValue(language);
             ConfirmationBoxInterface prompt= ConfirmationBox.create(driver, wait);
             prompt.clickButtonByLabel("OK");
-        }
-        else {
-            toolbar.callActionByLabel("loginButton");
+        } else {
+            toolbar.callActionByLabel(LOGIN_BUTTON);
         }
     }
 
