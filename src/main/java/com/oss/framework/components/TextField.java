@@ -27,7 +27,9 @@ public class TextField extends Input {
     @Override
     public void setValue(Data value) {
         WebElement input = webElement.findElement(By.xpath(".//input"));
+        input.clear();
         input.sendKeys(value.getStringValue());
+
     }
 
     @Override

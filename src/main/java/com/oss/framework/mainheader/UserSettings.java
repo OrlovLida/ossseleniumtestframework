@@ -11,6 +11,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.ComponentFactory;
+import com.oss.framework.components.Input;
+import com.oss.framework.prompts.ConfirmationBox;
+import com.oss.framework.prompts.ConfirmationBoxInterface;
 import com.oss.framework.utils.DelayUtils;
 
 /**
@@ -19,6 +23,9 @@ import com.oss.framework.utils.DelayUtils;
 public class UserSettings {
     private WebDriver driver;
     private WebDriverWait wait;
+    private final static String LOGIN_BUTTON= "loginButton";
+    private final static String XPATH_LOGIN_PANEL= "//div[@class='login-panel']";
+    private final static String LANGUAGE_CHOOSER= "language-chooser";
 
     public static UserSettings create (WebDriver driver, WebDriverWait wait){
         return new UserSettings(driver,wait);
@@ -30,19 +37,19 @@ public class UserSettings {
     }
     public void chooseLanguage(String language){
         MainHeader toolbar = MainHeader.create(driver, wait);
-        toolbar.callActionByLabel("loginButton");
-        DelayUtils.waitByXPath(wait,"//div[@class='login-panel']");
-        WebElement loginPanel = driver.findElement(By.xpath("//div[@class='login-panel']"));
-
-
-
+        toolbar.callActionByLabel(LOGIN_BUTTON);
+        DelayUtils.waitByXPath(wait,XPATH_LOGIN_PANEL);
+        Input input = ComponentFactory.create(LANGUAGE_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
+        String currentLanguage = input.getStringValue();
+        if (!currentLanguage.equals(language)){
+            input.setSingleStringValue(language);
+            ConfirmationBoxInterface prompt= ConfirmationBox.create(driver, wait);
+            prompt.clickButtonByLabel("OK");
+        } else {
+            toolbar.callActionByLabel(LOGIN_BUTTON);
+        }
     }
 
-    private String checkLanguage(){
-        DelayUtils.waitByXPath(wait,"//div[@class='login-panel']");
-        WebElement loginPanel = driver.findElement(By.xpath("//div[@class='login-panel']"));
 
-        return null;
-    }
 
 }

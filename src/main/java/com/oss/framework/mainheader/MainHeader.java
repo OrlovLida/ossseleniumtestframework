@@ -18,8 +18,8 @@ import com.oss.framework.utils.DelayUtils;
  */
 public class MainHeader {
     public static MainHeader create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, "//header[@class='oss-header']");
-        WebElement toolbar = driver.findElement(By.xpath("//header[@class='oss-header']"));
+        DelayUtils.waitByXPath(wait, "//div[@class='oss-header-cont']");
+        WebElement toolbar = driver.findElement(By.xpath("//div[@class='oss-header-cont']"));
         return new MainHeader(driver, wait, toolbar);
     }
     
@@ -37,8 +37,8 @@ public class MainHeader {
         {
             DelayUtils.waitForNestedElements(wait, this.toolbar, ".//div[@class='oss-header-toolbar']");
             WebElement headerToolbar = this.toolbar.findElement(By.xpath(".//div[@class='oss-header-toolbar']"));
-            DelayUtils.waitForNestedElements(wait, headerToolbar, "//a[contains(@class,'" + label + "')]");
-            WebElement action = headerToolbar.findElement(By.xpath("//a[contains(@class,'" + label + "')]"));
+            DelayUtils.waitForNestedElements(wait, headerToolbar, "//a[contains(@class,'" + label + "')] | //div[contains(@class,'"+ label+"')]");
+            WebElement action = headerToolbar.findElement(By.xpath("//a[contains(@class,'" + label + "')] | //div[contains(@class,'"+ label+"')]"));
             action.click();
             
         }
