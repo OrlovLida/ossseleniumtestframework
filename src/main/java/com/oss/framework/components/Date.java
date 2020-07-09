@@ -2,13 +2,15 @@ package com.oss.framework.components;
 
 import com.oss.framework.components.portals.DatePicker;
 import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Date extends Input {
-    private final WebElement input = this.webElement.findElement(By.xpath(".//input"));
 
     static Date create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new Date(driver, wait, componentId);
@@ -28,25 +30,26 @@ public class Date extends Input {
 
     @Override
     public Data getValue() {
-        return Data.createSingleData(this.input
+
+        return Data.createSingleData(this.webElement.findElement(By.xpath(".//input"))
                 .getAttribute("value"));
     }
 
     @Override
     public void clear() {
-        this.input.clear();
+        this.webElement.findElement(By.xpath(".//input")).clear();
     }
 
     @Override
     public void setValue(Data value) {
-        this.input.click();
-        this.input.sendKeys(value.getStringValue());
+        this.webElement.findElement(By.xpath(".//input")).clear();
+        this.webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
     }
 
     @Override
     public void setValueContains(Data value) {
-        this.input.click();
-        this.input.sendKeys(value.getStringValue());
+        this.webElement.findElement(By.xpath(".//input")).click();
+        this.webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
     }
 
     @Override
