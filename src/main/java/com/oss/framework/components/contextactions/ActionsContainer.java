@@ -45,8 +45,10 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     @Override
-    public void callActionByLabel(String groupLabel, String actionLabel) {
-
+    public void callActionByLabel(String groupId, String actionLabel) {
+        clickOnGroup(groupId);
+        Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
+        dropdown.callActionByLabel(actionLabel);
     }
 
     private void clickOnGroup(String groupId) {
@@ -76,6 +78,10 @@ public class ActionsContainer implements ActionsInterface {
         private void callAction(String actionId) {
             DelayUtils.waitBy(this.webDriverWait, By.id(actionId));
             this.webElement.findElement(By.id(actionId)).click();
+        }
+        private void callActionByLabel(String actionLabel){
+            DelayUtils.waitByXPath(webDriverWait,"//a[contains(text(),'"+actionLabel+"')]");
+            this.webElement.findElement(By.xpath("//a[contains(text(),'"+actionLabel+"')]")).click();
         }
     }
 }
