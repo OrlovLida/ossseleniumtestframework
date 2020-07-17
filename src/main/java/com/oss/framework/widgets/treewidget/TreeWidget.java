@@ -88,8 +88,11 @@ public class TreeWidget extends Widget {
         return this;
     }
 
+    public void waitForXpathDisapear(String xpath) {
+        waitForElementDisapear(this.webElement.findElement(By.xpath(xpath)));
+    }
+
     public TreeWidget selectTreeRowByText(String text) {
-        waitForElementDisapear(this.webElement.findElement(By.xpath("//i[contains(@class, 'list-plus')]")));
         getVisibleTreeRow()
                 .stream()
                 .filter(treeRow -> treeRow.getLabel()
