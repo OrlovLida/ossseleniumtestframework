@@ -6,8 +6,6 @@
  */
 package com.oss.framework.widgets.tabswidget;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,7 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.DelayUtils;
-
 
 /**
  * @author Gabriela Kasza
@@ -55,6 +52,11 @@ public class OldTabs implements TabsInterface {
     public void callActionByLabel(String label) {
         ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, wait, this.tabs);
         actionsContainer.callActionByLabel(label);
+    }
+
+    @Override
+    public void callActionByLabel(String groupLabel, String label) {
+        throw new RuntimeException("Method not implemented for the old tabs");
     }
 
 }

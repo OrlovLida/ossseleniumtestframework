@@ -10,7 +10,10 @@ package com.oss.framework.widgets.tabswidget;
  * @author Gabriela Kasza
  */
 public interface TabsInterface {
-   void selectTabByLabel(String tabLabel);
-   void callActionByLabel(String actionLabel);
+    void selectTabByLabel(String tabLabel);
+
+    void callActionByLabel(String actionLabel);
+
+    void callActionByLabel(String groupLabel, String label);
 
 }
