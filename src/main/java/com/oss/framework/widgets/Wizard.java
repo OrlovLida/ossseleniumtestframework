@@ -1,8 +1,6 @@
 package com.oss.framework.widgets;
 
-import com.google.common.collect.Maps;
-import com.oss.framework.components.*;
-import com.oss.framework.utils.DelayUtils;
+import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +9,10 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.Map;
+import com.google.common.collect.Maps;
+import com.oss.framework.components.ComponentFactory;
+import com.oss.framework.components.Input;
+import com.oss.framework.utils.DelayUtils;
 
 public class Wizard {
 
@@ -51,14 +52,15 @@ public class Wizard {
     }
 
     public void clickAccept() {
-       DelayUtils.waitForNestedElements(wait,webElement,"//button[text()='Accept']");
+        DelayUtils.waitForNestedElements(wait, webElement, "//button[text()='Accept']");
         WebElement foundedElement =
                 webElement.findElement(By.xpath("//button[text()='Accept']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         foundedElement.click();
         //wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
-    public void waitToClose(){
+
+    public void waitToClose() {
         wait.until(ExpectedConditions.invisibilityOf(this.webElement));
     }
 
@@ -86,10 +88,25 @@ public class Wizard {
                 webElement.findElement(By.xpath(".//a[text()='Proceed']"));
         action.moveToElement(foundedElement).click().perform();
     }
+
     public void clickCreate() {
         Actions action = new Actions(driver);
         WebElement foundedElement =
                 webElement.findElement(By.xpath(".//a[text()='Create']"));
+        action.moveToElement(foundedElement).click().perform();
+    }
+
+    public void clickSave() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath(".//a[text()='Save']"));
+        action.moveToElement(foundedElement).click().perform();
+    }
+
+    public void clickDelete() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath(".//button[text()='Delete']"));
         action.moveToElement(foundedElement).click().perform();
     }
 }
