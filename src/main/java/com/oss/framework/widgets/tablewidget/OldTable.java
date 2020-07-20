@@ -25,11 +25,16 @@ public class OldTable implements TableInterface {
         WebElement table =  WidgetUtils.findOldWidget(driver, wait, windowTitle, "OSSTableContainer");
         return new OldTable(driver, wait, table, window);
     }
+    public static TableInterface createByComponentId(WebDriver driver, WebDriverWait wait, String componentId){
+        DelayUtils.waitByXPath(wait,"//div[contains(@id,'"+componentId+"')]");
+        WebElement table = driver.findElement(By.id(componentId));
+        return  new OldTable(driver,wait, table);
+    }
 
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement table;
-    private final WebElement window;
+    private  WebElement window;
 
     //private final Map<String, Column> columns = Maps.newHashMap();
 
@@ -39,6 +44,12 @@ public class OldTable implements TableInterface {
         this.table = table;
         this.window = window;
     }
+    private OldTable(WebDriver driver, WebDriverWait wait, WebElement table){
+        this.driver=driver;
+        this.wait= wait;
+        this.table=table;
+    }
+
 
     @Override
     public void selectRow(int row) {
@@ -78,6 +89,7 @@ public class OldTable implements TableInterface {
         Column column = columns.get(attributeLabel);
         column.clear();
         column.setValue(value);
+        DelayUtils.waitByXPath(wait,".//div[contains(@class, 'Cell')]");
 
     }
 
@@ -100,6 +112,17 @@ public class OldTable implements TableInterface {
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         throw new RuntimeException("Not implemented for the old table widget");
+    }
+    public String getValueCell(int index, String attributeLabel){
+        Map<String, Column> columns = createColumnsFilters();
+        Column column = columns.get(attributeLabel);
+        return column.getValueCell(index);
+
+    }
+    public int getRowNumber(String value, String attributeLabel){
+        Map<String, Column> columns = createColumnsFilters();
+        Column column = columns.get(attributeLabel);
+        return column.indexOf(value);
     }
 
     private Map<String, Column> createColumnsFilters() {
@@ -139,14 +162,31 @@ public class OldTable implements TableInterface {
                    cell.click();
                }
             }
+        }
 
+        public int indexOf(String value) {
+            List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
+
+            for(WebElement cell : cells) {
+
+                DelayUtils.waitForNestedElements(this.wait,cell,".//div[contains(@class, 'OSSRichText')]");
+                WebElement richText = cell.findElement(By.xpath(".//div[contains(@class, 'OSSRichText')]"));
+                if (richText.getText().equals(value)){
+                    return cells.indexOf(cell);
+                }
+            }
+            throw new RuntimeException("Cannot find a row with the provided value");
         }
         public void selectCell(int index){
             List<WebElement> cells=column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
             WebElement cell = cells.get(index);
             cell.click();
 
-
+        }
+        public String getValueCell(int index){
+            List<WebElement> cells=column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
+            WebElement cell = cells.get(index);
+            return cell.getText();
         }
 
         private void setValue(String value) {
