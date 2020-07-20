@@ -15,6 +15,8 @@ import static java.lang.Thread.sleep;
 
 public class DropdownList {
 
+    private static String XPATH_DROPDOWN_LIST = "//div[@class='portal']";
+
     public static DropdownList create(WebDriver driver, WebDriverWait webDriverWait) {
         return new DropdownList(driver, webDriverWait);
     }
@@ -29,14 +31,22 @@ public class DropdownList {
 
     public void selectOption(String option) {
         WebElement foundedElement =
-                driver.findElement(By.xpath("//div[@class='portal']//div[text()='"+option+"']"));
+                driver.findElement(By.xpath(XPATH_DROPDOWN_LIST+"//div[text()='"+option+"']"));
         foundedElement.click();
     }
 
     public void selectOptionContains(String option) {
         Actions action = new Actions(driver);
         WebElement foundedElement =
-                driver.findElement(By.xpath("//div[@class='portal']//div[contains(text(), '"+option+"')]"));
+                driver.findElement(By.xpath(XPATH_DROPDOWN_LIST+"//div[contains(text(), '"+option+"')]"));
+        action.moveToElement(foundedElement).click().perform();
+    }
+
+    public void selectOptionWithIconContains(String option) {
+        Actions action = new Actions(driver);
+        DelayUtils.waitByXPath(wait, XPATH_DROPDOWN_LIST+"//a[contains(text(), '"+option+"')]");
+        WebElement foundedElement =
+                driver.findElement(By.xpath(XPATH_DROPDOWN_LIST+"//a[contains(text(), '"+option+"')]"));
         action.moveToElement(foundedElement).click().perform();
     }
 
