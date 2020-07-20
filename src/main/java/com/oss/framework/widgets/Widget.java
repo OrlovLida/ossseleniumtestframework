@@ -1,13 +1,13 @@
 package com.oss.framework.widgets;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
 
 public abstract class Widget {
 
@@ -27,21 +27,23 @@ public abstract class Widget {
     }
 
     private static String createWidgetPath(String widgetId) {
-        return "//div[@data-attributename='"+widgetId+"']";
+        return "//div[@data-attributename='" + widgetId + "']";
     }
 
     //TODO: move to advanced search component
-    public WebElement getSearchInput(){
+    public WebElement getSearchInput() {
         waitForBy(By.xpath(searchInput));
         return this.webElement.findElement(By.xpath(searchInput));
     }
 
     //TODO: create wrapper for actions
     private WebElement getAction(String actionId) {
-        return this.webElement.findElement(By.xpath(".//div[@id='" + actionId + "']/div")); }
+        return this.webElement.findElement(By.xpath(".//div[@id='" + actionId + "']/div"));
+    }
 
     private List<WebElement> getActions() {
-        return this.webElement.findElements(By.xpath(".//div[@class='actionsContainer']/div")); }
+        return this.webElement.findElements(By.xpath(".//div[@class='actionsContainer']/div"));
+    }
 
     //TODO: rewrite method
     public Boolean isActionDisplayed(String expectedAction) {
@@ -57,6 +59,10 @@ public abstract class Widget {
 
     public void waitForVisibility(WebElement webelement) {
         webDriverWait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOf(webelement));
+    }
+
+    public void waitForElementDisapear(WebElement webElement) {
+        webDriverWait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.invisibilityOf(webElement));
     }
 
     protected void waitForVisibility(List<WebElement> webElements) {

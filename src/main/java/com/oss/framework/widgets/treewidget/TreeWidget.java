@@ -1,18 +1,19 @@
 package com.oss.framework.widgets.treewidget;
 
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Widget;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Widget;
 
 public class TreeWidget extends Widget {
     //TODO: fix order of variables and methods
@@ -43,6 +44,11 @@ public class TreeWidget extends Widget {
     public List<Node> getVisibleNodes() {
         return this.webElement.findElements(By.className("tree-node")).stream()
                 .map(Node::new).collect(Collectors.toList());
+    }
+
+    public List<TreeRow> getVisibleTreeRow() {
+        return this.webElement.findElements(By.className("TreeRow")).stream()
+                .map(TreeRow::new).collect(Collectors.toList());
     }
 
     public List<Node> getRootNodeWithDescendants() {
@@ -79,6 +85,18 @@ public class TreeWidget extends Widget {
     public TreeWidget selectNode() {
         waitForVisibility(getSearchInput());
         getVisibleNodes().get(0).click();
+        return this;
+    }
+
+    public void waitForXpathDisapear(String xpath) {
+        waitForElementDisapear(this.webElement.findElement(By.xpath(xpath)));
+    }
+
+    public TreeWidget selectTreeRowByText(String text) {
+        getVisibleTreeRow()
+                .stream()
+                .filter(treeRow -> treeRow.getLabel()
+                        .equals(text)).findFirst().orElseThrow(() -> new NoSuchElementException("Can't find TreeRow: " + text)).click();
         return this;
     }
 
@@ -121,6 +139,13 @@ public class TreeWidget extends Widget {
 
     public TreeWidget performSearch(String inputText) {
         getSearchInput().sendKeys(inputText);
+        return this;
+    }
+
+    public TreeWidget performSearchWithEnter(String inputText) {
+        WebElement input = getSearchInput();
+        input.sendKeys(inputText);
+        input.sendKeys(Keys.ENTER);
         return this;
     }
 
@@ -184,5 +209,25 @@ public class TreeWidget extends Widget {
             return this.webElement.findElement(By.xpath(TREE_NODE_SELECTION)).getAttribute("class").contains(
                     "selected");
         }
+    }
+
+    private static class TreeRow {
+
+        private final static String TREE_ROW_LABEL = ".//p[@class='TreeViewLabel']";
+
+        private final WebElement webElement;
+
+        private TreeRow(WebElement webElement) {
+            this.webElement = webElement;
+        }
+
+        private String getLabel() {
+            return this.webElement.findElement(By.xpath(TREE_ROW_LABEL)).getText();
+        }
+
+        private void click() {
+            this.webElement.click();
+        }
+
     }
 }
