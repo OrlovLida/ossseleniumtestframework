@@ -10,4 +10,6 @@ public interface ActionsInterface {
 
     void callActionByLabel(String groupLabel, String actionLabel);
 
+    void callActionById(String id);
+
 }

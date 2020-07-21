@@ -63,7 +63,18 @@ public class ActionsContainer implements ActionsInterface {
         }
     }
 
-    public static boolean isElementPresent(WebDriver driver, By by) {
+    public void callActionById(String id) {
+        DelayUtils.waitBy(this.webDriverWait, By.className("actionsGroup-default"));
+        if (isElementPresent(webDriver, By.id(id))) {
+            this.webElement.findElement(By.id(id)).click();
+        } else {
+            this.webElement.findElement(By.id("moreActions")).click();
+            Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
+            dropdown.callAction(id);
+        }
+    }
+
+    private static boolean isElementPresent(WebDriver driver, By by) {
         try {
             driver.findElement(by);
             return true;
