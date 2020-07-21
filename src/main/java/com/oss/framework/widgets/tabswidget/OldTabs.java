@@ -28,14 +28,12 @@ public class OldTabs implements TabsInterface {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'tabsContainer')]");
         WebElement widget = driver.findElement(By.xpath("//div[contains(@class,'tabsContainer')]"));
         return new OldTabs(driver, wait, widget);
-
     }
 
     private OldTabs(WebDriver driver, WebDriverWait wait, WebElement tabs) {
         this.driver = driver;
         this.wait = wait;
         this.tabs = tabs;
-
     }
 
     @Override
@@ -45,7 +43,6 @@ public class OldTabs implements TabsInterface {
         DelayUtils.waitForNestedElements(wait, allTabs, ".//a[contains(text(),'" + tabLabel + "')]");
         WebElement tab = allTabs.findElement(By.xpath(".//a[contains(text(),'" + tabLabel + "')]"));
         tab.click();
-
     }
 
     @Override
@@ -56,6 +53,11 @@ public class OldTabs implements TabsInterface {
 
     @Override
     public void callActionByLabel(String groupLabel, String label) {
+        throw new RuntimeException("Method not implemented for the old tabs");
+    }
+
+    @Override
+    public void callActionById(String id) {
         throw new RuntimeException("Method not implemented for the old tabs");
     }
 
