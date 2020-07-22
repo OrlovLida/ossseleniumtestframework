@@ -63,6 +63,7 @@ public class Wizard {
                 webElement.findElement(By.xpath("//button[text()='Accept']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         foundedElement.click();
+        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
     public void waitToClose() {
