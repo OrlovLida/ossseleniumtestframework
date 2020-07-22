@@ -21,5 +21,7 @@ public interface TableInterface {
     void callAction(String groupId, String actionId);
 
     void callActionByLabel(String groupLabel, String actionLabel);
+    int getRowNumber (String value, String attributeLabel);
+    String getValueCell (int index, String attributeLabel);
 
 }

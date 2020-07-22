@@ -47,7 +47,7 @@ public class OldTabs implements TabsInterface {
 
     @Override
     public void callActionByLabel(String label) {
-        ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, wait, this.tabs);
+        ActionsInterface actionsContainer = OldActionsContainer.createFromWidget(driver, wait, this.tabs);
         actionsContainer.callActionByLabel(label);
     }
 

@@ -24,13 +24,19 @@ public class Wizard {
 
     public static Wizard createWizard(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'OssWindow')]");
-        return new Wizard(driver, wait);
+        WebElement webElement = driver.findElement(By.xpath("//div[contains(@class,'OssWindow')]"));
+        return new Wizard(driver, wait, webElement);
+    }
+    public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String componentId){
+        DelayUtils.waitByXPath(wait,  "//div[@data-attributename='" + componentId + "']");
+        WebElement webElement = driver.findElement(By.xpath("//div[@data-attributename='" + componentId + "']"));
+        return new Wizard(driver,wait,webElement);
     }
 
-    private Wizard(WebDriver driver, WebDriverWait wait) {
+    private Wizard(WebDriver driver, WebDriverWait wait, WebElement webElement) {
         this.driver = driver;
         this.wait = wait;
-        this.webElement = driver.findElement(By.xpath("//div[contains(@class,'OssWindow')]"));
+        this.webElement = webElement;
     }
 
     public Input getComponent(String componentId, Input.ComponentType componentType) {
@@ -103,4 +109,17 @@ public class Wizard {
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
+
+    public void clickChange() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath(".//a[text()='Change']"));
+    }
+
+    public void clickDelete() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath(".//button[text()='Delete']"));
+        action.moveToElement(foundedElement).click().perform();
+    }
 }

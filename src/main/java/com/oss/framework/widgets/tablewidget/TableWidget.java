@@ -308,6 +308,16 @@ public class TableWidget extends Widget implements TableInterface {
 
     }
 
+    @Override
+    public int getRowNumber(String value, String attributeLabel) {
+        return 0;
+    }
+
+    @Override
+    public String getValueCell(int index, String attributeLabel) {
+        return null;
+    }
+
     public void clickOnKebabMenu(){
         getKebabMenuBtn().click();
     }
