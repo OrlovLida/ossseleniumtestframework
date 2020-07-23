@@ -63,8 +63,8 @@ public class Wizard {
                 webElement.findElement(By.xpath(".//button[text()='Accept']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         foundedElement.click();
-        DelayUtils.sleep(3000);
-        //wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+        //DelayUtils.sleep(3000);
+        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
     public void waitToClose() {
@@ -107,6 +107,8 @@ public class Wizard {
         Actions action = new Actions(driver);
         WebElement foundedElement =
                 webElement.findElement(By.xpath(".//a[text()='Change']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+        action.moveToElement(foundedElement).click().perform();
     }
 
     public void clickSave() {

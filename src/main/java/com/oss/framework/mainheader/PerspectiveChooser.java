@@ -59,7 +59,7 @@ public class PerspectiveChooser {
     }
      private void setPerspective(String perspective){
          MainHeader toolbar = MainHeader.create(driver, wait);
-         toolbar.callActionByLabel("queryContextButton");
+         toolbar.callActionByLabel("queryContextContainer");
          DelayUtils.waitByXPath(wait,"//div[@class= 'CustomSelectList-rowsContainer']");
          WebElement element = driver.findElement(By.xpath(".//div[@class= 'CustomSelectList-rowsContainer']"));
          DelayUtils.waitForNestedElements(wait,element,".//div[text()='"+perspective+"']");
