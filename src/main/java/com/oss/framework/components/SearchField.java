@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SearchField extends Input {
-    private static final String searchFirstResultXpath = "(//div[contains(@class,'CustomSelectList-data')])[1]";
+    private static final String searchFirstResultXpath = "(//div[@class='ExtendedSearchComponent']//div[contains(@class,'CustomSelectList-data')])[1]";
 
     static SearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new SearchField(driver, wait, componentId);
