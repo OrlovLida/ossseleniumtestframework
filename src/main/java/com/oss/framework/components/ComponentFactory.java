@@ -61,6 +61,9 @@ public class ComponentFactory {
             case TIME : {
                 return Time.create(webDriver, wait, componentId);
             }
+            case FILE_CHOOSER: {
+                return FileChooser.create(webDriver,wait,componentId);
+            }
         }
 
         throw new RuntimeException("Not supported component type: " + componentType);
