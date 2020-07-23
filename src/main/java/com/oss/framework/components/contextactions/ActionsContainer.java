@@ -1,6 +1,7 @@
 package com.oss.framework.components.contextactions;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -35,7 +36,7 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     public void callAction(String groupId, String actionId) {
-        if(groupId != null) {
+        if (groupId != null) {
             clickOnGroup(groupId);
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(actionId);
@@ -52,8 +53,34 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void clickOnGroup(String groupId) {
-        DelayUtils.waitBy(this.webDriverWait, By.id(groupId));
-        this.webElement.findElement(By.id(groupId)).click();
+        DelayUtils.waitBy(this.webDriverWait, By.className("actionsGroup-default"));
+        if (isElementPresent(webDriver, By.id(groupId))) {
+            this.webElement.findElement(By.id(groupId)).click();
+        } else {
+            this.webElement.findElement(By.id("moreActions")).click();
+            Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
+            dropdown.callAction(groupId);
+        }
+    }
+
+    public void callActionById(String id) {
+        DelayUtils.waitBy(this.webDriverWait, By.className("actionsGroup-default"));
+        if (isElementPresent(webDriver, By.id(id))) {
+            this.webElement.findElement(By.id(id)).click();
+        } else {
+            this.webElement.findElement(By.id("moreActions")).click();
+            Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
+            dropdown.callAction(id);
+        }
+    }
+
+    private static boolean isElementPresent(WebDriver driver, By by) {
+        try {
+            driver.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     private void clickOnAction(String actionId) {
@@ -79,9 +106,10 @@ public class ActionsContainer implements ActionsInterface {
             DelayUtils.waitBy(this.webDriverWait, By.id(actionId));
             this.webElement.findElement(By.id(actionId)).click();
         }
-        private void callActionByLabel(String actionLabel){
-            DelayUtils.waitByXPath(webDriverWait,"//a[contains(text(),'"+actionLabel+"')]");
-            this.webElement.findElement(By.xpath("//a[contains(text(),'"+actionLabel+"')]")).click();
+
+        private void callActionByLabel(String actionLabel) {
+            DelayUtils.waitByXPath(webDriverWait, "//a[contains(text(),'" + actionLabel + "')]");
+            this.webElement.findElement(By.xpath("//a[contains(text(),'" + actionLabel + "')]")).click();
         }
     }
 }

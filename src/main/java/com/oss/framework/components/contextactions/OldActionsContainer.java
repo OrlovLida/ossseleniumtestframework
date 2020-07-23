@@ -12,15 +12,15 @@ public class OldActionsContainer implements ActionsInterface {
     private static String WINDOW_TOOLBAR_CLASS = "windowToolbar";
 
     public static ActionsInterface createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
-        DelayUtils.waitForNestedElements(wait, parent, "//div[contains(@class, '"+ WINDOW_TOOLBAR_CLASS +"')]");
+        DelayUtils.waitForNestedElements(wait, parent, "//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]");
         WebElement toolbar = parent.findElement(By.className(WINDOW_TOOLBAR_CLASS));
-        return new OldActionsContainer(driver,wait, toolbar);
+        return new OldActionsContainer(driver, wait, toolbar);
     }
 
     public static ActionsInterface createFromWidget(WebDriver driver, WebDriverWait wait, WebElement widget) {
-        DelayUtils.waitForNestedElements(wait, widget, "//div[contains(@class, '"+ WINDOW_TOOLBAR_CLASS +"')]");
-        WebElement toolbar = widget.findElement(By.xpath("./../..//div[contains(@class, '"+ WINDOW_TOOLBAR_CLASS +"')]"));
-        return new OldActionsContainer(driver,wait, toolbar);
+        DelayUtils.waitForNestedElements(wait, widget, "//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]");
+        WebElement toolbar = widget.findElement(By.xpath("./../..//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"));
+        return new OldActionsContainer(driver, wait, toolbar);
     }
 
     private static ActionsInterface createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
@@ -33,7 +33,7 @@ public class OldActionsContainer implements ActionsInterface {
     private final WebDriverWait wait;
     private final WebElement toolbar;
 
-    private OldActionsContainer (WebDriver driver, WebDriverWait wait, WebElement toolbar) {
+    private OldActionsContainer(WebDriver driver, WebDriverWait wait, WebElement toolbar) {
         this.driver = driver;
         this.wait = wait;
         this.toolbar = toolbar;
@@ -46,8 +46,8 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, this.toolbar, ".//a[contains(text(),'"+label+"')] | .//i[contains(@aria-label,'"+label+"')]");
-        WebElement action = this.toolbar.findElement(By.xpath(".//a[contains(text(),'"+label+"')] | .//i[contains(@aria-label,'"+label+"')]"));
+        DelayUtils.waitForNestedElements(wait, this.toolbar, ".//a[contains(text(),'" + label + "')] | .//i[contains(@aria-label,'" + label + "')]");
+        WebElement action = this.toolbar.findElement(By.xpath(".//a[contains(text(),'" + label + "')] | .//i[contains(@aria-label,'" + label + "')]"));
         action.click();
     }
 
@@ -58,6 +58,11 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public void callActionById(String id) {
         throw new RuntimeException("Not implemented yet");
     }
 }

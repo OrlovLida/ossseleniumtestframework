@@ -16,4 +16,6 @@ public interface TabsInterface {
 
     void callActionByLabel(String groupLabel, String label);
 
+    void callActionById(String id);
+
 }

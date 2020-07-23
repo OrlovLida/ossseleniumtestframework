@@ -34,13 +34,18 @@ public class TabWindowWidget implements TabsInterface {
         DelayUtils.waitForNestedElements(wait, allTabs, "//div[contains(text(),'" + tabLabel + "')]");
         WebElement tab = allTabs.findElement(By.xpath("//div[contains(text(),'" + tabLabel + "')]"));
         tab.click();
-
     }
 
     @Override
     public void callActionByLabel(String label) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.tabs, driver, wait);
         actionsContainer.callActionByLabel(label);
+    }
+
+    @Override
+    public void callActionById(String id) {
+        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.tabs, driver, wait);
+        actionsContainer.callActionById(id);
     }
 
     @Override
