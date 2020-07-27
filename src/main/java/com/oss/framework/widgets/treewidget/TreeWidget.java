@@ -10,6 +10,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
@@ -100,6 +101,10 @@ public class TreeWidget extends Widget {
         return this;
     }
 
+    public void selectTreeRowByOrder(Integer order) {
+        getVisibleTreeRow().get(order).click();
+    }
+
     public Boolean isNodeSelected() {
         return getVisibleNodes().get(0).isSelected();
     }
@@ -108,6 +113,14 @@ public class TreeWidget extends Widget {
         DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
         getNodesWithExpandState("collapsed").get(0).changeExpandState();
         return this;
+    }
+
+    public void expandFirstTreeRow() {
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//i[@class='fa-li fa list-plus fa-border']"))));
+        List<TreeRow> treeRows = getVisibleTreeRow();
+        treeRows.get(0).expandTreeRow();
+        webDriverWait.until(ExpectedConditions.not(ExpectedConditions
+                .attributeToBe(driver.findElement(By.xpath("//div[@class='TreeRow']/i")), "class", "fa-li fa fa-border fa-spinner fa-spin")));
     }
 
     public TreeWidget selectRootCheckbox() {
@@ -214,6 +227,7 @@ public class TreeWidget extends Widget {
     private static class TreeRow {
 
         private final static String TREE_ROW_LABEL = ".//p[@class='TreeViewLabel']";
+        private final static String EXPAND_TREE_ROW = "//i[@class='fa-li fa list-plus fa-border']";
 
         private final WebElement webElement;
 
@@ -227,6 +241,10 @@ public class TreeWidget extends Widget {
 
         private void click() {
             this.webElement.click();
+        }
+
+        public void expandTreeRow() {
+            this.webElement.findElement(By.xpath(EXPAND_TREE_ROW)).click();
         }
 
     }
