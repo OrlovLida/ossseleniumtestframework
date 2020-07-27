@@ -6,11 +6,10 @@
  */
 package com.oss.framework.prompts;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
@@ -24,27 +23,28 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     private final WebDriverWait wait;
     private final WebElement prompt;
 
-    private ConfirmationBox(WebDriver driver, WebDriverWait wait, WebElement prompt){
-        this.driver=driver;
-        this.wait=wait;
-        this.prompt=prompt;
+    private ConfirmationBox(WebDriver driver, WebDriverWait wait, WebElement prompt) {
+        this.driver = driver;
+        this.wait = wait;
+        this.prompt = prompt;
     }
-    public static ConfirmationBoxInterface create (WebDriver driver, WebDriverWait wait){
-        DelayUtils.waitByXPath(wait,"//div[contains(@class,'OssWindow newPrompt')]");
-        WebElement prompt = driver.findElement(By.xpath("//div[contains(@class,'OssWindow newPrompt')]"));
-        return new ConfirmationBox(driver,wait,prompt);
 
+    public static ConfirmationBoxInterface create(WebDriver driver, WebDriverWait wait) {
+        DelayUtils.waitByXPath(wait, "//div[contains(@class,'OssWindow newPrompt')]");
+        WebElement prompt = driver.findElement(By.xpath("//div[contains(@class,'OssWindow newPrompt')]"));
+        return new ConfirmationBox(driver, wait, prompt);
     }
+
     @Override
     public void clickButtonByLabel(String label) {
-        WebElement button = this.prompt.findElement(By.xpath(".//button[contains(text(),'"+label+"')]"));
+        WebElement button = this.prompt.findElement(By.xpath(".//button[contains(text(),'" + label + "')]"));
         button.click();
-
+        wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[contains(@class,'OssWindow newPrompt')]"))));
     }
 
     @Override
     public String getMessage() {
-        DelayUtils.waitByXPath(wait,".//div[contains(@class, 'windowContent')]");
+        DelayUtils.waitByXPath(wait, ".//div[contains(@class, 'windowContent')]");
         WebElement windowContent = driver.findElement(By.xpath(".//div[contains(@class, 'windowContent')]"));
         WebElement message = windowContent.findElement(By.xpath(".//div[contains(@class, 'OSSRichText')]"));
         return message.getText();

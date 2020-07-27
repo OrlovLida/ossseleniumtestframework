@@ -60,10 +60,9 @@ public class Wizard {
     public void clickAccept() {
         DelayUtils.waitForNestedElements(wait, webElement, "//button[text()='Accept']");
         WebElement foundedElement =
-                webElement.findElement(By.xpath(".//button[text()='Accept']"));
+                webElement.findElement(By.xpath("//button[text()='Accept']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         foundedElement.click();
-        //DelayUtils.sleep(3000);
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
@@ -103,19 +102,19 @@ public class Wizard {
         action.moveToElement(foundedElement).click().perform();
     }
 
-    public void clickChange() {
-        Actions action = new Actions(driver);
-        WebElement foundedElement =
-                webElement.findElement(By.xpath(".//a[text()='Change']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
-        action.moveToElement(foundedElement).click().perform();
-    }
-
     public void clickSave() {
         Actions action = new Actions(driver);
         WebElement foundedElement =
                 webElement.findElement(By.xpath(".//a[text()='Save']"));
         action.moveToElement(foundedElement).click().perform();
+        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+    }
+
+
+    public void clickChange() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath(".//a[text()='Change']"));
     }
 
     public void clickDelete() {

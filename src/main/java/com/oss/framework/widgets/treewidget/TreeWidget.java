@@ -70,7 +70,7 @@ public class TreeWidget extends Widget {
     }
 
     public String getFirstNodeLabel() {
-        waitForVisibility(getSearchInput());
+        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
         return getVisibleNodes().get(0).getLabel();
     }
 
@@ -83,13 +83,13 @@ public class TreeWidget extends Widget {
     }
 
     public TreeWidget selectNode() {
-        waitForVisibility(getSearchInput());
+        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
         getVisibleNodes().get(0).click();
         return this;
     }
 
-    public void waitForXpathDisapear(String xpath) {
-        waitForElementDisapear(this.webElement.findElement(By.xpath(xpath)));
+    public void waitForTreeExpansion() {
+        DelayUtils.waitForElementDisapear(webDriverWait, this.webElement.findElement(By.xpath("//i[contains(@class, 'list-plus')]")));
     }
 
     public TreeWidget selectTreeRowByText(String text) {
@@ -105,7 +105,7 @@ public class TreeWidget extends Widget {
     }
 
     public TreeWidget expandNode() {
-        waitForVisibility(getSearchInput());
+        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
         getNodesWithExpandState("collapsed").get(0).changeExpandState();
         return this;
     }
@@ -118,7 +118,7 @@ public class TreeWidget extends Widget {
     }
 
     public TreeWidget selectExpandAllIcon() {
-        waitForVisibility(getSearchInput());
+        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
         getVisibleNodes().get(0).clickExpandAllBtn();
         return this;
     }
@@ -128,10 +128,10 @@ public class TreeWidget extends Widget {
     }
 
     public InlineMenu selectInlineActionsBtn() {
-        waitForVisibility(getSearchInput());
+        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
         Actions builder = new Actions(driver);
         builder.moveToElement(this.webElement.findElement(By.className("tree-node"))).perform();
-        waitForBy(By.xpath(INLINE_ACTIONS_MENU_BTN));
+        DelayUtils.waitForBy(webDriverWait, By.xpath(INLINE_ACTIONS_MENU_BTN));
         builder.moveToElement(getInlineActionsMenuButtons().get(0)).perform();
         builder.click().perform();
         return inlineMenu.create(driver);

@@ -3,11 +3,12 @@ package com.oss.framework.widgets;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.utils.DelayUtils;
 
 public abstract class Widget {
 
@@ -32,7 +33,7 @@ public abstract class Widget {
 
     //TODO: move to advanced search component
     public WebElement getSearchInput() {
-        waitForBy(By.xpath(searchInput));
+        DelayUtils.waitForBy(webDriverWait, By.xpath(searchInput));
         return this.webElement.findElement(By.xpath(searchInput));
     }
 
@@ -48,32 +49,12 @@ public abstract class Widget {
     //TODO: rewrite method
     public Boolean isActionDisplayed(String expectedAction) {
         Boolean result = false;
-        waitForBy(By.xpath(".//div[@id='CREATE']/div"));
+        DelayUtils.waitForBy(webDriverWait, By.xpath(".//div[@id='CREATE']/div"));
         for (WebElement e : getActions()) {
             if (e.getAttribute("id").equals(expectedAction)) {
                 result = true;
             }
         }
         return result;
-    }
-
-    public void waitForVisibility(WebElement webelement) {
-        webDriverWait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOf(webelement));
-    }
-
-    public void waitForElementDisapear(WebElement webElement) {
-        webDriverWait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.invisibilityOf(webElement));
-    }
-
-    protected void waitForVisibility(List<WebElement> webElements) {
-        webDriverWait.until(ExpectedConditions.visibilityOfAllElements(webElements));
-    }
-
-    public void waitForClickability(WebElement webelement) {
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(webelement));
-    }
-
-    public void waitForBy(By by) {
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(by));
     }
 }
