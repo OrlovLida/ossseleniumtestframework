@@ -27,10 +27,11 @@ public class Wizard {
         WebElement webElement = driver.findElement(By.xpath("//div[contains(@class,'OssWindow')]"));
         return new Wizard(driver, wait, webElement);
     }
-    public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String componentId){
-        DelayUtils.waitByXPath(wait,  "//div[@data-attributename='" + componentId + "']");
+
+    public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
+        DelayUtils.waitByXPath(wait, "//div[@data-attributename='" + componentId + "']");
         WebElement webElement = driver.findElement(By.xpath("//div[@data-attributename='" + componentId + "']"));
-        return new Wizard(driver,wait,webElement);
+        return new Wizard(driver, wait, webElement);
     }
 
     private Wizard(WebDriver driver, WebDriverWait wait, WebElement webElement) {
@@ -114,6 +115,14 @@ public class Wizard {
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
+    public void clickUpdate() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath(".//a[text()='Update']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+        action.moveToElement(foundedElement).click().perform();
+        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+    }
 
     public void clickChange() {
         Actions action = new Actions(driver);
