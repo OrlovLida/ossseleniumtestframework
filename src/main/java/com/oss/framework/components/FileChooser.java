@@ -1,5 +1,8 @@
 package com.oss.framework.components;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
@@ -40,14 +43,22 @@ public class FileChooser extends Input{
 
     @Override
     public Data getValue() {
+        List<String> names = new ArrayList<String>();
         DelayUtils.waitByXPath(webDriverWait,"//ul[@class='UploadedFiles']");
-       return Data.createSingleData(webElement.findElement(By.className("fileName")).getText()) ;
+
+        List<WebElement> fileNames = webElement.findElements(By.className("fileName"));
+        for (WebElement fileName:fileNames) {
+            names.add(fileName.getText());
+        }
+        return Data.createMultiData(names) ;
     }
 
     @Override
     public void clear() {
-        DelayUtils.waitByXPath(webDriverWait,"//span[@class='statusContainer success']");
-        webElement.findElement(By.className("delete")).click();
-
+        DelayUtils.waitByXPath(webDriverWait,"//ul[@class='UploadedFiles']");
+        WebElement attachments = webElement.findElement(By.xpath("//ul[@class='UploadedFiles']"));
+        while (webElement.findElements(By.xpath("//ul[@class='UploadedFiles']")).size() != 0){
+            attachments.findElement(By.className("delete")).click();
+        }
     }
 }
