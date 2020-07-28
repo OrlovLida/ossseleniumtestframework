@@ -6,6 +6,7 @@
  */
 package com.oss.framework.listwidget;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -30,7 +31,7 @@ public class EditableList extends Widget {
     private static final String TEXT_CONTAINER = "textContainer";
 
     public static EditableList create(WebDriver driver, WebDriverWait webDriverWait){
-        DelayUtils.waitBy(webDriverWait, By.className(LIST_WIDGET_CLASS));
+        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '"+LIST_WIDGET_CLASS+ "')]"));
         return new EditableList(driver,LIST_WIDGET_CLASS,webDriverWait);
     }
 
@@ -59,6 +60,15 @@ public class EditableList extends Widget {
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup",actionLabel);
 
+    }
+    public List<String> getValues(){
+        List<String> values = new ArrayList<String>();
+        DelayUtils.waitByXPath(webDriverWait, "//div[contains(@class,'rowData')]");
+        List<WebElement> allRows = webElement.findElements(By.xpath(".//div[contains(@class,'rowData')]"));
+        for (WebElement value:allRows) {
+            values.add(value.getText());
+        }
+        return values;
     }
 
     private WebElement selectRow(int row) {
