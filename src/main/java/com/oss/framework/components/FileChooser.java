@@ -25,15 +25,14 @@ public class FileChooser extends Input{
 
     @Override
     public void setValue(Data value) {
-        DelayUtils.waitByXPath(webDriverWait,"//div[@data-attributename='file']");
+        DelayUtils.waitByElement(webDriverWait,this.webElement);
         WebElement elem = webElement.findElement(By.xpath("//input[@type='file']"));
         String js = "arguments[0].style.height='50px'; arguments[0].style.visibility='visible'; arguments[0].style.display='block';";
         ((JavascriptExecutor) driver).executeScript(js, elem);
         ((JavascriptExecutor) driver).executeScript("HTMLInputElement.prototype.click = function(){}");
         elem.sendKeys(value.getStringValue());
         ((JavascriptExecutor) driver).executeScript("delete HTMLInputElement.prototype.click");
-
-
+        DelayUtils.waitByXPath(webDriverWait,"//span[@class='uploadStatus'][text()='Upload success']");
     }
 
     @Override

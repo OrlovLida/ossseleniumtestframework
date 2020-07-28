@@ -107,6 +107,7 @@ public class Wizard {
         Actions action = new Actions(driver);
         WebElement foundedElement =
                 webElement.findElement(By.xpath(".//a[text()='Save']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
@@ -115,6 +116,15 @@ public class Wizard {
         Actions action = new Actions(driver);
         WebElement foundedElement =
                 webElement.findElement(By.xpath(".//a[text()='Update']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+        action.moveToElement(foundedElement).click().perform();
+        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+    }
+
+    public void clickOK() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath("//a[text()='OK']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
@@ -129,7 +139,7 @@ public class Wizard {
     public void clickDelete() {
         Actions action = new Actions(driver);
         WebElement foundedElement =
-                webElement.findElement(By.xpath(".//button[text()='Delete']"));
+                webElement.findElement(By.xpath("//a[text()='Delete']"));
         action.moveToElement(foundedElement).click().perform();
     }
 }
