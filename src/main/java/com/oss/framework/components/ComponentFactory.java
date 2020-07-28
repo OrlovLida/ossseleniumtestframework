@@ -64,6 +64,9 @@ public class ComponentFactory {
             case FILE_CHOOSER: {
                 return FileChooser.create(webDriver,wait,componentId);
             }
+            case RADIO_BUTTON:{
+                return RadioButton.create(webDriver,wait,componentId);
+            }
         }
 
         throw new RuntimeException("Not supported component type: " + componentType);

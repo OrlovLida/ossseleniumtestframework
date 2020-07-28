@@ -97,13 +97,17 @@ public class Wizard {
 
     public void clickCreate() {
         Actions action = new Actions(driver);
+        DelayUtils.waitByXPath(wait,".//a[text()='Create']");
+
         WebElement foundedElement =
                 webElement.findElement(By.xpath(".//a[text()='Create']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         action.moveToElement(foundedElement).click().perform();
     }
 
     public void clickSave() {
         Actions action = new Actions(driver);
+        DelayUtils.waitByXPath(wait,".//a[text()='Save']");
         WebElement foundedElement =
                 webElement.findElement(By.xpath(".//a[text()='Save']"));
         action.moveToElement(foundedElement).click().perform();
@@ -113,8 +117,12 @@ public class Wizard {
 
     public void clickChange() {
         Actions action = new Actions(driver);
+        DelayUtils.waitByXPath(wait,".//a[text()='Change']");
         WebElement foundedElement =
-                webElement.findElement(By.xpath(".//a[text()='Change']"));
+                webElement.findElement(By.xpath("//a[text()='Change']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+        action.moveToElement(foundedElement).click().perform();
+        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
     public void clickDelete() {
