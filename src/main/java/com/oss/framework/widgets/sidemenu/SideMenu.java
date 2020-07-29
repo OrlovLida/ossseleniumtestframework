@@ -10,8 +10,6 @@ import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -38,11 +36,7 @@ public class SideMenu {
 
     public void goToProductByLeftSideMenu(String tab, String product) {
 
-        String xPath = "//span[text()='%s']";
-        String tabXpath = String.format(xPath, tab);
-        WebElement tabElement = driver.findElement(By.xpath(tabXpath));
-        DelayUtils.waitByElement(wait, tabElement);
-        tabElement.click();
+        goToTabByLeftSideMenu(tab);
 
         String xPath2 = "//div[@class='subMenu isExpanded']//span[text()='%s']";
         String productXpath = String.format(xPath2, product);
@@ -54,17 +48,7 @@ public class SideMenu {
 
     public void goToTechnologyByLeftSideMenu(String tab, String product, String technology) {
 
-        String xPath = "//span[text()='%s']";
-        String tabXpath = String.format(xPath, tab);
-        WebElement tabElement = driver.findElement(By.xpath(tabXpath));
-        DelayUtils.waitByElement(wait, tabElement);
-        tabElement.click();
-
-        String xPath2 = "//div[@class='subMenu isExpanded']//span[text()='%s']";
-        String productXpath = String.format(xPath2, product);
-        WebElement productElement = driver.findElement(By.xpath(productXpath));
-        DelayUtils.waitByElement(wait, productElement);
-        productElement.click();
+        goToProductByLeftSideMenu(tab, product);
         DelayUtils.sleep(500);
 
         String xPath3 = "//span[text()='%s']";
