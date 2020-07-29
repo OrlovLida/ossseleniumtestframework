@@ -12,4 +12,6 @@ public interface ActionsInterface {
 
     void callActionById(String id);
 
+    void callActionById(String groupId, String actionId);
+
 }
