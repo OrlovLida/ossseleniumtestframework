@@ -61,4 +61,8 @@ public class OldTabs implements TabsInterface {
         throw new RuntimeException("Method not implemented for the old tabs");
     }
 
+    @Override
+    public void callActionById(String groupId, String id) {
+        throw new RuntimeException("Method not implemented for the old tabs");
+    }
 }
