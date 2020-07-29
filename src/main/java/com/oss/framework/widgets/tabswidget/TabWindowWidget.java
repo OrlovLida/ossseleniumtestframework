@@ -28,11 +28,11 @@ public class TabWindowWidget implements TabsInterface {
     }
 
     @Override
-    public void selectTabByLabel(String tabLabel) {
+    public void selectTabByLabel(String ariaControl) {
         DelayUtils.waitForNestedElements(wait, this.tabs, "//div[@class='OssWindow tabWindow']");
         WebElement allTabs = this.tabs.findElement(By.xpath("//ul[@role='tablist']"));
-        DelayUtils.waitForNestedElements(wait, allTabs, "//div[contains(text(),'" + tabLabel + "')]");
-        WebElement tab = allTabs.findElement(By.xpath("//div[contains(text(),'" + tabLabel + "')]"));
+        DelayUtils.waitForNestedElements(wait, allTabs, "//button[@aria-controls='" + ariaControl + "']");
+        WebElement tab = allTabs.findElement(By.xpath("//button[@aria-controls='" + ariaControl + "']"));
         tab.click();
     }
 
@@ -52,6 +52,12 @@ public class TabWindowWidget implements TabsInterface {
     public void callActionByLabel(String groupLabel, String label) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.tabs, driver, wait);
         actionsContainer.callActionByLabel(groupLabel, label);
+    }
+
+    @Override
+    public void callActionById(String groupLabel, String id) {
+        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.tabs, driver, wait);
+        actionsContainer.callActionById(groupLabel, id);
     }
 
 }

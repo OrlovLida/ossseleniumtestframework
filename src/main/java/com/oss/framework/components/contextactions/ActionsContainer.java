@@ -52,6 +52,13 @@ public class ActionsContainer implements ActionsInterface {
         dropdown.callActionByLabel(actionLabel);
     }
 
+    @Override
+    public void callActionById(String groupId, String actionId) {
+        clickOnGroup(groupId);
+        Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
+        dropdown.callActionById(actionId);
+    }
+
     private void clickOnGroup(String groupId) {
         DelayUtils.waitBy(this.webDriverWait, By.className("actionsGroup-default"));
         if (isElementPresent(webDriver, By.id(groupId))) {
@@ -110,6 +117,11 @@ public class ActionsContainer implements ActionsInterface {
         private void callActionByLabel(String actionLabel) {
             DelayUtils.waitByXPath(webDriverWait, "//a[contains(text(),'" + actionLabel + "')]");
             this.webElement.findElement(By.xpath("//a[contains(text(),'" + actionLabel + "')]")).click();
+        }
+
+        private void callActionById(String actionId) {
+            DelayUtils.waitByXPath(webDriverWait, "//a[@id='" + actionId + "']");
+            this.webElement.findElement(By.xpath("//a[@id='" + actionId + "']")).click();
         }
     }
 }

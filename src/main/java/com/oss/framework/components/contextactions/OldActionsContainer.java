@@ -67,4 +67,9 @@ public class OldActionsContainer implements ActionsInterface {
     public void callActionById(String id) {
         throw new RuntimeException("Not implemented yet");
     }
+
+    @Override
+    public void callActionById(String groupLabel, String actionId) {
+        throw new RuntimeException("Not implemented yet");
+    }
 }
