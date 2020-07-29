@@ -3,6 +3,7 @@ package com.oss.framework.components.contextactions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
@@ -48,6 +49,7 @@ public class OldActionsContainer implements ActionsInterface {
     public void callActionByLabel(String label) {
         DelayUtils.waitForNestedElements(wait, this.toolbar, ".//a[contains(text(),'" + label + "')] | .//i[contains(@aria-label,'" + label + "')]");
         WebElement action = this.toolbar.findElement(By.xpath(".//a[contains(text(),'" + label + "')] | .//i[contains(@aria-label,'" + label + "')]"));
+        wait.until(ExpectedConditions.elementToBeClickable(action));
         action.click();
     }
 
