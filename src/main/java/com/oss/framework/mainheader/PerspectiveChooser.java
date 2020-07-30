@@ -81,7 +81,7 @@ public class PerspectiveChooser {
     }
     public void setWithoutRemoved(){
         setPerspective(WITHOUT_REMOVED);
-        wait.until(url ->driver.getCurrentUrl().contains("withRemoved=true"));
+        wait.until(url ->driver.getCurrentUrl().contains("withRemoved=false"));
     }
      private void setPerspective(String perspective){
          MainHeader toolbar = MainHeader.create(driver, wait);
