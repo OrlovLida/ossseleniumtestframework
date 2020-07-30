@@ -58,7 +58,7 @@ public class PerspectiveChooser {
             planChooser.clickChange();
         }
         else planChooser.clickSave();
-        planChooser.waitToClose();
+        //planChooser.waitToClose();
         wait.until(url -> driver.getCurrentUrl().contains("PLAN"));
     }
     public void setPlanDatePerspective (String date){
@@ -72,7 +72,7 @@ public class PerspectiveChooser {
         dataChooser.clickChange();
         }
         else dataChooser.clickSave();
-        dataChooser.waitToClose();
+        //dataChooser.waitToClose();
         wait.until(url -> driver.getCurrentUrl().contains(date));
     }
     public void setWithRemove(){
