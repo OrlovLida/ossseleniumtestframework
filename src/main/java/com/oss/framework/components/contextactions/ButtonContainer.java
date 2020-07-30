@@ -62,4 +62,9 @@ public class ButtonContainer implements ActionsInterface{
     public void callActionById(String id) {
         throw new RuntimeException("Method not implemented for the old actions container Button Container");
     }
+
+    @Override
+    public void callActionById(String groupLabel, String actionId) {
+        throw new RuntimeException("Not implemented yet");
+    }
 }
