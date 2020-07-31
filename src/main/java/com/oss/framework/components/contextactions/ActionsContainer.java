@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
@@ -60,22 +61,22 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void clickOnGroup(String groupId) {
-        DelayUtils.waitBy(this.webDriverWait, By.className("actionsGroup-default"));
+        DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement,"//div[@class='actionsGroup-default']");
         if (isElementPresent(webDriver, By.id(groupId))) {
-            this.webElement.findElement(By.id(groupId)).click();
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(groupId)))).click();
         } else {
-            this.webElement.findElement(By.id("moreActions")).click();
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id("moreActions")))).click();
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(groupId);
         }
     }
 
     public void callActionById(String id) {
-        DelayUtils.waitBy(this.webDriverWait, By.className("actionsGroup-default"));
+        DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement,"//div[@class='actionsGroup-default']");
         if (isElementPresent(webDriver, By.id(id))) {
-            this.webElement.findElement(By.id(id)).click();
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(id)))).click();
         } else {
-            this.webElement.findElement(By.id("moreActions")).click();
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id("moreActions")))).click();
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(id);
         }
@@ -91,8 +92,8 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void clickOnAction(String actionId) {
-        DelayUtils.waitBy(this.webDriverWait, By.id(actionId));
-        this.webElement.findElement(By.id(actionId)).click();
+        DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement, "//div[@id='" + actionId + "']");
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(actionId)))).click();
     }
 
     private static class Dropdown {
@@ -110,18 +111,18 @@ public class ActionsContainer implements ActionsInterface {
         }
 
         private void callAction(String actionId) {
-            DelayUtils.waitBy(this.webDriverWait, By.id(actionId));
-            this.webElement.findElement(By.id(actionId)).click();
+            DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement, "//*[@id='" + actionId + "']");
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(actionId)))).click();
         }
 
         private void callActionByLabel(String actionLabel) {
-            DelayUtils.waitByXPath(webDriverWait, "//a[contains(text(),'" + actionLabel + "')]");
-            this.webElement.findElement(By.xpath("//a[contains(text(),'" + actionLabel + "')]")).click();
+            DelayUtils.waitForNestedElements(webDriverWait,  this.webElement, "//a[contains(text(),'" + actionLabel + "')]");
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.xpath("//a[contains(text(),'" + actionLabel + "')]")))).click();
         }
 
         private void callActionById(String actionId) {
-            DelayUtils.waitByXPath(webDriverWait, "//a[@id='" + actionId + "']");
-            this.webElement.findElement(By.xpath("//a[@id='" + actionId + "']")).click();
+            DelayUtils.waitForNestedElements(webDriverWait,  this.webElement, "//a[@id='" + actionId + "']");
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.xpath("//a[@id='" + actionId + "']")))).click();
         }
     }
 }

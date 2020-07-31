@@ -3,7 +3,6 @@ package com.oss.framework.components.notifications;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -43,11 +42,13 @@ public class Notifications implements NotificationsInterface {
         openNotificationContainer();
         wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(".//div[@class='notificationLabel']"))));
         wait.until(ExpectedConditions.not(ExpectedConditions
-                        .attributeToBe(driver.findElement(By.xpath("//div[@class='notificationContainer']/div")), "class", "notification progressNotification")));
-        WebElement windowContent = driver.findElement(By.xpath(".//div[@class='notificationLabel']"));
-        WebElement message = windowContent.findElement(By.xpath("//div[@class='notificationTextContainer']/span"));
+                .attributeToBe(driver.findElement(By.xpath("//div[@class='notificationContainer']/div")), "class", "notification progressNotification")));
+        String notificationText =
+                wait.until(ExpectedConditions
+                        .visibilityOf(driver.findElement(By.xpath(".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span"))))
+                        .getText();
         driver.findElement(CLEAR_NOTIFICATION).click();
-        return message.getText();
+        return notificationText;
     }
 
     @Override

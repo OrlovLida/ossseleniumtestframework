@@ -37,7 +37,9 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
 
     @Override
     public void clickButtonByLabel(String label) {
-        WebElement button = this.prompt.findElement(By.xpath(".//button[contains(text(),'" + label + "')]"));
+        DelayUtils.waitForNestedElements(wait, this.prompt, ".//button[contains(text(),'" + label + "')]");
+        WebElement button = wait.until(ExpectedConditions
+                .elementToBeClickable(this.prompt.findElement(By.xpath(".//button[contains(text(),'" + label + "')]"))));
         button.click();
         wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[contains(@class,'OssWindow newPrompt')]"))));
     }
