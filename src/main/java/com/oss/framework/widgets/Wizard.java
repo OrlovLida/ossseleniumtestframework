@@ -52,17 +52,13 @@ public class Wizard {
 
     public void clickNext() {
         Actions action = new Actions(driver);
-        WebElement foundedElement =
-                webElement.findElement(By.xpath("//button[text()='Next']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
-        action.moveToElement(foundedElement).click().perform();
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Next']"))))).click().perform();
     }
 
     public void clickAccept() {
         DelayUtils.waitForNestedElements(wait, webElement, "//button[text()='Accept']");
         WebElement foundedElement =
-                webElement.findElement(By.xpath("//button[text()='Accept']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Accept']"))));
         foundedElement.click();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
@@ -77,41 +73,30 @@ public class Wizard {
 
     public void submit() {
         Actions action = new Actions(driver);
-        WebElement foundedElement =
-                webElement.findElement(By.xpath(".//button[text()='Submit']"));
-        action.moveToElement(foundedElement).click().perform();
+        action.moveToElement(webElement.findElement(By.xpath(".//button[text()='Submit']"))).click().perform();
     }
 
     public void cancel() {
         Actions action = new Actions(driver);
-        WebElement foundedElement =
-                webElement.findElement(By.xpath(".//button[text()='Cancel']"));
-        action.moveToElement(foundedElement).click().perform();
+        action.moveToElement(webElement.findElement(By.xpath(".//button[text()='Cancel']"))).click().perform();
     }
 
     public void proceed() {
         Actions action = new Actions(driver);
-        WebElement foundedElement =
-                webElement.findElement(By.xpath(".//a[text()='Proceed']"));
-        action.moveToElement(foundedElement).click().perform();
+        action.moveToElement(webElement.findElement(By.xpath(".//a[text()='Proceed']"))).click().perform();
     }
 
     public void clickCreate() {
         Actions action = new Actions(driver);
-        DelayUtils.waitByXPath(wait,".//a[text()='Create']");
-
-        WebElement foundedElement =
-                webElement.findElement(By.xpath(".//a[text()='Create']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
-        action.moveToElement(foundedElement).click().perform();
+        DelayUtils.waitByXPath(wait, ".//a[text()='Create']");
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(".//a[text()='Create']"))))).click().perform();
     }
 
     public void clickSave() {
         Actions action = new Actions(driver);
-        DelayUtils.waitByXPath(wait,".//a[text()='Save']");
+        DelayUtils.waitByXPath(wait, ".//a[text()='Save']");
         WebElement foundedElement =
-                webElement.findElement(By.xpath(".//a[text()='Save']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(".//a[text()='Save']"))));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
@@ -119,8 +104,7 @@ public class Wizard {
     public void clickUpdate() {
         Actions action = new Actions(driver);
         WebElement foundedElement =
-                webElement.findElement(By.xpath(".//a[text()='Update']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(".//a[text()='Update']"))));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
@@ -128,26 +112,22 @@ public class Wizard {
     public void clickOK() {
         Actions action = new Actions(driver);
         WebElement foundedElement =
-                webElement.findElement(By.xpath("//a[text()='OK']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//a[text()='OK']"))));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
     public void clickChange() {
         Actions action = new Actions(driver);
-        DelayUtils.waitByXPath(wait,".//a[text()='Change']");
+        DelayUtils.waitByXPath(wait, ".//a[text()='Change']");
         WebElement foundedElement =
-                webElement.findElement(By.xpath("//a[text()='Change']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//a[text()='Change']"))));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
     public void clickDelete() {
         Actions action = new Actions(driver);
-        WebElement foundedElement =
-                webElement.findElement(By.xpath("//a[text()='Delete']"));
-        action.moveToElement(foundedElement).click().perform();
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//a[text()='Delete']"))))).click().perform();
     }
 }
