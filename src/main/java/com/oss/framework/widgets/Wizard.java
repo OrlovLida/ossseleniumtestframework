@@ -58,9 +58,7 @@ public class Wizard {
 
     public void clickAccept() {
         DelayUtils.waitForNestedElements(wait, webElement, "//button[text()='Accept']");
-        WebElement foundedElement =
-                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Accept']"))));
-        foundedElement.click();
+        wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Accept']")))).click();
     }
 
     public void waitToClose() {

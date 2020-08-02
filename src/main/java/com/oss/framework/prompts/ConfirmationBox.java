@@ -41,7 +41,7 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
         WebElement button = wait.until(ExpectedConditions
                 .elementToBeClickable(this.prompt.findElement(By.xpath(".//button[contains(text(),'" + label + "')]"))));
         button.click();
-        wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[contains(@class,'OssWindow newPrompt')]"))));
+        wait.until(ExpectedConditions.invisibilityOf(button));
     }
 
     @Override
