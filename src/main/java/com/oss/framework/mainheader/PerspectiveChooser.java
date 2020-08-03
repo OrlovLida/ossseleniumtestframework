@@ -54,11 +54,8 @@ public class PerspectiveChooser {
         Wizard planChooser = Wizard.createWizard(driver, wait);
         Input input = planChooser.getComponent("searchBoxId", Input.ComponentType.SEARCH_FIELD);
         input.setSingleStringValue(processCodeOrName);
-        if (this.driver.getPageSource().contains("Change")){
-            planChooser.clickChange();
-        }
-        else planChooser.clickSave();
-        //planChooser.waitToClose();
+        planChooser.clickActionById("plaPlanChooserView_planChooserFormButtons-1");
+
         wait.until(url -> driver.getCurrentUrl().contains("PLAN"));
     }
     public void setPlanDatePerspective (String date){
@@ -68,11 +65,7 @@ public class PerspectiveChooser {
         radioButtons.setSingleStringValue("Date");
         Input selectDate = dataChooser.getComponent("dateFieldId", Input.ComponentType.DATE);
         selectDate.setSingleStringValue(date);
-        if (this.driver.getPageSource().contains("Change")){
-        dataChooser.clickChange();
-        }
-        else dataChooser.clickSave();
-        //dataChooser.waitToClose();
+        dataChooser.clickActionById("plaPlanChooserView_planChooserFormButtons-1");
         wait.until(url -> driver.getCurrentUrl().contains(date));
     }
     public void setWithRemove(){
