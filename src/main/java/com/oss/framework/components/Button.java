@@ -16,6 +16,10 @@ public class Button {
         return new Button(driver, componentId, selector);
     }
 
+    public static Button createByID(WebDriver driver, String componentId) {
+        return new Button(componentId, driver);
+    }
+
     private Button(WebDriver driver, String componentId) {
         this.webElement = driver.findElement(By.xpath("//button[text()='" + componentId + "']"));
     }
@@ -24,6 +28,9 @@ public class Button {
         this.webElement = driver.findElement(By.xpath("//" + selector + "[text()='" + componentId + "']"));
     }
 
+    private Button(String componentId, WebDriver driver) {
+        this.webElement = driver.findElement(By.xpath("//button[@data-attributename='" + componentId + "']"));
+    }
     public void click() {
         this.webElement.click();
     }
