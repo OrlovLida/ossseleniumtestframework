@@ -6,9 +6,8 @@
  */
 package com.oss.framework.mainheader;
 
-import org.openqa.selenium.By;
+import com.oss.framework.components.Button;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.ComponentFactory;
@@ -26,10 +25,12 @@ public class UserSettings {
     private final static String LOGIN_BUTTON= "loginButton";
     private final static String XPATH_LOGIN_PANEL= "//div[@class='login-panel']";
     private final static String LANGUAGE_CHOOSER= "language-chooser";
+    private final static String LOGIN_BUTTON_ID = "logout-button";
 
     public static UserSettings create (WebDriver driver, WebDriverWait wait){
         return new UserSettings(driver,wait);
     }
+
     private UserSettings (WebDriver driver, WebDriverWait wait){
         this.driver=driver;
         this.wait=wait;
@@ -48,6 +49,16 @@ public class UserSettings {
         } else {
             toolbar.callActionByLabel(LOGIN_BUTTON);
         }
+    }
+
+    public UserSettings open(){
+        MainHeader.create(driver, wait).callActionByLabel(LOGIN_BUTTON);
+        DelayUtils.waitByXPath(wait,"//button[contains (@data-attributename, "+LOGIN_BUTTON_ID+")]");
+        return this;
+    }
+
+    public void logOut(){
+        Button.createByID(driver,LOGIN_BUTTON_ID).click();
     }
 
 
