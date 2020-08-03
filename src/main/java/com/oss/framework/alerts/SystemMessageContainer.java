@@ -31,7 +31,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
         DANGER, WARNING, SUCCESS, INFO
     }
 
-    public static SystemMessageContainer create(WebDriver driver, WebDriverWait wait) {
+    public static SystemMessageInterface create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class, 'systemMessagesContainer')]");
         WebElement messageContainer = driver.findElement(By.xpath("//div[contains(@class, 'systemMessagesContainer')]"));
         return new SystemMessageContainer(driver, wait, messageContainer);
