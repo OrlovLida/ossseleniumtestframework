@@ -9,6 +9,8 @@ package com.oss.framework.components.contextactions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
@@ -60,7 +62,12 @@ public class ButtonContainer implements ActionsInterface{
 
     @Override
     public void callActionById(String id) {
-        throw new RuntimeException("Method not implemented for the old actions container Button Container");
+        DelayUtils.waitForNestedElements(wait,buttons,"//*[@data-attributename='"+id+"'] | //*[@id='"+id+"'] ");
+        Actions action = new Actions(driver);
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
+                buttons.findElement(By.xpath("//*[@data-attributename='"+id+"'] | //*[@id='"+id+"'] ")))))
+                .click()
+                .perform();
     }
 
     @Override

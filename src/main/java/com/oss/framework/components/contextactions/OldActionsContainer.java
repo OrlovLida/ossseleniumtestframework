@@ -3,6 +3,7 @@ package com.oss.framework.components.contextactions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -65,8 +66,14 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String id) {
-        throw new RuntimeException("Not implemented yet");
+        DelayUtils.waitForNestedElements(wait,toolbar,"//*[@data-attributename='"+id+"'] | //*[@id='"+id+"'] ");
+        Actions action = new Actions(driver);
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
+                toolbar.findElement(By.xpath("//*[@data-attributename='"+id+"'] | //*[@id='"+id+"'] ")))))
+                .click()
+                .perform();
     }
+
 
     @Override
     public void callActionById(String groupLabel, String actionId) {

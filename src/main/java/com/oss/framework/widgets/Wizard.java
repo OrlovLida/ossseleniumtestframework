@@ -58,9 +58,7 @@ public class Wizard {
 
     public void clickAccept() {
         DelayUtils.waitForNestedElements(wait, webElement, "//button[text()='Accept']");
-        WebElement foundedElement =
-                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Accept']"))));
-        foundedElement.click();
+        wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Accept']")))).click();
     }
 
     public void waitToClose() {
@@ -132,5 +130,11 @@ public class Wizard {
         DelayUtils.waitForNestedElements(wait, webElement, "//a[text()='Delete']");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//a[text()='Delete']"))))).click().perform();
+    }
+    public void clickActionById(String actionId){
+        DelayUtils.waitForNestedElements(wait,webElement,"//*[@data-attributename='"+actionId+"']");
+        Actions action = new Actions(driver);
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@data-attributename='"+actionId+"']"))))).click().perform();
+
     }
 }
