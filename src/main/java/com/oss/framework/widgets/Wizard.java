@@ -53,6 +53,14 @@ public class Wizard {
         wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Accept']")))).click();
     }
 
+    public void clickAcceptOldWizard() {
+        DelayUtils.waitByXPath(wait, "//div[contains(@class,'OssWindow')]");
+        WebElement wizardElement = driver.findElement(By.xpath("//div[contains(@class,'OssWindow')]"));
+        DelayUtils.waitForNestedElements(wait, wizardElement, "//button[text()='Accept']");
+        wait.until(ExpectedConditions.elementToBeClickable(wizardElement.findElement(By.xpath("//button[text()='Accept']")))).click();
+        wait.until(ExpectedConditions.invisibilityOf(wizardElement.findElement(By.xpath("//button[text()='Accept']"))));
+    }
+
     public void waitToClose() {
         wait.until(ExpectedConditions.invisibilityOf(this.webElement));
     }
