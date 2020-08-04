@@ -35,10 +35,9 @@ public class OldTable implements TableInterface {
         return new OldTable(driver, wait, table);
     }
 
-    //temporary - until id will be added to all tables
-    public static TableInterface createByClassNameAndOrder(WebDriver driver, WebDriverWait wait, String className, Integer order) {
-        DelayUtils.waitByXPath(wait, "(//div[contains(@class,'" + className + "')])[" + order + "]");
-        WebElement table = driver.findElement(By.xpath("(//div[contains(@class,'" + className + "')])[" + order + "]"));
+    public static TableInterface createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
+        DelayUtils.waitByXPath(wait, "//div[@data-attributename='" + dataAttributeName + "']");
+        WebElement table = driver.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']"));
         return new OldTable(driver, wait, table);
     }
 
