@@ -22,6 +22,11 @@ public abstract class Widget {
         this.webElement = driver.findElement(By.xpath("//div[contains(@class, '"+widgetClass+"')]"));
         this.webDriverWait = webDriverWait;
     }
+    public Widget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
+        this.driver = driver;
+        this.webElement = webElement;
+        this.webDriverWait = webDriverWait;
+    }
 
     public static void waitForWidget(WebDriverWait wait, String widgetClass) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));

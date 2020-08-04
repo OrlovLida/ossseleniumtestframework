@@ -34,10 +34,19 @@ public class EditableList extends Widget {
         DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '"+LIST_WIDGET_CLASS+ "')]"));
         return new EditableList(driver,LIST_WIDGET_CLASS,webDriverWait);
     }
+    public static EditableList createById(WebDriver driver, WebDriverWait webDriverWait, String componentId){
+        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@data-attributename, '"+componentId+"')]"));
+        WebElement webElement = driver.findElement(By.xpath("//div[@data-attributename='" + componentId + "']"));
+        return new EditableList(driver,webElement,webDriverWait);
+    }
 
     private EditableList(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         super(driver, widgetClass, webDriverWait);
     }
+    private EditableList(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
+        super(driver, webElement, webDriverWait);
+    }
+
     public void addRow(){
         DelayUtils.waitByXPath(webDriverWait,XPATH_ADD_ROW);
         WebElement row = driver.findElement(By.xpath(XPATH_ADD_ROW));
@@ -63,8 +72,8 @@ public class EditableList extends Widget {
     }
     public List<String> getValues(){
         List<String> values = new ArrayList<String>();
-        DelayUtils.waitByXPath(webDriverWait, "//div[contains(@class,'rowData')]");
-        List<WebElement> allRows = webElement.findElements(By.xpath(".//div[contains(@class,'rowData')]"));
+        DelayUtils.waitByXPath(webDriverWait, "//ul[contains(@class,'SimpleList auto HeadersList')]");
+        List<WebElement> allRows = webElement.findElements(By.xpath("//ul[@class='SimpleList auto HeadersList']//div[@class='rowData']"));
         for (WebElement value:allRows) {
             values.add(value.getText());
         }
