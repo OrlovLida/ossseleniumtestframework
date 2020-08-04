@@ -8,7 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class PropertyPanel {
+public class PropertyPanel implements PropertyPanelInterface {
 
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
 
@@ -52,6 +52,7 @@ public class PropertyPanel {
         return properties;
     }
 
+    @Override
     public String getPropertyValue(String propertyName) {
        getPropertiesMap();
        return properties.get(propertyName).findElement(By.xpath(PROPERTY_VALUE_PATH)).getText();
