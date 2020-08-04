@@ -31,7 +31,7 @@ public class OldTable implements TableInterface {
 
     public static TableInterface createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
         DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')]");
-        WebElement table = driver.findElement(By.id(componentId));
+        WebElement table = driver.findElement(By.xpath("//div[@id='ip_involved_nrp_group1']"));
         return new OldTable(driver, wait, table);
     }
 
@@ -137,6 +137,7 @@ public class OldTable implements TableInterface {
     }
 
     public int getRowNumber(String value, String attributeLabel) {
+        DelayUtils.waitForNestedElements(wait,this.table,"//*[contains(text(),'"+value+"')]");
         Map<String, Column> columns = createColumnsFilters();
         Column column = columns.get(attributeLabel);
         return column.indexOf(value);

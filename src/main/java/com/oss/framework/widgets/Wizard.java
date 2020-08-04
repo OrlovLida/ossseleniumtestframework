@@ -9,7 +9,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.google.common.collect.Maps;
 import com.oss.framework.components.ComponentFactory;
 import com.oss.framework.components.Input;
 import com.oss.framework.utils.DelayUtils;
@@ -19,8 +18,6 @@ public class Wizard {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
-
-    private final Map<String, Input> components = Maps.newHashMap();
 
     public static Wizard createWizard(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'OssWindow')]");
@@ -41,12 +38,7 @@ public class Wizard {
     }
 
     public Input getComponent(String componentId, Input.ComponentType componentType) {
-        if (components.containsKey(componentId)) {
-            return components.get(componentId);
-        }
-
         Input input = ComponentFactory.create(componentId, componentType, this.driver, this.wait);
-        components.put(componentId, input);
         return input;
     }
 
