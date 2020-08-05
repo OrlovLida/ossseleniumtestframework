@@ -18,36 +18,34 @@ import com.oss.framework.utils.DelayUtils;
 /**
  * @author Gabriela Kasza
  */
-public class ButtonContainer implements ActionsInterface{
+public class ButtonContainer implements ActionsInterface {
 
-
-    public static ButtonContainer create (WebDriver driver, WebDriverWait wait){
+    public static ButtonContainer create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'commonButtons')]");
-        WebElement buttons= driver.findElement(By.xpath("//div[contains(@class,'commonButtons')]"));
-        return new ButtonContainer(driver,wait,buttons);
+        WebElement buttons = driver.findElement(By.xpath("//div[contains(@class,'commonButtons')]"));
+        return new ButtonContainer(driver, wait, buttons);
     }
 
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement buttons;
 
-    private ButtonContainer (WebDriver driver, WebDriverWait wait, WebElement buttons) {
+    private ButtonContainer(WebDriver driver, WebDriverWait wait, WebElement buttons) {
         this.driver = driver;
         this.wait = wait;
         this.buttons = buttons;
     }
+
     @Override
     public void callAction(String actionId) {
         throw new RuntimeException("Method not implemented for the old actions container Button Container");
-
     }
 
     @Override
     public void callActionByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait,this.buttons,".//a[contains(text(),'" + label + "')]");
-        WebElement button = this.buttons.findElement(By.xpath(".//a[contains(text(),'" + label + "')]"));
+        DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + label + "']");
+        WebElement button = buttons.findElement(By.xpath("//a[text()='" + label + "']"));
         button.click();
-
     }
 
     @Override
@@ -62,10 +60,10 @@ public class ButtonContainer implements ActionsInterface{
 
     @Override
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(wait,buttons,"//*[@data-attributename='"+id+"'] | //*[@id='"+id+"'] ");
+        DelayUtils.waitForNestedElements(wait, buttons, "//*[@data-attributename='" + id + "'] | //*[@id='" + id + "'] ");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                buttons.findElement(By.xpath("//*[@data-attributename='"+id+"'] | //*[@id='"+id+"'] ")))))
+                buttons.findElement(By.xpath("//*[@data-attributename='" + id + "'] | //*[@id='" + id + "'] ")))))
                 .click()
                 .perform();
     }
