@@ -72,8 +72,8 @@ public class EditableList extends Widget {
     }
     public List<String> getValues(){
         List<String> values = new ArrayList<String>();
-        DelayUtils.waitByXPath(webDriverWait, "//ul[contains(@class,'SimpleList auto HeadersList')]");
-        List<WebElement> allRows = webElement.findElements(By.xpath("//ul[@class='SimpleList auto HeadersList']//div[@class='rowData']"));
+        DelayUtils.waitForNestedElements(webDriverWait,webElement,"//div[contains(@class,'rowData')]");
+        List<WebElement> allRows = webElement.findElements(By.xpath("//div[contains(@class,'rowData')]"));
         for (WebElement value:allRows) {
             values.add(value.getText());
         }
