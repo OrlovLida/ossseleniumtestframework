@@ -9,6 +9,7 @@ package com.oss.framework.widgets.tabswidget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsInterface;
@@ -42,6 +43,7 @@ public class OldTabs implements TabsInterface {
         WebElement allTabs = this.tabs.findElement(By.xpath(".//div[contains(@class,'tabsContainerTabs')]"));
         DelayUtils.waitForNestedElements(wait, allTabs, ".//a[contains(text(),'" + tabLabel + "')]");
         WebElement tab = allTabs.findElement(By.xpath(".//a[contains(text(),'" + tabLabel + "')]"));
+        wait.until(ExpectedConditions.elementToBeClickable(tab));
         tab.click();
     }
 

@@ -47,6 +47,10 @@ public class TreeWidget extends Widget {
                 .map(Node::new).collect(Collectors.toList());
     }
 
+    public void selectTreeRow(String name) {
+        this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + name + "']")).click();
+    }
+
     public List<TreeRow> getVisibleTreeRow() {
         return this.webElement.findElements(By.className("TreeRow")).stream()
                 .map(TreeRow::new).collect(Collectors.toList());

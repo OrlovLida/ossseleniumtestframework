@@ -55,8 +55,10 @@ public class OldActionsContainer implements ActionsInterface {
     }
 
     @Override
-    public void callAction(String groupId, String actionId) {
-        throw new RuntimeException("Method not implemented for the old actions container");
+    public void callAction(String groupId, String actionLabel) {
+        DelayUtils.waitForNestedElements(wait, toolbar, ".//li[@data-group-id='" + groupId + "']//button");
+        wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(".//li[@data-group-id='" + groupId + "']//button")))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='widgetLabel'][text()='" + actionLabel + "']"))).click();
     }
 
     @Override
