@@ -1,9 +1,11 @@
 package com.oss.framework.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -51,7 +53,7 @@ public class DelayUtils {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.invisibilityOf(webElement));
     }
 
-    protected static void waitForVisibility(WebDriverWait wait, List<WebElement> webElements) {
+    public static void waitForVisibility(WebDriverWait wait, List<WebElement> webElements) {
         wait.until(ExpectedConditions.visibilityOfAllElements(webElements));
     }
 
@@ -62,4 +64,32 @@ public class DelayUtils {
     public static void waitForBy(WebDriverWait wait, By by) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
     }
+
+    public static void waitForPageToLoad(WebDriver driver, WebDriverWait wait) {
+        DelayUtils.sleep(1000);
+        List<WebElement> spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
+        List<WebElement> loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
+        List<WebElement> appPreloader = driver.findElements(By.xpath("//div[contains(@class,'appPreloader')]"));
+        List<WebElement> preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
+        List<WebElement> newList = new ArrayList<>(spinners);
+        newList.addAll(loadBars);
+        newList.addAll(appPreloader);
+        newList.addAll(preloaderWrapper);
+        while (newList.size() > 0) {
+            wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
+            spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
+            loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
+            appPreloader = driver.findElements(By.xpath("//div[contains(@class,'appPreloader')]"));
+            preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
+            newList = new ArrayList<>(spinners);
+            newList.addAll(loadBars);
+            newList.addAll(appPreloader);
+            newList.addAll(preloaderWrapper);
+        }
+    }
+
+    public static void waitForComponent(WebDriverWait wait, String xpath) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+    }
+
 }
