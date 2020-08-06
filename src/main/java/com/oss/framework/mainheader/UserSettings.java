@@ -58,7 +58,7 @@ public class UserSettings {
     }
 
     public void logOut(){
-        Button.createByID(driver,LOGIN_BUTTON_ID).click();
+        Button.createById(driver,LOGIN_BUTTON_ID).click();
     }
 
 
