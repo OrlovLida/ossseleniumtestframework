@@ -93,7 +93,7 @@ public class OldTable implements TableInterface {
         Column column = columns.get(attributeLabel);
         column.clear();
         column.setValue(value);
-        DelayUtils.waitByXPath(wait, ".//div[contains(@class, 'Cell')]");
+        DelayUtils.waitForNestedElements(wait,this.table, "//*[contains(text(),'"+value+"')]");
     }
 
     @Override
