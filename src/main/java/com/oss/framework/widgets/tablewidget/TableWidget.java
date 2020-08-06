@@ -54,7 +54,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.className(TABLE_WIDGET_CLASS)); //TODO: change to id
-        DelayUtils.waitBy(webDriverWait, By.className(PAGINATION_COMPONENT_CLASS));
+        //DelayUtils.waitBy(webDriverWait, By.className(PAGINATION_COMPONENT_CLASS));
         return new TableWidget(driver, widgetClass, webDriverWait);
     }
 
@@ -197,6 +197,10 @@ public class TableWidget extends Widget implements TableInterface {
         if(expandedTextTooltip == null){
             expandedTextTooltip = new ExpandedTextTooltip(this.driver);
         }
+    }
+
+    public int howManyRowsOnFirstPage(){
+        return driver.findElements(By.xpath(tableRows)).size();
     }
 
     public void selectFirstRow(){

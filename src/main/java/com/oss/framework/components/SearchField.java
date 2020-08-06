@@ -27,6 +27,11 @@ public class SearchField extends Input {
         super(parent, driver, wait, componentId);
     }
 
+    public void typeValue(String value) {
+        webElement.click();
+        webElement.findElement(By.xpath(".//input")).sendKeys(value);
+    }
+
     @Override
     public void setValue(Data value) {
         webElement.click();
