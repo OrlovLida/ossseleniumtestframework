@@ -118,9 +118,9 @@ public class ComponentFactory {
 //            case TEXT_AREA : {
 //                return TextArea.create(webDriver, wait, componentId);
 //            }
-//            case TEXT_FIELD : {
-//                return TextField.create(webDriver, wait, componentId);
-//            }
+            case TEXT_FIELD : {
+                return TextField.create(webDriver, wait, componentId);
+            }
 //            case TIME : {
 //                return Time.create(webDriver, wait, componentId);
 //            }
