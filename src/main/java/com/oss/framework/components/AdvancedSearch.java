@@ -83,6 +83,19 @@ public class AdvancedSearch {
         this.searchPanel = null;
     }
 
+
+    public void clickOnTagByLabel(String label) {
+        this.webElement.findElement(By.xpath("//div[@class='" + TAGS_CLASS + "']//*[contains (text(), '" + label + "')]")).click();
+    }
+
+    public void closeTagByLabel(String label) {
+        this.webElement.findElement(By.xpath(TAGS_ITEMS + "//*[contains (text(), '" + label + "')]/span[contains (@class, 'close')]")).click();
+    }
+
+    public int howManyTagsIsVisible(){
+        return tags.getTags().size();
+    }
+
     private static class Tags {
         private final WebElement webElement;
 

@@ -58,6 +58,14 @@ public class DropdownList {
         action.moveToElement(foundedElement).click().perform();
     }
 
+    public void selectOptionWithId(String option) {
+        Actions action = new Actions(driver);
+        DelayUtils.waitByXPath(wait, XPATH_DROPDOWN_LIST+"//a[contains(@data-attributename, '"+option+"')]");
+        WebElement foundedElement =
+                driver.findElement(By.xpath(XPATH_DROPDOWN_LIST+"//a[contains(@data-attributename, '"+option+"')]"));
+        action.moveToElement(foundedElement).click().perform();
+    }
+
     public void selectOptions(List<String> options) {
         options.forEach(this::selectOption);
     }
