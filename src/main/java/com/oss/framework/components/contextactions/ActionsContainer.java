@@ -92,7 +92,7 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void clickOnAction(String actionId) {
-        DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement, "//div[@id='" + actionId + "']");
+        DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement, "//*[@id='" + actionId + "']");
         webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(actionId)))).click();
     }
 
