@@ -28,7 +28,7 @@ public abstract class Input {
     }
 
     static String createComponentPath(String componentId) {
-        return "//div[@data-attributename='" + componentId + "']";
+        return "//*[@data-attributename='" + componentId + "']";
     }
 
     Input(WebDriver driver, WebDriverWait webDriverWait, String componentId) {

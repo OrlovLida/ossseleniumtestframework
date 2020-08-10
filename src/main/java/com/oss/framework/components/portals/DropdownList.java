@@ -7,11 +7,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.LocatingUtils;
 
-import static java.lang.Thread.sleep;
 
 public class DropdownList {
 
@@ -57,7 +54,6 @@ public class DropdownList {
                 driver.findElement(By.xpath(XPATH_DROPDOWN_LIST+"//a[contains(@data-attributename, '"+option+"')]"));
         action.moveToElement(foundedElement).click().perform();
     }
-
 
     public void selectOptions(List<String> options) {
         options.forEach(this::selectOption);
