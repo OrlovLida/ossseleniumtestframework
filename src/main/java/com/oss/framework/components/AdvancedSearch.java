@@ -93,7 +93,7 @@ public class AdvancedSearch {
     }
 
     public int howManyTagsIsVisible(){
-        return tags.getTags().size();
+        return this.webElement.findElements(By.xpath(TAGS_ITEMS)).size();
     }
 
     private static class Tags {
