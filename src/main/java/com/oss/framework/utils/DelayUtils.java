@@ -75,7 +75,8 @@ public class DelayUtils {
         newList.addAll(loadBars);
         newList.addAll(appPreloader);
         newList.addAll(preloaderWrapper);
-        while (newList.size() > 0) {
+        long startTime = System.currentTimeMillis();
+        while (newList.size() > 0 ||(System.currentTimeMillis()-startTime) < 50000) {
             wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
             spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
             loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
@@ -85,6 +86,9 @@ public class DelayUtils {
             newList.addAll(loadBars);
             newList.addAll(appPreloader);
             newList.addAll(preloaderWrapper);
+        }
+        if ((System.currentTimeMillis()-startTime)>50000){
+             System.out.println("Page did not load for 50 seconds!");
         }
     }
 
