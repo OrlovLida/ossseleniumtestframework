@@ -6,6 +6,7 @@ import com.oss.framework.components.portals.Tooltip;
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -51,6 +52,18 @@ public abstract class Input {
     public final void click() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).click().perform();
+        DelayUtils.sleep();
+    }
+
+    public final void doubleClick() {
+        Actions action = new Actions(driver);
+        action.moveToElement(webElement).doubleClick().perform();
+        DelayUtils.sleep();
+    }
+
+    public final void clearByAction() {
+        Actions action = new Actions(driver);
+        action.moveToElement(webElement).doubleClick().sendKeys(Keys.DELETE).perform();
         DelayUtils.sleep();
     }
 
