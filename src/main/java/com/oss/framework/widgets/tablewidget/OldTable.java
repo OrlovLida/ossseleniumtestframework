@@ -2,7 +2,9 @@ package com.oss.framework.widgets.tablewidget;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.oss.framework.components.contextactions.ActionsContainer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -26,6 +28,13 @@ public class OldTable implements TableInterface {
         DelayUtils.waitByXPath(wait, "//div[contains(text(), '" + windowTitle + "')]");
         WebElement window = driver.findElement(By.xpath("//div[contains(text(), '" + windowTitle + "')]"));
         WebElement table = WidgetUtils.findOldWidget(driver, wait, windowTitle, "OSSTableContainer");
+        return new OldTable(driver, wait, table, window);
+    }
+
+    public static TableInterface createByWindowDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName){
+        DelayUtils.waitByXPath(wait, "//div[@class='OssWindow'][@data-attributename='" + dataAttributeName + "']");
+        WebElement window = driver.findElement(By.xpath("//div[@class='OssWindow'][@data-attributename='" + dataAttributeName + "']"));
+        WebElement table = window.findElement(By.xpath("//.//div[@class='OSSTableContainer']"));
         return new OldTable(driver, wait, table, window);
     }
 
@@ -108,7 +117,8 @@ public class OldTable implements TableInterface {
 
     @Override
     public void callAction(String groupId, String actionId) {
-        throw new RuntimeException("Not implemented for the old table widget");
+        ActionsInterface actions = ActionsContainer.createFromParent(window, driver, wait);
+        actions.callAction(groupId, actionId);
     }
 
     @Override
@@ -145,29 +155,35 @@ public class OldTable implements TableInterface {
     private Map<String, Column> createColumnsFilters() {
         Map<String, Column> columns = Maps.newHashMap();
         DelayUtils.waitForNestedElements(wait, this.table, "//div[contains(@class, 'OSSTableComponent')]");
-        WebElement tableBody = this.table.findElement(By.className("OSSTableComponent"));
-        List<WebElement> columns2 = tableBody.findElements(By.className("OSSTableColumn"));
-        for (WebElement element : columns2) {
-            DelayUtils.waitForNestedElements(wait, element, ".//span");
-            String label = element.findElement(By.xpath(".//span")).getText();
-            columns.put(label, new Column(label, element, wait));
+        WebElement tableBody = this.table.findElement(By.xpath("//div[contains(@class, 'OSSTableComponent')]"));
+        List<Column> columns2 =
+                tableBody.findElements(By.xpath("//div[contains(@class,'OSSTableColumn')]"))
+                        .stream().map(columnElement->new Column(columnElement, wait)).collect(Collectors.toList());
+        for(Column column: columns2){
+            if(column.checkIfLabelExist()){
+                columns.put(column.getLabel(), column);
+            } else{
+                columns.put("", column);
+            }
         }
         return columns;
     }
 
     private static class Column {
         private final WebElement column;
-        private final String label;
         private final WebDriverWait wait;
 
-        private Column(String label, WebElement column, WebDriverWait wait) {
-            this.label = label;
+        private Column(WebElement column, WebDriverWait wait) {
             this.column = column;
             this.wait = wait;
         }
 
-        private String getLabel() {
-            return label;
+        private String getLabel(){
+            return this.column.findElement(By.xpath(".//span")).getText();
+        }
+
+        private boolean checkIfLabelExist(){
+            return this.column.findElements(By.xpath(".//span")).size() > 0;
         }
 
         private void selectCell(String value) {
