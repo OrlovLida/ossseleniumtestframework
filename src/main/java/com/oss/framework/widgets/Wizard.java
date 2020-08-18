@@ -48,6 +48,14 @@ public class Wizard {
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Next']"))))).click().perform();
     }
 
+    public void clickNextStep() {
+        Actions action = new Actions(driver);
+        WebElement foundedElement =
+                webElement.findElement(By.xpath("//button[text()='Next Step']"));
+        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
+        action.moveToElement(foundedElement).click().perform();
+    }
+
     public void clickAccept() {
         DelayUtils.waitForNestedElements(wait, webElement, "//button[text()='Accept']");
         wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//button[text()='Accept']")))).click();
