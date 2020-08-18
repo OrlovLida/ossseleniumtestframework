@@ -156,10 +156,10 @@ public class OldTable implements TableInterface {
 
     private Map<String, Column> createColumnsFilters() {
         Map<String, Column> columns = Maps.newHashMap();
-        DelayUtils.waitForNestedElements(wait, this.table, "//div[contains(@class, 'OSSTableComponent')]");
-        WebElement tableBody = this.table.findElement(By.xpath("//div[contains(@class, 'OSSTableComponent')]"));
+        DelayUtils.waitForNestedElements(wait, this.table, ".//div[contains(@class, 'OSSTableComponent')]");
+        WebElement tableBody = this.table.findElement(By.xpath(".//div[contains(@class, 'OSSTableComponent')]"));
         List<Column> columns2 =
-                tableBody.findElements(By.xpath("//div[contains(@class,'OSSTableColumn')]"))
+                tableBody.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn')]"))
                         .stream().map(columnElement->new Column(columnElement, wait, driver)).collect(Collectors.toList());
         for(Column column: columns2){
             if(column.checkIfLabelExist()){
@@ -191,12 +191,14 @@ public class OldTable implements TableInterface {
         }
 
         private void selectCell(String value) {
+            DelayUtils.waitByXPath(this.wait, "//div[contains(@class, 'Cell')]//div[contains(@class, 'OSSRichText')]");
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
             for (WebElement cell : cells) {
                 DelayUtils.waitForNestedElements(this.wait, cell, ".//div[contains(@class, 'OSSRichText')]");
                 WebElement richText = cell.findElement(By.xpath(".//div[contains(@class, 'OSSRichText')]"));
                 if (richText.getText().equals(value)) {
-                    cell.click();
+                    Actions action = new Actions(driver);
+                    action.click(cell).perform();
                 }
             }
         }
