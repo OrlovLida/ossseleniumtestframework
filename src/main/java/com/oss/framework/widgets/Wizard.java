@@ -139,10 +139,10 @@ public class Wizard {
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//a[text()='Delete']"))))).click().perform();
     }
+
     public void clickActionById(String actionId){
         DelayUtils.waitForNestedElements(wait,webElement,"//*[@data-attributename='"+actionId+"']");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@data-attributename='"+actionId+"']"))))).click().perform();
-
     }
 }
