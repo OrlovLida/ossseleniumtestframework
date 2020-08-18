@@ -12,6 +12,8 @@ package com.oss.framework.widgets.tabswidget;
 public interface TabsInterface {
     void selectTabByLabel(String tabLabel);
 
+    void selectTabById(String id);
+
     void callActionByLabel(String actionLabel);
 
     void callActionByLabel(String groupLabel, String label);

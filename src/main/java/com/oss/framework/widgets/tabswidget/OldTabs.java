@@ -48,6 +48,17 @@ public class OldTabs implements TabsInterface {
     }
 
     @Override
+    public void selectTabById(String id) {
+        DelayUtils.waitForNestedElements(wait, this.tabs, ".//div[contains(@class,'tabsContainerTabs')]");
+        WebElement allTabs = this.tabs.findElement(By.xpath(".//div[contains(@class,'tabsContainerTabs')]"));
+        DelayUtils.waitForNestedElements(wait, allTabs, ".//a[@id='" + id + "']");
+        WebElement tab = allTabs.findElement(By.xpath(".//a[@id='" + id + "']"));
+        wait.until(ExpectedConditions.elementToBeClickable(tab));
+        tab.click();
+
+    }
+
+    @Override
     public void callActionByLabel(String label) {
         ActionsInterface actionsContainer = OldActionsContainer.createFromWidget(driver, wait, this.tabs);
         actionsContainer.callActionByLabel(label);
