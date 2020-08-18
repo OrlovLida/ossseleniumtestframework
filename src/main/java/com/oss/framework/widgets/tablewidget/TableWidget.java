@@ -53,7 +53,7 @@ public class TableWidget extends Widget implements TableInterface {
     private ExpandedTextTooltip expandedTextTooltip;
 
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
-        DelayUtils.waitBy(webDriverWait, By.className(TABLE_WIDGET_CLASS)); //TODO: change to id
+        DelayUtils.waitBy(webDriverWait, By.className(widgetClass)); //TODO: change to id
         //DelayUtils.waitBy(webDriverWait, By.className(PAGINATION_COMPONENT_CLASS));
         return new TableWidget(driver, widgetClass, webDriverWait);
     }
