@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -158,7 +160,7 @@ public class OldTable implements TableInterface {
         WebElement tableBody = this.table.findElement(By.xpath("//div[contains(@class, 'OSSTableComponent')]"));
         List<Column> columns2 =
                 tableBody.findElements(By.xpath("//div[contains(@class,'OSSTableColumn')]"))
-                        .stream().map(columnElement->new Column(columnElement, wait)).collect(Collectors.toList());
+                        .stream().map(columnElement->new Column(columnElement, wait, driver)).collect(Collectors.toList());
         for(Column column: columns2){
             if(column.checkIfLabelExist()){
                 columns.put(column.getLabel(), column);
@@ -172,10 +174,12 @@ public class OldTable implements TableInterface {
     private static class Column {
         private final WebElement column;
         private final WebDriverWait wait;
+        private final WebDriver driver;
 
-        private Column(WebElement column, WebDriverWait wait) {
+        private Column(WebElement column, WebDriverWait wait, WebDriver driver) {
             this.column = column;
             this.wait = wait;
+            this.driver = driver;
         }
 
         private String getLabel(){
@@ -230,7 +234,9 @@ public class OldTable implements TableInterface {
 
         private void clear() {
             WebElement input = column.findElement(By.xpath(".//input"));
-            input.clear();
+            Actions action = new Actions(driver);
+            action.click(input).sendKeys(Keys.chord(Keys.CONTROL, "a")).sendKeys(Keys.DELETE).perform();
+            DelayUtils.sleep();
         }
     }
 
