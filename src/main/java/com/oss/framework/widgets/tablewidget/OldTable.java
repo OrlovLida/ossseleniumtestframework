@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -150,7 +152,7 @@ public class OldTable implements TableInterface {
         for (WebElement element : columns2) {
             DelayUtils.waitForNestedElements(wait, element, ".//span");
             String label = element.findElement(By.xpath(".//span")).getText();
-            columns.put(label, new Column(label, element, wait));
+            columns.put(label, new Column(label, element, wait,driver));
         }
         return columns;
     }
@@ -159,11 +161,13 @@ public class OldTable implements TableInterface {
         private final WebElement column;
         private final String label;
         private final WebDriverWait wait;
+        private final WebDriver driver;
 
-        private Column(String label, WebElement column, WebDriverWait wait) {
+        private Column(String label, WebElement column, WebDriverWait wait, WebDriver driver) {
             this.label = label;
             this.column = column;
             this.wait = wait;
+            this.driver = driver;
         }
 
         private String getLabel() {
@@ -171,6 +175,7 @@ public class OldTable implements TableInterface {
         }
 
         private void selectCell(String value) {
+            DelayUtils.waitByXPath(this.wait, "//div[contains(@class, 'Cell')]//div[contains(@class, 'OSSRichText')]");
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
             for (WebElement cell : cells) {
                 DelayUtils.waitForNestedElements(this.wait, cell, ".//div[contains(@class, 'OSSRichText')]");
@@ -214,7 +219,9 @@ public class OldTable implements TableInterface {
 
         private void clear() {
             WebElement input = column.findElement(By.xpath(".//input"));
-            input.clear();
+            Actions action = new Actions(driver);
+            action.click(input).sendKeys(Keys.chord(Keys.CONTROL, "a")).sendKeys(Keys.DELETE).perform();
+            DelayUtils.sleep();
         }
     }
 
