@@ -31,7 +31,7 @@ public class OldTable implements TableInterface {
 
     public static TableInterface createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
         DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')]");
-        WebElement table = driver.findElement(By.xpath("//div[@id='ip_involved_nrp_group1']"));
+        WebElement table = driver.findElement(By.xpath("//div[@id='"+componentId+"']"));
         return new OldTable(driver, wait, table);
     }
 
