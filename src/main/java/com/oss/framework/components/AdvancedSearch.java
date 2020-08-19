@@ -82,7 +82,7 @@ public class AdvancedSearch {
     public void openSearchPanel() {
         this.webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)).click();
         if (this.searchPanel == null) {
-            DelayUtils.waitBy(this.wait, By.xpath("//*[@class=" + ADVANCED_SEARCH_PANEL_CLASS + "] | //*[@class='filters-box']"));
+            DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
             this.searchPanel = new SearchPanel(this.driver, this.wait);
         }
     }
@@ -90,7 +90,7 @@ public class AdvancedSearch {
     public Input getComponent(String componentId, ComponentType componentType) {
         if (this.searchPanel == null) {
             //openSearchPanel();
-            DelayUtils.waitBy(this.wait, By.xpath("//*[@class=" + ADVANCED_SEARCH_PANEL_CLASS + "] | //*[@class='filters-box']"));
+            DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
             this.searchPanel = new SearchPanel(this.driver, this.wait);
         }
         return this.searchPanel.getComponent(componentId, componentType);
@@ -145,7 +145,7 @@ public class AdvancedSearch {
         private SearchPanel(WebDriver driver, WebDriverWait wait) {
             this.driver = driver;
             this.wait = wait;
-            this.webElement = this.driver.findElement(By.xpath("//*[@class=" + ADVANCED_SEARCH_PANEL_CLASS + "] | //*[@class='filters-box']"));
+            this.webElement = this.driver.findElement(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
         }
 
         private void applyFilter() {
