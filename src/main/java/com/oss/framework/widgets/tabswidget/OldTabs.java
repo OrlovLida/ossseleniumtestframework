@@ -22,6 +22,7 @@ import com.oss.framework.utils.DelayUtils;
 public class OldTabs implements TabsInterface {
     private final WebDriver driver;
     private final WebDriverWait wait;
+    @Deprecated
     private final WebElement tabs;
     private final String id;
 

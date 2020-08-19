@@ -83,6 +83,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
+        DelayUtils.waitForPageToLoad(driver, wait);
         Map<String, Column> columns = createColumnsFilters();
         Column column = columns.get(attributeLabel);
         column.selectCell(value);
@@ -102,7 +103,7 @@ public class OldTable implements TableInterface {
         Column column = columns.get(attributeLabel);
         column.clear();
         column.setValue(value);
-        DelayUtils.waitForNestedElements(wait,this.table, "//*[contains(text(),'"+value+"')]");
+        DelayUtils.waitForPageToLoad(driver, wait);
     }
 
     @Override
