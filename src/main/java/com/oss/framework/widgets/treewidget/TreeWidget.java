@@ -125,10 +125,10 @@ public class TreeWidget extends Widget {
         return this;
     }
 
-    public void expandFirstTreeRow() {
-        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//i[@class='fa-li fa list-plus fa-border']"))));
+    public void expandLastTreeRow() {
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(".//i[@class='fa-li fa list-plus fa-border']"))));
         List<TreeRow> treeRows = getVisibleTreeRow();
-        treeRows.get(0).expandTreeRow();
+        treeRows.get(treeRows.size() - 1).expandTreeRow();
         webDriverWait.until(ExpectedConditions.not(ExpectedConditions
                 .attributeToBe(driver.findElement(By.xpath("//div[@class='TreeRow']/i")), "class", "fa-li fa fa-border fa-spinner fa-spin")));
     }
