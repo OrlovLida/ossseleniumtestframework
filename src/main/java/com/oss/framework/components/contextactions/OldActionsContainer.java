@@ -13,19 +13,19 @@ public class OldActionsContainer implements ActionsInterface {
 
     private static String WINDOW_TOOLBAR_CLASS = "windowToolbar";
 
-    public static ActionsInterface createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
+    public static OldActionsContainer createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitForNestedElements(wait, parent, "//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]");
-        WebElement toolbar = parent.findElement(By.className(WINDOW_TOOLBAR_CLASS));
+        WebElement toolbar = parent.findElement(By.xpath(".//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"));
         return new OldActionsContainer(driver, wait, toolbar);
     }
 
-    public static ActionsInterface createFromWidget(WebDriver driver, WebDriverWait wait, WebElement widget) {
+    public static OldActionsContainer createFromWidget(WebDriver driver, WebDriverWait wait, WebElement widget) {
         DelayUtils.waitForNestedElements(wait, widget, "//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]");
         WebElement toolbar = widget.findElement(By.xpath("./../..//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"));
         return new OldActionsContainer(driver, wait, toolbar);
     }
 
-    private static ActionsInterface createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
+    private static OldActionsContainer createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
         DelayUtils.waitByXPath(wait, xpath);
         WebElement toolbar = driver.findElement(By.xpath(xpath));
         return new OldActionsContainer(driver, wait, toolbar);
