@@ -25,14 +25,6 @@ public class OldTable implements TableInterface {
 
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
 
-    @Deprecated
-    public static OldTable createByWindowTitle(WebDriver driver, WebDriverWait wait, String windowTitle) {
-        DelayUtils.waitByXPath(wait, "//div[contains(text(), '" + windowTitle + "')]");
-        WebElement window = driver.findElement(By.xpath("//div[contains(text(), '" + windowTitle + "')]"));
-        WebElement table = WidgetUtils.findOldWidget(driver, wait, windowTitle, "OSSTableContainer");
-        return new OldTable(driver, wait, table, window);
-    }
-
     public static OldTable createByWindowDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName){
         DelayUtils.waitByXPath(wait, "//div[@class='OssWindow'][@data-attributename='" + dataAttributeName + "']");
         WebElement window = driver.findElement(By.xpath("//div[@class='OssWindow'][@data-attributename='" + dataAttributeName + "']"));
@@ -49,7 +41,8 @@ public class OldTable implements TableInterface {
     public static OldTable createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
         DelayUtils.waitByXPath(wait, "//div[@data-attributename='" + dataAttributeName + "']");
         WebElement table = driver.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']"));
-        return new OldTable(driver, wait, table);
+        WebElement window = table.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
+        return new OldTable(driver, wait, table, window);
     }
 
     private final WebDriver driver;
