@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.oss.framework.components.contextactions.ActionsContainer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.oss.framework.components.Input.ComponentType;
+import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.DelayUtils;
@@ -26,24 +26,23 @@ public class OldTable implements TableInterface {
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
 
     public static TableInterface createByWindowTitle(WebDriver driver, WebDriverWait wait, String windowTitle) {
-
         DelayUtils.waitByXPath(wait, "//div[contains(text(), '" + windowTitle + "')]");
         WebElement window = driver.findElement(By.xpath("//div[contains(text(), '" + windowTitle + "')]"));
         WebElement table = WidgetUtils.findOldWidget(driver, wait, windowTitle, "OSSTableContainer");
         return new OldTable(driver, wait, table, window);
     }
 
-    public static TableInterface createByWindowDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName){
-        DelayUtils.waitByXPath(wait, "//div[@class='OssWindow'][@data-attributename='" + dataAttributeName + "']");
-        WebElement window = driver.findElement(By.xpath("//div[@class='OssWindow'][@data-attributename='" + dataAttributeName + "']"));
-        WebElement table = window.findElement(By.xpath("//.//div[@class='OSSTableContainer']"));
-        return new OldTable(driver, wait, table, window);
-    }
-
     public static TableInterface createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
         DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')]");
-        WebElement table = driver.findElement(By.xpath("//div[@id='"+componentId+"']"));
+        WebElement table = driver.findElement(By.xpath("//div[@id='" + componentId + "']"));
         return new OldTable(driver, wait, table);
+    }
+
+    public static TableInterface createByOssWindow(WebDriver driver, WebDriverWait wait) {
+        DelayUtils.waitByXPath(wait, "//div[@class='OssWindow']");
+        WebElement table = driver.findElement(By.xpath("//div[@class='OSSTableContainer']"));
+        WebElement window = driver.findElement(By.xpath("//div[@class='OssWindow']"));
+        return new OldTable(driver, wait, table, window);
     }
 
     public static TableInterface createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
@@ -104,7 +103,7 @@ public class OldTable implements TableInterface {
         Column column = columns.get(attributeLabel);
         column.clear();
         column.setValue(value);
-        DelayUtils.waitForNestedElements(wait,this.table, "//*[contains(text(),'"+value+"')]");
+        DelayUtils.waitForNestedElements(wait, this.table, "//*[contains(text(),'" + value + "')]");
     }
 
     @Override
@@ -148,7 +147,7 @@ public class OldTable implements TableInterface {
     }
 
     public int getRowNumber(String value, String attributeLabel) {
-        DelayUtils.waitForNestedElements(wait,this.table,"//*[contains(text(),'"+value+"')]");
+        DelayUtils.waitForNestedElements(wait, this.table, "//*[contains(text(),'" + value + "')]");
         Map<String, Column> columns = createColumnsFilters();
         Column column = columns.get(attributeLabel);
         return column.indexOf(value);
@@ -160,11 +159,11 @@ public class OldTable implements TableInterface {
         WebElement tableBody = this.table.findElement(By.xpath(".//div[contains(@class, 'OSSTableComponent')]"));
         List<Column> columns2 =
                 tableBody.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn')]"))
-                        .stream().map(columnElement->new Column(columnElement, wait, driver)).collect(Collectors.toList());
-        for(Column column: columns2){
-            if(column.checkIfLabelExist()){
+                        .stream().map(columnElement -> new Column(columnElement, wait, driver)).collect(Collectors.toList());
+        for (Column column : columns2) {
+            if (column.checkIfLabelExist()) {
                 columns.put(column.getLabel(), column);
-            } else{
+            } else {
                 columns.put("", column);
             }
         }
@@ -182,11 +181,11 @@ public class OldTable implements TableInterface {
             this.driver = driver;
         }
 
-        private String getLabel(){
+        private String getLabel() {
             return this.column.findElement(By.xpath(".//span")).getText();
         }
 
-        private boolean checkIfLabelExist(){
+        private boolean checkIfLabelExist() {
             return this.column.findElements(By.xpath(".//span")).size() > 0;
         }
 
@@ -199,6 +198,7 @@ public class OldTable implements TableInterface {
                 if (richText.getText().equals(value)) {
                     Actions action = new Actions(driver);
                     action.click(cell).perform();
+                    break;
                 }
             }
         }
