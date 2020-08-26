@@ -8,8 +8,9 @@ package com.oss.framework.sidemenu;
 
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -29,27 +30,26 @@ public class SideMenu {
 
     public void goToTabByLeftSideMenu(String tab) {
         String tabXpath = String.format(TAB_NAME_PATH_PATTERN, tab);
-        WebElement tabElement = driver.findElement(By.xpath(tabXpath));
-        DelayUtils.waitByElement(wait, tabElement);
-        tabElement.click();
+        DelayUtils.waitByXPath(wait, tabXpath);
+        driver.findElement(By.xpath(tabXpath)).click();
     }
 
     public void goToProductByLeftSideMenu(String tab, String product) {
         goToTabByLeftSideMenu(tab);
-
         String productXpath = String.format(PRODUCT_NAME_PATH_PATTERN, product);
-        WebElement productElement = driver.findElement(By.xpath(productXpath));
-        DelayUtils.waitByElement(wait, productElement);
-        productElement.click();
+        DelayUtils.waitByXPath(wait, productXpath);
+        driver.findElement(By.xpath(productXpath)).click();
     }
 
     public void goToTechnologyByLeftSideMenu(String tab, String product, String technology) {
         goToProductByLeftSideMenu(tab, product);
-        DelayUtils.sleep(500);
-
         String technologyXpath = String.format(TECHNOLOGY_NAME_PATH_PATTERN, technology);
-        WebElement technologyElement = driver.findElement(By.xpath(technologyXpath));
-        DelayUtils.waitByElement(wait, technologyElement);
-        technologyElement.click();
+        DelayUtils.waitByXPath(wait, technologyXpath);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(driver.findElement(By.xpath(technologyXpath)))
+                .sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN)
+                .pause(500).build().perform();
+        actions.moveToElement(driver.findElement(By.xpath(technologyXpath)))
+                .click().build().perform();
     }
 }
