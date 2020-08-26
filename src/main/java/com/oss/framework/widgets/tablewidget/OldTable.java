@@ -27,41 +27,48 @@ public class OldTable implements TableInterface {
     private static final String REFRESH_BUTTON_LABEL = "";
 
     //to be removed after adding data-attributeName OSSWEB-8398
+    @Deprecated
     public static OldTable createByOssWindow(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[@class='OssWindow']");
         WebElement table = driver.findElement(By.xpath("//div[@class='OSSTableContainer']"));
         WebElement window = driver.findElement(By.xpath("//div[@class='OssWindow']"));
-        return new OldTable(driver, wait, table, window);
+        return new OldTable(driver, wait, null, table, window);
     }
 
     public static OldTable createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
         DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')]");
         WebElement table = driver.findElement(By.xpath("//div[@id='" + componentId + "']"));
-        return new OldTable(driver, wait, table);
+        return new OldTable(driver, wait, componentId, table);
     }
 
     public static OldTable createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
         DelayUtils.waitByXPath(wait, "//div[@data-attributename='" + dataAttributeName + "']");
         WebElement table = driver.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']"));
         WebElement window = table.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
-        return new OldTable(driver, wait, table, window);
+        return new OldTable(driver, wait, dataAttributeName, table, window);
     }
 
     private final WebDriver driver;
     private final WebDriverWait wait;
+    private final String widgetId;
+
+    @Deprecated //TODO:
     private final WebElement table;
+    @Deprecated
     private WebElement window;
 
-    private OldTable(WebDriver driver, WebDriverWait wait, WebElement table, WebElement window) {
+    private OldTable(WebDriver driver, WebDriverWait wait, String widgetId, WebElement table, WebElement window) {
         this.driver = driver;
         this.wait = wait;
+        this.widgetId = widgetId;
         this.table = table;
         this.window = window;
     }
 
-    private OldTable(WebDriver driver, WebDriverWait wait, WebElement table) {
+    private OldTable(WebDriver driver, WebDriverWait wait, String widgetId, WebElement table) {
         this.driver = driver;
         this.wait = wait;
+        this.widgetId = widgetId;
         this.table = table;
     }
 
@@ -144,6 +151,9 @@ public class OldTable implements TableInterface {
 
     @Override
     public void refreshUntilNoData(int waitTime, String refreshLabel) {
+        if(this.widgetId == null) {
+            throw new RuntimeException("widgetId property is missing");
+        }
         long currentTime = System.currentTimeMillis();
         long stopTime = currentTime + waitTime;
         while (isNoData() && stopTime > System.currentTimeMillis()) {
@@ -153,7 +163,7 @@ public class OldTable implements TableInterface {
     }
 
     private boolean isNoData() {
-        List<WebElement> noData =  this.table.findElements(By.xpath("./h3[contains(@class,'noDataWithColumns')]"));
+        List<WebElement> noData = this.driver.findElements(By.xpath("//div[@data-attributename='"+this.widgetId +"']//h3[contains(@class,'noDataWithColumns')]"));
         return !noData.isEmpty();
     }
 
