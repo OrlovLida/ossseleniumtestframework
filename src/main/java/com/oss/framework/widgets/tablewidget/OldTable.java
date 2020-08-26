@@ -24,6 +24,8 @@ import com.oss.framework.utils.WidgetUtils;
 public class OldTable implements TableInterface {
 
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
+    private static final int REFRESH_INTERVAL = 2000;
+    private static final String REFRESH_BUTTON_LABEL = "";
 
     public static OldTable createByWindowDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName){
         DelayUtils.waitByXPath(wait, "//div[@class='OssWindow'][@data-attributename='" + dataAttributeName + "']");
@@ -101,6 +103,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public void callAction(String actionId) {
+        throw new RuntimeException("Not implemented yet");
     }
 
     @Override
@@ -137,6 +140,21 @@ public class OldTable implements TableInterface {
         WebElement foundedElement = this.table.findElement(By.xpath("//a[text()='" + actionName + "']"));
         wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
         foundedElement.click();
+    }
+
+    @Override
+    public void refreshUntilNoData(int waitTime, String refreshLabel) {
+        long currentTime = System.currentTimeMillis();
+        long stopTime = currentTime + waitTime;
+        while (isNoData() && stopTime > System.currentTimeMillis()) {
+            DelayUtils.sleep(REFRESH_INTERVAL);
+            callActionByLabel(refreshLabel);
+        }
+    }
+
+    private boolean isNoData() {
+        List<WebElement> noData =  this.table.findElements(By.xpath("./h3[contains(@class,'noDataWithColumns')]"));
+        return !noData.isEmpty();
     }
 
     public int getRowNumber(String value, String attributeLabel) {

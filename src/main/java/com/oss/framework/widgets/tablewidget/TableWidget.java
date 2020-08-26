@@ -329,6 +329,11 @@ public class TableWidget extends Widget implements TableInterface {
     public void clickOnAction(String actionName){
     }
 
+    @Override
+    public void refreshUntilNoData(int waitTime, String refreshLabel) {
+
+    }
+
     public void typeIntoSearch(String text){ getSearchInput().sendKeys(text); }
 
     public void scrollHorizontally(int offset){
