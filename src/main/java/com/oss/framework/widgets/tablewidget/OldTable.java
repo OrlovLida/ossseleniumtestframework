@@ -19,44 +19,36 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WidgetUtils;
 
 public class OldTable implements TableInterface {
 
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
 
-    public static TableInterface createByWindowTitle(WebDriver driver, WebDriverWait wait, String windowTitle) {
-        DelayUtils.waitByXPath(wait, "//div[contains(text(), '" + windowTitle + "')]");
-        WebElement window = driver.findElement(By.xpath("//div[contains(text(), '" + windowTitle + "')]"));
-        WebElement table = WidgetUtils.findOldWidget(driver, wait, windowTitle, "OSSTableContainer");
-        return new OldTable(driver, wait, table, window);
-    }
-
-    public static TableInterface createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
-        DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')]");
-        WebElement table = driver.findElement(By.xpath("//div[@id='" + componentId + "']"));
-        return new OldTable(driver, wait, table);
-    }
-
-    public static TableInterface createByOssWindow(WebDriver driver, WebDriverWait wait) {
+    //to be removed after adding data-attributeName OSSWEB-8398
+    public static OldTable createByOssWindow(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[@class='OssWindow']");
         WebElement table = driver.findElement(By.xpath("//div[@class='OSSTableContainer']"));
         WebElement window = driver.findElement(By.xpath("//div[@class='OssWindow']"));
         return new OldTable(driver, wait, table, window);
     }
 
-    public static TableInterface createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
+    public static OldTable createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
+        DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')]");
+        WebElement table = driver.findElement(By.xpath("//div[@id='" + componentId + "']"));
+        return new OldTable(driver, wait, table);
+    }
+
+    public static OldTable createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
         DelayUtils.waitByXPath(wait, "//div[@data-attributename='" + dataAttributeName + "']");
         WebElement table = driver.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']"));
-        return new OldTable(driver, wait, table);
+        WebElement window = table.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
+        return new OldTable(driver, wait, table, window);
     }
 
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement table;
     private WebElement window;
-
-    //private final Map<String, Column> columns = Maps.newHashMap();
 
     private OldTable(WebDriver driver, WebDriverWait wait, WebElement table, WebElement window) {
         this.driver = driver;
@@ -84,6 +76,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
+        DelayUtils.waitForPageToLoad(driver, wait);
         Map<String, Column> columns = createColumnsFilters();
         Column column = columns.get(attributeLabel);
         column.selectCell(value);
@@ -103,7 +96,7 @@ public class OldTable implements TableInterface {
         Column column = columns.get(attributeLabel);
         column.clear();
         column.setValue(value);
-        DelayUtils.waitForNestedElements(wait, this.table, "//*[contains(text(),'" + value + "')]");
+        DelayUtils.waitForPageToLoad(driver, wait);
     }
 
     @Override
@@ -237,7 +230,7 @@ public class OldTable implements TableInterface {
         private void clear() {
             WebElement input = column.findElement(By.xpath(".//input"));
             Actions action = new Actions(driver);
-            action.click(input).sendKeys(Keys.chord(Keys.CONTROL, "a")).sendKeys(Keys.DELETE).perform();
+            action.click(input).keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).sendKeys(Keys.DELETE).build().perform();
             DelayUtils.sleep();
         }
     }
