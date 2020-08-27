@@ -31,4 +31,6 @@ public interface TableInterface {
     void clickOnAction(String actionName);
 
     void refreshUntilNoData(int waitTime, String refreshLabel);
+
+    String getEmptyTable(String windowClass);
 }
