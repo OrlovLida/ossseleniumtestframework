@@ -9,6 +9,8 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.utils.DelayUtils;
 
+import java.util.List;
+
 public class TabWindowWidget implements TabsInterface {
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -65,4 +67,9 @@ public class TabWindowWidget implements TabsInterface {
         actionsContainer.callActionById(groupLabel, id);
     }
 
+    @Override
+    public boolean isNoData(String id) {
+        List<WebElement> noData = driver.findElements(By.xpath("//div[@data-attributename='" + id + "']//h3[contains(@class,'noDataWithColumns')]"));
+        return !noData.isEmpty();
+    }
 }

@@ -32,5 +32,4 @@ public interface TableInterface {
 
     void refreshUntilNoData(int waitTime, String refreshLabel);
 
-    String getEmptyTable(String windowClass);
 }
