@@ -174,6 +174,16 @@ public class OldTable implements TableInterface {
         return column.indexOf(value);
     }
 
+    @Override
+    public String getEmptyTable (String windowClass) {
+        DelayUtils.waitByXPath(wait, "//div[@class='"+ windowClass +"']");
+        WebElement window = driver.findElement(By.xpath("//div[@class='"+ windowClass +"']"));
+        WebElement table = window.findElement(By.xpath("//div[@class='OSSTableContainer']"));
+        WebElement noColumns = table.findElement(By.xpath("//h3[@class='noDataWithColumns']"));
+        String value = noColumns.getText();
+        return value;
+    }
+
     private Map<String, Column> createColumnsFilters() {
         Map<String, Column> columns = Maps.newHashMap();
         DelayUtils.waitForNestedElements(wait, this.table, ".//div[contains(@class, 'OSSTableComponent')]");
