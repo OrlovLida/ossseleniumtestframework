@@ -334,6 +334,11 @@ public class TableWidget extends Widget implements TableInterface {
 
     }
 
+    @Override
+    public String getEmptyTable(String windowClass) {
+        return null;
+    }
+
     public void typeIntoSearch(String text){ getSearchInput().sendKeys(text); }
 
     public void scrollHorizontally(int offset){
