@@ -39,6 +39,7 @@ public class MainHeader {
             WebElement headerToolbar = this.toolbar.findElement(By.xpath(".//div[@class='oss-header-toolbar']"));
             DelayUtils.waitForNestedElements(wait, headerToolbar, "//a[contains(@class,'" + label + "')] | //div[contains(@class,'"+ label+"')]");
             WebElement action = headerToolbar.findElement(By.xpath("//a[contains(@class,'" + label + "')] | //div[contains(@class,'"+ label+"')]"));
+            DelayUtils.waitForClickability(wait,action);
             action.click();
 
     }

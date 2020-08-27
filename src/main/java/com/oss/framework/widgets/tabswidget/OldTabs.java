@@ -76,6 +76,7 @@ public class OldTabs implements TabsInterface {
     public void selectTabById(String id) {
 //        DelayUtils.waitForNestedElements(wait, this.tabs, ".//div[contains(@class,'tabsContainerTabs')]");
 //        WebElement allTabs = this.tabs.findElement(By.xpath(".//div[contains(@class,'tabsContainerTabs')]"));
+        DelayUtils.waitForPageToLoad(driver,wait);
         DelayUtils.waitForNestedElements(wait, createTabs(), "//a[@id='" + id + "']");
         WebElement tab = createTabs().findElement(By.xpath(".//a[@id='" + id + "']"));
         wait.until(ExpectedConditions.elementToBeClickable(tab));
