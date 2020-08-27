@@ -45,8 +45,13 @@ public class Combobox extends Input {
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.clear();
         input.sendKeys(value.getStringValue());
-        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item' and @data-attributename='" + value.getStringValue() + "-item']");
-        driver.findElement(By.xpath("//div[@class='combo-box__list-item' and @data-attributename='" + value.getStringValue() + "-item']")).click();
+        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item']");
+        List<WebElement> result = driver.findElements(By.xpath("//div[@class='combo-box__list-item' and @data-attributename='" + value.getStringValue().replace(" ","") + "-item']"));
+        if (result.size()>0)
+            result.get(0).click();
+        else
+            input.sendKeys(Keys.DOWN);
+            input.sendKeys(Keys.RETURN);
     }
 
     public void setFirstValue(Data value){
@@ -57,7 +62,6 @@ public class Combobox extends Input {
         DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item']//*[text()='" + value.getStringValue() + "']");
         input.sendKeys(Keys.DOWN);
         input.sendKeys(Keys.RETURN);
-
     }
 
     @Override
