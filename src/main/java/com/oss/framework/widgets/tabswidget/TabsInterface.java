@@ -22,4 +22,5 @@ public interface TabsInterface {
 
     void callActionById(String id);
 
+    boolean isNoData(String id);
 }

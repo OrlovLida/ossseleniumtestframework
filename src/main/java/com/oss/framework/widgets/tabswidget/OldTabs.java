@@ -100,6 +100,11 @@ public class OldTabs implements TabsInterface {
     }
 
     @Override
+    public boolean isNoData(String id) {
+        return false;
+    }
+
+    @Override
     public void callActionById(String groupId, String id) {
         throw new RuntimeException("Method not implemented for the old tabs");
     }
