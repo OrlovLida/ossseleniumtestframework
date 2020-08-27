@@ -23,13 +23,14 @@ public class OldPropertyPanel implements PropertyPanelInterface{
     private static final String PROPERTY_NAME = ".//div[contains(@class,'OSSRichText')]";
 
 
-
+    protected final WebDriverWait wait;
     protected final WebDriver driver;
     protected final WebElement webElement;
 
 
     private OldPropertyPanel(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
+        this.wait = wait;
         DelayUtils.waitByXPath(wait, PROPERTY_PANEL_PATH);
         this.webElement = driver.findElement(By.className(PROPERTY_PANEL_CLASS));
     }
@@ -39,7 +40,9 @@ public class OldPropertyPanel implements PropertyPanelInterface{
     }
 
     @Override
-    public List<WebElement> getProperties(){return this.webElement.findElements(By.xpath(PROPERTY_PATH));}
+    public List<WebElement> getProperties(){
+        DelayUtils.waitByXPath(wait, PROPERTY_PATH);
+        return this.webElement.findElements(By.xpath(PROPERTY_PATH));}
 
     @Override
     public String getPropertyValue(String propertyName) {
