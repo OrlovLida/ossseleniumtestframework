@@ -45,7 +45,7 @@ public class Combobox extends Input {
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.clear();
         input.sendKeys(value.getStringValue());
-        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item']");
+        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item']//*[text()='" + value.getStringValue() + "']");
         List<WebElement> result = driver.findElements(By.xpath("//div[@class='combo-box__list-item' and @data-attributename='" + value.getStringValue().replace(" ","") + "-item']"));
         if (result.size()>0)
             result.get(0).click();
