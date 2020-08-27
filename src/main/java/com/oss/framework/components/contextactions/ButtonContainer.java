@@ -21,8 +21,8 @@ import com.oss.framework.utils.DelayUtils;
 public class ButtonContainer implements ActionsInterface {
 
     public static ButtonContainer create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, "//div[contains(@class,'commonButtons')]");
-        WebElement buttons = driver.findElement(By.xpath("//div[contains(@class,'commonButtons')]"));
+        DelayUtils.waitByXPath(wait, "//div[contains(@class,'commonButtons')] | //div[class='windowIcons']");
+        WebElement buttons = driver.findElement(By.xpath("//div[contains(@class,'commonButtons')] | //div[class='windowIcons']"));
         return new ButtonContainer(driver, wait, buttons);
     }
 
@@ -38,7 +38,12 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callAction(String actionId) {
-        throw new RuntimeException("Method not implemented for the old actions container Button Container");
+        DelayUtils.waitByXPath(wait, "//*[@data-attributename='" + actionId + "']");
+        Actions action = new Actions(driver);
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
+                buttons.findElement(By.xpath("//*[@data-attributename='" + actionId + "']")))))
+                .click()
+                .perform();
     }
 
     @Override

@@ -29,4 +29,6 @@ public interface TableInterface {
     void clickOnKebabMenu();
 
     void clickOnAction(String actionName);
+
+    void refreshUntilNoData(int waitTime, String refreshLabel);
 }
