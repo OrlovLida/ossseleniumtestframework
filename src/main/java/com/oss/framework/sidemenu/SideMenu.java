@@ -28,12 +28,14 @@ public class SideMenu {
         this.wait = wait;
     }
 
+    @Deprecated
     public void goToTabByLeftSideMenu(String tab) {
         String tabXpath = String.format(TAB_NAME_PATH_PATTERN, tab);
         DelayUtils.waitByXPath(wait, tabXpath);
         driver.findElement(By.xpath(tabXpath)).click();
     }
 
+    @Deprecated
     public void goToProductByLeftSideMenu(String tab, String product) {
         goToTabByLeftSideMenu(tab);
         String productXpath = String.format(PRODUCT_NAME_PATH_PATTERN, product);
@@ -41,6 +43,7 @@ public class SideMenu {
         driver.findElement(By.xpath(productXpath)).click();
     }
 
+    @Deprecated
     public void goToTechnologyByLeftSideMenu(String tab, String product, String technology) {
         goToProductByLeftSideMenu(tab, product);
         String technologyXpath = String.format(TECHNOLOGY_NAME_PATH_PATTERN, technology);
@@ -51,5 +54,9 @@ public class SideMenu {
                 .pause(500).build().perform();
         actions.moveToElement(driver.findElement(By.xpath(technologyXpath)))
                 .click().build().perform();
+    }
+
+    public void callActionByLabel(String actionLabel, String... path) {
+        //TODO:
     }
 }
