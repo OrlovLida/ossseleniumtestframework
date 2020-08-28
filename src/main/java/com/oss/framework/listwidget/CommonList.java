@@ -108,7 +108,7 @@ public class CommonList {
     }
 
     public boolean isEditActionVisible(String name){
-        return driver.findElements(By.xpath(LIST_ELEMENT_XPATH+"[text()='"+ name +"']/../../../.."+EDIT_BUTTON_XPATH)).size()>0;
+        return driver.findElements(By.xpath(LIST_ELEMENT_XPATH+"[text()='"+ name +"']/../../../.." + EDIT_BUTTON_XPATH)).size()>0;
     }
 
     public boolean isFavorite(String name){
@@ -118,7 +118,7 @@ public class CommonList {
     }
 
     public int howManyListElements(){
-        return driver.findElements(By.xpath(LIST_ELEMENT_XPATH)).size();
+        return driver.findElements(By.xpath(LIST_ELEMENT_XPATH + "/../../../../../li[@class='listElement']")).size();
     }
 
     public int howManyCategories(){
