@@ -92,7 +92,7 @@ public class Wizard {
     public void proceed() {
         DelayUtils.waitForNestedElements(wait, webElement, "//a[text()='Proceed']");
         Actions action = new Actions(driver);
-        action.moveToElement(webElement.findElement(By.xpath(".//a[text()='Proceed']"))).click().perform();
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(".//a[text()='Proceed']"))))).click().perform();
     }
 
     public void clickCreate() {
