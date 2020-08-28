@@ -21,7 +21,7 @@ import com.oss.framework.utils.DelayUtils;
 public class ButtonContainer implements ActionsInterface {
 
     public static ButtonContainer create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, "//div[contains(@class,'commonButtons')] | //div[class='windowIcons']");
+        DelayUtils.waitByXPath(wait, "//div[contains(@class,'commonButtons')] | //div[@class='windowIcons']");
         WebElement buttons = driver.findElement(By.xpath("//div[contains(@class,'commonButtons')] | //div[class='windowIcons']"));
         return new ButtonContainer(driver, wait, buttons);
     }

@@ -1,16 +1,20 @@
 package com.oss.framework.components;
 
-import com.oss.framework.data.Data;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.LocatingUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.LocatingUtils;
+
 public class SearchField extends Input {
-    private static final String searchFirstResultXpath = "(//div[@class='ExtendedSearchComponent']//div[contains(@class,'CustomSelectList-data')])[1]";
+
+    private String searchFirstResultXpath(String value) {
+        return "(//div[@class='ExtendedSearchComponent']//div[contains(@class,'CustomSelectList-data')][./*[contains(text(), '" + value + "')]])[1]";
+    }
 
     static SearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new SearchField(driver, wait, componentId);
@@ -40,8 +44,8 @@ public class SearchField extends Input {
         webElement.click();
         DelayUtils.sleep();//wait for cursor
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
-        LocatingUtils.waitUsingXpath(searchFirstResultXpath, webDriverWait);
-        webElement.findElement(By.xpath(searchFirstResultXpath)).click();
+        LocatingUtils.waitUsingXpath(searchFirstResultXpath(value.getStringValue()), webDriverWait);
+        webElement.findElement(By.xpath(searchFirstResultXpath(value.getStringValue()))).click();
     }
 
     @Override
