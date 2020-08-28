@@ -142,7 +142,6 @@ public class AdvancedSearch {
         private final WebDriver driver;
         private final WebDriverWait wait;
         private final WebElement webElement;
-        private final Map<String, Input> components = Maps.newHashMap();
 
         private SearchPanel(WebDriver driver, WebDriverWait wait) {
             this.driver = driver;
@@ -159,13 +158,7 @@ public class AdvancedSearch {
         }
 
         private Input getComponent(String componentId, ComponentType componentType) {
-            if (components.containsKey(componentId)) {
-                return components.get(componentId);
-            }
-
-            Input input = ComponentFactory.createFromParent(componentId, componentType, this.driver, this.wait, this.webElement);
-            components.put(componentId, input);
-            return input;
+            return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
         }
     }
 
