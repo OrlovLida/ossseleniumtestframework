@@ -4,7 +4,7 @@
  * duplication or redistribution of this software is allowed only according to
  * separate agreement prepared in written between Comarch and authorized party.
  */
-package com.oss.framework.components;
+package com.oss.framework.components.inputs;
 
 
 import java.util.ArrayList;
@@ -15,7 +15,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.google.common.collect.Lists;
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
 

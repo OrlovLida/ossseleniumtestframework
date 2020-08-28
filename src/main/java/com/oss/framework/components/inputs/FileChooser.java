@@ -1,4 +1,4 @@
-package com.oss.framework.components;
+package com.oss.framework.components.inputs;
 
 import java.util.ArrayList;
 import java.util.List;

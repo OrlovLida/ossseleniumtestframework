@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.oss.framework.components.Input.ComponentType;
+import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;

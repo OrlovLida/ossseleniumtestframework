@@ -1,4 +1,4 @@
-package com.oss.framework.components;
+package com.oss.framework.components.inputs;
 
 import com.oss.framework.data.Data;
 import org.openqa.selenium.By;
@@ -6,35 +6,34 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class TextField extends Input {
+public class PhoneField extends Input {
 
-    static TextField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new TextField(driver, wait, componentId);
+    static PhoneField create(WebDriver driver, WebDriverWait wait, String phoneFieldId) {
+        return new PhoneField(driver, wait, phoneFieldId);
     }
 
-    static TextField create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new TextField(parent, driver, wait, componentId);
+    static PhoneField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String phoneFieldId) {
+        return new PhoneField(parent, driver, wait, phoneFieldId);
     }
 
-    private TextField(WebDriver driver, WebDriverWait wait, String componentId) {
+    private PhoneField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
 
-    private TextField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+    private PhoneField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         super(parent, driver, wait, componentId);
     }
 
     @Override
     public void setValue(Data value) {
         WebElement input = webElement.findElement(By.xpath(".//input"));
-        input.clear();
         input.sendKeys(value.getStringValue());
-
     }
 
     @Override
     public void setValueContains(Data value) {
-
+        WebElement input = webElement.findElement(By.xpath(".//input"));
+        input.sendKeys(value.getStringValue());
     }
 
     @Override
@@ -46,4 +45,6 @@ public class TextField extends Input {
     public void clear() {
         webElement.findElement(By.xpath(".//input")).clear();
     }
+
+
 }

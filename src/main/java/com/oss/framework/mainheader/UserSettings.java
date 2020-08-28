@@ -6,12 +6,12 @@
  */
 package com.oss.framework.mainheader;
 
-import com.oss.framework.components.Button;
+import com.oss.framework.components.inputs.Button;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.ComponentFactory;
-import com.oss.framework.components.Input;
+import com.oss.framework.components.inputs.ComponentFactory;
+import com.oss.framework.components.inputs.Input;
 import com.oss.framework.prompts.ConfirmationBox;
 import com.oss.framework.prompts.ConfirmationBoxInterface;
 import com.oss.framework.utils.DelayUtils;

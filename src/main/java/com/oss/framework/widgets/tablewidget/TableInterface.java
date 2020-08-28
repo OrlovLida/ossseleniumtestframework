@@ -1,6 +1,6 @@
 package com.oss.framework.widgets.tablewidget;
 
-import com.oss.framework.components.Input;
+import com.oss.framework.components.inputs.Input;
 
 public interface TableInterface {
 

@@ -1,25 +1,30 @@
-package com.oss.framework.components;
+package com.oss.framework.components.inputs;
 
-import com.oss.framework.data.Data;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import com.oss.framework.data.Data;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class MultiSearchField extends Input {
+public class MultiCombobox extends Input {
 
-    static MultiSearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new MultiSearchField(driver, wait, componentId);
+    static MultiCombobox create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new MultiCombobox(driver, wait, componentId);
     }
 
-    static MultiSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new MultiSearchField(parent, driver, wait, componentId);
+    static MultiCombobox createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new MultiCombobox(parent, driver, wait, componentId);
     }
 
-    private MultiSearchField(WebDriver driver, WebDriverWait wait, String componentId) { super(driver, wait, componentId); }
-    private MultiSearchField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId); }
+    private MultiCombobox(WebDriver driver, WebDriverWait wait, String label) {
+        super(driver, wait, label);
+    }
+
+    private MultiCombobox(WebElement parent, WebDriver driver, WebDriverWait wait, String label) {
+        super(parent, driver, wait, label);
+    }
 
     @Override
     public void setValue(Data value) {

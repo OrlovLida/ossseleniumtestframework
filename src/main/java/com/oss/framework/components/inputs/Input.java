@@ -1,4 +1,4 @@
-package com.oss.framework.components;
+package com.oss.framework.components.inputs;
 
 
 import com.oss.framework.components.portals.ComponentMessages;

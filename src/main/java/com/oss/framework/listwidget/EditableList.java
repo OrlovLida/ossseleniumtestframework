@@ -15,8 +15,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.InlineForm;
-import com.oss.framework.components.Input;
+import com.oss.framework.components.inputs.InlineForm;
+import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;

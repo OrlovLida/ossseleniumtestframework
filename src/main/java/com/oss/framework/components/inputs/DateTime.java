@@ -1,4 +1,4 @@
-package com.oss.framework.components;
+package com.oss.framework.components.inputs;
 
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;

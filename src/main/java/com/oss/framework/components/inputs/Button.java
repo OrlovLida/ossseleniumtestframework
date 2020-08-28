@@ -1,4 +1,4 @@
-package com.oss.framework.components;
+package com.oss.framework.components.inputs;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

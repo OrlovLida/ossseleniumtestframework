@@ -1,10 +1,10 @@
-package com.oss.framework.components;
+package com.oss.framework.components.inputs;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.Input.ComponentType;
+import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.DelayUtils;
 
 public class ComponentFactory {
