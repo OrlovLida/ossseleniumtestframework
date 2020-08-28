@@ -143,6 +143,8 @@ public class Wizard {
     public void clickActionById(String actionId){
         DelayUtils.waitForNestedElements(wait,webElement,"//*[@data-attributename='"+actionId+"']");
         Actions action = new Actions(driver);
-        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@data-attributename='"+actionId+"']"))))).click().perform();
+        WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@data-attributename='" + actionId + "']"))));
+        action.moveToElement(foundedElement).click().perform();
+        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 }
