@@ -2,7 +2,7 @@ package com.oss.framework.widgets.tablewidget;
 
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.AdvancedSearch;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.portals.ExpandedTextTooltip;

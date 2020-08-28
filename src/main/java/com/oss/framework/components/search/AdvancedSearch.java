@@ -1,4 +1,4 @@
-package com.oss.framework.components;
+package com.oss.framework.components.search;
 
 import java.util.List;
 import java.util.Map;
