@@ -17,6 +17,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * @author Kamil Szota
  */
 public class SideMenu {
+
+    private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menu__item-label' and text()='%s']";
     private static final String TAB_NAME_PATH_PATTERN = "//span[text()='%s']";
     private static final String PRODUCT_NAME_PATH_PATTERN = "//div[@class='subMenu isExpanded']//span[text()='%s']";
     private static final String TECHNOLOGY_NAME_PATH_PATTERN = "//span[text()='%s']";
@@ -57,6 +59,19 @@ public class SideMenu {
     }
 
     public void callActionByLabel(String actionLabel, String... path) {
-        //TODO:
+        String actionXpath;
+        for(String s:path){
+            actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
+            DelayUtils.waitByXPath(wait, actionXpath);
+            driver.findElement(By.xpath(actionXpath)).click();
+        }
+        actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
+        DelayUtils.waitByXPath(wait, actionXpath);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(driver.findElement(By.xpath(actionXpath)))
+                .sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN)
+                .pause(500).build().perform();
+        actions.moveToElement(driver.findElement(By.xpath(actionXpath)))
+                .click().build().perform();
     }
 }
