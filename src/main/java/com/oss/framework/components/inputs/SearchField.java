@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.data.Data;
@@ -42,6 +43,7 @@ public class SearchField extends Input {
     public void setValue(Data value) {
         DelayUtils.waitForClickability(webDriverWait,webElement);
         webElement.click();
+        clear();
         DelayUtils.sleep();//wait for cursor
         clear();
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
@@ -61,7 +63,8 @@ public class SearchField extends Input {
 
     @Override
     public void clear() {
-        webElement.findElement(By.xpath(".//input")).clear();
+        Actions action = new Actions(driver);
+        action.moveToElement(webElement.findElement(By.xpath(".//input"))).doubleClick().sendKeys(Keys.chord(Keys.CONTROL, "a")).sendKeys(Keys.DELETE).perform();
     }
 
     @Override
