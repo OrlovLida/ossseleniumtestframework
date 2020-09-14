@@ -215,6 +215,10 @@ public class TableWidget extends Widget implements TableInterface {
         getTableRows().get(row).click();
     }
 
+    public boolean checkIfTableIsEmpty(){
+        return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size()>0;
+    }
+
     //TODO: Due to virtual scrolls returns only selected visible rows.
     public List<Row> getSelectedVisibleRows() {
         return getVisibleRows().stream().filter(Row::isSelected).collect(Collectors.toList());
