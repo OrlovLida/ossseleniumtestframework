@@ -1,5 +1,6 @@
 package com.oss.framework.widgets;
 
+import com.oss.framework.components.inputs.Button;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -144,5 +145,12 @@ public class Wizard {
         WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@data-attributename='" + actionId + "']"))));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+    }
+
+    public void clickButtonByLabel(String label){
+        DelayUtils.waitForNestedElements(wait,webElement,"//*[text()='"+label+"']");
+        wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[text()='" + label + "']"))));
+        driver.findElement(By.xpath("//*[text()='" + label + "']")).click();
+
     }
 }
