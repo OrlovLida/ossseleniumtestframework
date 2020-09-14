@@ -2,6 +2,7 @@ package com.oss.framework.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -90,6 +91,30 @@ public class DelayUtils {
         if ((System.currentTimeMillis()-startTime)>120000){
              System.out.println("Page did not load for a two minutes!");
              driver.quit();
+        }
+    }
+
+    public static void waitForPageToLoadWithoutAppPreloader(WebDriver driver, WebDriverWait wait) {
+        DelayUtils.sleep(1500);
+        List<WebElement> spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
+        List<WebElement> loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
+        List<WebElement> preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
+        List<WebElement> newList = new ArrayList<>(spinners);
+        newList.addAll(loadBars);
+        newList.addAll(preloaderWrapper);
+        long startTime = System.currentTimeMillis();
+        while ((newList.size() > 0) && ((System.currentTimeMillis()-startTime) < 120000)) {
+            wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
+            spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
+            loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
+            preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
+            newList = new ArrayList<>(spinners);
+            newList.addAll(loadBars);
+            newList.addAll(preloaderWrapper);
+        }
+        if ((System.currentTimeMillis()-startTime)>120000){
+            System.out.println("Page did not load for a two minutes!");
+            driver.quit();
         }
     }
 

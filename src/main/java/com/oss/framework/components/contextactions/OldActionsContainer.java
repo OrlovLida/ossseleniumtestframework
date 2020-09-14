@@ -76,9 +76,19 @@ public class OldActionsContainer implements ActionsInterface {
                 .perform();
     }
 
-
     @Override
-    public void callActionById(String groupLabel, String actionId) {
-        throw new RuntimeException("Not implemented yet");
+    public void callActionById(String groupId, String actionDataAttributeName) {
+        DelayUtils.waitForNestedElements(wait, toolbar, ".//li[@data-group-id='" + groupId + "']//button");
+        wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(".//li[@data-group-id='" + groupId + "']//button")))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributeName='" + actionDataAttributeName + "']"))).click();
+    }
+
+    public void callActionById(String groupId, String innerGroupId, String actionDataAttributeName) {
+        DelayUtils.waitForNestedElements(wait, toolbar, ".//li[@data-group-id='" + groupId + "']//button");
+        wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(".//li[@data-group-id='" + groupId + "']//button")))).click();
+        Actions action = new Actions(driver);
+        WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath("//a[contains(@data-attributename, '"+innerGroupId+"')]"))));
+        action.moveToElement(foundedElement).perform();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributeName='" + actionDataAttributeName + "']"))).click();
     }
 }
