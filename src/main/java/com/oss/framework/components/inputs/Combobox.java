@@ -36,6 +36,16 @@ public class Combobox extends Input {
         return label.getText();
     }
 
+    public void setValueWithId(Data value, String dataAttributeName) {
+        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
+        WebElement input = webElement.findElement(By.xpath(".//input"));
+        input.clear();
+        input.sendKeys(value.getStringValue());
+        DelayUtils.sleep();
+        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item' and @data-attributename='" + dataAttributeName +"']" );
+        driver.findElement(By.xpath("//div[@class='combo-box__list-item' and @data-attributename='" + dataAttributeName +"']")).click();
+    }
+
     @Override
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");

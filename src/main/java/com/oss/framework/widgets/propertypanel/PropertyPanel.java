@@ -12,7 +12,7 @@ public class PropertyPanel implements PropertyPanelInterface {
 
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
 
-    private static final String PROPERTY_PATH = ".//div[@class='propertyPanelRow']";
+    private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow')]";
     private static final String PROPERTY_NAME_PATH = ".//div[@class='propertyPanelRow-label']";
     private static final String PROPERTY_VALUE_PATH = ".//div[@class='propertyPanelRow-value']";
     private final Map<String, WebElement> properties = Maps.newHashMap();
