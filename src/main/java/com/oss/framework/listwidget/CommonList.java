@@ -20,7 +20,8 @@ public class CommonList {
     private final String ALL_CATEGORY_KEBABS_XPATH ="//div[@class='DropdownList']//div[@id='frameworkObjectButtonsGroup']";
     private final String KEBAB_ID="frameworkObjectButtonsGroup";
     private final String FAVORITE_BUTTON_XPATH=".//button[contains(@class, 'favourite')]";
-    private final String EDIT_BUTTON_XPATH="//button[contains(@class, 'square')]";
+    private final String EDIT_BUTTON_XPATH="//button[contains(@class, 'square')and contains(string(), 'Edit')]";
+    private final String DELETE_BUTTON_XPATH="//button[contains(@class, 'square')and contains(string(), 'Delete')]";
     private final String CATEGORY_XPATH="//div[contains(@class,'categoryLabel')]";
     private final String LIST_ELEMENT_XPATH="//div[@class='text-wrapper']";
     private final String COLLAPSE_ICON_XPATH="//i[contains (@class, 'chevron-up')]";
@@ -129,6 +130,10 @@ public class CommonList {
         return getListElementByName(name).findElement(By.xpath("."+EDIT_BUTTON_XPATH));
     }
 
+    public WebElement getDeleteButtonByListElementName(String name){
+        return getListElementByName(name).findElement(By.xpath("."+DELETE_BUTTON_XPATH));
+    }
+
     public WebElement getFavoriteButtonByListElementName(String name){
         return getListElementByName(name).findElement(By.xpath(FAVORITE_BUTTON_XPATH));
     }
@@ -145,6 +150,6 @@ public class CommonList {
         parent.findElement(By.xpath(".//*[@id='" + parent+ "']"));
     }
 
-    }
+}
 
 

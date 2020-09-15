@@ -14,6 +14,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -60,7 +61,9 @@ public class TableWidget extends Widget implements TableInterface {
 
     private TableWidget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         super(driver, widgetClass, webDriverWait);
-        this.paginationComponent = new PaginationComponent(this.webElement);
+        if(webElement.findElements(By.className(PAGINATION_COMPONENT_CLASS)).size()>0){
+            this.paginationComponent = new PaginationComponent(this.webElement);
+        }
     }
 
     private WebElement getKebabMenuBtn(){
@@ -210,6 +213,10 @@ public class TableWidget extends Widget implements TableInterface {
     public void selectTableRow(int row) {
         this.contextActions = null;
         getTableRows().get(row).click();
+    }
+
+    public boolean checkIfTableIsEmpty(){
+        return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size()>0;
     }
 
     //TODO: Due to virtual scrolls returns only selected visible rows.
