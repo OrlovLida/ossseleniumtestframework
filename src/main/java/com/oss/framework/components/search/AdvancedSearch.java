@@ -30,7 +30,7 @@ public class AdvancedSearch {
     private static final String ADD_BTN_PATH = ".//a[text()='Add']";
     private static final String CANCEL_BTN_PATH = ".//a[text()='Cancel']";
 
-    private static final String TAGS_SEPARATOR = " : ";
+    private static final String TAGS_SEPARATOR = ": ";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -162,6 +162,7 @@ public class AdvancedSearch {
         }
     }
 
+    //TODO: move to the advanced search widget
     public TableWidget getTableWidget() {
         Widget.waitForWidget(wait, "right-side");
         return TableWidget.create(driver, "right-side", wait);

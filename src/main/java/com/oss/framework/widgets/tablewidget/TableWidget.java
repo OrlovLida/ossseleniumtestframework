@@ -63,11 +63,11 @@ public class TableWidget extends Widget implements TableInterface {
         this.paginationComponent = new PaginationComponent(this.webElement);
     }
 
-    public WebElement getKebabMenuBtn(){
+    private WebElement getKebabMenuBtn(){
         return this.webElement.findElement(By.xpath(kebabMenuBtn));
     }
 
-    public WebElement getRowsCounter(){
+    private WebElement getRowsCounter(){
         return this.webElement.findElement(By.xpath(rowsCounter));
     }
 
@@ -84,19 +84,19 @@ public class TableWidget extends Widget implements TableInterface {
         return this.webElement.findElements(By.xpath(cells));
     }
 
-    public WebElement getHorizontalTableScroller(){
+    private WebElement getHorizontalTableScroller(){
         return this.webElement.findElement(By.xpath(horizontalTableScroller));
     }
 
-    public WebElement getVerticalTableScroller(){
+    private WebElement getVerticalTableScroller(){
         return this.webElement.findElement(By.xpath(verticalTableScroller));
     }
 
-    public List<WebElement> getColumnResizeGrips(){
+    private List<WebElement> getColumnResizeGrips(){
         return this.webElement.findElements(By.xpath(columnResizeGrips));
     }
 
-    public List<WebElement> getExpanders(){
+    private List<WebElement> getExpanders(){
         return this.webElement.findElements(By.xpath(expanders));
     }
 

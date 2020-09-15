@@ -56,7 +56,8 @@ public class SideMenu {
                 .click().build().perform();
     }
 
-    public void callActionByLabel(String actionLabel, String... path) {
+    public void callActionByLabel(String actionLabel, String... labelPath) {
+        throw new RuntimeException("not implemented yet");
         //TODO:
     }
 }

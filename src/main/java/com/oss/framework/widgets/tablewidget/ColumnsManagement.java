@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+@Deprecated
 public class ColumnsManagement {
 
     private static final String APPLY_BTN_PATH =".//a[@class='CommonButton btn btn-primary btn-md']";
