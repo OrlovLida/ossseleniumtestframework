@@ -6,13 +6,17 @@
  */
 package com.oss.framework.widgets.tabswidget;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.DelayUtils;
 
@@ -74,13 +78,21 @@ public class OldTabs implements TabsInterface {
 
     @Override
     public void selectTabById(String id) {
-//        DelayUtils.waitForNestedElements(wait, this.tabs, ".//div[contains(@class,'tabsContainerTabs')]");
-//        WebElement allTabs = this.tabs.findElement(By.xpath(".//div[contains(@class,'tabsContainerTabs')]"));
         DelayUtils.waitForPageToLoad(driver,wait);
-        DelayUtils.waitForNestedElements(wait, createTabs(), "//a[@id='" + id + "']");
-        WebElement tab = createTabs().findElement(By.xpath(".//a[@id='" + id + "']"));
-        wait.until(ExpectedConditions.elementToBeClickable(tab));
-        tab.click();
+        if (isMoreVisible()) {
+            WebElement moreTab = createTabs().findElement(By.xpath("//div[@class= 'dropdown-tab']"));
+            wait.until(ExpectedConditions.elementToBeClickable(moreTab));
+            moreTab.click();
+            DelayUtils.waitByXPath(wait, ".//a[@id='" + id + "']");
+            WebElement tab = driver.findElement(By.xpath(".//a[@id='" + id + "']"));
+            wait.until(ExpectedConditions.elementToBeClickable(tab));
+            tab.click();
+        }
+        else {
+            WebElement tab = createTabs().findElement(By.xpath(".//a[@id='" + id + "']"));
+            wait.until(ExpectedConditions.elementToBeClickable(tab));
+            tab.click();
+        }
 
     }
 
@@ -97,7 +109,9 @@ public class OldTabs implements TabsInterface {
 
     @Override
     public void callActionById(String id) {
-        throw new RuntimeException("Method not implemented for the old tabs");
+        ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, wait, createTabs());
+        actionsContainer.callActionById(id);
+
     }
 
     @Override
@@ -108,5 +122,10 @@ public class OldTabs implements TabsInterface {
     @Override
     public void callActionById(String groupId, String id) {
         throw new RuntimeException("Method not implemented for the old tabs");
+    }
+    private boolean isMoreVisible(){
+        DelayUtils.waitForNestedElements(wait,createTabs(),"//div[@class= 'tabsContainerTabs']");
+        List<WebElement> isMore = createTabs().findElements(By.xpath("//div[@class= 'dropdown-tab']"));
+        return !isMore.isEmpty();
     }
 }
