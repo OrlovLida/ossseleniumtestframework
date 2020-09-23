@@ -30,17 +30,21 @@ public class TabWindowWidget implements TabsInterface {
     }
 
     @Override
-    public void selectTabByLabel(String ariaControl) {
+    public void selectTabByLabel(String tabLabel) {
         DelayUtils.waitForNestedElements(wait, this.tabs, "//div[@class='OssWindow tabWindow']");
         WebElement allTabs = this.tabs.findElement(By.xpath("//ul[@role='tablist']"));
-        DelayUtils.waitForNestedElements(wait, allTabs, "//button[@aria-controls='" + ariaControl + "']");
-        WebElement tab = allTabs.findElement(By.xpath("//button[@aria-controls='" + ariaControl + "']"));
+        DelayUtils.waitForNestedElements(wait, allTabs, ".//button[@class='oss-tab']//div[contains(text(),'"+tabLabel+"')]");
+        WebElement tab = allTabs.findElement(By.xpath(".//button[@class='oss-tab']//div[contains(text(),'"+tabLabel+"')]"));
         tab.click();
     }
 
     @Override
-    public void selectTabById(String id) {
-        throw new RuntimeException("Method not implemented for the Tab Window Widget");
+    public void selectTabById(String ariaControls) {
+        DelayUtils.waitForNestedElements(wait, this.tabs, "//div[@class='OssWindow tabWindow']");
+        WebElement allTabs = this.tabs.findElement(By.xpath("//ul[@role='tablist']"));
+        DelayUtils.waitForNestedElements(wait, allTabs, "//button[@aria-controls='" + ariaControls + "']");
+        WebElement tab = allTabs.findElement(By.xpath("//button[@aria-controls='" + ariaControls + "']"));
+        tab.click();
     }
 
     @Override
