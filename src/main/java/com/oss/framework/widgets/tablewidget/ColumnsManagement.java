@@ -26,7 +26,7 @@ public class ColumnsManagement {
 
     private ColumnsManagement (WebDriver driver) {
         this.driver = driver;
-        this.webElement = driver.findElement(By.id("columns-management"));
+        this.webElement = driver.findElement(By.id("attributes-management"));
     }
 
     public void clickApply(){

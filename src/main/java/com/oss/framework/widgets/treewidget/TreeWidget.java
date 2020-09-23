@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.oss.framework.components.inputs.Checkbox;
+import com.oss.framework.components.inputs.ComponentFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -15,6 +17,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
+
+import static com.oss.framework.components.inputs.Input.ComponentType.CHECKBOX;
 
 public class TreeWidget extends Widget {
     //TODO: fix order of variables and methods
@@ -45,6 +49,24 @@ public class TreeWidget extends Widget {
     public List<Node> getVisibleNodes() {
         return this.webElement.findElements(By.className("tree-node")).stream()
                 .map(Node::new).collect(Collectors.toList());
+    }
+
+    public void setValueOnCheckboxByNodeLabel(String nodeLabel, boolean checkboxValue){
+        Actions action = new Actions(driver);
+        action.moveToElement(getNodeByLabel(nodeLabel)).perform();
+         if (getNodeByLabel(nodeLabel).findElements(By.xpath(".//input[@checked]")).size()>0 == !checkboxValue)
+             getNodeByLabel(nodeLabel).findElement(By.xpath(".//input/..")).click();
+    }
+
+    private WebElement getNodeByLabel(String nodeLabel){
+        DelayUtils.waitForVisibility(webDriverWait, webElement.findElement(By.xpath(".//div[text()='" + nodeLabel + "']/ancestor::div[@class='tree-node']")));
+        return this.webElement.findElement(By.xpath(".//div[text()='" + nodeLabel + "']/ancestor::div[@class='tree-node']"));
+    }
+
+    private WebElement getCheckboxByNodeLabel(String nodeLabel){
+        getNodeByLabel(nodeLabel).findElement(By.xpath(".//input"));
+        ComponentFactory.createFromParent("a", CHECKBOX, driver, webDriverWait, getNodeByLabel(nodeLabel));
+        return getNodeByLabel(nodeLabel).findElement(By.xpath(".//input"));
     }
 
     public void selectFirstTreeRow() {
