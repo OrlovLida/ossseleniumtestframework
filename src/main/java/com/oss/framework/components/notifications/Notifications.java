@@ -14,6 +14,7 @@ public class Notifications implements NotificationsInterface {
     private static final By NOTIFICATION_OPENED = By.xpath("//a[@class='clicked notificationType badge']");
     private static final By NOTIFICATION_CLOSED = By.xpath("//a[@class='notificationType badge']");
     private static final By EMPTY_NOTIFICATION = By.xpath("//div[@class='notificationEmpty']");
+    private static final By NOTIFICATION_LIST = By.xpath("//div[@class='notificationContainer']/div");
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -57,6 +58,11 @@ public class Notifications implements NotificationsInterface {
             openNotificationContainer();
             driver.findElement(CLEAR_NOTIFICATION).click();
         }
+    }
+
+    @Override
+    public int getAmountOfNotifications(){
+        return driver.findElements(NOTIFICATION_LIST).size();
     }
 
     private void openNotificationContainer() {

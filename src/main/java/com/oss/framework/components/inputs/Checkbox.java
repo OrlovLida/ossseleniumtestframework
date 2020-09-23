@@ -37,10 +37,7 @@ public class Checkbox extends Input {
 
     private void setCheckBoxValue(Data value) {
         Boolean valueToSet = Boolean.valueOf(value.getStringValue());
-        if(valueToSet && !isChecked()) {
-            this.webElement.findElement(By.className("checkbox-cont")).click();
-        }
-        if(!valueToSet && isChecked()) {
+        if(!valueToSet.equals(isChecked())) {
             this.webElement.findElement(By.className("checkbox-cont")).click();
         }
     }
