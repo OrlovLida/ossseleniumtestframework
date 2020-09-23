@@ -5,4 +5,6 @@ public interface NotificationsInterface {
     String waitAndGetFinishedNotificationText();
 
     void clearAllNotification();
+
+    int getAmountOfNotifications();
 }

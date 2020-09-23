@@ -8,13 +8,13 @@ import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.portals.ExpandedTextTooltip;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.LocatingUtils;
 import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String checkboxes = ".//div[contains(@class,'stickyColumn')]//div[contains(@class, 'Row')]";
     private static final String tableRows = ".//div[@class='TableBody']//div[@class='custom-scrollbars']//div[contains(@class, 'Row')]";
     private static final String columnResizeGrips = ".//div[@class='resizeGrip']";
-    private static final String headers = ".//div[@class='headerItem']";
+    private static final String headers = ".//div[@class='headerItem text-align']";
     private static final String gearIcon = ".//i[contains(@class,'fa-cog')]";
     private static final String horizontalTableScroller = ".//div[contains(@style,'position: relative; display: block; height: 100%; cursor: pointer;')]";
 
@@ -103,9 +103,23 @@ public class TableWidget extends Widget implements TableInterface {
         return this.webElement.findElements(By.xpath(expanders));
     }
 
-    //TODO:
-    private List<WebElement> getColumnHeaders(){
+    public List<WebElement> getColumnHeaders(){
         return this.webElement.findElements(By.xpath(headers));
+    }
+
+    public String getColumnHeaderName(int index){
+        return getColumnHeaders().get(index).findElement(By.xpath(".//p")).getText();
+    }
+
+    public WebElement getColumnByLabel(String label){
+        return driver.findElement(By.xpath(".//p[text()='" + label +"']/ancestor::div[@class='headerItem text-align']"));
+    }
+
+    public void changeColumnPosition(WebElement source, WebElement target){
+        Actions action = new Actions(driver);
+        source = source.findElement(By.xpath(".//div[@class = 'btn-drag']"));
+        action.moveToElement(source).perform();
+        DragAndDrop.dragAndDrop(source, target, driver);
     }
 
     public List<String> getActiveColumns() {

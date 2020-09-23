@@ -1,5 +1,6 @@
 package com.oss.framework.components.inputs;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,6 +27,14 @@ public class Switcher extends Input {
 
     @Override
     public void setValue(Data value) {
+        setSwitcherValue(value);
+    }
+
+    private void setSwitcherValue(Data value){
+        Boolean valueToSet = Boolean.valueOf(value.getStringValue());
+        if(!valueToSet.equals(isSwitched())) {
+            this.webElement.findElement(By.className("switcher-inner")).click();
+        }
     }
 
     @Override
@@ -36,6 +45,12 @@ public class Switcher extends Input {
     @Override
     public Data getValue() {
         return null;
+    }
+
+
+    private boolean isSwitched() {
+        String switched = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
+        return switched.equals("true");
     }
 
     @Override
