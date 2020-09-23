@@ -18,6 +18,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -353,6 +354,11 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void refreshUntilNoData(int waitTime, String refreshLabel) {
 
+    }
+
+    @Override
+    public Map<String, String> getPropertyNamesToValues() {
+        throw new RuntimeException("Not implemented for TableWidget");
     }
 
     public void typeIntoSearch(String text){ getSearchInput().sendKeys(text); }
