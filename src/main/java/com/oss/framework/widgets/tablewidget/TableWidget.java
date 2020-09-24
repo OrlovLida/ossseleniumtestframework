@@ -281,6 +281,10 @@ public class TableWidget extends Widget implements TableInterface {
         input.setSingleStringValueContains(value);
     }
 
+    public String getAttribute(int rowIndex, String attribute){
+        return getTableRows().get(rowIndex).getAttribute(attribute);
+    }
+
     @Override
     public void selectRow(int row) {
 
