@@ -2,6 +2,8 @@ package com.oss.framework.widgets.tablewidget;
 
 import com.oss.framework.components.inputs.Input;
 
+import java.util.Map;
+
 public interface TableInterface {
 
     void selectRow(int row);
@@ -32,4 +34,5 @@ public interface TableInterface {
 
     void refreshUntilNoData(int waitTime, String refreshLabel);
 
+    Map<String, String> getPropertyNamesToValues();
 }

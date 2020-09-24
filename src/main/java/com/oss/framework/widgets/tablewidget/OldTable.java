@@ -1,7 +1,9 @@
 package com.oss.framework.widgets.tablewidget;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -25,6 +27,10 @@ public class OldTable implements TableInterface {
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
     private static final int REFRESH_INTERVAL = 2000;
     private static final String REFRESH_BUTTON_LABEL = "";
+
+    private static final String PROPERTY_NAME_PATTERN = "//div[contains(@class, 'OSSTableColumn Col_PropertyName')]/div[contains(@class,'Cell Row_%s')]";
+    private static final String PROPERTY_VALUE_PATTERN = "//div[contains(@class, 'OSSTableColumn Col_PropertyValue')]/div[contains(@class,'Cell Row_%s')]";
+    private static final String EXPAND_PROPERTIES_BUTTON_PATH = "//div[contains(@class, 'tabWindow')]//a[contains(@class, 'fullScreenButton')]";
 
     //to be removed after adding data-attributeName OSSWEB-8398
     @Deprecated
@@ -160,6 +166,34 @@ public class OldTable implements TableInterface {
             DelayUtils.sleep(REFRESH_INTERVAL);
             callActionByLabel(refreshLabel);
         }
+    }
+
+    public Map<String, String> getPropertyNamesToValues() {
+        int index = 0;
+        clickExpandPropertiesButton();
+        String propertyNamePath = String.format(PROPERTY_NAME_PATTERN, index);
+        String propertyValuePath = String.format(PROPERTY_VALUE_PATTERN, index);
+        Optional<WebElement> propertyName = driver.findElements(By.xpath(propertyNamePath)).stream().findFirst();
+        Optional<WebElement> propertyValue = driver.findElements(By.xpath(propertyValuePath)).stream().findFirst();
+        Map<String, String> namesToValues = new HashMap<>();
+        while (propertyName.isPresent() && propertyValue.isPresent()) {
+            index++;
+            String propertyNameText = propertyName.get().getText();
+            String propertyValueText = propertyValue.get().getText();
+            namesToValues.put(propertyNameText, propertyValueText);
+            propertyNamePath = String.format(PROPERTY_NAME_PATTERN, index);
+            propertyValuePath = String.format(PROPERTY_VALUE_PATTERN, index);
+            propertyName = driver.findElements(By.xpath(propertyNamePath)).stream().findFirst();
+            propertyValue = driver.findElements(By.xpath(propertyValuePath)).stream().findFirst();
+        }
+        clickExpandPropertiesButton();
+        return namesToValues;
+    }
+
+    private void clickExpandPropertiesButton() {
+        WebElement expandButton = driver.findElement(By.xpath(EXPAND_PROPERTIES_BUTTON_PATH));
+        expandButton.click();
+        DelayUtils.waitForPageToLoad(driver, wait);
     }
 
     private boolean isNoData() {
