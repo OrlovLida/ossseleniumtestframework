@@ -76,54 +76,54 @@ public class ComponentFactory {
         DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
 
         switch(componentType) {
-//            case CHECKBOX : {
-//                return Checkbox.create(webDriver, wait, componentId);
-//            }
+            case CHECKBOX : {
+                return Checkbox.create(webDriver, wait, componentId);
+            }
             case COMBOBOX : {
                 return Combobox.create(webDriver, wait, componentId);
             }
-//            case COORDINATES : {
-//                return Coordinates.create(webDriver, wait, componentId);
-//            }
-//            case DATE : {
-//                return Date.create(webDriver, wait, componentId);
-//            }
-//            case DATE_TIME : {
-//                return DateTime.create(webDriver, wait, componentId);
-//            }
-//            case DATE_TIME_RANGE : {
-//                return DateTimeRange.create(webDriver, wait, componentId);
-//            }
-//            case MULTI_COMBOBOX : {
-//                return MultiCombobox.create(webDriver, wait, componentId);
-//            }
-//            case MULTI_SEARCH_FIELD : {
-//                return MultiSearchField.create(webDriver, wait, componentId);
-//            }
-//            case NUMBER_FIELD : {
-//                return NumberField.create(webDriver, wait, componentId);
-//            }
-//            case PASSWORD_FIELD : {
-//                return PasswordField.create(webDriver, wait, componentId);
-//            }
-//            case PHONE_FIELD : {
-//                return PhoneField.create(webDriver, wait, componentId);
-//            }
-//            case SEARCH_FIELD : {
-//                return SearchField.create(webDriver, wait, componentId);
-//            }
-//            case SWITCHER : {
-//                return Switcher.create(webDriver, wait, componentId);
-//            }
-//            case TEXT_AREA : {
-//                return TextArea.create(webDriver, wait, componentId);
-//            }
+            case COORDINATES : {
+                return Coordinates.create(webDriver, wait, componentId);
+           }
+            case DATE : {
+                return Date.create(webDriver, wait, componentId);
+            }
+            case DATE_TIME : {
+                return DateTime.create(webDriver, wait, componentId);
+            }
+            case DATE_TIME_RANGE : {
+                return DateTimeRange.create(webDriver, wait, componentId);
+            }
+            case MULTI_COMBOBOX : {
+                return MultiCombobox.create(webDriver, wait, componentId);
+            }
+            case MULTI_SEARCH_FIELD : {
+                return MultiSearchField.create(webDriver, wait, componentId);
+            }
+            case NUMBER_FIELD : {
+                return NumberField.create(webDriver, wait, componentId);
+            }
+            case PASSWORD_FIELD : {
+                return PasswordField.create(webDriver, wait, componentId);
+            }
+            case PHONE_FIELD : {
+                return PhoneField.create(webDriver, wait, componentId);
+            }
+            case SEARCH_FIELD : {
+                return SearchField.create(webDriver, wait, componentId);
+            }
+           case SWITCHER : {
+                return Switcher.create(webDriver, wait, componentId);
+            }
+           case TEXT_AREA : {
+                return TextArea.create(webDriver, wait, componentId);
+           }
             case TEXT_FIELD : {
                 return TextField.create(webDriver, wait, componentId);
             }
-//            case TIME : {
-//                return Time.create(webDriver, wait, componentId);
-//            }
+            case TIME : {
+                return Time.create(webDriver, wait, componentId);
+            }
         }
 
         throw new RuntimeException("Not supported component type: " + componentType);

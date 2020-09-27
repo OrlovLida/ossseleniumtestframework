@@ -2,6 +2,7 @@ package com.oss.framework.components.inputs;
 
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.data.Data;
+import com.oss.framework.data.Data.DataWrapper;
 import com.oss.framework.utils.DelayUtils;
 
 import org.openqa.selenium.By;
@@ -36,42 +37,31 @@ public class Combobox extends Input {
         return label.getText();
     }
 
-    public void setValueWithId(Data value, String dataAttributeName) {
-        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
-        WebElement input = webElement.findElement(By.xpath(".//input"));
-        input.clear();
-        input.sendKeys(value.getStringValue());
-        DelayUtils.sleep();
-        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item' and @data-attributename='" + dataAttributeName +"']" );
-        driver.findElement(By.xpath("//div[@class='combo-box__list-item' and @data-attributename='" + dataAttributeName +"']")).click();
-    }
-
     @Override
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
+        DataWrapper wrapper = value.getWrapper();
+
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.clear();
-        input.sendKeys(value.getStringValue());
-        DelayUtils.sleep();
-        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item']//*[text()='" + value.getStringValue() + "']");
-        List<WebElement> result = driver.findElements(By.xpath("//div[@class='combo-box__list-item' and @data-attributename='" + value.getStringValue().replace(" ","") + "-item']"));
-        if (result.size()>0){
-            result.get(0).click();
-        }
-        else {
+        input.sendKeys(wrapper.getReadableValue());
+
+        if(wrapper.isFindFirst()) {
+            DelayUtils.sleep(); //TODO: wait for spinners
             input.sendKeys(Keys.DOWN);
             input.sendKeys(Keys.RETURN);
+            return;
         }
-    }
 
-    public void setFirstValue(Data value){
-        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
-        WebElement input = webElement.findElement(By.xpath(".//input"));
-        input.clear();
-        input.sendKeys(value.getStringValue());
-        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item']//*[text()='" + value.getStringValue() + "']");
-        input.sendKeys(Keys.DOWN);
-        input.sendKeys(Keys.RETURN);
+        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item']//*[text()='" + wrapper.getReadableValue() + "']");
+        List<WebElement> results = driver.findElements(By.xpath("//div[@class='combo-box__list-item']"));
+        for(WebElement element : results) {
+            if(wrapper.getReadableValue().equals(element.getText())) {
+                element.click();
+                return;
+            }
+        }
+        throw new RuntimeException("Cant find element: " + wrapper.getReadableValue());
     }
 
     @Override
