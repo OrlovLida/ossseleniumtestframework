@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
@@ -82,6 +83,41 @@ public class OldTable implements TableInterface {
     public void selectRow(int row) {
         Map<String, Column> columns = createColumnsFilters();
         Lists.newArrayList(columns.values()).get(0).selectCell(0);
+    }
+
+    @Override
+    public int getColumnSize(int column) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public void resizeColumn(int column, int offset) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public List<String> getActiveColumnHeaders() {
+        return null;
+    }
+
+    @Override
+    public void disableColumn(String columnId) {
+
+    }
+
+    @Override
+    public void disableColumnByLabel(String columnLabel) {
+
+    }
+
+    @Override
+    public void enableColumnByLabel(String columnLabel) {
+
+    }
+
+    @Override
+    public void changeColumnsOrder(String columnLabel, int position) {
+
     }
 
     @Override
@@ -168,6 +204,11 @@ public class OldTable implements TableInterface {
         }
     }
 
+    @Override
+    public Multimap<String, String> getAppliedFilters() {
+        throw new RuntimeException("Not implemented yet");
+    }
+
     public Map<String, String> getPropertyNamesToValues() {
         int index = 0;
         clickExpandPropertiesButton();
@@ -188,6 +229,11 @@ public class OldTable implements TableInterface {
         }
         clickExpandPropertiesButton();
         return namesToValues;
+    }
+
+    @Override
+    public List<TableRow> getSelectedRows() {
+        throw new RuntimeException("not implemented yet");
     }
 
     private void clickExpandPropertiesButton() {
