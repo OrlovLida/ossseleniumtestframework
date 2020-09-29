@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
     public static final String PAGINATION_COMPONENT_CLASS = "OSSPagination";
-
+    private static final String ATTRIBUTES_MANAGEMENT_XPATH = "//div[@id='attributes-management']";
 //    private static final String PATH = "//div[@class='TableWidget']";
 //    private static final String FILTER_ICON_PATH =".//i[@class='fa fa-filter']";
 //    private static final String filterTiles = ".//span[@class='md-input-value']";
@@ -35,7 +35,7 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String tableRows = ".//div[@class='TableBody']//div[@class='custom-scrollbars']//div[contains(@class, 'Row')]";
     private static final String columnResizeGrips = ".//div[@class='resizeGrip']";
     private static final String headers = ".//div[@class='headerItem text-align']";
-    private static final String gearIcon = ".//i[contains(@class,'fa-cog')]";
+    private static final String gearIcon = ".//div[@id='management-btn']";
     private static final String horizontalTableScroller = ".//div[contains(@style,'position: relative; display: block; height: 100%; cursor: pointer;')]";
 
     private static final String verticalTableScroller = ".//div[contains(@style,'position: relative; display: block; width: 100%; cursor: pointer;')]";
@@ -77,7 +77,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void selectRow(int row) {
-        selectTableRow(0);
+        selectTableRow(row);
     }
 
     @Override
@@ -189,10 +189,22 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void changeColumnsOrder(String columnLabel, int position){
-//        Actions action = new Actions(driver);
-//        source = source.findElement(By.xpath(".//div[@class = 'btn-drag']"));
-//        action.moveToElement(source).perform();
-//        DragAndDrop.dragAndDrop(source, target, driver);
+        changeColumnsPosition(getColumnByLabel(columnLabel), getColumns().get(position).getWebElement());
+    }
+
+    public void changeColumnsOrder(String sourceColumnLabel, String targetColumnLabel){
+        changeColumnsPosition(getColumnByLabel(sourceColumnLabel), getColumnByLabel(targetColumnLabel));
+    }
+
+    public void changeColumnsOrder(int sourcePosition, int targetPosition){
+        changeColumnsPosition(getColumns().get(sourcePosition).getWebElement(), getColumns().get(targetPosition).getWebElement());
+    }
+
+    private void changeColumnsPosition(WebElement source, WebElement target){
+        Actions action = new Actions(driver);
+        WebElement sourceBtn = source.findElement(By.xpath(".//div[@class = 'btn-drag']"));
+        action.moveToElement(sourceBtn).perform();
+        DragAndDrop.dragAndDrop(sourceBtn, target, driver);
     }
 
     private List<Column> getColumns() {
@@ -201,8 +213,9 @@ public class TableWidget extends Widget implements TableInterface {
         return elements.stream().map(Column::new).collect(Collectors.toList());
     }
 
-    private AttributesChooser getAttributesChooser() {
-        this.webElement.findElement(By.xpath(gearIcon)).click();
+    public AttributesChooser getAttributesChooser() {
+        if(!this.webElement.findElement(By.xpath(gearIcon)).getClass().equals("open")){
+        this.webElement.findElement(By.xpath(gearIcon)).click();}
         return AttributesChooser.create(driver, webDriverWait);
     }
 
@@ -250,8 +263,6 @@ public class TableWidget extends Widget implements TableInterface {
     private List<WebElement> getExpanders(){
         return this.webElement.findElements(By.xpath(expanders));
     }
-
-
 
     public WebElement getColumnByLabel(String label){
         return driver.findElement(By.xpath(".//p[text()='" + label +"']/ancestor::div[@class='headerItem text-align']"));
