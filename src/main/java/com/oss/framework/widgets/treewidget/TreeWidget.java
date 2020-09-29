@@ -70,18 +70,18 @@ public class TreeWidget extends Widget {
     }
 
     public void selectFirstTreeRow() {
-        DelayUtils.waitForVisibility(webDriverWait, driver.findElement(By.xpath("//div[@class='TreeRow'][1]")));
+        DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//div[@class='TreeRow'][1]"));
         List<TreeRow> treeRows = getVisibleTreeRow();
         treeRows.get(0).click();
     }
 
     public void selectTreeRow(String name) {
-        DelayUtils.waitForClickability(webDriverWait, this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + name + "']")));
+        DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//p[@class='TreeViewLabel'][text()='" + name + "']"));
         this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + name + "']")).click();
     }
 
     public void selectTreeRowContains(String name) {
-        DelayUtils.waitForClickability(webDriverWait, this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]")));
+        DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]"));
         this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]")).click();
     }
 

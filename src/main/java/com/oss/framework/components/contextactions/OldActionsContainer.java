@@ -80,6 +80,7 @@ public class OldActionsContainer implements ActionsInterface {
     public void callActionById(String groupId, String actionDataAttributeName) {
         DelayUtils.waitForNestedElements(wait, toolbar, ".//li[@data-group-id='" + groupId + "']//button");
         wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(".//li[@data-group-id='" + groupId + "']//button")))).click();
+        DelayUtils.waitForNestedElements(wait, toolbar, "//a[@data-attributeName='" + actionDataAttributeName + "']");
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributeName='" + actionDataAttributeName + "']"))).click();
     }
 
