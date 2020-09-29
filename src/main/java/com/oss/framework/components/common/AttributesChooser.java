@@ -33,6 +33,20 @@ public class AttributesChooser {
         this.attributesChooser = attributesChooser;
     }
 
+    public AttributesChooser disableColumnByLabel(String columnLabel) {
+        if(isAttributeSelectedByLabel(columnLabel)) {
+            toggleAttributeByLabel(columnLabel);
+        }
+        return this;
+    }
+
+    public AttributesChooser enableColumnByLabel(String columnLabel) {
+        if(!isAttributeSelectedByLabel(columnLabel)) {
+            toggleAttributeByLabel(columnLabel);
+        }
+        return this;
+    }
+
     public List<Attribute> getAttributes() {
         return null;
     }
@@ -83,7 +97,7 @@ public class AttributesChooser {
     }
 
     public void clickCancel() {
-
+        this.attributesChooser.findElement(By.xpath(".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]")).click();
     }
 
     public static class Attribute {

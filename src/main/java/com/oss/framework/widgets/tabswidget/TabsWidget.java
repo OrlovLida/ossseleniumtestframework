@@ -1,14 +1,18 @@
 package com.oss.framework.widgets.tabswidget;
 
 import com.google.common.collect.Maps;
+import com.oss.framework.components.common.AttributesChooser;
+import com.oss.framework.components.common.WidgetChooser;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.tablewidget.TableWidget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,6 +26,11 @@ public class TabsWidget implements TabsInterface {
 
     private final String tabs = ".//a";
     private final String activeTab = ".//a[contains(@class,'active')]";
+    private final String addTabIcon = ".//i[@class ='OSSIcon fa fa-plus')]";
+    private final String saveTabIcon = ".//i[@class ='OSSIcon fa fa-save')]";
+    private final String downloadConfigurationIcon = ".//i[@class ='OSSIcon fa fa-download')]";
+    private final String chooseConfigurationIcon = ".//i[@class ='OSSIcon fa fa-cog')]";
+
     private final Map<String, TableWidget> widgets = Maps.newHashMap();
 
 
@@ -100,7 +109,7 @@ public class TabsWidget implements TabsInterface {
         if (widgets.containsKey(tabName)) {
             return widgets.get(tabName);
         }
-        if (tabName != "Properties") {
+        if (!tabName.equals("Properties")) {
             Widget.waitForWidget(new WebDriverWait(this.driver, 11), tabName);
             TableWidget tableWidget = TableWidget.create(this.driver, tabName, this.webDriverWait);
             widgets.put(tabName, tableWidget);
@@ -118,16 +127,14 @@ public class TabsWidget implements TabsInterface {
             WebElement moreTab = createTabs().findElement(By.xpath("//div[@class= 'dropdown-tab']"));
             webDriverWait.until(ExpectedConditions.elementToBeClickable(moreTab));
             moreTab.click();
-            DelayUtils.waitByXPath(webDriverWait, ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'"+tabLabel+"')]");
-            WebElement tab = driver.findElement(By.xpath(".//a[contains(text(),'" + tabLabel + "')]  | .//div[@class='tab-label'][contains(text(),'"+ tabLabel+"')]"));
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(tab));
-            tab.click();
+            getTabByLabel(tabLabel);
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(getTabByLabel(tabLabel)));
+            getTabByLabel(tabLabel).click();
         }
         else {
-            DelayUtils.waitForNestedElements(webDriverWait, allTabs, ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'"+tabLabel+"')]");
-            WebElement tab = allTabs.findElement(By.xpath(".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'"+tabLabel+"')]"));
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(tab));
-            tab.click();
+            getTabByLabel(tabLabel);
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(getTabByLabel(tabLabel)));
+            getTabByLabel(tabLabel).click();
         }
 
     }
@@ -184,5 +191,38 @@ public class TabsWidget implements TabsInterface {
         DelayUtils.waitForNestedElements(webDriverWait,createTabs(),"//div[@class= 'tabsContainerTabs']");
         List<WebElement> isMore = createTabs().findElements(By.xpath("//div[@class= 'dropdown-tab']"));
         return !isMore.isEmpty();
+    }
+
+    public void changeTabsOrder(String tabLabel, int position){
+        changeTabsPosition(getTabByLabel(tabLabel), this.webElement.findElements(By.xpath(tabs)).get(position));
+    }
+
+    private void changeTabsPosition(WebElement source, WebElement target){
+        Actions action = new Actions(driver);
+        action.moveToElement(source).perform();
+        WebElement sourceBtn = source.findElement(By.xpath(".//div[@class = 'btn-drag']"));
+        DragAndDrop.dragAndDrop(sourceBtn, target,  driver);
+    }
+
+    public WidgetChooser getWidgetChooser() {
+        this.webElement.findElement(By.xpath(addTabIcon)).click();
+        return WidgetChooser.create(driver, webDriverWait);
+    }
+
+    public void openSaveConfigurationWizard(){
+        this.webElement.findElement(By.xpath(saveTabIcon)).click();
+    }
+
+    public void openDownloadConfigurationWizard(){
+        this.webElement.findElement(By.xpath(downloadConfigurationIcon)).click();
+    }
+
+    public void openChooseConfigurationWizard(){
+        this.webElement.findElement(By.xpath(chooseConfigurationIcon)).click();
+    }
+
+    private WebElement getTabByLabel(String tabLabel){
+        DelayUtils.waitByXPath(webDriverWait, ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'"+tabLabel+"')]");
+        return this.webElement.findElement(By.xpath(".//a[contains(text(),'" + tabLabel + "')]  | .//div[@class='tab-label'][contains(text(),'"+ tabLabel+"')]/.."));
     }
 }
