@@ -129,6 +129,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
+    public void callOldAction(String groupId, String actionId) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         throw new RuntimeException("Not implemented yet");
     }

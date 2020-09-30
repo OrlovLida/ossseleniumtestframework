@@ -33,8 +33,16 @@ public class TreeWidget extends Widget {
                 widgetClass, webDriverWait);
     }
 
+    public static TreeWidget createByDataAttributeName(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
+        return new TreeWidget(driver, webDriverWait, dataAttributeName);
+    }
+
     private TreeWidget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         super(driver, widgetClass, webDriverWait);
+    }
+
+    private TreeWidget(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
+        super(driver, webDriverWait, dataAttributeName);
     }
 
     public List<WebElement> getCheckboxes() {

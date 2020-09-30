@@ -54,6 +54,8 @@ public interface TableInterface {
 
     void callAction(String groupId, String actionId);
 
+    void callOldAction(String groupId, String actionId);
+
     void callActionByLabel(String groupLabel, String actionLabel);
 
     @Deprecated //TODO: we can treat kebab menu as a special group, so this method should be removed
