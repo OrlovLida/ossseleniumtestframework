@@ -57,11 +57,11 @@ public class ActionsContainer implements ActionsInterface {
     public void callActionById(String groupId, String actionId) {
         clickOnGroup(groupId);
         Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
-        dropdown.callActionById(actionId);
+        dropdown.callAction(actionId);
     }
 
     private void clickOnGroup(String groupId) {
-        DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement,"//div[@class='actionsGroup-default']");
+        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//div[@class='actionsGroup-default']");
         if (isElementPresent(webDriver, By.id(groupId))) {
             webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(groupId)))).click();
         } else {
@@ -72,7 +72,7 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement,"//div[@class='actionsGroup-default']");
+        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//div[@class='actionsGroup-default']");
         if (isElementPresent(webDriver, By.id(id))) {
             webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(id)))).click();
         } else {
@@ -92,7 +92,7 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void clickOnAction(String actionId) {
-        DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement, "//*[@id='" + actionId + "']");
+        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//*[@id='" + actionId + "']");
         webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(actionId)))).click();
     }
 
@@ -111,18 +111,14 @@ public class ActionsContainer implements ActionsInterface {
         }
 
         private void callAction(String actionId) {
-            DelayUtils.waitForNestedElements(this.webDriverWait,  this.webElement, "//*[@id='" + actionId + "']");
+            DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//*[@id='" + actionId + "']");
             webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(actionId)))).click();
         }
 
         private void callActionByLabel(String actionLabel) {
-            DelayUtils.waitForNestedElements(webDriverWait,  this.webElement, "//a[contains(text(),'" + actionLabel + "')]");
+            DelayUtils.waitForNestedElements(webDriverWait, this.webElement, "//a[contains(text(),'" + actionLabel + "')]");
             webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.xpath("//a[contains(text(),'" + actionLabel + "')]")))).click();
         }
 
-        private void callActionById(String actionId) {
-            DelayUtils.waitForNestedElements(webDriverWait,  this.webElement, "//a[@id='" + actionId + "']");
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.xpath("//a[@id='" + actionId + "']")))).click();
-        }
     }
 }

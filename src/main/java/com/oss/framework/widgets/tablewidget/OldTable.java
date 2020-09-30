@@ -168,6 +168,12 @@ public class OldTable implements TableInterface {
     }
 
     @Override
+    public void callOldAction(String groupId, String actionId) {
+        ActionsInterface actions = OldActionsContainer.createFromParent(driver, wait, window);
+        actions.callAction(groupId, actionId);
+    }
+
+    @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         throw new RuntimeException("Not implemented for the old table widget");
     }
