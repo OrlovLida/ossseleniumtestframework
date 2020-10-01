@@ -8,6 +8,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.utils.DelayUtils;
 
 public abstract class Widget {
@@ -16,12 +18,15 @@ public abstract class Widget {
     protected final WebDriver driver;
     protected final WebElement webElement;
     protected final WebDriverWait webDriverWait;
+    protected WebElement ossWindow;
 
     public Widget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//div[contains(@class, '"+widgetClass+"')]"));
+        this.webElement = driver.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]"));
         this.webDriverWait = webDriverWait;
+        this.ossWindow = webElement.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]/ancestor::div[contains(@class,'OssWindow')]"));
     }
+
     public Widget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         this.driver = driver;
         this.webElement = webElement;
@@ -30,6 +35,13 @@ public abstract class Widget {
 
     public static void waitForWidget(WebDriverWait wait, String widgetClass) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
+    }
+
+    public Widget(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
+        this.driver = driver;
+        this.webElement = driver.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']"));
+        this.ossWindow = webElement.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
+        this.webDriverWait = webDriverWait;
     }
 
     private static String createWidgetPath(String widgetId) {
@@ -61,5 +73,10 @@ public abstract class Widget {
             }
         }
         return result;
+    }
+
+    public void callActionById(String groupId, String actionId) {
+        ActionsInterface actions = ActionsContainer.createFromParent(ossWindow, driver, webDriverWait);
+        actions.callActionById(groupId, actionId);
     }
 }
