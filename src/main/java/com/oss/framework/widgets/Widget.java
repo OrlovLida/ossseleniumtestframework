@@ -24,7 +24,6 @@ public abstract class Widget {
         this.driver = driver;
         this.webElement = driver.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]"));
         this.webDriverWait = webDriverWait;
-        this.ossWindow = webElement.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]/ancestor::div[contains(@class,'OssWindow')]"));
     }
 
     public Widget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
@@ -40,7 +39,6 @@ public abstract class Widget {
     public Widget(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
         this.driver = driver;
         this.webElement = driver.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']"));
-        this.ossWindow = webElement.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
         this.webDriverWait = webDriverWait;
     }
 
@@ -75,7 +73,8 @@ public abstract class Widget {
         return result;
     }
 
-    public void callActionById(String groupId, String actionId) {
+    public void callOssWindowActionById(String groupId, String actionId) {
+        this.ossWindow = webElement.findElement(By.xpath("//ancestor::div[contains(@class,'OssWindow')]"));
         ActionsInterface actions = ActionsContainer.createFromParent(ossWindow, driver, webDriverWait);
         actions.callActionById(groupId, actionId);
     }
