@@ -1,24 +1,18 @@
 package com.oss.framework.widgets.tabswidget;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.oss.framework.components.common.WidgetChooser;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
-import com.oss.framework.widgets.Widget;
-import com.oss.framework.widgets.tablewidget.TableWidget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class TabsWidget implements TabsInterface {
     
@@ -32,8 +26,6 @@ public class TabsWidget implements TabsInterface {
     private static final String CHOOSE_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-cog')]";
     private static final String DROPDOWN_TAB = ".//div[@class= 'dropdown-tab']";
     private static final String TABS_CONTAINER_XPATH = ".//div[contains(@class,'tabsContainerTabs')]";
-    
-    private final Map<String, TableWidget> widgets = Maps.newHashMap();
     
     protected final WebDriver driver;
     protected final WebElement webElement;
@@ -103,7 +95,6 @@ public class TabsWidget implements TabsInterface {
     @Override
     public void selectTabByLabel(String tabLabel) {
         DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
-        //WebElement allTabs = createTabs().findElement(By.xpath(TABS_CONTAINER_XPATH));
         String xpath = ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'" + tabLabel + "')]";
         WebElement tabToSelect = getTabToSelect(xpath);
         webDriverWait.until(ExpectedConditions.elementToBeClickable(tabToSelect));
@@ -168,6 +159,7 @@ public class TabsWidget implements TabsInterface {
         return WidgetChooser.create(driver, webDriverWait);
     }
     
+    // methods will be used in configuration Tests
     public void openSaveConfigurationWizard() {
         this.webElement.findElement(By.xpath(SAVE_TAB_ICON)).click();
     }
