@@ -25,8 +25,12 @@ public class ListGroup {
         this.webelement = driver.findElement(By.className(LIST_GROUP_CLASS));
     }
 
-    public void selectItemByName(String name){
+    public void selectItemByName(String itemName){
         Actions action = new Actions(driver);
-        action.moveToElement(webelement.findElement(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + name + "']"))).click();
+        action.moveToElement(webelement.findElement(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + itemName + "']"))).click();
+    }
+
+    public boolean isItemVisible(String itemName){
+        return webelement.findElements(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + itemName + "']")).size()>0;
     }
 }
