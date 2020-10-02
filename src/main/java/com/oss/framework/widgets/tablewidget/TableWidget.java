@@ -219,7 +219,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public AttributesChooser getAttributesChooser() {
-        if(!this.webElement.findElement(By.xpath(gearIcon)).getClass().equals("open")){
+        if(!(this.webElement.findElements(By.xpath(gearIcon + "[@class = 'open']")).size()>0)){
         this.webElement.findElement(By.xpath(gearIcon)).click();}
         return AttributesChooser.create(driver, webDriverWait);
     }

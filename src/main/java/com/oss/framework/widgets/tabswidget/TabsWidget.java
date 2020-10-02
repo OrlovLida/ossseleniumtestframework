@@ -22,11 +22,11 @@ public class TabsWidget implements TabsInterface {
     private static final String ACTIVE_TAB = ".//a[contains(@class,'active')]";
     private static final String ADD_TAB_ICON = ".//i[@class ='OSSIcon fa fa-plus')]";
     private static final String SAVE_TAB_ICON = ".//i[@class ='OSSIcon fa fa-save')]";
-    private static final String DOWNLOAD_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-download')]";
-    private static final String CHOOSE_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-cog')]";
+    private static final String DOWNLOAD_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-download']";
+    private static final String CHOOSE_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-cog']";
     private static final String DROPDOWN_TAB = ".//div[@class= 'dropdown-tab']";
     private static final String TABS_CONTAINER_XPATH = ".//div[contains(@class,'tabsContainerTabs')]";
-    
+
     protected final WebDriver driver;
     protected final WebElement webElement;
     protected final WebDriverWait webDriverWait;
@@ -158,20 +158,27 @@ public class TabsWidget implements TabsInterface {
         this.webElement.findElement(By.xpath(ADD_TAB_ICON)).click();
         return WidgetChooser.create(driver, webDriverWait);
     }
-    
-    // methods will be used in configuration Tests
-    public void openSaveConfigurationWizard() {
+
+    public boolean isTabVisible(String tabLabel){
+        for (String s:getTabLabels()) {
+            if (s.equals(tabLabel))
+                return true;
+        }
+        return false;
+    }
+
+    public void openSaveConfigurationWizard(){
         this.webElement.findElement(By.xpath(SAVE_TAB_ICON)).click();
     }
-    
+
     public void openDownloadConfigurationWizard() {
         this.webElement.findElement(By.xpath(DOWNLOAD_CONFIGURATION_ICON)).click();
     }
-    
+
     public void openChooseConfigurationWizard() {
         this.webElement.findElement(By.xpath(CHOOSE_CONFIGURATION_ICON)).click();
     }
-    
+
     private WebElement getTabByLabel(String tabLabel) {
         DelayUtils.waitByXPath(webDriverWait,
                 ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'" + tabLabel + "')]");

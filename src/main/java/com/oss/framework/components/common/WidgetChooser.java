@@ -29,6 +29,7 @@ public class WidgetChooser {
     }
 
     public WidgetChooser disableWidgetByLabel(String widgetLabel) {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         if(isWidgetSelectedByLabel(widgetLabel)) {
             toggleWidgetByLabel(widgetLabel);
         }
@@ -36,6 +37,7 @@ public class WidgetChooser {
     }
 
     public WidgetChooser enableWidgetByLabel(String widgetLabel) {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         if(!isWidgetSelectedByLabel(widgetLabel)) {
             toggleWidgetByLabel(widgetLabel);
         }
