@@ -91,6 +91,7 @@ public class EditableList extends Widget {
 
        InlineForm inlineForm = InlineForm.create(driver, webDriverWait);
        Input component = inlineForm.getComponent(componentId, componentType);
+       DelayUtils.sleep(500);
        component.setSingleStringValue(value);
        inlineForm.clickButtonByLabel("Save");
    }
