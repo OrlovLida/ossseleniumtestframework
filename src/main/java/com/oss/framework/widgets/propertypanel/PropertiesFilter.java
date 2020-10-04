@@ -19,17 +19,19 @@ public class PropertiesFilter {
     private final String DOWNLOAD_CONFIGURATION_XPATH = ".//a[@data-attributename='propertyPanelDownload']";
     private final String SAVE_NEW_CONFIGURATION_XPATH = ".//a[@data-attributename='propertyPanelSave']";
 
-    protected final WebDriver driver;
-    protected final WebElement webElement;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement webElement;
     private PropertiesFilterPanel propertiesFilterPanel;
 
-    public PropertiesFilter(WebDriver driver) {
+    private PropertiesFilter(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
+        this.wait = wait;
         this.webElement = driver.findElement(By.className(PROPERTIES_FILTER_CLASS));
     }
 
-    public static PropertiesFilter create(WebDriver driver) {
-        return new PropertiesFilter(driver);
+    public static PropertiesFilter create(WebDriver driver, WebDriverWait wait) {
+        return new PropertiesFilter(driver, wait);
     }
 
     public WebElement getFilterIcon() {
@@ -40,7 +42,7 @@ public class PropertiesFilter {
         return this.webElement.findElement(By.xpath(SWITCHER_XPATH));
     }
 
-    public AttributesChooser clickOnFilterIcon(WebDriverWait wait) {
+    public AttributesChooser clickOnFilterIcon() {
         getFilterIcon().click();
         return AttributesChooser.create(driver, wait);
     }
