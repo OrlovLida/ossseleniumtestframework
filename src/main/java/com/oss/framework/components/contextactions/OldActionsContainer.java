@@ -80,8 +80,8 @@ public class OldActionsContainer implements ActionsInterface {
     public void callActionById(String groupId, String actionDataAttributeName) {
         DelayUtils.waitForNestedElements(wait, toolbar, ".//li[@data-group-id='" + groupId + "']//button");
         wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(".//li[@data-group-id='" + groupId + "']//button")))).click();
-        DelayUtils.waitForNestedElements(wait, toolbar, "//a[@data-attributeName='" + actionDataAttributeName + "']");
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributeName='" + actionDataAttributeName + "']"))).click();
+        DelayUtils.waitForNestedElements(wait, toolbar, "//a[@data-attributename='" + actionDataAttributeName + "']");
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributename='" + actionDataAttributeName + "']"))).click();
     }
 
     public void callActionById(String groupId, String innerGroupId, String actionDataAttributeName) {
@@ -90,6 +90,6 @@ public class OldActionsContainer implements ActionsInterface {
         Actions action = new Actions(driver);
         WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath("//a[contains(@data-attributename, '"+innerGroupId+"')]"))));
         action.moveToElement(foundedElement).perform();
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributeName='" + actionDataAttributeName + "']"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributename='" + actionDataAttributeName + "']"))).click();
     }
 }
