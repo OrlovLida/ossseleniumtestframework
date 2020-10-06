@@ -4,7 +4,6 @@ import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.data.Data;
 import com.oss.framework.data.Data.DataWrapper;
 import com.oss.framework.utils.DelayUtils;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -46,17 +45,17 @@ public class Combobox extends Input {
         input.clear();
         input.sendKeys(wrapper.getReadableValue());
 
-        if(wrapper.isFindFirst()) {
+        if (wrapper.isFindFirst()) {
             DelayUtils.sleep(); //TODO: wait for spinners
             input.sendKeys(Keys.DOWN);
             input.sendKeys(Keys.RETURN);
             return;
         }
 
-        DelayUtils.waitByXPath(webDriverWait,"//div[@class='combo-box__list-item']//*[text()='" + wrapper.getReadableValue() + "']");
+        DelayUtils.waitByXPath(webDriverWait, "//div[@class='combo-box__list-item']//*[text()='" + wrapper.getReadableValue() + "']");
         List<WebElement> results = driver.findElements(By.xpath("//div[@class='combo-box__list-item']"));
-        for(WebElement element : results) {
-            if(wrapper.getReadableValue().equals(element.getText())) {
+        for (WebElement element : results) {
+            if (wrapper.getReadableValue().equals(element.getText())) {
                 element.click();
                 return;
             }
@@ -73,7 +72,8 @@ public class Combobox extends Input {
 
     @Override
     public Data getValue() {
-        WebElement input = webElement.findElement(By.xpath(".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]"));
+        WebElement input =
+                webElement.findElement(By.xpath(".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]"));
         return Data.createSingleData(input.getAttribute("value"));
 
     }
@@ -83,13 +83,9 @@ public class Combobox extends Input {
     }
 
     @Override
-    public void clear(){
-        try {
-            webElement.findElement(By.xpath(".//input")).clear();
-        } catch (Exception e) {
-            List<WebElement> closeButtons = this.webElement.findElements(By.xpath(".//i[@class='OSSIcon fa fa-close']"));
-            closeButtons.forEach(WebElement::click);
-        }
+    public void clear() {
+        List<WebElement> closeButtons = this.webElement.findElements(By.xpath(".//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]"));
+        closeButtons.forEach(WebElement::click);
     }
 }
 
