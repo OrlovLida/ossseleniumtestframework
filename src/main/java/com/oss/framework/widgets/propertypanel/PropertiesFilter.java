@@ -28,7 +28,6 @@ public class PropertiesFilter {
         this.driver = driver;
         this.wait = wait;
         this.webElement = driver.findElement(By.className(PROPERTIES_FILTER_CLASS));
-        this.wait = wait;
     }
 
     public PropertiesFilter(WebDriver driver, WebDriverWait wait, PropertyPanel propertyPanel) {
