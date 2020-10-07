@@ -26,9 +26,17 @@ public class ButtonPanel {
         return new ButtonPanel(driver, wait, buttonPanel);
     }
 
-    public WebElement getButtonIcon(String iconID){
-        DelayUtils.waitByXPath(wait, ".//i[contains(@class,'"+iconID+"')]");
-        return this.buttonPanel.findElement(By.xpath(".//i[contains(@class,'"+iconID+"')]"));
+    private WebElement getButtonIcon(String iconID) {
+        DelayUtils.waitByXPath(wait, ".//i[contains(@class,'" + iconID + "')]");
+        return this.buttonPanel.findElement(By.xpath(".//i[contains(@class,'" + iconID + "')]"));
+    }
+
+    public void clickOnIcon(String iconId) {
+        getButtonIcon(iconId).click();
+    }
+
+    public boolean isButtonDisplayed(String iconId) {
+        return this.buttonPanel.findElements(By.xpath(".//i[contains(@class,'" + iconId + "')]")).size()>0;
     }
 
 }

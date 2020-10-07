@@ -42,7 +42,7 @@ public class TabsWidget implements TabsInterface {
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         this.driver = driver;
         this.webDriverWait = wait;
-        this.webElement = null;
+        this.webElement = driver.findElement(By.xpath("//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@data-attributename,'" + id + "')]"));
         this.id = id;
     }
     
@@ -55,14 +55,15 @@ public class TabsWidget implements TabsInterface {
     }
     
     private WebElement createTabs() {
-        if (this.webElement != null) {
-            return this.webElement;
+        if (this.id == null) {
+            DelayUtils.waitByXPath(webDriverWait,
+                    "//*[@class = '" + TABS_WIDGET_CLASS + "']");
+            return driver.findElement(By.className(TABS_WIDGET_CLASS));
         }
         DelayUtils.waitByXPath(webDriverWait,
-                "//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@data-attributename, " + id + ")]");
-        WebElement widget = driver
-                .findElement(By.xpath("//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@data-attributename," + id + ")]"));
-        return widget;
+                "//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@data-attributename, '" + id + "')]");
+        return driver
+                .findElement(By.xpath("//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@data-attributename,'" + id + "')]"));
     }
     
     @Deprecated
@@ -113,7 +114,6 @@ public class TabsWidget implements TabsInterface {
     public void callActionByLabel(String actionLabel) {
         ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
         actionsContainer.callActionByLabel(actionLabel);
-        
     }
     
     @Override
