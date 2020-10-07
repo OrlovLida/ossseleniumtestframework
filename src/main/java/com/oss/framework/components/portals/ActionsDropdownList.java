@@ -38,4 +38,8 @@ public class ActionsDropdownList {
         int index = getActionLabels().indexOf(actionName);
         getActions().get(index).click();
     }
+
+    public void clickOnActionById(String id) {
+        this.webElement.findElement(By.xpath(".//*[@id='" + id + "']")).click();
+    }
 }

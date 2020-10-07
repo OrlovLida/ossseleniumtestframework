@@ -15,26 +15,37 @@ public class PropertiesFilter {
     private static final String FILTER_BTN_PATH = ".//i";
     private final String SWITCHER_XPATH = ".//div[@class='switcher']";
     private final String KEBAB_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
-    private final String CHOOSE_CONFIGURATION_XPATH = ".//a[@data-attributename='chooseConfiguration']";
-    private final String DOWNLOAD_CONFIGURATION_XPATH = ".//a[@data-attributename='propertyPanelDownload']";
-    private final String SAVE_NEW_CONFIGURATION_XPATH = ".//a[@data-attributename='propertyPanelSave']";
+    private final String CHOOSE_CONFIGURATION_XPATH = "//a[@data-attributename='chooseConfiguration']";
+    private final String DOWNLOAD_CONFIGURATION_XPATH = "//a[@data-attributename='propertyPanelDownload']";
+    private final String SAVE_NEW_CONFIGURATION_XPATH = "//a[@data-attributename='propertyPanelSave']";
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-    private final WebElement webElement;
+    protected final WebDriver driver;
+    protected final WebElement webElement;
+    protected final WebDriverWait wait;
     private PropertiesFilterPanel propertiesFilterPanel;
 
-    private PropertiesFilter(WebDriver driver, WebDriverWait wait) {
+    public PropertiesFilter(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
         this.webElement = driver.findElement(By.className(PROPERTIES_FILTER_CLASS));
+        this.wait = wait;
+    }
+
+    public PropertiesFilter(WebDriver driver, WebDriverWait wait, PropertyPanel propertyPanel) {
+        this.driver = driver;
+        this.webElement = propertyPanel.webElement.findElement(By.xpath(".//../*[@class = '" + PROPERTIES_FILTER_CLASS + "']"));
+        this.wait = wait;
+    }
+
+    public static PropertiesFilter createByPropertyPanel(WebDriver driver, WebDriverWait wait, PropertyPanel propertyPanel) {
+        return new PropertiesFilter(driver, wait, propertyPanel);
     }
 
     public static PropertiesFilter create(WebDriver driver, WebDriverWait wait) {
         return new PropertiesFilter(driver, wait);
     }
 
-    public WebElement getFilterIcon() {
+    private WebElement getFilterIcon() {
         return this.webElement.findElement(By.xpath(FILTER_BTN_PATH));
     }
 
@@ -57,19 +68,19 @@ public class PropertiesFilter {
             getSwitcher().click();
     }
 
-    public void openChooseConfigurationWizard(WebDriverWait wait) {
+    public void openChooseConfigurationWizard() {
         this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
         DelayUtils.waitByXPath(wait, CHOOSE_CONFIGURATION_XPATH);
         this.webElement.findElement(By.xpath(CHOOSE_CONFIGURATION_XPATH)).click();
     }
 
-    public void openDoowloadConfigurationWizard(WebDriverWait wait) {
+    public void openDownloadConfigurationWizard() {
         this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
         DelayUtils.waitByXPath(wait, DOWNLOAD_CONFIGURATION_XPATH);
         this.webElement.findElement(By.xpath(DOWNLOAD_CONFIGURATION_XPATH)).click();
     }
 
-    public void openSaveAsNewConfigurationWizard(WebDriverWait wait) {
+    public void openSaveAsNewConfigurationWizard() {
         this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
         DelayUtils.waitByXPath(wait, SAVE_NEW_CONFIGURATION_XPATH);
         this.webElement.findElement(By.xpath(SAVE_NEW_CONFIGURATION_XPATH)).click();

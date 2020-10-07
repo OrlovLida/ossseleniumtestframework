@@ -67,6 +67,10 @@ public class TableWidget extends Widget implements TableInterface {
         }
     }
 
+    public ActionsContainer getContextActions(){
+        return this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
+    }
+
     @Override
     public Multimap<String, String> getAppliedFilters() {
         if(this.advancedSearch == null) {
@@ -374,7 +378,8 @@ public class TableWidget extends Widget implements TableInterface {
 
     private void selectTableRow(int row) {
         this.contextActions = null;
-        getTableRows().get(row).click();
+        if(!getTableRows().get(row).getAttribute("class").contains("selected"))
+            getTableRows().get(row).click();
     }
 
     public boolean checkIfTableIsEmpty(){
