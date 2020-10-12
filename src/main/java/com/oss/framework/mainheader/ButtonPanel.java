@@ -1,5 +1,7 @@
 package com.oss.framework.mainheader;
 
+import com.oss.framework.components.portals.ChooseConfigurationWizard;
+import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -8,35 +10,63 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ButtonPanel {
 
-    private static final String XPATH_BUTTON_PANEL = "//div[@class='buttonPanel']";
+    private static final String BUTTON_PANEL_XPATH = "//div[@class='buttonPanel']";
+    private static final String ICON_XPATH_PATTERN = ".//i[contains(@class,'%s')]";
+    private static final String LAYOUT_ICON_ID = "layout";
+    private static final String LAYOUT_EXPANDER_ICON_ID = "fa fa-chevron-down";
+    private static final String SAVE_CONFIGURATION_ICON_ID = "fa fa-fw fa-floppy-o";
+    private static final String CHOOSE_CONFIGURATION_ICON_ID = "fa fa-fw fa-cog";
+    private static final String DOWNLOAD_CONFIGURATION_ICON_ID = "fa fa-fw fa-download";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement buttonPanel;
 
-    private ButtonPanel(WebDriver driver, WebDriverWait wait, WebElement buttonPanel) {
+    private ButtonPanel(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-        this.buttonPanel = buttonPanel;
     }
 
     public static ButtonPanel create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, XPATH_BUTTON_PANEL);
-        WebElement buttonPanel = driver.findElement(By.xpath(XPATH_BUTTON_PANEL));
-        return new ButtonPanel(driver, wait, buttonPanel);
+        return new ButtonPanel(driver, wait);
     }
 
-    private WebElement getButtonIcon(String iconID) {
-        DelayUtils.waitByXPath(wait, ".//i[contains(@class,'" + iconID + "')]");
-        return this.buttonPanel.findElement(By.xpath(".//i[contains(@class,'" + iconID + "')]"));
+    private WebElement getButtonPanel() {
+        DelayUtils.waitByXPath(wait, BUTTON_PANEL_XPATH);
+        return driver.findElement(By.xpath(BUTTON_PANEL_XPATH));
+    }
+
+    private WebElement getButtonIcon(String iconId) {
+        DelayUtils.waitByXPath(wait, String.format(ICON_XPATH_PATTERN, iconId));
+        return getButtonPanel().findElement(By.xpath(String.format(ICON_XPATH_PATTERN, iconId)));
     }
 
     public void clickOnIcon(String iconId) {
         getButtonIcon(iconId).click();
     }
 
-    public boolean isButtonDisplayed(String iconId) {
-        return this.buttonPanel.findElements(By.xpath(".//i[contains(@class,'" + iconId + "')]")).size()>0;
+    private boolean isButtonDisplayed(String iconId) {
+        DelayUtils.waitByXPath(wait, String.format(ICON_XPATH_PATTERN, iconId));
+        return getButtonPanel().findElements(By.xpath(String.format(ICON_XPATH_PATTERN, iconId))).size() > 0;
+    }
+
+    public void expandLayoutMenu() {
+        if (isButtonDisplayed(LAYOUT_EXPANDER_ICON_ID))
+            clickOnIcon(LAYOUT_ICON_ID);
+    }
+
+    public SaveConfigurationWizard openSaveConfigurationWizard() {
+        clickOnIcon(SAVE_CONFIGURATION_ICON_ID);
+        return SaveConfigurationWizard.create(driver, wait);
+    }
+
+    public ChooseConfigurationWizard openChooseConfigurationWizard() {
+        clickOnIcon(CHOOSE_CONFIGURATION_ICON_ID);
+        return ChooseConfigurationWizard.create(driver, wait);
+    }
+
+    public ChooseConfigurationWizard openDownloadConfigurationWizard() {
+        clickOnIcon(DOWNLOAD_CONFIGURATION_ICON_ID);
+        return ChooseConfigurationWizard.create(driver, wait);
     }
 
 }

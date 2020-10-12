@@ -27,24 +27,34 @@ public class AttributesChooser {
     private final WebDriverWait webDriverWait;
     private final WebElement attributesChooser;
 
-    private AttributesChooser (WebDriver driver, WebDriverWait webDriverWait,  WebElement attributesChooser) {
+    private AttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement attributesChooser) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.attributesChooser = attributesChooser;
     }
 
-    public AttributesChooser disableColumnByLabel(String columnLabel) {
-        if(isAttributeSelectedByLabel(columnLabel)) {
-            toggleAttributeByLabel(columnLabel);
+    public AttributesChooser disableAttributesByLabel(String... columnLabels) {
+        for (String columnLabel : columnLabels) {
+            if (isAttributeSelectedByLabel(columnLabel)) {
+                toggleAttributeByLabel(columnLabel);
+            }
         }
         return this;
     }
 
-    public AttributesChooser enableColumnByLabel(String columnLabel) {
-        if(!isAttributeSelectedByLabel(columnLabel)) {
-            toggleAttributeByLabel(columnLabel);
+    public AttributesChooser enableAttributesByLabel(String... columnLabels) {
+        for (String columnLabel : columnLabels) {
+            if (!isAttributeSelectedByLabel(columnLabel)) {
+                toggleAttributeByLabel(columnLabel);
+            }
         }
         return this;
+    }
+
+    public void setAttributesState(String[] enableAttributes, String[] disableAttributes) {
+        enableAttributesByLabel(enableAttributes).
+        disableAttributesByLabel(disableAttributes).
+        clickApply();
     }
 
     public List<Attribute> getAttributes() {
@@ -105,7 +115,7 @@ public class AttributesChooser {
         private final String attributeLabel;
         private final boolean isSelected;
 
-        public Attribute (String attributeId, String attributeLabel, boolean isSelected) {
+        public Attribute(String attributeId, String attributeLabel, boolean isSelected) {
             this.attributeId = attributeId;
             this.attributeLabel = attributeLabel;
             this.isSelected = isSelected;

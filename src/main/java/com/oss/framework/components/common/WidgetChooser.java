@@ -22,26 +22,34 @@ public class WidgetChooser {
     private final WebDriverWait webDriverWait;
     private final WebElement widgetChooser;
 
-    private WidgetChooser (WebDriver driver, WebDriverWait webDriverWait,  WebElement widgetChooser) {
+    private WidgetChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement widgetChooser) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.widgetChooser = widgetChooser;
     }
 
-    public WidgetChooser disableWidgetByLabel(String widgetLabel) {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        if(isWidgetSelectedByLabel(widgetLabel)) {
-            toggleWidgetByLabel(widgetLabel);
+    public WidgetChooser disableWidgetsByLabel(String... widgetLabels) {
+        for (String widgetLabel : widgetLabels) {
+            if (isWidgetSelected(widgetLabel)) {
+                toggleWidgetByLabel(widgetLabel);
+            }
         }
         return this;
     }
 
-    public WidgetChooser enableWidgetByLabel(String widgetLabel) {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        if(!isWidgetSelectedByLabel(widgetLabel)) {
-            toggleWidgetByLabel(widgetLabel);
+    public WidgetChooser enableWidgetsByLabel(String... widgetLabels) {
+        for (String widgetLabel : widgetLabels) {
+            if (!isWidgetSelected(widgetLabel)) {
+                toggleWidgetByLabel(widgetLabel);
+            }
         }
         return this;
+    }
+
+    public void setWidgetsState(String[] enableWidgetLabels, String[] disableWidgetLabels) {
+        enableWidgetsByLabel(enableWidgetLabels);
+        disableWidgetsByLabel(disableWidgetLabels);
+        clickAdd();
     }
 
     private void toggleWidgetByLabel(String widgetLabel) {
@@ -50,11 +58,11 @@ public class WidgetChooser {
         getWidgetByLabel(widgetLabel).click();
     }
 
-    public boolean isWidgetSelectedByLabel(String widgetLabel) {
+    public boolean isWidgetSelected(String widgetLabel) {
         return getWidgetByLabel(widgetLabel).findElement(By.xpath(".//input")).isSelected();
     }
 
-    private WebElement getWidgetByLabel(String widgetLabel){
+    private WebElement getWidgetByLabel(String widgetLabel) {
         return widgetChooser.findElement(By.xpath(".//label[text()='" + widgetLabel + "']/.."));
     }
 

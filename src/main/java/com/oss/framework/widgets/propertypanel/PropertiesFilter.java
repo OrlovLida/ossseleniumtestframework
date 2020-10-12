@@ -3,6 +3,8 @@ package com.oss.framework.widgets.propertypanel;
 import java.util.List;
 
 import com.oss.framework.components.common.AttributesChooser;
+import com.oss.framework.components.portals.ChooseConfigurationWizard;
+import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -67,22 +69,25 @@ public class PropertiesFilter {
             getSwitcher().click();
     }
 
-    public void openChooseConfigurationWizard() {
+    public ChooseConfigurationWizard openChooseConfigurationWizard() {
         this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
         DelayUtils.waitByXPath(wait, CHOOSE_CONFIGURATION_XPATH);
         this.webElement.findElement(By.xpath(CHOOSE_CONFIGURATION_XPATH)).click();
+        return ChooseConfigurationWizard.create(driver, wait);
     }
 
-    public void openDownloadConfigurationWizard() {
+    public ChooseConfigurationWizard openDownloadConfigurationWizard() {
         this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
         DelayUtils.waitByXPath(wait, DOWNLOAD_CONFIGURATION_XPATH);
         this.webElement.findElement(By.xpath(DOWNLOAD_CONFIGURATION_XPATH)).click();
+        return ChooseConfigurationWizard.create(driver, wait);
     }
 
-    public void openSaveAsNewConfigurationWizard() {
+    public SaveConfigurationWizard openSaveAsNewConfigurationWizard() {
         this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
         DelayUtils.waitByXPath(wait, SAVE_NEW_CONFIGURATION_XPATH);
         this.webElement.findElement(By.xpath(SAVE_NEW_CONFIGURATION_XPATH)).click();
+        return SaveConfigurationWizard.create(driver, wait);
     }
 
     public List<String> getPropertyChbxLabelsFromPopup() {
