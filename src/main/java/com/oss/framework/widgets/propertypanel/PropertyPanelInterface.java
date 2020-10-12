@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public interface PropertyPanelInterface {
 
-    List<WebElement> getProperties();
+//    List<WebElement> getProperties();
 
 //    List<String> getPropertyLabels();
 //

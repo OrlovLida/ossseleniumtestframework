@@ -39,8 +39,8 @@ public class OldPropertyPanel implements PropertyPanelInterface{
         return new OldPropertyPanel(driver, wait);
     }
 
-    @Override
-    public List<WebElement> getProperties(){
+
+    private List<WebElement> getProperties(){
         DelayUtils.waitByXPath(wait, PROPERTY_PATH);
         return this.webElement.findElements(By.xpath(PROPERTY_PATH));}
 

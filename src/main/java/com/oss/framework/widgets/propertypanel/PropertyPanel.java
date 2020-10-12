@@ -42,7 +42,7 @@ public class PropertyPanel implements PropertyPanelInterface {
         return new PropertyPanel(driver, id);
     }
 
-    public List<WebElement> getProperties() {
+    private List<WebElement> getProperties() {
         return this.webElement.findElements(By.xpath(PROPERTY_PATH));
     }
 
@@ -59,7 +59,7 @@ public class PropertyPanel implements PropertyPanelInterface {
         return propertyLabels.get(n - 1);
     }
 
-    public Map<String, WebElement> getPropertiesMap() {
+    private Map<String, WebElement> getPropertiesMap() {
         for (WebElement element : getProperties()) {
             properties.put(element.getAttribute("id"), element);
         }

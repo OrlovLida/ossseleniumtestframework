@@ -3,6 +3,9 @@ package com.oss.framework.widgets.tablewidget;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.components.portals.ChooseConfigurationWizard;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
@@ -68,7 +71,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public ActionsContainer getContextActions(){
-        return this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
+        return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
     }
 
     @Override
@@ -216,6 +219,24 @@ public class TableWidget extends Widget implements TableInterface {
         DragAndDrop.dragAndDrop(sourceBtn, target, driver);
     }
 
+    public SaveConfigurationWizard openSaveConfigurationWizard() {
+        clickOnKebabMenu();
+        DropdownList.create(driver, webDriverWait).selectOptionWithId("saveNewConfig");
+        return SaveConfigurationWizard.create(driver, webDriverWait);
+    }
+
+    public ChooseConfigurationWizard openChooseConfigurationWizard() {
+        clickOnKebabMenu();
+        DropdownList.create(driver, webDriverWait).selectOptionWithId("chooseConfig");
+        return ChooseConfigurationWizard.create(driver, webDriverWait);
+    }
+
+    public ChooseConfigurationWizard openDownloadConfigurationWizard() {
+        clickOnKebabMenu();
+        DropdownList.create(driver, webDriverWait).selectOptionWithId("table_gql_Download");
+        return ChooseConfigurationWizard.create(driver, webDriverWait);
+    }
+
     private List<Column> getColumns() {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         List<WebElement> elements = this.webElement.findElements(By.xpath(headers));
@@ -273,7 +294,7 @@ public class TableWidget extends Widget implements TableInterface {
         return this.webElement.findElements(By.xpath(expanders));
     }
 
-    public WebElement getColumnByLabel(String label){
+    private WebElement getColumnByLabel(String label){
         return driver.findElement(By.xpath(".//p[text()='" + label +"']/ancestor::div[@class='headerItem text-align']"));
     }
 
