@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.CSSUtils;
@@ -53,6 +54,14 @@ public class SystemMessageContainer implements SystemMessageInterface {
     @Override
     public Optional<Message> getFirstMessage() {
         return getMessages().stream().findFirst();
+    }
+
+    @Override
+    public void close(){
+        Actions builder = new Actions(driver);
+        builder.moveToElement(messageContainer).build().perform();
+        DelayUtils.waitForNestedElements(wait, messageContainer, "//div[contains(@class,'closeButton')]");
+        builder.click(messageContainer.findElement(By.xpath("//div[contains(@class,'closeButton')]"))).build().perform();
     }
 
     private Message toMessage(WebElement messageItem) {

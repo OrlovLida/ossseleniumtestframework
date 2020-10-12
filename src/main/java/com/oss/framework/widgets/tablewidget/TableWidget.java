@@ -403,6 +403,12 @@ public class TableWidget extends Widget implements TableInterface {
             getTableRows().get(row).click();
     }
 
+    public void unselectTableRow(int row) {
+        this.contextActions = null;
+        if(getTableRows().get(row).getAttribute("class").contains("selected"))
+            getTableRows().get(row).click();
+    }
+
     public boolean checkIfTableIsEmpty(){
         return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size()>0;
     }

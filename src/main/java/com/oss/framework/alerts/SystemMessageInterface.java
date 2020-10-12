@@ -10,4 +10,6 @@ public interface SystemMessageInterface {
     List<Message> getMessages();
 
     Optional<Message> getFirstMessage();
+
+    void close();
 }
