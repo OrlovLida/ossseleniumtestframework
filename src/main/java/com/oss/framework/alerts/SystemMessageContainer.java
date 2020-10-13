@@ -28,6 +28,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private WebDriverWait wait;
     private WebElement messageContainer;
 
+    private static final String PATH_TO_CLOSEBUTTON = "//div[contains(@class,'closeButton')]";
+
     public enum MessageType {
         DANGER, WARNING, SUCCESS, INFO
     }
@@ -60,8 +62,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
     public void close(){
         Actions builder = new Actions(driver);
         builder.moveToElement(messageContainer).build().perform();
-        DelayUtils.waitForNestedElements(wait, messageContainer, "//div[contains(@class,'closeButton')]");
-        builder.click(messageContainer.findElement(By.xpath("//div[contains(@class,'closeButton')]"))).build().perform();
+        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_CLOSEBUTTON);
+        builder.click(messageContainer.findElement(By.xpath(PATH_TO_CLOSEBUTTON))).build().perform();
     }
 
     private Message toMessage(WebElement messageItem) {
