@@ -1,5 +1,15 @@
 package com.oss.framework.widgets.tablewidget;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
@@ -10,21 +20,12 @@ import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.portals.ExpandedTextTooltip;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.LocatingUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 
 public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
@@ -51,8 +52,6 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String activePageBtn = ".//li[@class='page active']";
     private static final String rowsCounter = ".//div[@class='rowsCounter']/span[last()]";
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
-    private static final String CLASS_ATTRIBUTE = "class";
-    private static final String SELECTED = "selected";
 
     private AdvancedSearch advancedSearch;
     private ActionsContainer contextActions;
@@ -67,18 +66,18 @@ public class TableWidget extends Widget implements TableInterface {
 
     private TableWidget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         super(driver, widgetClass, webDriverWait);
-        if(webElement.findElements(By.className(PAGINATION_COMPONENT_CLASS)).size()>0){
+        if (webElement.findElements(By.className(PAGINATION_COMPONENT_CLASS)).size() > 0) {
             this.paginationComponent = new PaginationComponent(this.webElement);
         }
     }
 
-    public ActionsContainer getContextActions(){
+    public ActionsContainer getContextActions() {
         return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
     }
 
     @Override
     public Multimap<String, String> getAppliedFilters() {
-        if(this.advancedSearch == null) {
+        if (this.advancedSearch == null) {
             throw new IllegalStateException("Advanced search has never been initialized");
         }
         return this.advancedSearch.getAppliedFilters();
@@ -106,7 +105,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
-        setFilterContains(attributeId, componentType,value);
+        setFilterContains(attributeId, componentType, value);
         confirmFilter();
     }
 
@@ -116,8 +115,8 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void callAction(String actionLabel){
-        if(contextActions == null) {
+    public void callAction(String actionLabel) {
+        if (contextActions == null) {
             this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
         }
         contextActions.callAction(actionLabel);
@@ -130,16 +129,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void callAction(String groupId, String actionId){
-        if(contextActions == null) {
+    public void callAction(String groupId, String actionId) {
+        if (contextActions == null) {
             this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
         }
         contextActions.callAction(groupId, actionId);
-    }
-
-    @Override
-    public void callOldAction(String groupId, String actionId) {
-        throw new RuntimeException("Not implemented yet");
     }
 
     @Override
@@ -173,7 +167,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public List<String> getActiveColumnHeaders(){
+    public List<String> getActiveColumnHeaders() {
         return getColumns().stream().map(Column::getText).collect(Collectors.toList());
     }
 
@@ -186,7 +180,7 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void disableColumnByLabel(String columnLabel) {
         AttributesChooser attributesChooser = getAttributesChooser();
-        if(attributesChooser.isAttributeSelectedByLabel(columnLabel)) {
+        if (attributesChooser.isAttributeSelectedByLabel(columnLabel)) {
             attributesChooser.toggleAttributeByLabel(columnLabel);
         }
         attributesChooser.clickApply();
@@ -195,26 +189,26 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void enableColumnByLabel(String columnLabel) {
         AttributesChooser attributesChooser = getAttributesChooser();
-        if(!attributesChooser.isAttributeSelectedByLabel(columnLabel)) {
+        if (!attributesChooser.isAttributeSelectedByLabel(columnLabel)) {
             attributesChooser.toggleAttributeByLabel(columnLabel);
         }
         attributesChooser.clickApply();
     }
 
     @Override
-    public void changeColumnsOrder(String columnLabel, int position){
+    public void changeColumnsOrder(String columnLabel, int position) {
         changeColumnsPosition(getColumnByLabel(columnLabel), getColumns().get(position).getWebElement());
     }
 
-    public void changeColumnsOrder(String sourceColumnLabel, String targetColumnLabel){
+    public void changeColumnsOrder(String sourceColumnLabel, String targetColumnLabel) {
         changeColumnsPosition(getColumnByLabel(sourceColumnLabel), getColumnByLabel(targetColumnLabel));
     }
 
-    public void changeColumnsOrder(int sourcePosition, int targetPosition){
+    public void changeColumnsOrder(int sourcePosition, int targetPosition) {
         changeColumnsPosition(getColumns().get(sourcePosition).getWebElement(), getColumns().get(targetPosition).getWebElement());
     }
 
-    private void changeColumnsPosition(WebElement source, WebElement target){
+    private void changeColumnsPosition(WebElement source, WebElement target) {
         Actions action = new Actions(driver);
         WebElement sourceBtn = source.findElement(By.xpath(".//div[@class = 'btn-drag']"));
         action.moveToElement(sourceBtn).perform();
@@ -246,60 +240,59 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public AttributesChooser getAttributesChooser() {
-        if(!(this.webElement.findElements(By.xpath(gearIcon + "[@class = 'open']")).size()>0)){
-        this.webElement.findElement(By.xpath(gearIcon)).click();}
+        if (!(this.webElement.findElements(By.xpath(gearIcon + "[@class = 'open']")).size() > 0)) {
+            this.webElement.findElement(By.xpath(gearIcon)).click();
+        }
         return AttributesChooser.create(driver, webDriverWait);
     }
 
-    public void clickOnKebabMenu(){
+    public void clickOnKebabMenu() {
         getKebabMenuBtn().click();
     }
 
-    public void clickOnAction(String actionName){
+    public void clickOnAction(String actionName) {
     }
 
-
-    private WebElement getKebabMenuBtn(){
+    private WebElement getKebabMenuBtn() {
         return this.webElement.findElement(By.xpath(kebabMenuBtn));
     }
 
-    private WebElement getRowsCounter(){
+    private WebElement getRowsCounter() {
         return this.webElement.findElement(By.xpath(rowsCounter));
     }
 
     //TODO: return checkbox class instead of WebElement
-    public List<WebElement> getTableCheckboxes(){
+    public List<WebElement> getTableCheckboxes() {
         return this.webElement.findElements(By.xpath(checkboxes));
     }
 
-    private List<WebElement> getTableRows(){
+    private List<WebElement> getTableRows() {
         return this.webElement.findElements(By.xpath(tableRows));
     }
 
-    public List<WebElement> getTableCells(){
+    public List<WebElement> getTableCells() {
         return this.webElement.findElements(By.xpath(cells));
     }
 
-    private WebElement getHorizontalTableScroller(){
+    private WebElement getHorizontalTableScroller() {
         return this.webElement.findElement(By.xpath(horizontalTableScroller));
     }
 
-    private WebElement getVerticalTableScroller(){
+    private WebElement getVerticalTableScroller() {
         return this.webElement.findElement(By.xpath(verticalTableScroller));
     }
 
-    private List<WebElement> getColumnResizeGrips(){
+    private List<WebElement> getColumnResizeGrips() {
         return this.webElement.findElements(By.xpath(columnResizeGrips));
     }
 
-    private List<WebElement> getExpanders(){
+    private List<WebElement> getExpanders() {
         return this.webElement.findElements(By.xpath(expanders));
     }
 
-    private WebElement getColumnByLabel(String label){
-        return driver.findElement(By.xpath(".//p[text()='" + label +"']/ancestor::div[@class='headerItem text-align']"));
+    private WebElement getColumnByLabel(String label) {
+        return driver.findElement(By.xpath(".//p[text()='" + label + "']/ancestor::div[@class='headerItem text-align']"));
     }
-
 
     public List<String> getActiveColumns() {
         return this.webElement.findElements(By.xpath(headers)).stream()
@@ -316,39 +309,39 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     //TODO: wrap WebElement
-    public WebElement getActivePageBtn(){
+    public WebElement getActivePageBtn() {
         return this.webElement.findElement(By.xpath(activePageBtn));
     }
 
-    private WebElement getFirstPageBtn(){
+    private WebElement getFirstPageBtn() {
         return this.webElement.findElement(By.xpath(firstPageBtn));
     }
 
-    private WebElement getLastPageBtn(){
+    private WebElement getLastPageBtn() {
         return this.webElement.findElement(By.xpath(lastPageBtn));
     }
 
-    private WebElement getPreviousPageBtn(){
+    private WebElement getPreviousPageBtn() {
         return this.webElement.findElement(By.xpath(previousPageBtn));
     }
 
-    private WebElement getNextPageBtn(){
+    private WebElement getNextPageBtn() {
         return this.webElement.findElement(By.xpath(nextPageBtn));
     }
 
-    public String getLabelOfActivePageBtn(){
+    public String getLabelOfActivePageBtn() {
         return getActivePageBtn().getText();
     }
 
-    public String getLabelOfLastPageBtn(){
+    public String getLabelOfLastPageBtn() {
         return getLastPageBtn().getText();
     }
 
-    public String getNumberOfAllRowsInTable(){
+    public String getNumberOfAllRowsInTable() {
         return getRowsCounter().getText();
     }
 
-    public String getExpandedText(){
+    public String getExpandedText() {
         return expandedTextTooltip.getExpandedText();
     }
 
@@ -372,49 +365,48 @@ public class TableWidget extends Widget implements TableInterface {
         return !getNextPageBtn().getAttribute("class").contains("disabled");
     }
 
-    public void clickFirstPage(){
+    public void clickFirstPage() {
         getFirstPageBtn().click();
     }
 
-    public void clickLastPage(){
+    public void clickLastPage() {
         getLastPageBtn().click();
     }
 
-    public void clickNextPage(){
+    public void clickNextPage() {
         getNextPageBtn().click();
     }
 
-    public void clickPreviousPage(){
+    public void clickPreviousPage() {
         getPreviousPageBtn().click();
     }
 
-    public void clickOnFirstExpander(){
+    public void clickOnFirstExpander() {
         getExpanders().get(0).click();
-        if(expandedTextTooltip == null){
+        if (expandedTextTooltip == null) {
             expandedTextTooltip = new ExpandedTextTooltip(this.driver);
         }
     }
 
-    public int howManyRowsOnFirstPage(){
+    public int howManyRowsOnFirstPage() {
         return driver.findElements(By.xpath(tableRows)).size();
     }
 
     private void selectTableRow(int row) {
         this.contextActions = null;
-        if(!getTableRows().get(row).getAttribute(CLASS_ATTRIBUTE).contains(SELECTED))
+        if (!getTableRows().get(row).getAttribute("class").contains("selected"))
             getTableRows().get(row).click();
     }
 
     public void unselectTableRow(int row) {
         this.contextActions = null;
-        if(getTableRows().get(row).getAttribute(CLASS_ATTRIBUTE).contains(SELECTED))
+        if(getTableRows().get(row).getAttribute("class").contains("selected"))
             getTableRows().get(row).click();
     }
 
     public boolean checkIfTableIsEmpty(){
         return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size()>0;
     }
-
 
     private List<Row> getVisibleRows() {
         WebElement gridContainer = this.webElement.findElement(By.className("TableBody"))
@@ -425,54 +417,54 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Deprecated
-    public ColumnsManagement getColumnsManagement(){
+    public ColumnsManagement getColumnsManagement() {
         DelayUtils.waitByXPath(this.webDriverWait, gearIcon);
         this.webElement.findElement(By.xpath(gearIcon)).click();
         return ColumnsManagement.create(this.driver);
     }
 
-    private void openSearchPanel(){
-        if(advancedSearch == null){
+    private void openSearchPanel() {
+        if (advancedSearch == null) {
             LocatingUtils.waitUsingBy(By.className(AdvancedSearch.SEARCH_COMPONENT_CLASS), this.webDriverWait);
             advancedSearch = new AdvancedSearch(this.driver, this.webDriverWait);
         }
         advancedSearch.openSearchPanel();
     }
 
-    private void confirmFilter(){
+    private void confirmFilter() {
         this.advancedSearch.clickApply();
     }
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
-        if(this.advancedSearch == null) {
+        if (this.advancedSearch == null) {
             this.openSearchPanel();
         }
         Input input = advancedSearch.getComponent(componentId, componentType);
         input.setSingleStringValueContains(value);
     }
 
-    public String getAttribute(int rowIndex, String attribute){
+    public String getAttribute(int rowIndex, String attribute) {
         return getTableRows().get(rowIndex).getAttribute(attribute);
     }
 
+    public void typeIntoSearch(String text) {
+        getSearchInput().sendKeys(text);
+    }
 
-
-    public void typeIntoSearch(String text){ getSearchInput().sendKeys(text); }
-
-    public void scrollHorizontally(int offset){
+    public void scrollHorizontally(int offset) {
         getHorizontalTableScroller().click();
         Actions action = new Actions(this.driver);
         action.moveToElement(getHorizontalTableScroller()).clickAndHold();
-        action.moveByOffset(offset,0);
+        action.moveByOffset(offset, 0);
         action.release();
         action.perform();
     }
 
-    public void scrollVertically(int offset){
+    public void scrollVertically(int offset) {
         getVerticalTableScroller().click();
         Actions action = new Actions(this.driver);
         action.moveToElement(getVerticalTableScroller()).clickAndHold();
-        action.moveByOffset(0,offset);
+        action.moveByOffset(0, offset);
         action.release();
         action.perform();
     }
@@ -480,18 +472,18 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void resizeColumn(int column, int offset) {
         Actions action = new Actions(this.driver);
-        action.dragAndDropBy(getColumnResizeGrips().get(column), offset,0).perform();
+        action.dragAndDropBy(getColumnResizeGrips().get(column), offset, 0).perform();
     }
 
     public String getValueFromRowWithID(String columnLabel, String id) {
         int index = getActiveColumns().indexOf(columnLabel);
-        List<WebElement> valueCells = this.webElement.findElements(By.xpath(".//div[@id='table-wrapper']/div[@class='TableBody']//div[@id='"+id+"' and contains(@class,'Row')]/div[@class='Cell']//div[contains(@class,'text-wrapper')]"));
+        List<WebElement> valueCells = this.webElement.findElements(By.xpath(".//div[@id='table-wrapper']/div[@class='TableBody']//div[@id='" + id + "' and contains(@class,'Row')]/div[@class='Cell']//div[contains(@class,'text-wrapper')]"));
         return valueCells.get(index).getText();
     }
 
     public String getValueFromNthRow(String columnLabel, String rowNumber) {
         int index = getActiveColumns().indexOf(columnLabel);
-        List<WebElement> valueCells = this.webElement.findElements(By.xpath("(.//div[@id='table-wrapper']/div[@class='TableBody']//div[@class='Row' or @class='Row selected'])["+rowNumber+"]/div[@class='Cell']/div/div"));
+        List<WebElement> valueCells = this.webElement.findElements(By.xpath("(.//div[@id='table-wrapper']/div[@class='TableBody']//div[@class='Row' or @class='Row selected'])[" + rowNumber + "]/div[@class='Cell']/div/div"));
         return valueCells.get(index).getText();
     }
 
@@ -530,7 +522,7 @@ public class TableWidget extends Widget implements TableInterface {
         public int getIndex() {
             int heightValue = CSSUtils.getHeightValue(this.webElement);
             int topValue = CSSUtils.getTopValue(this.webElement) + heightValue;
-            return (topValue/heightValue);
+            return (topValue / heightValue);
         }
     }
 

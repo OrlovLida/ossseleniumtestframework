@@ -117,4 +117,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
             return messageType;
         }
     }
+
+    @Override
+    public void clickMessageLink() {
+        DelayUtils.waitForNestedElements(wait, messageContainer, "//div[contains(@class,'systemMessageItem')]");
+        messageContainer.findElement(By.xpath(".//a[contains(@href, '#/')]")).click();
+    }
 }

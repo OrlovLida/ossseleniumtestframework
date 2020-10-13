@@ -25,12 +25,6 @@ public class OldActionsContainer implements ActionsInterface {
         return new OldActionsContainer(driver, wait, toolbar);
     }
 
-    private static OldActionsContainer createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
-        DelayUtils.waitByXPath(wait, xpath);
-        WebElement toolbar = driver.findElement(By.xpath(xpath));
-        return new OldActionsContainer(driver, wait, toolbar);
-    }
-
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement toolbar;
@@ -68,10 +62,10 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(wait,toolbar,"//*[@data-attributename='"+id+"'] | //*[@id='"+id+"'] ");
+        DelayUtils.waitForNestedElements(wait, toolbar, "//*[@data-attributename='" + id + "'] | //*[@id='" + id + "'] ");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                toolbar.findElement(By.xpath("//*[@data-attributename='"+id+"'] | //*[@id='"+id+"'] ")))))
+                toolbar.findElement(By.xpath("//*[@data-attributename='" + id + "'] | //*[@id='" + id + "'] ")))))
                 .click()
                 .perform();
     }
@@ -88,7 +82,7 @@ public class OldActionsContainer implements ActionsInterface {
         DelayUtils.waitForNestedElements(wait, toolbar, ".//li[@data-group-id='" + groupId + "']//button");
         wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(".//li[@data-group-id='" + groupId + "']//button")))).click();
         Actions action = new Actions(driver);
-        WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath("//a[contains(@data-attributename, '"+innerGroupId+"')]"))));
+        WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath("//a[contains(@data-attributename, '" + innerGroupId + "')]"))));
         action.moveToElement(foundedElement).perform();
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributename='" + actionDataAttributeName + "']"))).click();
     }
