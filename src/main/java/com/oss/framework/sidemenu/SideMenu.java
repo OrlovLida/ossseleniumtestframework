@@ -19,9 +19,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class SideMenu {
 
     private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menu__item-label' and text()='%s']";
-    private static final String TAB_NAME_PATH_PATTERN = "//span[text()='%s']";
-    private static final String PRODUCT_NAME_PATH_PATTERN = "//div[@class='subMenu isExpanded']//span[text()='%s']";
-    private static final String TECHNOLOGY_NAME_PATH_PATTERN = "//span[text()='%s']";
     private final WebDriver driver;
     private final WebDriverWait wait;
 
@@ -30,42 +27,18 @@ public class SideMenu {
         this.wait = wait;
     }
 
-    @Deprecated
-    public void goToTabByLeftSideMenu(String tab) {
-        String tabXpath = String.format(TAB_NAME_PATH_PATTERN, tab);
-        DelayUtils.waitByXPath(wait, tabXpath);
-        driver.findElement(By.xpath(tabXpath)).click();
-    }
-
-    @Deprecated
-    public void goToProductByLeftSideMenu(String tab, String product) {
-        goToTabByLeftSideMenu(tab);
-        String productXpath = String.format(PRODUCT_NAME_PATH_PATTERN, product);
-        DelayUtils.waitByXPath(wait, productXpath);
-        driver.findElement(By.xpath(productXpath)).click();
-    }
-
-    @Deprecated
-    public void goToTechnologyByLeftSideMenu(String tab, String product, String technology) {
-        goToProductByLeftSideMenu(tab, product);
-        String technologyXpath = String.format(TECHNOLOGY_NAME_PATH_PATTERN, technology);
-        DelayUtils.waitByXPath(wait, technologyXpath);
-        Actions actions = new Actions(driver);
-        actions.moveToElement(driver.findElement(By.xpath(technologyXpath)))
-                .sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN)
-                .pause(500).build().perform();
-        actions.moveToElement(driver.findElement(By.xpath(technologyXpath)))
-                .click().build().perform();
-    }
-
     public void callActionByLabel(String actionLabel, String... path) {
         String actionXpath;
-        for(String s:path){
+        for (String s : path) {
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
             DelayUtils.waitByXPath(wait, actionXpath);
             driver.findElement(By.xpath(actionXpath)).click();
         }
-        actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
+        callAction(actionLabel);
+    }
+
+    private void callAction(String actionLabel) {
+        String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
         DelayUtils.waitByXPath(wait, actionXpath);
         Actions actions = new Actions(driver);
         actions.moveToElement(driver.findElement(By.xpath(actionXpath)))
