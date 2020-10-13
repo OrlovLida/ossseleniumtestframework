@@ -1,5 +1,7 @@
 package com.oss.framework.components.contextactions;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -107,7 +109,8 @@ public class ActionsContainer implements ActionsInterface {
 
         private Dropdown(WebDriver driver, WebDriverWait webDriverWait) {
             this.webDriverWait = webDriverWait;
-            this.webElement = driver.findElement(By.className("actionsList"));
+            List<WebElement> actionsLists = driver.findElements(By.className("actionsList"));
+            this.webElement = actionsLists.get(actionsLists.size() - 1);
         }
 
         private void callAction(String actionId) {
