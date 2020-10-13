@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -17,10 +18,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.DelayUtils;
 
 public class OldTable implements TableInterface {
@@ -163,14 +164,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public void callAction(String groupId, String actionId) {
-        ActionsInterface actions = ActionsContainer.createFromParent(window, driver, wait);
-        actions.callAction(groupId, actionId);
-    }
-
-    @Override
-    public void callOldAction(String groupId, String actionId) {
-        ActionsInterface actions = OldActionsContainer.createFromParent(driver, wait, window);
-        actions.callAction(groupId, actionId);
+        getActionsInterface().callAction(groupId, actionId);
     }
 
     @Override
@@ -199,7 +193,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public void refreshUntilNoData(int waitTime, String refreshLabel) {
-        if(this.widgetId == null) {
+        if (this.widgetId == null) {
             throw new RuntimeException("widgetId property is missing");
         }
         long currentTime = System.currentTimeMillis();
@@ -249,7 +243,7 @@ public class OldTable implements TableInterface {
     }
 
     private boolean isNoData() {
-        List<WebElement> noData = this.driver.findElements(By.xpath("//div[@data-attributename='"+this.widgetId +"']//h3[contains(@class,'noDataWithColumns')]"));
+        List<WebElement> noData = this.driver.findElements(By.xpath("//div[@data-attributename='" + this.widgetId + "']//h3[contains(@class,'noDataWithColumns')]"));
         return !noData.isEmpty();
     }
 
@@ -275,6 +269,25 @@ public class OldTable implements TableInterface {
             }
         }
         return columns;
+    }
+
+    private ActionsInterface getActionsInterface() {
+        DelayUtils.waitForNestedElements(wait, window, "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']");
+        boolean isNewActionContainer = isElementPresent(driver, By.className("actionsContainer"));
+        if (isNewActionContainer) {
+            return ActionsContainer.createFromParent(window, driver, wait);
+        } else {
+            return OldActionsContainer.createFromParent(driver, wait, window);
+        }
+    }
+
+    private static boolean isElementPresent(WebDriver driver, By by) {
+        try {
+            driver.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     private static class Column {
