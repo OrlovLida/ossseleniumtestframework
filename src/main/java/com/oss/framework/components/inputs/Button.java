@@ -8,12 +8,12 @@ public class Button {
 
     private final WebElement webElement;
 
-    public static Button create(WebDriver driver, String componentId) {
-        return new Button(driver, componentId);
+    public static Button create(WebDriver driver, String text) {
+        return new Button(driver, text);
     }
 
-    public static Button create(WebDriver driver, String componentId, String selector) {
-        return new Button(driver, componentId, selector);
+    public static Button create(WebDriver driver, String text, String selector) {
+        return new Button(driver, text, selector);
     }
 
     public static Button createById(WebDriver driver, String componentId) {
@@ -28,23 +28,23 @@ public class Button {
         return new Button(iconClass, driver, buttonClass);
     }
 
-    private Button(WebDriver driver, String componentId) {
-        this.webElement = driver.findElement(By.xpath("//button[text()='" + componentId + "']"));
+    private Button(WebDriver driver, String text) {
+        this.webElement = driver.findElement(By.xpath("//button[text()='" + text + "']"));
     }
 
-    private Button(WebDriver driver, String componentId, String selector) {
-        this.webElement = driver.findElement(By.xpath("//" + selector + "[text()='" + componentId + "']"));
+    private Button(WebDriver driver, String text, String selector) {
+        this.webElement = driver.findElement(By.xpath("//" + selector + "[text()='" + text + "']"));
     }
 
     private Button(String componentId, WebDriver driver) {
         this.webElement = driver.findElement(By.xpath("//button[@data-attributename='" + componentId + "']"));
     }
 
-    private Button(String selector, String componentId, WebDriver driver){
+    private Button(String selector, String componentId, WebDriver driver) {
         this.webElement = driver.findElement(By.xpath("//" + selector + "[@data-attributename='" + componentId + "']"));
     }
 
-    private Button(String iconClass, WebDriver driver, String buttonClass){
+    private Button(String iconClass, WebDriver driver, String buttonClass) {
         this.webElement = driver.findElement(By.xpath("//button[contains (@class,'" + buttonClass + "')]/i[contains(@class,'" + iconClass + "')]"));
     }
 

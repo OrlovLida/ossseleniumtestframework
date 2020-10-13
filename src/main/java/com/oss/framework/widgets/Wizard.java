@@ -1,16 +1,15 @@
 package com.oss.framework.widgets;
 
-import com.oss.framework.components.inputs.Button;
+import com.oss.framework.components.inputs.ComponentFactory;
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.oss.framework.components.inputs.ComponentFactory;
-import com.oss.framework.components.inputs.Input;
-import com.oss.framework.utils.DelayUtils;
 
 public class Wizard {
 
@@ -139,18 +138,34 @@ public class Wizard {
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//a[text()='Delete']"))))).click().perform();
     }
 
-    public void clickActionById(String actionId){
-        DelayUtils.waitForNestedElements(wait,webElement,"//*[@data-attributename='"+actionId+"']");
+    public void clickActionById(String actionId) {
+        DelayUtils.waitForNestedElements(wait, webElement, "//*[@data-attributename='" + actionId + "']");
         Actions action = new Actions(driver);
         WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@data-attributename='" + actionId + "']"))));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
 
-    public void clickButtonByLabel(String label){
-        DelayUtils.waitForNestedElements(wait,webElement,"//*[text()='"+label+"']");
+    public void clickButtonByLabel(String label) {
+        DelayUtils.waitForNestedElements(wait, webElement, "//*[text()='" + label + "']");
         wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[text()='" + label + "']"))));
         driver.findElement(By.xpath("//*[text()='" + label + "']")).click();
 
+    }
+
+
+    public void rolloutByLabel(String text) {
+        if (isElementPresent(webElement, By.xpath("//div[contains(@class, 'collapsedRollout')]//*[text()='" + text + "']"))) {
+            webElement.findElement(By.xpath("//*[text()='" + text + "']")).click();
+        }
+    }
+
+    private static boolean isElementPresent(WebElement webElement, By by) {
+        try {
+            webElement.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 }
