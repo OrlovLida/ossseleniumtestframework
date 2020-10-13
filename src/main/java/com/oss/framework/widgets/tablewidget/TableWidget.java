@@ -51,6 +51,8 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String activePageBtn = ".//li[@class='page active']";
     private static final String rowsCounter = ".//div[@class='rowsCounter']/span[last()]";
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
+    private static final String CLASS_ATTRIBUTE = "class";
+    private static final String SELECTED = "selected";
 
     private AdvancedSearch advancedSearch;
     private ActionsContainer contextActions;
@@ -399,13 +401,13 @@ public class TableWidget extends Widget implements TableInterface {
 
     private void selectTableRow(int row) {
         this.contextActions = null;
-        if(!getTableRows().get(row).getAttribute("class").contains("selected"))
+        if(!getTableRows().get(row).getAttribute(CLASS_ATTRIBUTE).contains(SELECTED))
             getTableRows().get(row).click();
     }
 
     public void unselectTableRow(int row) {
         this.contextActions = null;
-        if(getTableRows().get(row).getAttribute("class").contains("selected"))
+        if(getTableRows().get(row).getAttribute(CLASS_ATTRIBUTE).contains(SELECTED))
             getTableRows().get(row).click();
     }
 

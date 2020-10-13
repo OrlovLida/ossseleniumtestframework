@@ -29,14 +29,21 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private WebElement messageContainer;
 
     private static final String PATH_TO_CLOSEBUTTON = "//div[contains(@class,'closeButton')]";
+    private static final String PATH_TO_SYSTEM_MESSAGE_CONTAINER = "//div[contains(@class, 'systemMessagesContainer')]";
+    private static final String PATH_TO_SYSTEM_MESSAGE_ITEM = "//div[contains(@class,'systemMessageItem')]";
+    private static final String DANGER = "danger";
+    private static final String SUCCESS = "success";
+    private static final String WARNING = "warning";
+    private static final String INFO = "info";
+    private static final String CANNOT_MAP_TO_MESSAGE_EXCEPTION = "Cannot map to message type";
 
     public enum MessageType {
         DANGER, WARNING, SUCCESS, INFO
     }
 
     public static SystemMessageInterface create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, "//div[contains(@class, 'systemMessagesContainer')]");
-        WebElement messageContainer = driver.findElement(By.xpath("//div[contains(@class, 'systemMessagesContainer')]"));
+        DelayUtils.waitByXPath(wait, PATH_TO_SYSTEM_MESSAGE_CONTAINER);
+        WebElement messageContainer = driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         return new SystemMessageContainer(driver, wait, messageContainer);
     }
 
@@ -48,8 +55,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public List<Message> getMessages() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, "//div[contains(@class,'systemMessageItem')]");
-        List<WebElement> messageItems = messageContainer.findElements(By.xpath("//div[contains(@class,'systemMessageItem')]"));
+        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
+        List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
 
@@ -75,21 +82,21 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private MessageType mapToMassageType(List<String> classes) {
         for (String cssClass : classes) {
             switch (cssClass) {
-                case "success": {
+                case SUCCESS: {
                     return MessageType.SUCCESS;
                 }
-                case "danger": {
+                case DANGER: {
                     return MessageType.DANGER;
                 }
-                case "info": {
+                case INFO: {
                     return MessageType.INFO;
                 }
-                case "warning": {
+                case WARNING: {
                     return MessageType.WARNING;
                 }
             }
         }
-        throw new RuntimeException("Cannot map to message type");
+        throw new RuntimeException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);
     }
 
     public static class Message {
