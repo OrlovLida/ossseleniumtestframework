@@ -37,9 +37,9 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
 
     @Override
     public void clickButtonByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, this.prompt, ".//button[contains(text(),'" + label + "')]");
+        DelayUtils.waitForNestedElements(wait, this.prompt, ".//button[contains(text(),'" + label + "')]|.//a[contains(text(),'" + label + "')]");
         WebElement button = wait.until(ExpectedConditions
-                .elementToBeClickable(this.prompt.findElement(By.xpath(".//button[contains(text(),'" + label + "')]"))));
+                .elementToBeClickable(this.prompt.findElement(By.xpath(".//button[contains(text(),'" + label + "')]|.//a[contains(text(),'" + label + "')]"))));
         button.click();
         wait.until(ExpectedConditions.invisibilityOf(button));
     }
