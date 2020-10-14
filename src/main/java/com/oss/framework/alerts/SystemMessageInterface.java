@@ -11,5 +11,8 @@ public interface SystemMessageInterface {
 
     Optional<Message> getFirstMessage();
 
+    void close();
+
     void clickMessageLink();
+    
 }
