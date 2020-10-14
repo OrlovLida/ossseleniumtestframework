@@ -31,10 +31,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private static final String PATH_TO_CLOSEBUTTON = "//div[contains(@class,'closeButton')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_CONTAINER = "//div[contains(@class, 'systemMessagesContainer')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_ITEM = "//div[contains(@class,'systemMessageItem')]";
-    private static final String DANGER = "danger";
-    private static final String SUCCESS = "success";
-    private static final String WARNING = "warning";
-    private static final String INFO = "info";
+    private static final String DANGER_MESSAGE_TYPE_CLASS = "danger";
+    private static final String SUCCESS_MESSAGE_TYPE_CLASS = "success";
+    private static final String WARNING_MESSAGE_TYPE_CLASS = "warning";
+    private static final String INFO_MESSAGE_TYPE_CLASS = "info";
     private static final String CANNOT_MAP_TO_MESSAGE_EXCEPTION = "Cannot map to message type";
 
     public enum MessageType {
@@ -82,16 +82,16 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private MessageType mapToMassageType(List<String> classes) {
         for (String cssClass : classes) {
             switch (cssClass) {
-                case SUCCESS: {
+                case SUCCESS_MESSAGE_TYPE_CLASS: {
                     return MessageType.SUCCESS;
                 }
-                case DANGER: {
+                case DANGER_MESSAGE_TYPE_CLASS: {
                     return MessageType.DANGER;
                 }
-                case INFO: {
+                case INFO_MESSAGE_TYPE_CLASS: {
                     return MessageType.INFO;
                 }
-                case WARNING: {
+                case WARNING_MESSAGE_TYPE_CLASS: {
                     return MessageType.WARNING;
                 }
             }
