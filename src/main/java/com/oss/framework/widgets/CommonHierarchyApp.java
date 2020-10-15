@@ -5,11 +5,16 @@ import com.oss.framework.utils.LocatingUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 /**
  * @author Ewa Frączek
  */
 
 public class CommonHierarchyApp extends Widget {
+
+    private static final String HORIZONTAL_SECTION_PATTERN = "//div[@class='CommonHierarchyAppList horizontal'][%d]";
+    private static final String SEARCH_FIELD_PATH = "//input[contains(@class, 'form-control SearchText')]";
 
     public static CommonHierarchyApp createByClass(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         return new CommonHierarchyApp(driver, widgetClass, webDriverWait);
@@ -43,4 +48,62 @@ public class CommonHierarchyApp extends Widget {
         LocatingUtils.waitUsingXpath(searchResultXpath, webDriverWait);
         webElement.findElement(By.xpath(searchResultXpath)).click();
     }
+
+    public void selectValue(List<String> valueLabels, String... pathLabels){
+        navigateToPath(pathLabels);
+        String deepestHorizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, pathLabels.length + 1);
+        for(String valueLabel: valueLabels) {
+            searchIfAvailable(pathLabels.length, valueLabel);
+            List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
+                    "//ul[(@class = 'levelElementsList')]//li[@class='levelElement']"));
+            makeActionOnCorrectElement(valueLabel, rowCandidates, "Select");
+            DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        }
+    }
+
+    private void makeActionOnCorrectElement(String valueLabel, List<WebElement> rowCandidates, String action) {
+        for (WebElement correctRowCandidate : rowCandidates) {
+            String elementText = correctRowCandidate.getText();
+            if (elementText.contains(valueLabel) && elementText.contains(action)) {
+                WebElement optionButton = correctRowCandidate.findElement(By.xpath(".//button[contains(@class, 'squareButton')]"));
+                optionButton.click();
+                DelayUtils.waitForPageToLoad(driver, webDriverWait);
+            }
+        }
+    }
+
+    private void navigateToPath(String... pathLabels) {
+        for(int depthLevel = 0; depthLevel < pathLabels.length; ++depthLevel){
+            String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
+            searchIfAvailable(depthLevel, pathLabels[depthLevel]);
+            WebElement elementToChoose = webElement.findElement(By.xpath(horizontalSectionPath + "//span[text()='" + pathLabels[depthLevel] + "']"));
+            elementToChoose.click();
+            DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        }
+    }
+
+    private void searchIfAvailable(int depthLevel, String phraseToSearchFor) {
+        String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
+        if(isSearchFieldPresent(depthLevel)){
+            WebElement searchField = webElement.findElement(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH));
+            searchField.clear();
+            searchField.sendKeys(phraseToSearchFor);
+            searchField.sendKeys(Keys.ENTER);
+            DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        }
+    }
+
+    private boolean isSearchFieldPresent(int depthLevel) {
+        String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
+        return !webElement.findElements(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH)).isEmpty();
+    }
+
+    public void callAction(String valueLabels, String actionName, String... pathLabels){
+
+    }
+
+    public void search(String searchText, String... pathLabels){
+
+    }
+
 }
