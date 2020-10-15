@@ -16,8 +16,8 @@ public class CommonHierarchyApp extends Widget {
     private static final String HORIZONTAL_SECTION_PATTERN = "//div[@class='CommonHierarchyAppList horizontal'][%d]";
     private static final String SEARCH_FIELD_PATH = "//input[contains(@class, 'form-control SearchText')]";
 
-    public static CommonHierarchyApp createByClass(WebDriver driver, WebDriverWait webDriverWait) {
-        return new CommonHierarchyApp(driver, "CommonHierarchyApp", webDriverWait);
+    public static CommonHierarchyApp createByClass(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
+        return new CommonHierarchyApp(driver, widgetClass, webDriverWait);
     }
 
     private CommonHierarchyApp(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
@@ -49,60 +49,16 @@ public class CommonHierarchyApp extends Widget {
         webElement.findElement(By.xpath(searchResultXpath)).click();
     }
 
-    /**
-     * Goes through CommonHierarchyApp using pathLabels.
-     * Should be used when there is no selection of elements at deepest level of hierarchy
-     * @param pathLabels path to go through. Example: locationName, deviceName
-     */
-    public void navigateToPath(String... pathLabels) {
-        for(int depthLevel = 0; depthLevel < pathLabels.length; ++depthLevel){
-            String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
-            searchIfAvailable(depthLevel, pathLabels[depthLevel]);
-            WebElement elementToChoose = webElement.findElement(By.xpath(horizontalSectionPath + "//span[text()='" + pathLabels[depthLevel] + "']"));
-            elementToChoose.click();
-            DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        }
-    }
-
-    /**
-     * Goes through CommonHierarchyApp using pathLabels.
-     * Should be used when there is selection of elements at deepest level of hierarchy
-     * @param valueLabels values on which should action be executed at deepest level. Example: names of interfaces
-     * @param actionName action that should be executed on valueLabels. Example: Remove/Select
-     * @param pathLabels path to go through. Example: locationName, deviceName
-     */
-    public void callAction(List<String> valueLabels, String actionName, String... pathLabels){
+    public void selectValue(List<String> valueLabels, String... pathLabels){
         navigateToPath(pathLabels);
         String deepestHorizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, pathLabels.length + 1);
         for(String valueLabel: valueLabels) {
             searchIfAvailable(pathLabels.length, valueLabel);
             List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
                     "//ul[(@class = 'levelElementsList')]//li[@class='levelElement']"));
-            makeActionOnCorrectElement(valueLabel, rowCandidates, actionName);
+            makeActionOnCorrectElement(valueLabel, rowCandidates, "Select");
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
-    }
-
-    /**
-     * Goes through CommonHierarchyApp using pathLabels.
-     * Should be used when there is a selection of elements at deepest level of hierarchy
-     * Calls available action on elements of List<String>. If there is remove - calls remove, if select - calls select etc.
-     * @param valueLabels values that should be selected at deepest level. Example: names of interfaces
-     * @param pathLabels path to go through. Example: locationName, deviceName
-     */
-    public void callAvailableAction(List<String> valueLabels, String... pathLabels){
-        callAction(valueLabels, "", pathLabels);
-    }
-
-    /**
-     * Goes through CommonHierarchyApp using pathLabels.
-     * Should be used when there is selection of elements at deepest level of hierarchy
-     * Acts the same as method callAction with parameter actionName set as 'Select'
-     * @param valueLabels values that should be selected at deepest level. Example: names of interfaces
-     * @param pathLabels path to go through. Example: locationName, deviceName
-     */
-    public void selectValue(List<String> valueLabels, String... pathLabels){
-        callAction(valueLabels, "Select", pathLabels);
     }
 
     private void makeActionOnCorrectElement(String valueLabel, List<WebElement> rowCandidates, String action) {
@@ -113,6 +69,16 @@ public class CommonHierarchyApp extends Widget {
                 optionButton.click();
                 DelayUtils.waitForPageToLoad(driver, webDriverWait);
             }
+        }
+    }
+
+    private void navigateToPath(String... pathLabels) {
+        for(int depthLevel = 0; depthLevel < pathLabels.length; ++depthLevel){
+            String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
+            searchIfAvailable(depthLevel, pathLabels[depthLevel]);
+            WebElement elementToChoose = webElement.findElement(By.xpath(horizontalSectionPath + "//span[text()='" + pathLabels[depthLevel] + "']"));
+            elementToChoose.click();
+            DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
     }
 
@@ -130,6 +96,14 @@ public class CommonHierarchyApp extends Widget {
     private boolean isSearchFieldPresent(int depthLevel) {
         String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
         return !webElement.findElements(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH)).isEmpty();
+    }
+
+    public void callAction(String valueLabels, String actionName, String... pathLabels){
+
+    }
+
+    public void search(String searchText, String... pathLabels){
+
     }
 
 }
