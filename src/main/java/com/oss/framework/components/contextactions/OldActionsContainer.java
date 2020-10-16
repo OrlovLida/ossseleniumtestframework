@@ -25,6 +25,12 @@ public class OldActionsContainer implements ActionsInterface {
         return new OldActionsContainer(driver, wait, toolbar);
     }
 
+    public static OldActionsContainer createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
+        DelayUtils.waitByXPath(wait, xpath);
+        WebElement toolbar = driver.findElement(By.xpath(xpath));
+        return new OldActionsContainer(driver, wait, toolbar);
+    }
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement toolbar;

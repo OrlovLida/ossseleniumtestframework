@@ -241,8 +241,8 @@ public class OldTable implements TableInterface {
         expandButton.click();
         DelayUtils.waitForPageToLoad(driver, wait);
     }
-
-    private boolean isNoData() {
+    @Override
+    public boolean isNoData() {
         List<WebElement> noData = this.driver.findElements(By.xpath("//div[@data-attributename='" + this.widgetId + "']//h3[contains(@class,'noDataWithColumns')]"));
         return !noData.isEmpty();
     }

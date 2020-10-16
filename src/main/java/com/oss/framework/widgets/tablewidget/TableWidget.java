@@ -99,6 +99,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
+    public boolean isNoData() {
+        return false;
+    }
+
+    @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
         throw new RuntimeException("Not implemented yet");
     }

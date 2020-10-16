@@ -38,6 +38,8 @@ public interface TableInterface {
 
     void selectRowByAttributeValue(String attributeId, String value);
 
+    boolean isNoData();
+
     int getRowNumber(String value, String attributeLabel);
 
     void selectRowByAttributeValueWithLabel(String attributeLabel, String value);
