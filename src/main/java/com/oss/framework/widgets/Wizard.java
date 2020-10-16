@@ -40,6 +40,12 @@ public class Wizard {
         return input;
     }
 
+    public void setComponentValue(String componentId, String value, Input.ComponentType componentType) {
+        DelayUtils.waitForNestedElements(wait, webElement, "//*[@data-attributename='"+componentId+"']");
+        Input input = getComponent(componentId, componentType);
+        input.setSingleStringValue(value);
+    }
+
     public void clickNext() {
         DelayUtils.waitForNestedElements(wait, webElement, "//button[text()='Next']");
         Actions action = new Actions(driver);
