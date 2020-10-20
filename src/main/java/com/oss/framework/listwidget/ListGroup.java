@@ -11,9 +11,9 @@ public class ListGroup {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private String LIST_GROUP_CLASS = "list-group";
-    private String ITEM_LIST_CLASS = "list-group-item";
-
+    private static final String LIST_GROUP_CLASS = "list-group";
+    private static final String ITEM_LIST_CLASS = "list-group-item";
+    private static final String SELECTED_ITEM_CLASS = ITEM_LIST_CLASS + " active";
 
     public static ListGroup create(WebDriver driver, WebDriverWait wait) {
         return new ListGroup(driver, wait);
@@ -30,11 +30,17 @@ public class ListGroup {
     }
 
     public void selectItemByName(String itemName) {
-        Actions action = new Actions(driver);
-        action.moveToElement(getListGroup().findElement(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + itemName + "']"))).click();
+        if (notSelected(itemName)) {
+            Actions action = new Actions(driver);
+            action.moveToElement(getListGroup().findElement(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + itemName + "']"))).click();
+        }
     }
 
-    public boolean isItemVisible(String itemName) {
-        return getListGroup().findElements(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + itemName + "']")).size() > 0;
+    public boolean notVisible(String itemName) {
+        return getListGroup().findElements(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + itemName + "']")).isEmpty();
+    }
+
+    private boolean notSelected(String itemName) {
+        return getListGroup().findElements(By.xpath("//button[@class='" + SELECTED_ITEM_CLASS + "' and text() = '" + itemName + "']")).isEmpty();
     }
 }

@@ -23,8 +23,8 @@ public class TabsWidget implements TabsInterface {
 
     private static final String TABS = ".//a";
     private static final String ACTIVE_TAB = ".//a[contains(@class,'active')]";
-    private static final String ADD_TAB_ICON = ".//i[@class ='OSSIcon fa fa-plus')]";
-    private static final String SAVE_TAB_ICON = ".//i[@class ='OSSIcon fa fa-save')]";
+    private static final String ADD_TAB_ICON = ".//i[@class ='OSSIcon fa fa-plus']";
+    private static final String SAVE_TAB_ICON = ".//i[@class ='OSSIcon fa fa-save']";
     private static final String DOWNLOAD_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-download']";
     private static final String CHOOSE_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-cog']";
     private static final String DROPDOWN_TAB = ".//div[@class= 'dropdown-tab']";
@@ -123,7 +123,7 @@ public class TabsWidget implements TabsInterface {
 
     @Override
     public void callActionById(String groupLabel, String id) {
-        
+
     }
 
     @Override
