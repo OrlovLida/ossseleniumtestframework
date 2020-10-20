@@ -70,7 +70,7 @@ public class PropertyPanel implements PropertyPanelInterface {
         return this.webElement.findElement(By.id(id));
     }
 
-    public void changeOrder(String id, int position) {
+    public void changePropertyOrder(String id, int position) {
         DragAndDrop.dragAndDrop(getPropertyById(id).findElement(By.xpath(".//div[@class = 'btn-drag']")),
                 this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH)).get(position), driver);
     }
