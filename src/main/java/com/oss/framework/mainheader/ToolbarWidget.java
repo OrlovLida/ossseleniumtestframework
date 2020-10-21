@@ -34,7 +34,7 @@ public class ToolbarWidget {
 
     public void openLoginPanel() {
         if (!isOpen(getLoginPanel()))
-            getloginPanel().click();
+            getLoginPanel().click();
     }
 
     public void openNotificationPanel() {
@@ -48,8 +48,8 @@ public class ToolbarWidget {
     }
 
     public void closeLoginPanel() {
-        if (isOpen(getloginPanel()))
-            getloginPanel().click();
+        if (isOpen(getLoginPanel()))
+            getLoginPanel().click();
     }
 
     public void closeNotificationPanel() {
