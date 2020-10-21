@@ -109,6 +109,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
+    public void selectLinkInSpecificColumn(String columnName) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         setFilterContains(attributeId, componentType, value);
         confirmFilter();
