@@ -1,13 +1,7 @@
 package com.oss.framework.widgets.tabswidget;
 
-import com.google.common.collect.Lists;
-import com.oss.framework.components.common.WidgetChooser;
-import com.oss.framework.components.contextactions.ActionsInterface;
-import com.oss.framework.components.contextactions.OldActionsContainer;
-import com.oss.framework.components.portals.ChooseConfigurationWizard;
-import com.oss.framework.components.portals.SaveConfigurationWizard;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.DragAndDrop;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,7 +9,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
+import com.google.common.collect.Lists;
+import com.oss.framework.components.common.WidgetChooser;
+import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.contextactions.ButtonContainer;
+import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.components.portals.ChooseConfigurationWizard;
+import com.oss.framework.components.portals.SaveConfigurationWizard;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 
 public class TabsWidget implements TabsInterface {
 
@@ -135,6 +137,12 @@ public class TabsWidget implements TabsInterface {
     @Override
     public boolean isNoData(String id) {
         return false;
+    }
+
+    @Override
+    public void clickButtonByLabel(String label) {
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(createTabs(), driver, webDriverWait);
+        buttonContainer.callActionByLabel(label);
     }
 
     private boolean isMoreVisible() {
