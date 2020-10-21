@@ -15,6 +15,8 @@ public class CommonHierarchyApp extends Widget {
 
     private static final String HORIZONTAL_SECTION_PATTERN = "//div[@class='CommonHierarchyAppList horizontal'][%d]";
     private static final String SEARCH_FIELD_PATH = "//input[contains(@class, 'form-control SearchText')]";
+    private static final String SINGLE_CHOOSABLE_ELEMENT_PATH = "//ul[(@class = 'levelElementsList')]//li[@class='levelElement']";
+    private static final String ACTION_BUTTON_PATH = ".//button[contains(@class, 'squareButton')]";
 
     public static CommonHierarchyApp createByClass(WebDriver driver, WebDriverWait webDriverWait) {
         return new CommonHierarchyApp(driver, "CommonHierarchyApp", webDriverWait);
@@ -24,29 +26,15 @@ public class CommonHierarchyApp extends Widget {
         super(driver, widgetClass, webDriverWait);
     }
 
+    @Deprecated
     public void setFirstObjectInHierarchy(String value){
         setValue(1, value);
         selectObject(value);
     }
 
+    @Deprecated
     public void setNextObjectInHierarchy(String objectName){
         selectObject(objectName);
-    }
-
-    private void setValue(int hierarchyLevel, String value) {
-        webElement.click();
-        DelayUtils.sleep();//wait for cursor
-        webElement.findElement(By.xpath("(.//input)["+hierarchyLevel+"]"))
-                .sendKeys(value);
-        this.webElement.findElement(By.xpath("(.//button)")).click();
-        this.webElement.findElement(By.xpath("(.//button)")).click();
-        DelayUtils.sleep();
-    }
-
-    private void selectObject(String value){
-        String searchResultXpath = "(//div[@class='CommonHierarchyApp']//span[text()='"+value+"'])";
-        LocatingUtils.waitUsingXpath(searchResultXpath, webDriverWait);
-        webElement.findElement(By.xpath(searchResultXpath)).click();
     }
 
     /**
@@ -77,7 +65,7 @@ public class CommonHierarchyApp extends Widget {
         for(String valueLabel: valueLabels) {
             searchIfAvailable(pathLabels.length, valueLabel);
             List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
-                    "//ul[(@class = 'levelElementsList')]//li[@class='levelElement']"));
+                    SINGLE_CHOOSABLE_ELEMENT_PATH));
             makeActionOnCorrectElement(valueLabel, rowCandidates, actionName);
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
@@ -110,7 +98,7 @@ public class CommonHierarchyApp extends Widget {
         for (WebElement correctRowCandidate : rowCandidates) {
             String elementText = correctRowCandidate.getText();
             if (elementText.contains(valueLabel) && elementText.contains(action)) {
-                WebElement optionButton = correctRowCandidate.findElement(By.xpath(".//button[contains(@class, 'squareButton')]"));
+                WebElement optionButton = correctRowCandidate.findElement(By.xpath(ACTION_BUTTON_PATH));
                 optionButton.click();
                 DelayUtils.waitForPageToLoad(driver, webDriverWait);
             }
@@ -131,6 +119,23 @@ public class CommonHierarchyApp extends Widget {
     private boolean isSearchFieldPresent(int depthLevel) {
         String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
         return !webElement.findElements(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH)).isEmpty();
+    }
+
+
+    private void setValue(int hierarchyLevel, String value) {
+        webElement.click();
+        DelayUtils.sleep();//wait for cursor
+        webElement.findElement(By.xpath("(.//input)["+hierarchyLevel+"]"))
+                .sendKeys(value);
+        this.webElement.findElement(By.xpath("(.//button)")).click();
+        this.webElement.findElement(By.xpath("(.//button)")).click();
+        DelayUtils.sleep();
+    }
+
+    private void selectObject(String value){
+        String searchResultXpath = "(//div[@class='CommonHierarchyApp']//span[text()='"+value+"'])";
+        LocatingUtils.waitUsingXpath(searchResultXpath, webDriverWait);
+        webElement.findElement(By.xpath(searchResultXpath)).click();
     }
 
 }
