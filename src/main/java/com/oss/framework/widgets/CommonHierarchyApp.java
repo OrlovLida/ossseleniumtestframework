@@ -18,6 +18,7 @@ public class CommonHierarchyApp extends Widget {
     private static final String SINGLE_CHOOSABLE_ELEMENT_PATH = "//ul[(@class = 'levelElementsList')]//li[@class='levelElement']";
     private static final String ACTION_BUTTON_PATH = ".//button[contains(@class, 'squareButton')]";
     private static final String COMPONENT_CLASS_NAME = "CommonHierarchyApp";
+    private static final String ELEMENT_TO_CLICK_PATTERN = "//span[text()='%s']";
 
     public static CommonHierarchyApp createByClass(WebDriver driver, WebDriverWait webDriverWait) {
         return new CommonHierarchyApp(driver, COMPONENT_CLASS_NAME, webDriverWait);
@@ -47,7 +48,8 @@ public class CommonHierarchyApp extends Widget {
         for(int depthLevel = 0; depthLevel < pathLabels.length; ++depthLevel){
             String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
             searchIfAvailable(depthLevel, pathLabels[depthLevel]);
-            WebElement elementToChoose = webElement.findElement(By.xpath(horizontalSectionPath + "//span[text()='" + pathLabels[depthLevel] + "']"));
+            String elementPath = String.format(ELEMENT_TO_CLICK_PATTERN, pathLabels[depthLevel]);
+            WebElement elementToChoose = webElement.findElement(By.xpath(horizontalSectionPath + elementPath));
             elementToChoose.click();
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
