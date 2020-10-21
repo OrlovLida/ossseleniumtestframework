@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.oss.framework.widgets.tabswidget.TabsWidget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -168,6 +169,12 @@ public class OldTable implements TableInterface {
     }
 
     @Override
+    public void selectTabByLabel(String tabLabel, String id) {
+        TabsWidget tabs = TabsWidget.createById(driver, wait, id);
+        tabs.selectTabByLabel(tabLabel);
+    }
+
+    @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         throw new RuntimeException("Not implemented for the old table widget");
     }
@@ -319,7 +326,7 @@ public class OldTable implements TableInterface {
 
         private void selectCell(String value) {
             DelayUtils.waitByXPath(this.wait, "//div[contains(@class, 'Cell')]//div[contains(@class, 'OSSRichText')]");
-            List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
+            List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell Row')]"));
             for (WebElement cell : cells) {
                 DelayUtils.waitForNestedElements(this.wait, cell, ".//div[contains(@class, 'OSSRichText')]");
                 WebElement richText = cell.findElement(By.xpath(".//div[contains(@class, 'OSSRichText')]"));

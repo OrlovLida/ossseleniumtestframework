@@ -31,7 +31,7 @@ public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
     public static final String PAGINATION_COMPONENT_CLASS = "OSSPagination";
     private static final String ATTRIBUTES_MANAGEMENT_XPATH = "//div[@id='attributes-management']";
-//    private static final String PATH = "//div[@class='TableWidget']";
+    //    private static final String PATH = "//div[@class='TableWidget']";
 //    private static final String FILTER_ICON_PATH =".//i[@class='fa fa-filter']";
 //    private static final String filterTiles = ".//span[@class='md-input-value']";
 //    private static final String typeTile = ".//span[@class='md-input-value']/span[contains(text(),'Type')]";
@@ -144,6 +144,11 @@ public class TableWidget extends Widget implements TableInterface {
             this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
         }
         contextActions.callAction(groupId, actionId);
+    }
+
+    @Override
+    public void selectTabByLabel(String tabLabel, String id) {
+
     }
 
     @Override
@@ -410,12 +415,12 @@ public class TableWidget extends Widget implements TableInterface {
 
     public void unselectTableRow(int row) {
         this.contextActions = null;
-        if(getTableRows().get(row).getAttribute("class").contains("selected"))
+        if (getTableRows().get(row).getAttribute("class").contains("selected"))
             getTableRows().get(row).click();
     }
 
-    public boolean checkIfTableIsEmpty(){
-        return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size()>0;
+    public boolean checkIfTableIsEmpty() {
+        return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size() > 0;
     }
 
     private List<Row> getVisibleRows() {

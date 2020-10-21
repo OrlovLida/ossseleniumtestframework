@@ -183,7 +183,7 @@ public class TreeWidget extends Widget {
     }
 
     public void expandTreeRow(String treeRowName){
-        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]")));
+        DelayUtils.waitByXPath(webDriverWait,"//p[contains(@class,'TreeViewLabel')][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]");
         WebElement treeRowElement= this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]"));
         DelayUtils.waitForClickability(webDriverWait, treeRowElement.findElement(By.xpath(".//i[@class='fa-li fa list-plus fa-border']")));
         TreeRow treeRow = new TreeRow(treeRowElement);
