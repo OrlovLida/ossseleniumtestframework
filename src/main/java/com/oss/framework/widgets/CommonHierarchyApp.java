@@ -16,8 +16,8 @@ public class CommonHierarchyApp extends Widget {
     private static final String HORIZONTAL_SECTION_PATTERN = "//div[@class='CommonHierarchyAppList horizontal'][%d]";
     private static final String SEARCH_FIELD_PATH = "//input[contains(@class, 'form-control SearchText')]";
 
-    public static CommonHierarchyApp createByClass(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
-        return new CommonHierarchyApp(driver, widgetClass, webDriverWait);
+    public static CommonHierarchyApp createByClass(WebDriver driver, WebDriverWait webDriverWait) {
+        return new CommonHierarchyApp(driver, "CommonHierarchyApp", webDriverWait);
     }
 
     private CommonHierarchyApp(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
@@ -85,6 +85,17 @@ public class CommonHierarchyApp extends Widget {
 
     /**
      * Goes through CommonHierarchyApp using pathLabels.
+     * Should be used when there is a selection of elements at deepest level of hierarchy
+     * Calls available action on elements of List<String>. If there is remove - calls remove, if select - calls select etc.
+     * @param valueLabels values that should be selected at deepest level. Example: names of interfaces
+     * @param pathLabels path to go through. Example: locationName, deviceName
+     */
+    public void callAvailableAction(List<String> valueLabels, String... pathLabels){
+        callAction(valueLabels, "", pathLabels);
+    }
+
+    /**
+     * Goes through CommonHierarchyApp using pathLabels.
      * Should be used when there is selection of elements at deepest level of hierarchy
      * Acts the same as method callAction with parameter actionName set as 'Select'
      * @param valueLabels values that should be selected at deepest level. Example: names of interfaces
@@ -93,7 +104,6 @@ public class CommonHierarchyApp extends Widget {
     public void selectValue(List<String> valueLabels, String... pathLabels){
         callAction(valueLabels, "Select", pathLabels);
     }
-
 
     private void makeActionOnCorrectElement(String valueLabel, List<WebElement> rowCandidates, String action) {
         for (WebElement correctRowCandidate : rowCandidates) {
