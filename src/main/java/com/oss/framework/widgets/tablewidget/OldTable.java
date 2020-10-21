@@ -247,6 +247,14 @@ public class OldTable implements TableInterface {
         return !noData.isEmpty();
     }
 
+    @Override
+    public void selectLinkInSpecificColumn(String columnName) {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        Map<String, Column> columns = createColumnsFilters();
+        Column column = columns.get(columnName);
+        column.selectLink();
+    }
+
     public int getRowNumber(String value, String attributeLabel) {
         DelayUtils.waitForNestedElements(wait, this.table, "//*[contains(text(),'" + value + "')]");
         Map<String, Column> columns = createColumnsFilters();
@@ -359,6 +367,13 @@ public class OldTable implements TableInterface {
             Actions action = new Actions(driver);
             action.click(input).keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).sendKeys(Keys.DELETE).build().perform();
             DelayUtils.sleep();
+        }
+
+        private void selectLink() {
+            DelayUtils.waitByXPath(this.wait, "//div[contains(@class, 'Cell')]//div[contains(@class, 'OSSRichText')]");
+            DelayUtils.waitForNestedElements(this.wait, column, ".//a[contains(@href, '#/')]");
+            Actions action = new Actions(driver);
+            action.click(column.findElement(By.xpath(".//div[contains(@class, 'Cell')]//a[contains(@href, '#/')]"))).perform();
         }
     }
 

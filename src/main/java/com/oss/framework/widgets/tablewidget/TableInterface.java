@@ -40,6 +40,8 @@ public interface TableInterface {
 
     boolean isNoData();
 
+    void selectLinkInSpecificColumn(String columnName);
+
     int getRowNumber(String value, String attributeLabel);
 
     void selectRowByAttributeValueWithLabel(String attributeLabel, String value);
