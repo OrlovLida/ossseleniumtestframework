@@ -26,6 +26,10 @@ public class ButtonContainer implements ActionsInterface {
         return new ButtonContainer(driver, wait, buttons);
     }
 
+    public static ButtonContainer createFromParent(WebElement parentElement, WebDriver driver, WebDriverWait wait) {
+        return new ButtonContainer(driver, wait, parentElement);
+    }
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement buttons;
@@ -37,30 +41,10 @@ public class ButtonContainer implements ActionsInterface {
     }
 
     @Override
-    public void callAction(String actionId) {
-        DelayUtils.waitByXPath(wait, "//*[@data-attributename='" + actionId + "']");
-        Actions action = new Actions(driver);
-        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                buttons.findElement(By.xpath("//*[@data-attributename='" + actionId + "']")))))
-                .click()
-                .perform();
-    }
-
-    @Override
     public void callActionByLabel(String label) {
         DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + label + "']");
         WebElement button = buttons.findElement(By.xpath("//a[text()='" + label + "']"));
         button.click();
-    }
-
-    @Override
-    public void callAction(String groupId, String actionId) {
-        throw new RuntimeException("Method not implemented for the old actions container Button Container");
-    }
-
-    @Override
-    public void callActionByLabel(String groupLabel, String actionLabel) {
-        throw new RuntimeException("Method not implemented for the old actions container Button Container");
     }
 
     @Override
@@ -74,7 +58,22 @@ public class ButtonContainer implements ActionsInterface {
     }
 
     @Override
+    public void callAction(String actionId) {
+        throw new RuntimeException("Method not implemented for Button Container");
+    }
+
+    @Override
+    public void callAction(String groupId, String actionId) {
+        throw new RuntimeException("Method not implemented for Button Container");
+    }
+
+    @Override
+    public void callActionByLabel(String groupLabel, String actionLabel) {
+        throw new RuntimeException("Method not implemented for Button Container");
+    }
+
+    @Override
     public void callActionById(String groupLabel, String actionId) {
-        throw new RuntimeException("Not implemented yet");
+        throw new RuntimeException("Method not implemented for Button Container");
     }
 }

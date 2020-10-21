@@ -1,5 +1,7 @@
 package com.oss.framework.widgets.tabswidget;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,9 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.utils.DelayUtils;
-
-import java.util.List;
 
 public class TabWindowWidget implements TabsInterface {
     private final WebDriver driver;
@@ -33,8 +34,8 @@ public class TabWindowWidget implements TabsInterface {
     public void selectTabByLabel(String tabLabel) {
         DelayUtils.waitForNestedElements(wait, this.tabs, "//div[@class='OssWindow tabWindow']");
         WebElement allTabs = this.tabs.findElement(By.xpath("//ul[@role='tablist']"));
-        DelayUtils.waitForNestedElements(wait, allTabs, ".//button[@class='oss-tab']//div[contains(text(),'"+tabLabel+"')]");
-        WebElement tab = allTabs.findElement(By.xpath(".//button[@class='oss-tab']//div[contains(text(),'"+tabLabel+"')]"));
+        DelayUtils.waitForNestedElements(wait, allTabs, ".//button[@class='oss-tab']//div[contains(text(),'" + tabLabel + "')]");
+        WebElement tab = allTabs.findElement(By.xpath(".//button[@class='oss-tab']//div[contains(text(),'" + tabLabel + "')]"));
         tab.click();
     }
 
@@ -75,5 +76,11 @@ public class TabWindowWidget implements TabsInterface {
     public boolean isNoData(String id) {
         List<WebElement> noData = driver.findElements(By.xpath("//div[@data-attributename='" + id + "']//h3[contains(@class,'noDataWithColumns')]"));
         return !noData.isEmpty();
+    }
+
+    @Override
+    public void clickButtonByLabel(String label) {
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(this.tabs, driver, wait);
+        buttonContainer.callActionByLabel(label);
     }
 }

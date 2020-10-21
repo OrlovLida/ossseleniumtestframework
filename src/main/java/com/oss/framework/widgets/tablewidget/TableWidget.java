@@ -125,11 +125,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void callAction(String actionLabel) {
+    public void callAction(String actionId) {
         if (contextActions == null) {
             this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
         }
-        contextActions.callAction(actionLabel);
+        contextActions.callActionById(actionId);
         this.contextActions = null;
     }
 
