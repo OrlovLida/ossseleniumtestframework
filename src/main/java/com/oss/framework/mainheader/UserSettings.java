@@ -22,45 +22,42 @@ import com.oss.framework.utils.DelayUtils;
 public class UserSettings {
     private WebDriver driver;
     private WebDriverWait wait;
-    private final static String LOGIN_BUTTON= "loginButton";
-    private final static String XPATH_LOGIN_PANEL= "//div[@class='login-panel']";
-    private final static String LANGUAGE_CHOOSER= "language-chooser";
+    private final static String LANGUAGE_CHOOSER = "language-chooser";
     private final static String LOGIN_BUTTON_ID = "logout-button";
-
-    public static UserSettings create (WebDriver driver, WebDriverWait wait){
-        return new UserSettings(driver,wait);
+    
+    public static UserSettings create(WebDriver driver, WebDriverWait wait) {
+        return new UserSettings(driver, wait);
     }
-
-    private UserSettings (WebDriver driver, WebDriverWait wait){
-        this.driver=driver;
-        this.wait=wait;
-
+    
+    private UserSettings(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
+        
     }
-    public void chooseLanguage(String language){
-        MainHeader toolbar = MainHeader.create(driver, wait);
-        toolbar.callActionByLabel(LOGIN_BUTTON);
-        DelayUtils.waitByXPath(wait,XPATH_LOGIN_PANEL);
+    
+    public void chooseLanguage(String language) {
+        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
+        toolbar.openLoginPanel();
         Input input = ComponentFactory.create(LANGUAGE_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
         String currentLanguage = input.getStringValue();
-        if (!currentLanguage.equals(language)){
+        if (!currentLanguage.equals(language)) {
             input.setSingleStringValue(language);
-            ConfirmationBoxInterface prompt= ConfirmationBox.create(driver, wait);
+            ConfirmationBoxInterface prompt = ConfirmationBox.create(driver, wait);
             prompt.clickButtonByLabel("OK");
+            DelayUtils.waitForPageToLoad(driver, wait);
         } else {
-            toolbar.callActionByLabel(LOGIN_BUTTON);
+            toolbar.closeLoginPanel();
         }
     }
-
-    public UserSettings open(){
-        MainHeader.create(driver, wait).callActionByLabel(LOGIN_BUTTON);
-        DelayUtils.waitByXPath(wait,"//button[contains (@data-attributename, "+LOGIN_BUTTON_ID+")]");
+    
+    public UserSettings open() {
+        ToolbarWidget.create(driver, wait).openLoginPanel();
+        DelayUtils.waitByXPath(wait, "//button[contains (@data-attributename, " + LOGIN_BUTTON_ID + ")]");
         return this;
     }
-
-    public void logOut(){
-        Button.createById(driver,LOGIN_BUTTON_ID).click();
+    
+    public void logOut() {
+        Button.createById(driver, LOGIN_BUTTON_ID).click();
     }
-
-
-
+    
 }
