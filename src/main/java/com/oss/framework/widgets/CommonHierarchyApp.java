@@ -17,9 +17,10 @@ public class CommonHierarchyApp extends Widget {
     private static final String SEARCH_FIELD_PATH = "//input[contains(@class, 'form-control SearchText')]";
     private static final String SINGLE_CHOOSABLE_ELEMENT_PATH = "//ul[(@class = 'levelElementsList')]//li[@class='levelElement']";
     private static final String ACTION_BUTTON_PATH = ".//button[contains(@class, 'squareButton')]";
+    private static final String COMPONENT_CLASS_NAME = "CommonHierarchyApp";
 
     public static CommonHierarchyApp createByClass(WebDriver driver, WebDriverWait webDriverWait) {
-        return new CommonHierarchyApp(driver, "CommonHierarchyApp", webDriverWait);
+        return new CommonHierarchyApp(driver, COMPONENT_CLASS_NAME, webDriverWait);
     }
 
     private CommonHierarchyApp(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
