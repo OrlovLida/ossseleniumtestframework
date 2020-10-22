@@ -56,8 +56,6 @@ public interface TableInterface {
 
     void callActionByLabel(String actionLabel);
 
-    void callActionByLabelFromParent(String actionLabel);
-
     void callAction(String groupId, String actionId);
 
     void selectTabByLabel(String tabLabel, String id);
