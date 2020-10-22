@@ -139,6 +139,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
+    public void callActionByLabelFromParent(String actionLabel) {
+
+    }
+
+    @Override
     public void callAction(String groupId, String actionId) {
         if (contextActions == null) {
             this.contextActions = ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
