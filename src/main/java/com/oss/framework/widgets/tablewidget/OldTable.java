@@ -164,6 +164,12 @@ public class OldTable implements TableInterface {
     }
 
     @Override
+    public void callActionByLabelFromParent(String actionLabel) {
+        ActionsInterface actions = OldActionsContainer.createFromParent(driver, wait, window);
+        actions.callActionByLabel(actionLabel);
+    }
+
+    @Override
     public void callAction(String groupId, String actionId) {
         getActionsInterface().callAction(groupId, actionId);
     }

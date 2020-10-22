@@ -183,16 +183,16 @@ public class TreeWidget extends Widget {
     }
 
     public void expandTreeRow(String treeRowName){
-        DelayUtils.waitByXPath(webDriverWait,"//p[contains(@class,'TreeViewLabel')][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]");
-        WebElement treeRowElement= this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]"));
+        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath("//p[contains(@class,'TreeViewLabel')][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]")));
+        WebElement treeRowElement= this.webElement.findElement(By.xpath("//p[contains(@class,'TreeViewLabel')][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]"));
         DelayUtils.waitForClickability(webDriverWait, treeRowElement.findElement(By.xpath(".//i[@class='fa-li fa list-plus fa-border']")));
         TreeRow treeRow = new TreeRow(treeRowElement);
         treeRow.expandTreeRow();
     }
 
     public void expandTreeRowContains(String treeRowName){
-        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + treeRowName + "')]//..//..//div[@class='TreeRow']")));
-        WebElement treeRowElement= this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + treeRowName + "')]//..//..//div[@class='TreeRow']"));
+        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath("//p[contains(@class='TreeViewLabel')][contains(text(), '" + treeRowName + "')]//..//..//div[@class='TreeRow']")));
+        WebElement treeRowElement= this.webElement.findElement(By.xpath("//p[contains(@class='TreeViewLabel')][contains(text(), '" + treeRowName + "')]//..//..//div[@class='TreeRow']"));
         DelayUtils.waitForClickability(webDriverWait, treeRowElement.findElement(By.xpath(".//i[@class='fa-li fa list-plus fa-border']")));
         TreeRow treeRow = new TreeRow(treeRowElement);
         treeRow.expandTreeRow();
