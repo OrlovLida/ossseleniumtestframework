@@ -1,6 +1,7 @@
 package com.oss.framework.components.contextactions;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -15,14 +16,13 @@ public class OldActionsContainer implements ActionsInterface {
 
     public static OldActionsContainer createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitForNestedElements(wait, parent, "//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]");
-        WebElement toolbar = parent.findElement(By.xpath(".//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"));
-        return new OldActionsContainer(driver, wait, toolbar);
-    }
-
-    public static OldActionsContainer createFromWidget(WebDriver driver, WebDriverWait wait, WebElement widget) {
-        DelayUtils.waitForNestedElements(wait, widget, "//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]");
-        WebElement toolbar = widget.findElement(By.xpath("./../..//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"));
-        return new OldActionsContainer(driver, wait, toolbar);
+        if (isElementPresent(parent, By.xpath(".//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"))) {
+            WebElement toolbar = parent.findElement(By.xpath(".//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"));
+            return new OldActionsContainer(driver, wait, toolbar);
+        } else {
+            WebElement toolbar = parent.findElement(By.xpath("./../..//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"));
+            return new OldActionsContainer(driver, wait, toolbar);
+        }
     }
 
     public static OldActionsContainer createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
@@ -91,5 +91,14 @@ public class OldActionsContainer implements ActionsInterface {
         WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath("//a[contains(@data-attributename, '" + innerGroupId + "')]"))));
         action.moveToElement(foundedElement).perform();
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributename='" + actionDataAttributeName + "']"))).click();
+    }
+
+    private static boolean isElementPresent(WebElement webElement, By by) {
+        try {
+            webElement.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 }
