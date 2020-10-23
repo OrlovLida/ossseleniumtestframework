@@ -355,7 +355,8 @@ public class OldTable implements TableInterface {
         public void selectCell(int index) {
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
             WebElement cell = cells.get(index);
-            cell.click();
+            Actions action = new Actions(driver);
+            action.click(cell).perform();
         }
 
         public String getValueCell(int index) {
