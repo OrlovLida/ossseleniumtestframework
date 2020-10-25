@@ -23,7 +23,7 @@ public class CommonList {
     private final String FAVORITE_BUTTON_XPATH = ".//button[contains(@class, 'favourite')]";
     private final String EDIT_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Edit')]";
     private final String DELETE_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Delete')]";
-    private final String CATEGORY_XPATH = "//div[contains(@class,'categoryLabel')]";
+    private final String CATEGORY_XPATH = "//div[@class='categoryLabel']";
     private final String LIST_ELEMENT_XPATH = "//div[@class='text-wrapper']";
     private final String COLLAPSE_ICON_XPATH = "//i[contains (@class, 'chevron-up')]";
     private final String EXPAND_ICON_XPATH = "//i[contains (@class, 'chevron-down')]";
