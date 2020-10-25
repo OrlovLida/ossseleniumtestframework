@@ -97,7 +97,8 @@ public class TabsWidget implements TabsInterface {
 
     @Override
     public void selectTabByLabel(String tabLabel) {
-        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
+//        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
+        DelayUtils.waitByXPath(webDriverWait, ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'" + tabLabel + "')]");
         String xpath = ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'" + tabLabel + "')]";
         WebElement tabToSelect = getTabToSelect(xpath);
         webDriverWait.until(ExpectedConditions.elementToBeClickable(tabToSelect));

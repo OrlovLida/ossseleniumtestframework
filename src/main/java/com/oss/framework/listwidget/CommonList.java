@@ -99,7 +99,7 @@ public class CommonList {
     }
 
     private WebElement getListElementByName(String name) {
-        return driver.findElement(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../.."));
+        return driver.findElement(By.xpath(LIST_ELEMENT_XPATH + "[contains(text(),'" + name + "')]/../../../.."));
     }
 
     private WebElement getCategoryByName(String name) {
@@ -141,7 +141,7 @@ public class CommonList {
         return getListElementByName(name).findElement(By.xpath("." + EDIT_BUTTON_XPATH));
     }
 
-    public void clickOnEditButtonByListElementName (String name) {
+    public void clickOnEditButtonByListElementName(String name) {
         getEditButtonByListElementName(name).click();
     }
 
@@ -149,7 +149,7 @@ public class CommonList {
         return getListElementByName(name).findElement(By.xpath("." + DELETE_BUTTON_XPATH));
     }
 
-    public void clickOnDeleteButtonByListElementName (String name) {
+    public void clickOnDeleteButtonByListElementName(String name) {
         getDeleteButtonByListElementName(name).click();
     }
 
@@ -157,7 +157,7 @@ public class CommonList {
         return getListElementByName(name).findElement(By.xpath(FAVORITE_BUTTON_XPATH));
     }
 
-    public void clickOnFavoriteButtonByListElementName (String name) {
+    public void clickOnFavoriteButtonByListElementName(String name) {
         getFavoriteButtonByListElementName(name).click();
     }
 
@@ -171,6 +171,11 @@ public class CommonList {
 
     public ActionsContainer getActionsContainer() {
         return ActionsContainer.createFromParent(getCommonList().findElement(By.xpath("//div[@class='OssWindow']")), driver, wait);
+    }
+
+    public boolean isNoData() {
+        List<WebElement> noData = this.driver.findElements(By.xpath("//div[@data-attributename='" + id + "']//h3[contains(@class,'emptyResultsText')]"));
+        return !noData.isEmpty();
     }
 
 }

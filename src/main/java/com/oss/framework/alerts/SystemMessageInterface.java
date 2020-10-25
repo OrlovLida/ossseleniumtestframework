@@ -14,5 +14,6 @@ public interface SystemMessageInterface {
     void close();
 
     void clickMessageLink();
-    
+
+    void waitForMessageDisappear();
 }
