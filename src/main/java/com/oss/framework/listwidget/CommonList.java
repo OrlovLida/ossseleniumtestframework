@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class CommonList {
 
@@ -162,8 +163,21 @@ public class CommonList {
         return !noData.isEmpty();
     }
 
+    private static boolean isElementPresent(WebElement webElement, By by) {
+        try {
+            webElement.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
     private WebElement getListElementByName(String name) {
-        return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../.."));
+        if (isElementPresent(getCommonList(), By.xpath((LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../..")))) {
+            return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../.."));
+        } else {
+            return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[contains(text(),'" + name + "')]/../../../.."));
+        }
     }
 
     private WebElement getCategoryByName(String name) {
