@@ -4,12 +4,14 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
 
 public class CommonList {
 
@@ -25,7 +27,7 @@ public class CommonList {
     private static final String EDIT_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Edit')]";
     private static final String DELETE_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Delete')]";
     private static final String CATEGORY_XPATH = "//div[@class='categoryLabel-text']";
-    private static final String LIST_ELEMENT_XPATH = "//div[@class='text-wrapper']";
+    private static final String LIST_ELEMENT_XPATH = ".//div[@class='text-wrapper']";
     private static final String COLLAPSE_ICON_XPATH = "//i[contains (@class, 'chevron-up')]";
     private static final String EXPAND_ICON_XPATH = "//i[contains (@class, 'chevron-down')]";
     private static final String SHARE_ACTION_ID = "share_action";
