@@ -34,6 +34,7 @@ public class DropdownList {
     }
 
     public void selectOptionContains(String option) {
+        DelayUtils.waitByXPath(wait, XPATH_DROPDOWN_LIST + "//div[contains(text(), '" + option + "')]");
         Actions action = new Actions(driver);
         WebElement foundedElement =
                 driver.findElement(By.xpath(XPATH_DROPDOWN_LIST + "//div[contains(text(), '" + option + "')]"));
