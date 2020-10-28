@@ -316,10 +316,14 @@ public class OldTable implements TableInterface {
         }
 
         private String getLabel() {
+            return moveToHeader().getText();
+        }
+
+        private WebElement moveToHeader() {
             WebElement header = this.column.findElement(By.xpath(".//div[contains(@class, 'Header')]"));
             Actions action = new Actions(driver);
             action.moveToElement(header).perform();
-            return header.getText();
+            return header;
         }
 
         private boolean checkIfLabelExist() {
@@ -327,6 +331,7 @@ public class OldTable implements TableInterface {
         }
 
         private void selectCell(String value) {
+            moveToHeader();
             DelayUtils.waitByXPath(this.wait, "//div[contains(@class, 'Cell')]//div[contains(@class, 'OSSRichText')]");
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell Row')]"));
             for (WebElement cell : cells) {
@@ -341,6 +346,7 @@ public class OldTable implements TableInterface {
         }
 
         public int indexOf(String value) {
+            moveToHeader();
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
 
             for (WebElement cell : cells) {
@@ -355,27 +361,32 @@ public class OldTable implements TableInterface {
         }
 
         public void selectCell(int index) {
+            moveToHeader();
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
             WebElement cell = cells.get(index);
             Actions action = new Actions(driver);
-            action.click(cell).perform();
+            action.moveToElement(cell).click(cell).perform();
         }
 
         public String getValueCell(int index) {
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
             WebElement cell = cells.get(index);
+            Actions action = new Actions(driver);
+            action.moveToElement(cell).build().perform();
             return cell.getText();
         }
 
         private void setValue(String value) {
             WebElement input = column.findElement(By.xpath(".//input"));
+            Actions action = new Actions(driver);
+            action.moveToElement(input).build().perform();
             input.sendKeys(value);
         }
 
         private void clear() {
             WebElement input = column.findElement(By.xpath(".//input"));
             Actions action = new Actions(driver);
-            action.click(input).keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).sendKeys(Keys.DELETE).build().perform();
+            action.moveToElement(input).click(input).keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).sendKeys(Keys.DELETE).build().perform();
             DelayUtils.sleep();
         }
 
