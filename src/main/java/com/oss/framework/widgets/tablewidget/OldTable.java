@@ -275,7 +275,8 @@ public class OldTable implements TableInterface {
         List<Column> columns2 =
                 this.table.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn')]"))
                         .stream().map(columnElement -> new Column(columnElement, wait, driver)).collect(Collectors.toList());
-        for (Column column : columns2) {
+
+        for (Column column :  Lists.reverse(columns2)) {
             if (column.checkIfLabelExist()) {
                 columns.put(column.getLabel(), column);
             } else {
@@ -361,19 +362,22 @@ public class OldTable implements TableInterface {
         }
 
         public void selectCell(int index) {
-            moveToHeader();
-            List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
-            WebElement cell = cells.get(index);
+            WebElement cell = getCellByIndex(index);
             Actions action = new Actions(driver);
             action.moveToElement(cell).click(cell).perform();
         }
 
-        public String getValueCell(int index) {
-            List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
-            WebElement cell = cells.get(index);
+        private String getValueCell(int index) {
+            WebElement cell = getCellByIndex(index);
             Actions action = new Actions(driver);
             action.moveToElement(cell).build().perform();
             return cell.getText();
+        }
+
+        private WebElement getCellByIndex(int index) {
+            moveToHeader();
+            List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
+            return cells.get(index);
         }
 
         private void setValue(String value) {
