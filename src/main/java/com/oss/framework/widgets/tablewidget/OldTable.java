@@ -272,9 +272,8 @@ public class OldTable implements TableInterface {
     private Map<String, Column> createColumnsFilters() {
         Map<String, Column> columns = Maps.newHashMap();
         DelayUtils.waitForNestedElements(wait, this.table, ".//div[contains(@class, 'OSSTableComponent')]");
-        WebElement tableBody = this.table.findElement(By.xpath(".//div[contains(@class, 'OSSTableComponent')]"));
         List<Column> columns2 =
-                tableBody.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn')]"))
+                this.table.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn')]"))
                         .stream().map(columnElement -> new Column(columnElement, wait, driver)).collect(Collectors.toList());
         for (Column column : columns2) {
             if (column.checkIfLabelExist()) {
@@ -317,7 +316,10 @@ public class OldTable implements TableInterface {
         }
 
         private String getLabel() {
-            return this.column.findElement(By.xpath(".//span")).getText();
+            WebElement header = this.column.findElement(By.xpath(".//div[contains(@class, 'Header')]"));
+            Actions action = new Actions(driver);
+            action.moveToElement(header).perform();
+            return header.getText();
         }
 
         private boolean checkIfLabelExist() {
