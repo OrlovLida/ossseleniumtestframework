@@ -19,6 +19,8 @@ public class TreeWidget extends Widget {
 
     private final static String CHECKBOXES = ".//div[@class='tree-node-selection']";
     private final static String INLINE_ACTIONS_MENU_BTN = ".//div[@class='actionsGroup-inline']";
+    private final static String PATH_TO_TREE_ROW = "//p[contains(@class,'TreeViewLabel')][text()='%s']//..//..//div[contains(@class,'TreeRow')]";
+    private final static String PATH_TO_TREE_ROW_CONTAINS = "//p[contains(@class,'TreeViewLabel')][contains(text(), '%s')]//..//..//div[@class='TreeRow']";
 
     private InlineMenu inlineMenu;
 
@@ -95,7 +97,7 @@ public class TreeWidget extends Widget {
 
     public List<TreeRow> getVisibleTreeRow() {
         return this.webElement.findElements(By.className("TreeRow")).stream()
-                .map(TreeRow::new).collect(Collectors.toList());
+                .map(webElement -> new TreeRow(webElement, webDriverWait)).collect(Collectors.toList());
     }
 
     public List<Node> getRootNodeWithDescendants() {
@@ -172,24 +174,22 @@ public class TreeWidget extends Widget {
     public void expandTreeRow(int treeItemId, String parentTreeRowName) {
         WebElement childTreeRowElement = this.webElement.findElement(By.xpath("(//p[text()='" + parentTreeRowName + "']//..//..//..//li[@id='"
                 + treeItemId + "']//div[@class='TreeRow'])"));
-        TreeRow treeRow2 = new TreeRow(childTreeRowElement);
-        treeRow2.expandTreeRow();
+        TreeRow treeRow = new TreeRow(childTreeRowElement, webDriverWait);
+        treeRow.expandTreeRow();
     }
 
     public void expandTreeRow(String treeRowName) {
-        DelayUtils.waitByXPath(webDriverWait, "//p[contains(@class,'TreeViewLabel')][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]");
-        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath("//p[contains(@class,'TreeViewLabel')][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]")));
-        WebElement treeRowElement = this.webElement.findElement(By.xpath("//p[contains(@class,'TreeViewLabel')][text()='" + treeRowName + "']//..//..//div[contains(@class,'TreeRow')]"));
-        DelayUtils.waitForClickability(webDriverWait, treeRowElement.findElement(By.xpath(".//i[@class='fa-li fa list-plus fa-border']")));
-        TreeRow treeRow = new TreeRow(treeRowElement);
+        DelayUtils.waitByXPath(webDriverWait, String.format(PATH_TO_TREE_ROW, treeRowName));
+        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW, treeRowName))));
+        WebElement treeRowElement = this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW, treeRowName)));
+        TreeRow treeRow = new TreeRow(treeRowElement, webDriverWait);
         treeRow.expandTreeRow();
     }
 
     public void expandTreeRowContains(String treeRowName) {
-        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath("//p[contains(@class='TreeViewLabel')][contains(text(), '" + treeRowName + "')]//..//..//div[@class='TreeRow']")));
-        WebElement treeRowElement = this.webElement.findElement(By.xpath("//p[contains(@class='TreeViewLabel')][contains(text(), '" + treeRowName + "')]//..//..//div[@class='TreeRow']"));
-        DelayUtils.waitForClickability(webDriverWait, treeRowElement.findElement(By.xpath(".//i[@class='fa-li fa list-plus fa-border']")));
-        TreeRow treeRow = new TreeRow(treeRowElement);
+        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW_CONTAINS, treeRowName))));
+        WebElement treeRowElement = this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW_CONTAINS, treeRowName)));
+        TreeRow treeRow = new TreeRow(treeRowElement, webDriverWait);
         treeRow.expandTreeRow();
     }
 
@@ -299,9 +299,11 @@ public class TreeWidget extends Widget {
         private final static String EXPAND_TREE_ROW = ".//i[@class='fa-li fa list-plus fa-border']";
 
         private final WebElement webElement;
+        private final WebDriverWait webDriverWait;
 
-        private TreeRow(WebElement webElement) {
+        private TreeRow(WebElement webElement, WebDriverWait webDriverWait) {
             this.webElement = webElement;
+            this.webDriverWait = webDriverWait;
         }
 
         private String getLabel() {
@@ -313,6 +315,7 @@ public class TreeWidget extends Widget {
         }
 
         public void expandTreeRow() {
+            DelayUtils.waitForClickability(webDriverWait, this.webElement.findElement(By.xpath(EXPAND_TREE_ROW)));
             this.webElement.findElement(By.xpath(EXPAND_TREE_ROW)).click();
         }
 
