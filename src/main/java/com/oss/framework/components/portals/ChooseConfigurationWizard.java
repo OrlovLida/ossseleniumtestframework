@@ -9,10 +9,10 @@ public class ChooseConfigurationWizard {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final String WIZARD_ID = "configuration_chooser";
-    private final String APPLY_BUTTON_ID = "configuration_chooser_apply_button";
-    private final String CANCEL_BUTTON_ID = "configuration_chooser_cancel_button";
-    private final String DOWNLOAD_BUTTON_ID = "configuration_chooser_apply_button";
+    private static final String WIZARD_ID = "configuration_chooser";
+    private static final String APPLY_BUTTON_ID = "configuration_chooser_apply_button";
+    private static final String CANCEL_BUTTON_ID = "configuration_chooser_cancel_button";
+    private static final String DOWNLOAD_BUTTON_ID = "configuration_chooser_apply_button";
 
     private ChooseConfigurationWizard(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
@@ -34,17 +34,14 @@ public class ChooseConfigurationWizard {
 
     public void apply() {
         getWizard().clickActionById(APPLY_BUTTON_ID);
-        getWizard().waitToClose();
     }
 
     public void download() {
         getWizard().clickActionById(DOWNLOAD_BUTTON_ID);
-        getWizard().waitToClose();
     }
 
     public void cancel() {
         getWizard().clickActionById(CANCEL_BUTTON_ID);
-        getWizard().waitToClose();
     }
 
 }

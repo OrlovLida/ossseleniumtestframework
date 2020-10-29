@@ -1,13 +1,7 @@
 package com.oss.framework.widgets.tabswidget;
 
-import com.google.common.collect.Lists;
-import com.oss.framework.components.common.WidgetChooser;
-import com.oss.framework.components.contextactions.ActionsInterface;
-import com.oss.framework.components.contextactions.OldActionsContainer;
-import com.oss.framework.components.portals.ChooseConfigurationWizard;
-import com.oss.framework.components.portals.SaveConfigurationWizard;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.DragAndDrop;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,7 +9,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
+import com.google.common.collect.Lists;
+import com.oss.framework.components.common.WidgetChooser;
+import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.contextactions.ButtonContainer;
+import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.components.portals.ChooseConfigurationWizard;
+import com.oss.framework.components.portals.SaveConfigurationWizard;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 
 public class TabsWidget implements TabsInterface {
 
@@ -23,8 +25,8 @@ public class TabsWidget implements TabsInterface {
 
     private static final String TABS = ".//a";
     private static final String ACTIVE_TAB = ".//a[contains(@class,'active')]";
-    private static final String ADD_TAB_ICON = ".//i[@class ='OSSIcon fa fa-plus')]";
-    private static final String SAVE_TAB_ICON = ".//i[@class ='OSSIcon fa fa-save')]";
+    private static final String ADD_TAB_ICON = ".//i[@class ='OSSIcon fa fa-plus']";
+    private static final String SAVE_TAB_ICON = ".//i[@class ='OSSIcon fa fa-save']";
     private static final String DOWNLOAD_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-download']";
     private static final String CHOOSE_CONFIGURATION_ICON = ".//i[@class ='OSSIcon fa fa-cog']";
     private static final String DROPDOWN_TAB = ".//div[@class= 'dropdown-tab']";
@@ -95,7 +97,8 @@ public class TabsWidget implements TabsInterface {
 
     @Override
     public void selectTabByLabel(String tabLabel) {
-        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
+//        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
+        DelayUtils.waitByXPath(webDriverWait, ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'" + tabLabel + "')]");
         String xpath = ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'" + tabLabel + "')]";
         WebElement tabToSelect = getTabToSelect(xpath);
         webDriverWait.until(ExpectedConditions.elementToBeClickable(tabToSelect));
@@ -123,7 +126,7 @@ public class TabsWidget implements TabsInterface {
 
     @Override
     public void callActionById(String groupLabel, String id) {
-        
+
     }
 
     @Override
@@ -135,6 +138,12 @@ public class TabsWidget implements TabsInterface {
     @Override
     public boolean isNoData(String id) {
         return false;
+    }
+
+    @Override
+    public void clickButtonByLabel(String label) {
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(createTabs(), driver, webDriverWait);
+        buttonContainer.callActionByLabel(label);
     }
 
     private boolean isMoreVisible() {

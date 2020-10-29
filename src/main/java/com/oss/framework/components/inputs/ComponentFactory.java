@@ -19,6 +19,9 @@ public class ComponentFactory {
             case COMBOBOX : {
                 return Combobox.create(webDriver, wait, componentId);
             }
+            case COMBOBOXV2:{
+                return ComboboxV2.create(webDriver,wait,componentId);
+            }
             case COORDINATES : {
                 return Coordinates.create(webDriver, wait, componentId);
             }
@@ -81,6 +84,9 @@ public class ComponentFactory {
             }
             case COMBOBOX : {
                 return Combobox.create(webDriver, wait, componentId);
+            }
+            case COMBOBOXV2:{
+                return ComboboxV2.create(webDriver,wait,componentId);
             }
             case COORDINATES : {
                 return Coordinates.create(webDriver, wait, componentId);

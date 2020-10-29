@@ -6,18 +6,17 @@
  */
 package com.oss.framework.alerts;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Gabriela Kasza
@@ -66,7 +65,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     @Override
-    public void close(){
+    public void close() {
         Actions builder = new Actions(driver);
         builder.moveToElement(messageContainer).build().perform();
         DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_CLOSEBUTTON);
@@ -122,5 +121,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
     public void clickMessageLink() {
         DelayUtils.waitForNestedElements(wait, messageContainer, "//div[contains(@class,'systemMessageItem')]");
         messageContainer.findElement(By.xpath(".//a[contains(@href, '#/')]")).click();
+    }
+
+    @Override
+    public void waitForMessageDisappear() {
+        DelayUtils.waitForElementDisappear(wait, driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM)));
     }
 }

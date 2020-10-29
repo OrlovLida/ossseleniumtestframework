@@ -1,5 +1,6 @@
 package com.oss.framework.components.inputs;
 
+import com.oss.framework.components.portals.DropdownList;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -53,7 +54,10 @@ public class SearchField extends Input {
 
     @Override
     public void setValueContains(Data value) {
-
+        webElement.click();
+        webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
+        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
+        dropdownList.selectOptionContains(value.getStringValue());
     }
 
     @Override

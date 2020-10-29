@@ -1,15 +1,14 @@
 package com.oss.framework.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DelayUtils {
     public static int HUMAN_REACTION_MS = 250;
@@ -54,7 +53,7 @@ public class DelayUtils {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public static void waitForElementDisapear(WebDriverWait wait, WebElement webElement) {
+    public static void waitForElementDisappear(WebDriverWait wait, WebElement webElement) {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.invisibilityOf(webElement));
     }
 
@@ -81,7 +80,7 @@ public class DelayUtils {
         newList.addAll(appPreloader);
         newList.addAll(preloaderWrapper);
         long startTime = System.currentTimeMillis();
-        while ((newList.size() > 0) && ((System.currentTimeMillis()-startTime) < 120000)) {
+        while ((newList.size() > 0) && ((System.currentTimeMillis() - startTime) < 120000)) {
             wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
             spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
             loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
@@ -92,9 +91,9 @@ public class DelayUtils {
             newList.addAll(appPreloader);
             newList.addAll(preloaderWrapper);
         }
-        if ((System.currentTimeMillis()-startTime)>120000){
-             System.out.println("Page did not load for a two minutes!");
-             driver.quit();
+        if ((System.currentTimeMillis() - startTime) > 120000) {
+            System.out.println("Page did not load for a two minutes!");
+            driver.quit();
         }
     }
 
@@ -107,7 +106,7 @@ public class DelayUtils {
         newList.addAll(loadBars);
         newList.addAll(preloaderWrapper);
         long startTime = System.currentTimeMillis();
-        while ((newList.size() > 0) && ((System.currentTimeMillis()-startTime) < 120000)) {
+        while ((newList.size() > 0) && ((System.currentTimeMillis() - startTime) < 120000)) {
             wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
             spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
             loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
@@ -116,7 +115,7 @@ public class DelayUtils {
             newList.addAll(loadBars);
             newList.addAll(preloaderWrapper);
         }
-        if ((System.currentTimeMillis()-startTime)>120000){
+        if ((System.currentTimeMillis() - startTime) > 120000) {
             System.out.println("Page did not load for a two minutes!");
             driver.quit();
         }

@@ -30,15 +30,17 @@ public interface TableInterface {
 
     void disableColumn(String columnId);
 
-    void disableColumnByLabel(String columnLabel);
+    void disableColumnByLabel(String columnLabel, String... path);
 
-    void enableColumnByLabel(String columnLabel);
+    void enableColumnByLabel(String columnLabel, String... path);
 
     void changeColumnsOrder(String columnLabel, int position);
 
     void selectRowByAttributeValue(String attributeId, String value);
 
     boolean isNoData();
+
+    void selectLinkInSpecificColumn(String columnName);
 
     int getRowNumber(String value, String attributeLabel);
 
@@ -55,6 +57,8 @@ public interface TableInterface {
     void callActionByLabel(String actionLabel);
 
     void callAction(String groupId, String actionId);
+
+    void selectTabByLabel(String tabLabel, String id);
 
     void callActionByLabel(String groupLabel, String actionLabel);
 
