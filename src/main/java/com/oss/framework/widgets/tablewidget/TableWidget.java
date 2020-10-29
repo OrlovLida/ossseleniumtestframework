@@ -193,21 +193,17 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void disableColumnByLabel(String columnLabel) {
-        AttributesChooser attributesChooser = getAttributesChooser();
-        if (attributesChooser.isAttributeSelectedByLabel(columnLabel)) {
-            attributesChooser.toggleAttributeByLabel(columnLabel);
-        }
-        attributesChooser.clickApply();
+    public void disableColumnByLabel(String columnLabel, String... path) {
+        getAttributesChooser()
+                .disableAttributeByLabel(columnLabel, path)
+                .clickApply();
     }
 
     @Override
-    public void enableColumnByLabel(String columnLabel) {
-        AttributesChooser attributesChooser = getAttributesChooser();
-        if (!attributesChooser.isAttributeSelectedByLabel(columnLabel)) {
-            attributesChooser.toggleAttributeByLabel(columnLabel);
-        }
-        attributesChooser.clickApply();
+    public void enableColumnByLabel(String columnLabel, String... path) {
+        getAttributesChooser()
+                .enableAttributeByLabel(columnLabel, path)
+                .clickApply();
     }
 
     @Override
@@ -255,7 +251,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public AttributesChooser getAttributesChooser() {
-        if (!(this.webElement.findElements(By.xpath(gearIcon + "[@class = 'open']")).size() > 0)) {
+        if ((this.webElement.findElements(By.xpath(gearIcon + "[@class = 'open']")).isEmpty())) {
             this.webElement.findElement(By.xpath(gearIcon)).click();
         }
         return AttributesChooser.create(driver, webDriverWait);
