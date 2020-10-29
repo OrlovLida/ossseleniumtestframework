@@ -227,6 +227,7 @@ public class TreeWidget extends Widget {
 
     public TreeWidget performSearchWithEnter(String inputText) {
         WebElement input = getSearchInput();
+        input.clear();
         input.sendKeys(inputText);
         input.sendKeys(Keys.ENTER);
         return this;
