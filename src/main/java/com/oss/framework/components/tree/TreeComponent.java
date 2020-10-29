@@ -15,8 +15,16 @@ import com.oss.framework.utils.DelayUtils;
 
 public class TreeComponent {
 
-    private static String TREE_CLASS = "tree-component";
-    private static String NODE_CLASS = "tree-node";
+    private static final String TREE_CLASS = "tree-component";
+    private static final String NODE_CLASS = "tree-node";
+    private static final String NODE_LABEL_CLASS = "OSSRichText";
+    private static final String EXPANDER_ICON_XPATH = ".//i[@class='OSSIcon fa fa-plus']";
+    private static final String EXPANDER_BUTTON_XPATH = ".//div[@class = 'tree-node-expand-icon tree-node-expand-icon--collapsed']";
+    private static final String COLLAPSER_BUTTON_XPATH = ".//div[@class = 'tree-node-expand-icon tree-node-expand-icon--expanded']";
+    private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
+    private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
+
+    private static final int LEFT_MARGIN_IN_PX = 28;
 
     public static TreeComponent create(WebDriver driver, WebDriverWait webDriverWait, WebElement parent) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
@@ -28,16 +36,24 @@ public class TreeComponent {
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponent;
 
-    private TreeComponent(WebDriver driver, WebDriverWait webDriverWait,  WebElement treeComponent) {
+    private TreeComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement treeComponent) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.treeComponent = treeComponent;
     }
 
-    public List<Node> getNodes() {
-        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='"+NODE_CLASS+"']");
-        return this.treeComponent.findElements(By.className(NODE_CLASS)).stream()
-                .map( node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
+    public List<Node> getNodes(int level) {
+        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
+        String marginToString = level * LEFT_MARGIN_IN_PX + "px";
+        return this.treeComponent.findElements(By.xpath("//div[@class='" + NODE_CLASS + "'][.//div[contains(@style, '" + marginToString + "')]]")).stream()
+                .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
+    }
+
+    public List<Node> getNodesWithExpander(int level) {
+        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
+        String marginToString = level * LEFT_MARGIN_IN_PX + "px";
+        return this.treeComponent.findElements(By.xpath("//div[@class='" + NODE_CLASS + "'][.//i][.//div[contains(@style, '" + marginToString + "')]]")).stream()
+                .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
     }
 
     public static class Node {
@@ -46,14 +62,14 @@ public class TreeComponent {
         private final WebDriverWait webDriverWait;
         private final WebElement node;
 
-        private Node(WebDriver driver, WebDriverWait webDriverWait,  WebElement node) {
+        private Node(WebDriver driver, WebDriverWait webDriverWait, WebElement node) {
             this.driver = driver;
             this.webDriverWait = webDriverWait;
             this.node = node;
         }
 
         public boolean isToggled() {
-            WebElement input = node.findElement(By.xpath(".//div[contains(@class,'tree-node-selection')]//input"));
+            WebElement input = node.findElement(By.xpath(NODE_CHECKBOX_XPATH));
             return input.isSelected();
         }
 
@@ -61,12 +77,36 @@ public class TreeComponent {
             Actions action = new Actions(driver);
             action.moveToElement(node).perform();
 
-            WebElement input = node.findElement(By.xpath(".//div[contains(@class,'tree-node-selection')]//label"));
+            WebElement input = node.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
             input.click();
         }
 
+        public void expandNode() {
+            if (!isExpanded()) {
+                Actions action = new Actions(driver);
+                action.moveToElement(node).perform();
+                WebElement button = node.findElement(By.xpath(EXPANDER_BUTTON_XPATH));
+                button.click();
+                DelayUtils.waitForPageToLoad(driver, webDriverWait);
+            }
+        }
+
+        public void collapseNode() {
+            if (isExpanded()) {
+                Actions action = new Actions(driver);
+                action.moveToElement(node).perform();
+                WebElement button = node.findElement(By.xpath(COLLAPSER_BUTTON_XPATH));
+                button.click();
+                DelayUtils.waitForPageToLoad(driver, webDriverWait);
+            }
+        }
+
+        public boolean isExpanded() {
+            return node.findElements(By.xpath(EXPANDER_ICON_XPATH)).isEmpty();
+        }
+
         public String getLabel() {
-            WebElement richText = node.findElement(By.className(" OSSRichText"));
+            WebElement richText = node.findElement(By.className(NODE_LABEL_CLASS));
             return richText.getText();
         }
     }

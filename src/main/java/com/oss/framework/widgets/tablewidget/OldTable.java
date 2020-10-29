@@ -108,12 +108,12 @@ public class OldTable implements TableInterface {
     }
 
     @Override
-    public void disableColumnByLabel(String columnLabel) {
+    public void disableColumnByLabel(String columnLabel, String... path) {
 
     }
 
     @Override
-    public void enableColumnByLabel(String columnLabel) {
+    public void enableColumnByLabel(String columnLabel, String... path) {
 
     }
 

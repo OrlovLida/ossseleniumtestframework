@@ -30,9 +30,9 @@ public interface TableInterface {
 
     void disableColumn(String columnId);
 
-    void disableColumnByLabel(String columnLabel);
+    void disableColumnByLabel(String columnLabel, String... path);
 
-    void enableColumnByLabel(String columnLabel);
+    void enableColumnByLabel(String columnLabel, String... path);
 
     void changeColumnsOrder(String columnLabel, int position);
 

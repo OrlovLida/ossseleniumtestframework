@@ -14,7 +14,10 @@ import com.oss.framework.utils.DelayUtils;
 
 public class AttributesChooser {
 
-    private static String X_PATH_ID = "//div[@id='attributes-management']";
+    private static final String X_PATH_ID = "//div[@id='attributes-management']";
+    private static final String APPLY_BUTTON_XPATH = ".//a[contains(@class,'btn-primary')]";
+    private static final String CANCEL_BUTTON_XPATH = ".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]";
+    private static final String DEFAULT_BUTTON_XPATH = ".//div[@class='management-default-button']/a[contains(@class,'btn-flat')]";
 
     public static AttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
@@ -33,28 +36,24 @@ public class AttributesChooser {
         this.attributesChooser = attributesChooser;
     }
 
-    public AttributesChooser disableAttributesByLabel(String... columnLabels) {
-        for (String columnLabel : columnLabels) {
-            if (isAttributeSelectedByLabel(columnLabel)) {
-                toggleAttributeByLabel(columnLabel);
-            }
+    public AttributesChooser enableAttributeByLabel(String attributeLabel, String... path) {
+        int level = 0;
+        for (String attributeCategory : path) {
+            expandAttributeCategoryByLabel(attributeCategory, level);
+            level++;
         }
+        enableAttributesByLabel(level, attributeLabel);
         return this;
     }
 
-    public AttributesChooser enableAttributesByLabel(String... columnLabels) {
-        for (String columnLabel : columnLabels) {
-            if (!isAttributeSelectedByLabel(columnLabel)) {
-                toggleAttributeByLabel(columnLabel);
-            }
+    public AttributesChooser disableAttributeByLabel(String attributeLabel, String... path) {
+        int level = 0;
+        for (String attributeCategory : path) {
+            expandAttributeCategoryByLabel(attributeCategory, level);
+            level++;
         }
+        disableAttributesByLabel(level, attributeLabel);
         return this;
-    }
-
-    public void setAttributesState(String[] enableAttributes, String[] disableAttributes) {
-        enableAttributesByLabel(enableAttributes).
-        disableAttributesByLabel(disableAttributes).
-        clickApply();
     }
 
     public List<Attribute> getAttributes() {
@@ -69,9 +68,26 @@ public class AttributesChooser {
         return null;
     }
 
-    public void toggleAttributeByLabel(String attributeLabel) {
-        Node node = findAttributeByLabel(attributeLabel);
+    public void toggleAttributeByLabel(String attributeLabel, int level) {
+        Node node = findAttributeByLabel(attributeLabel, level);
         node.toggleNode();
+    }
+
+    public void expandAttributeCategoryByLabel(String attributeCategoryLabel, int level) {
+        Node node = findAttributeCategoryByLabel(attributeCategoryLabel, level);
+        node.expandNode();
+    }
+
+    public void clickApply() {
+        this.attributesChooser.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
+    }
+
+    public void clickCancel() {
+        this.attributesChooser.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
+    }
+
+    public void clickDefaultSettings() {
+        this.attributesChooser.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
     }
 
     public void toggleAttributeByLabel(String attributeLabel, String... pathLabel) {
@@ -86,28 +102,47 @@ public class AttributesChooser {
 
     }
 
-    public boolean isAttributeSelectedByLabel(String attributeLabel) {
-        Node node = findAttributeByLabel(attributeLabel);
-        return node.isToggled();
-    }
-
-    private Node findAttributeByLabel(String attributeLabel) {
-        List<Node> nodes = getTreeComponent().getNodes();
-        Node node = nodes.stream().filter(n -> n.getLabel().equals(attributeLabel))
-                .findFirst().orElseThrow(() -> new RuntimeException("Cant find node " + attributeLabel));
-        return node;
-    }
-
     private TreeComponent getTreeComponent() {
         return TreeComponent.create(this.driver, this.webDriverWait, attributesChooser);
     }
 
-    public void clickApply() {
-        this.attributesChooser.findElement(By.xpath(".//a[contains(@class,'btn-primary')]")).click();
+    private AttributesChooser disableAttributesByLabel(int level, String... attributeLabels) {
+        for (String attributeLabel : attributeLabels) {
+            if (isAttributeSelectedByLabel(attributeLabel, level)) {
+                toggleAttributeByLabel(attributeLabel, level);
+            }
+        }
+        return this;
     }
 
-    public void clickCancel() {
-        this.attributesChooser.findElement(By.xpath(".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]")).click();
+    private AttributesChooser enableAttributesByLabel(int level, String... columnLabels) {
+        for (String columnLabel : columnLabels) {
+            if (!isAttributeSelectedByLabel(columnLabel, level)) {
+                toggleAttributeByLabel(columnLabel, level);
+            }
+        }
+        return this;
+    }
+
+    private boolean isAttributeSelectedByLabel(String attributeLabel, int level) {
+        Node node = findAttributeByLabel(attributeLabel, level);
+        return node.isToggled();
+    }
+
+    private Node findAttributeByLabel(String attributeLabel, int level) {
+        List<Node> nodes = getTreeComponent().getNodes(level);
+        return getNodeByLabel(nodes, attributeLabel);
+    }
+
+    private Node findAttributeCategoryByLabel(String attributeCategoryLabel, int level) {
+        List<Node> nodes = getTreeComponent().getNodesWithExpander(level);
+        return getNodeByLabel(nodes, attributeCategoryLabel);
+    }
+
+    private Node getNodeByLabel(List<Node> nodes, String label) {
+        Node node = nodes.stream().filter(n -> n.getLabel().equals(label))
+                .findFirst().orElseThrow(() -> new RuntimeException("Cant find node " + label));
+        return node;
     }
 
     public static class Attribute {
