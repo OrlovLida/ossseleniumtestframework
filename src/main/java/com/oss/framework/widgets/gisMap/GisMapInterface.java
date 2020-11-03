@@ -11,4 +11,8 @@ public interface GisMapInterface {
     void clickOnMapByCoordinates(int x, int y);
 
     void doubleClickOnMapByCoordinates(int x, int y);
+
+    void clickOnMapByCoordinatesWithShift(int x, int y);
+
+    void dragAndDropObject(int xSource, int ySource, int xDestination, int yDestination);
 }
