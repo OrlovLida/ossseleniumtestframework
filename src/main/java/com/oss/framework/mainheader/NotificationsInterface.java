@@ -1,4 +1,4 @@
-package com.oss.framework.components.notifications;
+package com.oss.framework.mainheader;
 
 public interface NotificationsInterface {
 

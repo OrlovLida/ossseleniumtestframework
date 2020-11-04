@@ -1,4 +1,4 @@
-package com.oss.framework.components.notifications;
+package com.oss.framework.mainheader;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;

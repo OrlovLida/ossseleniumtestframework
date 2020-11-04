@@ -19,22 +19,21 @@ import com.oss.framework.utils.DelayUtils;
 /**
  * @author Gabriela Kasza
  */
-public class UserSettings {
+public class LoginPanel {
     private WebDriver driver;
     private WebDriverWait wait;
     private final static String LANGUAGE_CHOOSER = "language-chooser";
     private final static String LOGIN_BUTTON_ID = "logout-button";
-    
-    public static UserSettings create(WebDriver driver, WebDriverWait wait) {
-        return new UserSettings(driver, wait);
+
+    public static LoginPanel create(WebDriver driver, WebDriverWait wait) {
+        return new LoginPanel(driver, wait);
     }
-    
-    private UserSettings(WebDriver driver, WebDriverWait wait) {
+
+    private LoginPanel(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-        
     }
-    
+
     public void chooseLanguage(String language) {
         ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
         toolbar.openLoginPanel();
@@ -49,15 +48,15 @@ public class UserSettings {
             toolbar.closeLoginPanel();
         }
     }
-    
-    public UserSettings open() {
+
+    public LoginPanel open() {
         ToolbarWidget.create(driver, wait).openLoginPanel();
         DelayUtils.waitByXPath(wait, "//button[contains (@data-attributename, " + LOGIN_BUTTON_ID + ")]");
         return this;
     }
-    
+
     public void logOut() {
         Button.createById(driver, LOGIN_BUTTON_ID).click();
     }
-    
+
 }
