@@ -9,8 +9,8 @@
     <version>0.1.0-SNAPSHOT</version>
 
     <scm>
-        <connection>scm:git:ssh://git@makumba-vm-1.krakow.comarch:ossseleniumtests/ossseleniumtestframework.git</connection>
-        <developerConnection>scm:git:ssh://git@makumba-vm-1.krakow.comarch:ossseleniumtests/ossseleniumtestframework.git</developerConnection>
+        <connection>scm:git:ssh://git@makumba-vm-1.krakow.comarch/ossseleniumtests/ossseleniumtestframework.git</connection>
+        <developerConnection>scm:git:ssh://git@makumba-vm-1.krakow.comarch/ossseleniumtests/ossseleniumtestframework.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
