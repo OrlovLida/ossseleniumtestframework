@@ -31,8 +31,8 @@ public class ComboboxV2 extends Input {
     @Override
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//span");
-        webElement.findElement(By.xpath(".//span")).click();
-        WebElement input = driver.findElement(By.xpath("//div[@class='combo-box__dropdown']//input[@class='oss-input__input']"));
+        webElement.click();
+        WebElement input = driver.findElement(By.xpath("//*[@class='combo-box__dropdown__search']//input"));
         input.sendKeys(value.getStringValue());
         input.sendKeys(Keys.DOWN);
         input.sendKeys(Keys.ENTER);
@@ -42,8 +42,8 @@ public class ComboboxV2 extends Input {
     @Override
     public void setValueContains(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//span");
-        webElement.findElement(By.xpath(".//span")).click();
-        WebElement input = driver.findElement(By.xpath("//div[@class='combo-box__dropdown']//input[@class='oss-input__input']"));
+        webElement.click();
+        WebElement input = driver.findElement(By.xpath("//*[@class='combo-box__dropdown__search']//input"));
         input.sendKeys(value.getStringValue());
         input.sendKeys(Keys.DOWN);
         input.sendKeys(Keys.ENTER);
