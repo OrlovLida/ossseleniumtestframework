@@ -99,7 +99,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public boolean isNoData() {
+    public boolean hasNoData() {
         return false;
     }
 
@@ -167,7 +167,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void refreshUntilNoData(int waitTime, String refreshLabel) {
+    public void doRefreshWhileNoData(int waitTime, String refreshLabel) {
         throw new RuntimeException("Not implemented yet");
     }
 
