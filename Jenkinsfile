@@ -28,7 +28,9 @@ pipeline {
     options {
         skipDefaultCheckout(true)
     }
+
     stages {
+
         stage('Checkout Git') {
             steps {
                 deleteDir()
@@ -63,16 +65,16 @@ pipeline {
             }
         }
     }
-}
 
-post {
-    failure {
-        sendEmail()
-    }
-    unstable {
-        sendEmail()
-    }
-    fixed {
-        sendEmail()
+    post {
+        failure {
+            sendEmail()
+        }
+        unstable {
+            sendEmail()
+        }
+        fixed {
+            sendEmail()
+        }
     }
 }
