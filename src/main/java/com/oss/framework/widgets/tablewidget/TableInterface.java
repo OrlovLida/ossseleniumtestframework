@@ -38,7 +38,7 @@ public interface TableInterface {
 
     void selectRowByAttributeValue(String attributeId, String value);
 
-    boolean isNoData();
+    boolean hasNoData();
 
     void selectLinkInSpecificColumn(String columnName);
 
@@ -68,7 +68,7 @@ public interface TableInterface {
     @Deprecated //TODO we already have callAction method
     void clickOnAction(String actionName);
 
-    void refreshUntilNoData(int waitTime, String refreshLabel);
+    void doRefreshWhileNoData(int waitTime, String refreshLabel);
 
     Multimap<String, String> getAppliedFilters();
 
