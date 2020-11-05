@@ -1,15 +1,14 @@
 package com.oss.framework.widgets.gisMap;
 
+import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.oss.framework.components.contextactions.ActionsInterface;
-import com.oss.framework.components.contextactions.OldActionsContainer;
-import com.oss.framework.utils.DelayUtils;
 
 public class GisMap implements GisMapInterface {
 
@@ -73,4 +72,24 @@ public class GisMap implements GisMapInterface {
         new Actions(driver).moveToElement(canvas, 0, 0).moveByOffset(canvas.getSize().width / x, canvas.getSize().height / y).doubleClick().build().perform();
     }
 
+    @Override
+    public void clickOnMapByCoordinatesWithShift(int x, int y) {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        WebElement canvas = driver.findElement(By.xpath("//canvas"));
+        new Actions(driver).moveToElement(canvas, 0, 0).moveByOffset(canvas.getSize().width / x, canvas.getSize().height / y).keyDown(Keys.SHIFT).click().keyUp(Keys.SHIFT).build().perform();
+    }
+
+    @Override
+    public void dragAndDropObject(int xSource, int ySource, int xDestination, int yDestination) {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        WebElement canvas = driver.findElement(By.xpath("//canvas"));
+        Actions action = new Actions(driver);
+        action
+                .moveToElement(canvas, 0, 0)
+                .moveByOffset(canvas.getSize().width / xSource, canvas.getSize().height / ySource)
+                .clickAndHold()
+                .moveToElement(canvas, 0, 0)
+                .moveByOffset(canvas.getSize().width / xDestination, canvas.getSize().height / yDestination)
+                .release().perform();
+    }
 }
