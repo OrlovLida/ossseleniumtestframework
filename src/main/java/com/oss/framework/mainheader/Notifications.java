@@ -1,12 +1,11 @@
 package com.oss.framework.mainheader;
 
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.oss.framework.utils.DelayUtils;
 
 public class Notifications implements NotificationsInterface {
     private static final By CLEAR_NOTIFICATION = By.xpath("//a[@class='clear-action']");
@@ -53,6 +52,13 @@ public class Notifications implements NotificationsInterface {
     }
 
     @Override
+    public void waitForSpecificNotification(String text, String notificationStatus) {
+        openNotificationContainer();
+        DelayUtils.waitByXPath(wait, ".//div[@class = 'notification success']//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span[contains(text(), '" + text + "') and contains(text(), '" + notificationStatus + "')]");
+        driver.findElement(CLEAR_NOTIFICATION).click();
+    }
+
+    @Override
     public void clearAllNotification() {
         if (!isElementPresent(driver, EMPTY_NOTIFICATION)) {
             openNotificationContainer();
@@ -61,7 +67,7 @@ public class Notifications implements NotificationsInterface {
     }
 
     @Override
-    public int getAmountOfNotifications(){
+    public int getAmountOfNotifications() {
         return driver.findElements(NOTIFICATION_LIST).size();
     }
 
