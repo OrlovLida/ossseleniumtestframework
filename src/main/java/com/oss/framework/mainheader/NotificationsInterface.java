@@ -4,7 +4,7 @@ public interface NotificationsInterface {
 
     String waitAndGetFinishedNotificationText();
 
-    void waitForSpecificNotification(String text, String notificationType);
+    void waitForSpecificNotification(String text, String notificationStatus);
 
     void clearAllNotification();
 
