@@ -10,8 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Notifications implements NotificationsInterface {
     private static final By CLEAR_NOTIFICATION = By.xpath("//a[@class='clear-action']");
     private static final By NOTIFICATION_BUTTON = By.xpath("//div[@class='notificationHoveringContainer']");
-    private static final By NOTIFICATION_OPENED = By.xpath("//a[@class='clicked notificationType badge']");
-    private static final By NOTIFICATION_CLOSED = By.xpath("//a[@class='notificationType badge']");
+    private static final By NOTIFICATION_OPENED = By.xpath("//a[(@class='clicked badge') or (@class = 'clicked notificationType badge')]");
+    private static final By NOTIFICATION_CLOSED = By.xpath("//a[(@class= 'badge') or (@class= 'notificationType badge')]");
     private static final By EMPTY_NOTIFICATION = By.xpath("//div[@class='notificationEmpty']");
     private static final By NOTIFICATION_LIST = By.xpath("//div[@class='notificationContainer']/div");
 
