@@ -188,6 +188,17 @@ public class OldTable implements TableInterface {
         Column column = columns.get(attributeLabel);
         return column.getValueCell(index);
     }
+
+    /**
+     *
+     * @param anyLabelInTable any column label existing in table
+     * @return number of rows in table
+     */
+    public int getNumberOfRowsInTable(String anyLabelInTable){
+        Map<String, Column> columns = createColumnsFilters();
+        Column column = columns.get(anyLabelInTable);
+        return column.getNumberOfRows();
+    }
     
     @Override
     public void clickOnKebabMenu() {
@@ -389,6 +400,11 @@ public class OldTable implements TableInterface {
             moveToHeader();
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
             return cells.get(index);
+        }
+
+        private int getNumberOfRows(){
+            List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell')]"));
+            return cells.size();
         }
         
         private void setValue(String value) {
