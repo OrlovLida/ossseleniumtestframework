@@ -37,7 +37,11 @@ public class SearchField extends Input {
     public void typeValue(String value) {
         webElement.click();
         webElement.findElement(By.xpath("./..//input")).sendKeys(value);
-        webElement.sendKeys(Keys.ENTER);
+        Actions action = new Actions(driver);
+        action.moveToElement(webElement)
+                .click()
+                .sendKeys(Keys.ENTER)
+                .perform();
     }
 
     @Override
