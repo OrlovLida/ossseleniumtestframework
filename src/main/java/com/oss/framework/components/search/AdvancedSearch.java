@@ -64,6 +64,11 @@ public class AdvancedSearch {
         this.webElement = webElement;
     }
 
+    public void fullTextSearch(String text) {
+        WebElement search = this.webElement.findElement(By.xpath(".//div[@data-attributename='search']"));
+        search.findElement(By.xpath(".//input")).sendKeys(text);
+    }
+
     public Multimap<String, String> getAppliedFilters() {
         if (tags == null) {
             DelayUtils.waitBy(this.wait, By.className(TAGS_CLASS));

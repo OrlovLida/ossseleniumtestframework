@@ -51,7 +51,7 @@ public abstract class Input {
 
     public final void click() {
         Actions action = new Actions(driver);
-        action.moveToElement(webElement).click().perform();
+        action.moveToElement(webElement).click().build().perform();
         DelayUtils.sleep();
     }
 
