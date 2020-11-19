@@ -57,6 +57,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     private PaginationComponent paginationComponent;
     private ExpandedTextTooltip expandedTextTooltip;
+    private AdvancedSearch advancedSearch;
 
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.className(widgetClass)); //TODO: change to id
@@ -412,7 +413,10 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private AdvancedSearch getAdvancedSearch() {
-        return AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
+        if(advancedSearch == null) {
+            advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
+        }
+        return advancedSearch;
     }
 
     private void confirmFilter() {
@@ -420,7 +424,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
-        Input input = getAdvancedSearch().getComponent(componentId, componentType);
+        Input input =  getAdvancedSearch().getComponent(componentId, componentType);
         input.setSingleStringValueContains(value);
     }
 
