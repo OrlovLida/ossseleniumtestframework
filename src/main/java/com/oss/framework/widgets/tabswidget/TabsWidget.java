@@ -114,6 +114,12 @@ public class TabsWidget implements TabsInterface {
     }
 
     @Override
+    public void callAction(String groupId, String actionId) {
+        ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
+        actionsContainer.callAction(groupId, actionId);
+    }
+
+    @Override
     public void callActionByLabel(String actionLabel) {
         ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
         actionsContainer.callActionByLabel(actionLabel);
