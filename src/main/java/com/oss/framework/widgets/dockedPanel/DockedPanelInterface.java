@@ -4,4 +4,6 @@ public interface DockedPanelInterface {
 
     void expandDockedPanel(String position);
 
+    void hideDockedPanel(String position);
+
 }

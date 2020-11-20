@@ -22,6 +22,8 @@ public interface TabsInterface {
 
     void callActionById(String id);
 
+    void callAction(String groupId, String actionId);
+
     boolean isNoData(String id);
 
     void clickButtonByLabel(String label);

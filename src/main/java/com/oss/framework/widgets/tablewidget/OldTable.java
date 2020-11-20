@@ -355,7 +355,6 @@ public class OldTable implements TableInterface {
         
         private void selectCell(String value) {
             moveToHeader();
-            DelayUtils.waitByXPath(this.wait, "//div[contains(@class, 'Cell')]//div[contains(@class, 'OSSRichText')]");
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell Row')]"));
             for (WebElement cell: cells) {
                 DelayUtils.waitForNestedElements(this.wait, cell, ".//div[contains(@class, 'OSSRichText')]");

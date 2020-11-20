@@ -83,4 +83,9 @@ public class TabWindowWidget implements TabsInterface {
         ActionsInterface buttonContainer = ButtonContainer.createFromParent(this.tabs, driver, wait);
         buttonContainer.callActionByLabel(label);
     }
+
+    @Override
+    public void callAction(String groupId, String actionId) {
+        throw new RuntimeException("Method not implemented");
+    }
 }

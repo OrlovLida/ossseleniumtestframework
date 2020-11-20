@@ -41,6 +41,13 @@ public class DockedPanel implements DockedPanelInterface {
                 .attributeContains(dockedPanel, "class", "expanded"));
     }
 
+    @Override
+    public void hideDockedPanel(String position) {
+        if (isElementPresent(driver, By.xpath("//div[contains(@class, 'dockedPanel')][contains(@class, '" + position + "')][contains(@class, 'expanded')]"))) {
+            dockedPanel.findElement(By.xpath(".//button[contains(@class,'splitterButton')]")).click();
+        }
+    }
+
     private static boolean isElementPresent(WebDriver driver, By by) {
         try {
             driver.findElement(by);
