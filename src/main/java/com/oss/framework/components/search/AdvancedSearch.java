@@ -1,7 +1,6 @@
 package com.oss.framework.components.search;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -10,9 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
@@ -27,9 +24,7 @@ public class AdvancedSearch {
     private static final String ADVANCED_SEARCH_PANEL_CLASS = "advanced-search_panel";
 
     private static final String SEARCH_PANEL_OPEN_BUTTON = ".//button[@class='button-filters-panel']";
-    private static final String APPLY_BTN_PATH = ".//a[text()='Apply']";
     private static final String ADD_BTN_PATH = ".//a[text()='Add']";
-    private static final String CANCEL_BTN_PATH = ".//a[text()='Cancel']";
 
     private static final String TAGS_SEPARATOR = ": ";
 
@@ -91,15 +86,15 @@ public class AdvancedSearch {
         this.webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)).click();
         if (this.searchPanel == null) {
             DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-            this.searchPanel = new SearchPanel(this.driver, this.wait);
+            this.searchPanel = SearchPanel.create(this.driver, this.wait);
         }
     }
 
     public Input getComponent(String componentId, ComponentType componentType) {
         if (this.searchPanel == null) {
-            // openSearchPanel();
+            openSearchPanel();
             DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-            this.searchPanel = new SearchPanel(this.driver, this.wait);
+            this.searchPanel = SearchPanel.create(this.driver, this.wait);
         }
         return this.searchPanel.getComponent(componentId, componentType);
     }
@@ -143,35 +138,4 @@ public class AdvancedSearch {
             return values;
         }
     }
-
-    private static class SearchPanel {
-        private final WebDriver driver;
-        private final WebDriverWait wait;
-        private final WebElement webElement;
-
-        private SearchPanel(WebDriver driver, WebDriverWait wait) {
-            this.driver = driver;
-            this.wait = wait;
-            this.webElement = this.driver.findElement(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-        }
-
-        private void applyFilter() {
-            this.webElement.findElement(By.xpath(APPLY_BTN_PATH)).click();
-        }
-
-        private void cancel() {
-            this.webElement.findElement(By.xpath(CANCEL_BTN_PATH)).click();
-        }
-
-        private Input getComponent(String componentId, ComponentType componentType) {
-            return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
-        }
-    }
-
-    //TODO: move to the advanced search widget
-    public TableWidget getTableWidget() {
-        Widget.waitForWidget(wait, "right-side");
-        return TableWidget.create(driver, "right-side", wait);
-    }
-
 }
