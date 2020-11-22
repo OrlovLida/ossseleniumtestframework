@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DragAndDrop;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -31,7 +32,7 @@ public class PropertyPanel implements PropertyPanelInterface {
 
     private PropertyPanel(WebDriver driver, String id) {
         this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//*[@data-attributename = '" + id + "']"));
+        this.webElement = driver.findElement(By.xpath("//*[@"+ CSSUtils.TEST_ID +" = '" + id + "']"));
     }
 
     public static PropertyPanel create(WebDriver driver) {

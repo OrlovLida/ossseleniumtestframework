@@ -18,6 +18,7 @@ public class CSSUtils {
     public static String TOP_ATTRIBUTE = "top";
     public static String HEIGHT_ATTRIBUTE = "height";
     public static String WIDTH_ATTRIBUTE = "width";
+    public static String TEST_ID = "data-attributename";
 
     private static Splitter attributeSplitter = Splitter.on(ATTRIBUTES_SEPARATOR);
     private static Splitter valueSplitter = Splitter.on(VALUE_SEPARATOR);

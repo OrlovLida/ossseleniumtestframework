@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class OldActionsContainer implements ActionsInterface {
@@ -68,10 +69,10 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(wait, toolbar, "//*[@data-attributename='" + id + "'] | //*[@id='" + id + "'] ");
+        DelayUtils.waitForNestedElements(wait, toolbar, "//*[@"+ CSSUtils.TEST_ID +"='" + id + "'] | //*[@id='" + id + "'] ");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                toolbar.findElement(By.xpath("//*[@data-attributename='" + id + "'] | //*[@id='" + id + "'] ")))))
+                toolbar.findElement(By.xpath("//*[@"+ CSSUtils.TEST_ID +"='" + id + "'] | //*[@id='" + id + "'] ")))))
                 .click()
                 .perform();
     }
@@ -80,17 +81,17 @@ public class OldActionsContainer implements ActionsInterface {
     public void callActionById(String groupId, String actionDataAttributeName) {
         DelayUtils.waitForNestedElements(wait, toolbar, ".//li[@data-group-id='" + groupId + "']//button");
         wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(".//li[@data-group-id='" + groupId + "']//button")))).click();
-        DelayUtils.waitForNestedElements(wait, toolbar, "//a[@data-attributename='" + actionDataAttributeName + "']");
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributename='" + actionDataAttributeName + "']"))).click();
+        DelayUtils.waitForNestedElements(wait, toolbar, "//a[@"+ CSSUtils.TEST_ID +"='" + actionDataAttributeName + "']");
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@"+ CSSUtils.TEST_ID +"='" + actionDataAttributeName + "']"))).click();
     }
 
     public void callActionById(String groupId, String innerGroupId, String actionDataAttributeName) {
         DelayUtils.waitForNestedElements(wait, toolbar, ".//li[@data-group-id='" + groupId + "']//button");
         wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(".//li[@data-group-id='" + groupId + "']//button")))).click();
         Actions action = new Actions(driver);
-        WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath("//a[contains(@data-attributename, '" + innerGroupId + "')]"))));
+        WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath("//a[contains(@"+ CSSUtils.TEST_ID +", '" + innerGroupId + "')]"))));
         action.moveToElement(foundedElement).perform();
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-attributename='" + actionDataAttributeName + "']"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@"+ CSSUtils.TEST_ID +"='" + actionDataAttributeName + "']"))).click();
     }
 
     private static boolean isElementPresent(WebElement webElement, By by) {

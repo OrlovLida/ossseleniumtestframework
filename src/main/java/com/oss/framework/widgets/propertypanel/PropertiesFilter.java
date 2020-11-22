@@ -5,6 +5,7 @@ import java.util.List;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.SaveConfigurationWizard;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,9 +18,9 @@ public class PropertiesFilter {
     private static final String FILTER_BTN_PATH = ".//i";
     private final String SWITCHER_XPATH = ".//div[@class='switcher']";
     private final String KEBAB_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
-    private final String CHOOSE_CONFIGURATION_XPATH = "//a[@data-attributename='chooseConfiguration']";
-    private final String DOWNLOAD_CONFIGURATION_XPATH = "//a[@data-attributename='propertyPanelDownload']";
-    private final String SAVE_NEW_CONFIGURATION_XPATH = "//a[@data-attributename='propertyPanelSave']";
+    private final String CHOOSE_CONFIGURATION_XPATH = "//a[@"+ CSSUtils.TEST_ID +"='chooseConfiguration']";
+    private final String DOWNLOAD_CONFIGURATION_XPATH = "//a[@"+ CSSUtils.TEST_ID +"='propertyPanelDownload']";
+    private final String SAVE_NEW_CONFIGURATION_XPATH = "//a[@"+ CSSUtils.TEST_ID +"='propertyPanelSave']";
 
     protected final WebDriver driver;
     protected final WebElement webElement;

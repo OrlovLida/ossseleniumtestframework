@@ -1,5 +1,6 @@
 package com.oss.framework.components.portals;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -51,9 +52,9 @@ public class DropdownList {
 
     public void selectOptionWithId(String option) {
         Actions action = new Actions(driver);
-        DelayUtils.waitByXPath(wait, XPATH_DROPDOWN_LIST + "//a[contains(@data-attributename, '" + option + "')]");
+        DelayUtils.waitByXPath(wait, XPATH_DROPDOWN_LIST + "//a[contains(@"+ CSSUtils.TEST_ID +", '" + option + "')]");
         WebElement foundedElement =
-                driver.findElement(By.xpath(XPATH_DROPDOWN_LIST + "//a[contains(@data-attributename, '" + option + "')]"));
+                driver.findElement(By.xpath(XPATH_DROPDOWN_LIST + "//a[contains(@"+ CSSUtils.TEST_ID +", '" + option + "')]"));
         action.moveToElement(foundedElement).click().perform();
     }
 

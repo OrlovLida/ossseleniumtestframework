@@ -2,6 +2,7 @@ package com.oss.framework.widgets.gisMap;
 
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -14,7 +15,7 @@ public class GisMap implements GisMapInterface {
 
     private static final String gisMapXpath2 = "//div[@class='gisMap']";
     private static final String gisMapXpath3 = "//div[@class='OssWindow']";
-    private static final String gisMapXpath = "//div[@data-attributename='template-gisview']";
+    private static final String gisMapXpath = "//div[@"+ CSSUtils.TEST_ID +"='template-gisview']";
     private static final String gisMapSearchXpath = "//input[@class='form-control mapSearchInput']";
 
     private WebDriver driver;
@@ -44,8 +45,8 @@ public class GisMap implements GisMapInterface {
     public void callActionByLabel(String group, String label) {
         DelayUtils.waitBy(wait, By.xpath("//div[text()='" + group + "']/.."));
         driver.findElement(By.xpath("//div[text()='" + group + "']/..")).click();
-        DelayUtils.waitBy(wait, By.xpath("//a[@data-attributename='" + label + "']"));
-        driver.findElement(By.xpath("//a[@data-attributename='" + label + "']")).click();
+        DelayUtils.waitBy(wait, By.xpath("//a[@"+ CSSUtils.TEST_ID +"='" + label + "']"));
+        driver.findElement(By.xpath("//a[@"+ CSSUtils.TEST_ID +"='" + label + "']")).click();
     }
 
     @Override

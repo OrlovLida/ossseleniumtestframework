@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oss.framework.data.Data;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -15,7 +16,7 @@ public class FileChooser extends Input{
 
 
     public static FileChooser create(WebDriver driver, WebDriverWait wait, String componentId){
-        DelayUtils.waitByXPath(wait,"//div[@data-attributename='"+componentId+"']");
+        DelayUtils.waitByXPath(wait,"//div[@"+ CSSUtils.TEST_ID +"='"+componentId+"']");
         return new FileChooser(driver,wait,componentId);
     }
 

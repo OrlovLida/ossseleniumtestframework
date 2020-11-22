@@ -15,6 +15,7 @@ import com.google.common.collect.Multimap;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.tablewidget.TableWidget;
@@ -65,7 +66,7 @@ public class AdvancedSearch {
     }
 
     public void fullTextSearch(String text) {
-        WebElement search = this.webElement.findElement(By.xpath(".//div[@data-attributename='search']"));
+        WebElement search = this.webElement.findElement(By.xpath(".//div[@"+ CSSUtils.TEST_ID +"='search']"));
         search.findElement(By.xpath(".//input")).sendKeys(text);
     }
 
@@ -96,7 +97,7 @@ public class AdvancedSearch {
 
     public Input getComponent(String componentId, ComponentType componentType) {
         if (this.searchPanel == null) {
-//            openSearchPanel();
+            // openSearchPanel();
             DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
             this.searchPanel = new SearchPanel(this.driver, this.wait);
         }

@@ -2,6 +2,7 @@ package com.oss.framework.listwidget;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -34,7 +35,7 @@ public class CommonList {
     private static final String FAVORITE_ICON_XPATH = ".//i[contains(@class, 'star-o')]";
 
     public static CommonList create(WebDriver driver, WebDriverWait wait, String commonListAppId) {
-        DelayUtils.waitBy(wait, By.xpath("//div[contains(@data-attributename, '" + commonListAppId + "')]"));
+        DelayUtils.waitBy(wait, By.xpath("//div[contains(@"+ CSSUtils.TEST_ID +", '" + commonListAppId + "')]"));
         return new CommonList(driver, wait, commonListAppId);
     }
 
@@ -45,8 +46,8 @@ public class CommonList {
     }
 
     private WebElement getCommonList() {
-        DelayUtils.waitByXPath(wait, "//div[contains(@data-attributename, '" + id + "')]");
-        return driver.findElement(By.xpath("//div[@data-attributename='" + id + "']"));
+        DelayUtils.waitByXPath(wait, "//div[contains(@"+ CSSUtils.TEST_ID +", '" + id + "')]");
+        return driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + id + "']"));
     }
 
     public void expandListElementKebab(String name) {
@@ -160,7 +161,7 @@ public class CommonList {
     }
 
     public boolean isNoData() {
-        List<WebElement> noData = this.driver.findElements(By.xpath("//div[@data-attributename='" + id + "']//h3[contains(@class,'emptyResultsText')]"));
+        List<WebElement> noData = this.driver.findElements(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + id + "']//h3[contains(@class,'emptyResultsText')]"));
         return !noData.isEmpty();
     }
 

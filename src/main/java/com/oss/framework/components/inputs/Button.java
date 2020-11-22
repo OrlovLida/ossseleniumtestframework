@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.oss.framework.utils.CSSUtils;
+
 public class Button {
 
     private final WebElement webElement;
@@ -37,11 +39,11 @@ public class Button {
     }
 
     private Button(String componentId, WebDriver driver) {
-        this.webElement = driver.findElement(By.xpath("//button[@data-attributename='" + componentId + "']"));
+        this.webElement = driver.findElement(By.xpath("//button[@"+ CSSUtils.TEST_ID +"='" + componentId + "']"));
     }
 
     private Button(String selector, String componentId, WebDriver driver) {
-        this.webElement = driver.findElement(By.xpath("//" + selector + "[@data-attributename='" + componentId + "']"));
+        this.webElement = driver.findElement(By.xpath("//" + selector + "[@"+ CSSUtils.TEST_ID +"='" + componentId + "']"));
     }
 
     private Button(String iconClass, WebDriver driver, String buttonClass) {

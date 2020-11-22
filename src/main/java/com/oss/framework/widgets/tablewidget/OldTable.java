@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.widgets.tabswidget.TabsWidget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -54,10 +55,10 @@ public class OldTable implements TableInterface {
     }
     
     public static OldTable createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
-        DelayUtils.waitByXPath(wait, "//div[@data-attributename='" + dataAttributeName + "']");
-        WebElement table = driver.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']"));
+        DelayUtils.waitByXPath(wait, "//div[@"+ CSSUtils.TEST_ID +"='" + dataAttributeName + "']");
+        WebElement table = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + dataAttributeName + "']"));
         WebElement window = table.findElement(
-                By.xpath("//div[@data-attributename='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
+                By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
         return new OldTable(driver, wait, dataAttributeName, table, window);
     }
     
@@ -267,7 +268,7 @@ public class OldTable implements TableInterface {
     @Override
     public boolean hasNoData() {
         List<WebElement> noData = this.driver
-                .findElements(By.xpath("//div[@data-attributename='" + this.widgetId + "']//h3[contains(@class,'noDataWithColumns')]"));
+                .findElements(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + this.widgetId + "']//h3[contains(@class,'noDataWithColumns')]"));
         return !noData.isEmpty();
     }
     

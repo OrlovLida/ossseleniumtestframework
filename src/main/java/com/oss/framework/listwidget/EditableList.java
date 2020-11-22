@@ -18,6 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.inputs.InlineForm;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -35,8 +36,8 @@ public class EditableList extends Widget {
         return new EditableList(driver,LIST_WIDGET_CLASS,webDriverWait);
     }
     public static EditableList createById(WebDriver driver, WebDriverWait webDriverWait, String componentId){
-        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@data-attributename, '"+componentId+"')]"));
-        WebElement webElement = driver.findElement(By.xpath("//div[@data-attributename='" + componentId + "']"));
+        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@"+ CSSUtils.TEST_ID +", '"+componentId+"')]"));
+        WebElement webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + componentId + "']"));
         return new EditableList(driver,webElement,webDriverWait);
     }
 

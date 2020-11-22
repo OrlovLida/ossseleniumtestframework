@@ -16,6 +16,7 @@ import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.SaveConfigurationWizard;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 
@@ -63,9 +64,9 @@ public class TabsWidget implements TabsInterface {
             return driver.findElement(By.className(TABS_WIDGET_CLASS));
         }
         DelayUtils.waitByXPath(webDriverWait,
-                "//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@data-attributename, '" + id + "')]");
+                "//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@"+ CSSUtils.TEST_ID +", '" + id + "')]");
         return driver
-                .findElement(By.xpath("//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@data-attributename,'" + id + "')]"));
+                .findElement(By.xpath("//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@"+ CSSUtils.TEST_ID +",'" + id + "')]"));
     }
 
     @Deprecated

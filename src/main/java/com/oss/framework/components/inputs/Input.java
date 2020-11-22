@@ -4,6 +4,7 @@ package com.oss.framework.components.inputs;
 import com.oss.framework.components.portals.ComponentMessages;
 import com.oss.framework.components.portals.Tooltip;
 import com.oss.framework.data.Data;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -29,7 +30,7 @@ public abstract class Input {
     }
 
     static String createComponentPath(String componentId) {
-        return "//*[@data-attributename='" + componentId + "']";
+        return "//*[@"+ CSSUtils.TEST_ID +"='" + componentId + "']";
     }
 
     Input(WebDriver driver, WebDriverWait webDriverWait, String componentId) {

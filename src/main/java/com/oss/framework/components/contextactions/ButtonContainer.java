@@ -13,6 +13,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 /**
@@ -49,10 +50,10 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//*[@data-attributename='" + id + "'] | //*[@id='" + id + "'] ");
+        DelayUtils.waitForNestedElements(wait, buttons, "//*[@"+ CSSUtils.TEST_ID +"='" + id + "'] | //*[@id='" + id + "'] ");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                buttons.findElement(By.xpath("//*[@data-attributename='" + id + "'] | //*[@id='" + id + "'] ")))))
+                buttons.findElement(By.xpath("//*[@"+ CSSUtils.TEST_ID +"='" + id + "'] | //*[@id='" + id + "'] ")))))
                 .click()
                 .perform();
     }

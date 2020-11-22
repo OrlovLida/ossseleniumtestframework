@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public abstract class Widget {
@@ -38,12 +39,12 @@ public abstract class Widget {
 
     public Widget(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
         this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//div[@data-attributename='" + dataAttributeName + "']"));
+        this.webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + dataAttributeName + "']"));
         this.webDriverWait = webDriverWait;
     }
 
     private static String createWidgetPath(String widgetId) {
-        return "//div[@data-attributename='" + widgetId + "']";
+        return "//div[@"+ CSSUtils.TEST_ID +"'" + widgetId + "']";
     }
 
     //TODO: move to advanced search component

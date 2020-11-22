@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class TabWindowWidget implements TabsInterface {
@@ -74,7 +75,7 @@ public class TabWindowWidget implements TabsInterface {
 
     @Override
     public boolean isNoData(String id) {
-        List<WebElement> noData = driver.findElements(By.xpath("//div[@data-attributename='" + id + "']//h3[contains(@class,'noDataWithColumns')]"));
+        List<WebElement> noData = driver.findElements(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + id + "']//h3[contains(@class,'noDataWithColumns')]"));
         return !noData.isEmpty();
     }
 

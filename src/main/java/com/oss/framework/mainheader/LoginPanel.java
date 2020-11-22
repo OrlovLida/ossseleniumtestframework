@@ -14,6 +14,7 @@ import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.prompts.ConfirmationBox;
 import com.oss.framework.prompts.ConfirmationBoxInterface;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 /**
@@ -51,7 +52,7 @@ public class LoginPanel {
 
     public LoginPanel open() {
         ToolbarWidget.create(driver, wait).openLoginPanel();
-        DelayUtils.waitByXPath(wait, "//button[contains (@data-attributename, " + LOGIN_BUTTON_ID + ")]");
+        DelayUtils.waitByXPath(wait, "//button[contains (@"+ CSSUtils.TEST_ID +", " + LOGIN_BUTTON_ID + ")]");
         return this;
     }
 

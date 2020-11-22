@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -26,8 +27,8 @@ public class Wizard {
     }
     
     public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
-        DelayUtils.waitByXPath(wait, "//div[@data-attributename='" + componentId + "']");
-        WebElement webElement = driver.findElement(By.xpath("//div[@data-attributename='" + componentId + "']"));
+        DelayUtils.waitByXPath(wait, "//div[@"+ CSSUtils.TEST_ID +"='" + componentId + "']");
+        WebElement webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + componentId + "']"));
         return new Wizard(driver, wait, webElement);
     }
     
@@ -43,7 +44,7 @@ public class Wizard {
     }
     
     public Input setComponentValue(String componentId, String value, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, "//*[@data-attributename='" + componentId + "']");
+        DelayUtils.waitForNestedElements(wait, webElement, "//*[@"+ CSSUtils.TEST_ID +"='" + componentId + "']");
         Input input = getComponent(componentId, componentType);
         input.setSingleStringValue(value);
         return input;
@@ -157,10 +158,10 @@ public class Wizard {
     }
     
     public void clickActionById(String actionId) {
-        DelayUtils.waitForNestedElements(wait, webElement, "//*[@data-attributename='" + actionId + "']");
+        DelayUtils.waitForNestedElements(wait, webElement, "//*[@"+ CSSUtils.TEST_ID +"='" + actionId + "']");
         Actions action = new Actions(driver);
         WebElement foundedElement = wait.until(
-                ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@data-attributename='" + actionId + "']"))));
+                ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@"+ CSSUtils.TEST_ID +"='" + actionId + "']"))));
         action.moveToElement(foundedElement).click().perform();
         wait.until(ExpectedConditions.invisibilityOf(foundedElement));
     }
