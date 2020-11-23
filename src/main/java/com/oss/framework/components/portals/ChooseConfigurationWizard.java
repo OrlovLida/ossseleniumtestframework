@@ -7,6 +7,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ChooseConfigurationWizard {
 
+    public static final String CHOOSE_CONFIG_ID = "chooseConfig";
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private static final String WIZARD_ID = "configuration_chooser";

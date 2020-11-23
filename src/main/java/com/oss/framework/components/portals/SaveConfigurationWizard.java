@@ -12,6 +12,8 @@ import java.util.List;
 
 public class SaveConfigurationWizard {
 
+    public static final String SAVE_CONFIG_ID = "saveNewConfig";
+
     private final WebDriver driver;
     private final WebDriverWait wait;
 

@@ -1,6 +1,5 @@
 package com.oss.framework.widgets.tablewidget;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,15 +21,16 @@ import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.portals.ExpandedTextTooltip;
-import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
-import com.oss.framework.utils.LocatingUtils;
 import com.oss.framework.widgets.Widget;
 
 public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
+    public static final String REFRESH_ACTION_ID = "refreshButton";
+    public static final String EXPORT_ACTION_ID = "exportButton";
+
     public static final String PAGINATION_COMPONENT_CLASS = "OSSPagination";
     private static final String ATTRIBUTES_MANAGEMENT_XPATH = "//div[@id='attributes-management']";
     //    private static final String PATH = "//div[@class='TableWidget']";
@@ -144,7 +144,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
-        throw new RuntimeException("Not implemented yet");
+        getContextActions().callActionByLabel(groupLabel, actionLabel);
     }
 
     @Override
@@ -220,14 +220,12 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public SaveConfigurationWizard openSaveConfigurationWizard() {
-        clickOnKebabMenu();
-        DropdownList.create(driver, webDriverWait).selectOptionWithId("saveNewConfig");
+        callAction(ActionsContainer.KEBAB_GROUP_ID, SaveConfigurationWizard.SAVE_CONFIG_ID);
         return SaveConfigurationWizard.create(driver, webDriverWait);
     }
 
     public ChooseConfigurationWizard openChooseConfigurationWizard() {
-        clickOnKebabMenu();
-        DropdownList.create(driver, webDriverWait).selectOptionWithId("chooseConfig");
+        callAction(ActionsContainer.KEBAB_GROUP_ID, ChooseConfigurationWizard.CHOOSE_CONFIG_ID);
         return ChooseConfigurationWizard.create(driver, webDriverWait);
     }
 
@@ -250,6 +248,7 @@ public class TableWidget extends Widget implements TableInterface {
         return AttributesChooser.create(driver, webDriverWait);
     }
 
+    @Deprecated
     public void clickOnKebabMenu() {
         getKebabMenuBtn().click();
     }

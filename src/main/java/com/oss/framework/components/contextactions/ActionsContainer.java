@@ -12,7 +12,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.utils.DelayUtils;
 
 public class ActionsContainer implements ActionsInterface {
+    public static final String KEBAB_GROUP_ID = "KEBAB";
+    public static final String KEBAB_GROUP_LABEL = "KEBAB";
+
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";
+    private static final String KEBAB_BUTTON_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
 
     private final WebElement webElement;
     private final WebDriver webDriver;
@@ -40,6 +44,10 @@ public class ActionsContainer implements ActionsInterface {
 
     public void callAction(String groupId, String actionId) {
         if (groupId != null) {
+            if(ActionsContainer.KEBAB_GROUP_ID.equals(groupId)) {
+                callActionFromKebab(actionId);
+                return;
+            }
             clickOnGroup(groupId);
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(actionId);
@@ -60,6 +68,20 @@ public class ActionsContainer implements ActionsInterface {
         clickOnGroup(groupId);
         Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
         dropdown.callAction(actionId);
+    }
+
+    private void callActionFromKebab(String actionId) {
+        getKebabMenuBtn().click();
+        Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
+        dropdown.callAction(actionId);
+    }
+
+    private WebElement getKebabMenuBtn() {
+        return this.webElement.findElement(By.xpath(KEBAB_BUTTON_XPATH));
+    }
+
+    private void callActionFromKebabByLabel(String actionLabel) {
+
     }
 
     private void clickOnGroup(String groupId) {

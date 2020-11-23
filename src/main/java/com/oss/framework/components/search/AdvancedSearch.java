@@ -92,7 +92,6 @@ public class AdvancedSearch {
 
     public Input getComponent(String componentId, ComponentType componentType) {
         if (this.searchPanel == null) {
-            openSearchPanel();
             DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
             this.searchPanel = SearchPanel.create(this.driver, this.wait);
         }
