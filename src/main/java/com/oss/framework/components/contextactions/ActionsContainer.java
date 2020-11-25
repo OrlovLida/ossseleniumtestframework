@@ -14,6 +14,9 @@ import com.oss.framework.utils.DelayUtils;
 public class ActionsContainer implements ActionsInterface {
     public static final String KEBAB_GROUP_ID = "KEBAB";
     public static final String KEBAB_GROUP_LABEL = "KEBAB";
+    public static final String CREATE_GROUP_ID = "CREATE";
+    public static final String EDIT_GROUP_ID = "EDIT";
+    public static final String SHOW_ON_GROUP_ID ="NAVIGATION";
 
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";
     private static final String KEBAB_BUTTON_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";

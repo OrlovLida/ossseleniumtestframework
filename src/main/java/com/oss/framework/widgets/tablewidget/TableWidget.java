@@ -113,6 +113,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
+        openAdvancedSearch();
         setFilterContains(attributeId, componentType, value);
         confirmFilter();
     }
@@ -318,8 +319,8 @@ public class TableWidget extends Widget implements TableInterface {
         return getLastPageBtn().getText();
     }
 
-    public String getNumberOfAllRowsInTable() {
-        return getRowsCounter().getText();
+    public int getRowsNumber() {
+        return Integer.valueOf(getRowsCounter().getText());
     }
 
     public String getExpandedText() {
@@ -409,6 +410,10 @@ public class TableWidget extends Widget implements TableInterface {
         return advancedSearch;
     }
 
+    private void openAdvancedSearch() {
+        getAdvancedSearch().openSearchPanel();
+    }
+
     private void confirmFilter() {
         getAdvancedSearch().clickApply();
     }
@@ -450,7 +455,7 @@ public class TableWidget extends Widget implements TableInterface {
         action.dragAndDropBy(getColumnResizeGrips().get(column), offset, 0).perform();
     }
 
-    public String getValueFromNthRow(String columnLabel, String rowNumber) {
+    public String getValueFromNthRow(String columnLabel, int rowNumber) {
         int index = getActiveColumnHeaders().indexOf(columnLabel);
         List<WebElement> valueCells = this.webElement.findElements(By.xpath("(.//div[@id='table-wrapper']/div[@class='TableBody']//div[@class='Row' or @class='Row selected'])[" + rowNumber + "]/div[@class='Cell']/div/div"));
         return valueCells.get(index).getText();

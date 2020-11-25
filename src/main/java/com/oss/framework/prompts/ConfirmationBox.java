@@ -29,7 +29,7 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
         this.prompt = prompt;
     }
 
-    public static ConfirmationBoxInterface create(WebDriver driver, WebDriverWait wait) {
+    public static ConfirmationBox create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'OssWindow newPrompt')]");
         WebElement prompt = driver.findElement(By.xpath("//div[contains(@class,'OssWindow newPrompt')]"));
         return new ConfirmationBox(driver, wait, prompt);
