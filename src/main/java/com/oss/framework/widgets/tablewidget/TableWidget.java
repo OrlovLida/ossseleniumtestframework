@@ -264,18 +264,9 @@ public class TableWidget extends Widget implements TableInterface {
         return this.webElement.findElement(By.xpath(rowsCounter));
     }
 
-    //TODO: return checkbox class instead of WebElement
-    public List<WebElement> getTableCheckboxes() {
-        return this.webElement.findElements(By.xpath(checkboxes));
-    }
-
     private List<WebElement> getTableRows() {
         DelayUtils.waitForNestedElements(webDriverWait, webElement, tableRows);
         return this.webElement.findElements(By.xpath(tableRows));
-    }
-
-    private List<WebElement> getTableCells() {
-        return this.webElement.findElements(By.xpath(cells));
     }
 
     private WebElement getHorizontalTableScroller() {
