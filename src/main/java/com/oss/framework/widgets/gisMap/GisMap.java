@@ -53,6 +53,7 @@ public class GisMap implements GisMapInterface {
     public void searchFirstResult(String value) {
         DelayUtils.waitByXPath(wait, gisMapSearchXpath);
         WebElement search = gisMap.findElement(By.xpath(gisMapSearchXpath));
+        search.clear();
         search.sendKeys(value);
         DelayUtils.waitForPageToLoad(driver, wait);
         search.sendKeys(Keys.ARROW_DOWN);
