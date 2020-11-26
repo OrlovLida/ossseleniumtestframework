@@ -31,6 +31,20 @@ public class Wizard {
         WebElement webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + componentId + "']"));
         return new Wizard(driver, wait, webElement);
     }
+
+    //TODO: temporary method due to OSSWEB-9886 and OSSWEB-9896
+    public static Wizard createWizardByHeaderText(WebDriver driver, WebDriverWait wait, String headerText) {
+        DelayUtils.waitByXPath(wait, "//div[contains(@class,'OssWindow')]");
+        WebElement webElement = driver.findElement(By.xpath(".//div[text()='" + headerText + "']/../../../../.."));
+        return new Wizard(driver, wait, webElement);
+    }
+
+    //TODO: temporary method due to OSSWEB-9886 and OSSWEB-9896
+    public static Wizard createWizardByClassArrayIndex(WebDriver driver, WebDriverWait wait, String index) {
+        DelayUtils.waitByXPath(wait, "//div[@class='OssWindow'][" + index + "]");
+        WebElement webElement = driver.findElement(By.xpath("//div[@class='OssWindow'][" + index + "]"));
+        return new Wizard(driver, wait, webElement);
+    }
     
     private Wizard(WebDriver driver, WebDriverWait wait, WebElement webElement) {
         this.driver = driver;
