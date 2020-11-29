@@ -64,9 +64,9 @@ public class TabsWidget implements TabsInterface {
             return driver.findElement(By.className(TABS_WIDGET_CLASS));
         }
         DelayUtils.waitByXPath(webDriverWait,
-                "//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@"+ CSSUtils.TEST_ID +", '" + id + "')]");
+                "//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@" + CSSUtils.TEST_ID + ", '" + id + "')]");
         return driver
-                .findElement(By.xpath("//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@"+ CSSUtils.TEST_ID +",'" + id + "')]"));
+                .findElement(By.xpath("//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@" + CSSUtils.TEST_ID + ",'" + id + "')]"));
     }
 
     @Deprecated
@@ -98,8 +98,7 @@ public class TabsWidget implements TabsInterface {
 
     @Override
     public void selectTabByLabel(String tabLabel) {
-//        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
-        DelayUtils.waitByXPath(webDriverWait, ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'" + tabLabel + "')]");
+        DelayUtils.waitByXPath(webDriverWait, TABS_CONTAINER_XPATH);
         String xpath = ".//a[contains(text(),'" + tabLabel + "')] | .//div[@class='tab-label'][contains(text(),'" + tabLabel + "')]";
         WebElement tabToSelect = getTabToSelect(xpath);
         webDriverWait.until(ExpectedConditions.elementToBeClickable(tabToSelect));
