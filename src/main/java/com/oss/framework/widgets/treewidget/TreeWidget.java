@@ -1,16 +1,23 @@
 package com.oss.framework.widgets.treewidget;
 
-import com.oss.framework.components.inputs.ComponentFactory;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.inputs.ComponentFactory;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Widget;
 
 import static com.oss.framework.components.inputs.Input.ComponentType.CHECKBOX;
 
@@ -137,6 +144,12 @@ public class TreeWidget extends Widget {
         return this;
     }
 
+    public TreeWidget selectNodeByPosition(int position) {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        getVisibleNodes().get(position).click();
+        return this;
+    }
+
     public void waitForTreeExpansion() {
         DelayUtils.waitForElementDisappear(webDriverWait, this.webElement.findElement(By.xpath("//i[contains(@class, 'list-plus')]")));
     }
@@ -247,6 +260,11 @@ public class TreeWidget extends Widget {
             }
         }
         return getVisibleNodes().size() == count;
+    }
+
+    public void callActionById(String groupLabel, String id) {
+        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
+        actionsContainer.callActionById(groupLabel, id);
     }
 
     private static class Node {
