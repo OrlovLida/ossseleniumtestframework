@@ -1,20 +1,5 @@
 package com.oss.framework.widgets.tablewidget;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -25,6 +10,16 @@ import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.tabswidget.TabsWidget;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class OldTable implements TableInterface {
 
@@ -49,8 +44,8 @@ public class OldTable implements TableInterface {
     }
 
     public static OldTable createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
-        DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')]");
-        WebElement table = driver.findElement(By.xpath("//div[@id='" + componentId + "']"));
+        DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')] | //div[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
+        WebElement table = driver.findElement(By.xpath("//div[@id='" + componentId + "'] | //div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
         return new OldTable(driver, wait, componentId, table);
     }
 
