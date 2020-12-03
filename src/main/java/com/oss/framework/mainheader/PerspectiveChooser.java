@@ -6,16 +6,15 @@
  */
 package com.oss.framework.mainheader;
 
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Wizard;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.inputs.Input;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Wizard;
-
-import static com.oss.framework.widgets.Wizard.*;
+import static com.oss.framework.widgets.Wizard.createWizard;
 
 /**
  * @author Gabriela Kasza
@@ -28,38 +27,39 @@ public class PerspectiveChooser {
     private static final String PLAN = "Plan";
     private static final String WITH_REMOVE = "With removed";
     private static final String WITHOUT_REMOVED = "Without removed";
-    
+    private static final String CURRENT_TASK = "Current task";
+
     public static PerspectiveChooser create(WebDriver driver, WebDriverWait wait) {
         return new PerspectiveChooser(driver, wait);
     }
-    
+
     private PerspectiveChooser(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-        
+
     }
-    
+
     public void setLivePerspective() {
         setPerspective(LIVE);
         wait.until(url -> driver.getCurrentUrl().contains("LIVE"));
     }
-    
+
     public void setNetworkPerspective() {
         setPerspective(NETWORK);
         wait.until(url -> driver.getCurrentUrl().contains("NETWORK"));
-        
+
     }
-    
+
     public void setPlanPerspective(String processCodeOrName) {
         setPerspective(PLAN);
         Wizard planChooser = Wizard.createWizard(driver, wait);
         Input input = planChooser.getComponent("searchBoxId", Input.ComponentType.SEARCH_FIELD);
         input.setSingleStringValue(processCodeOrName);
         planChooser.clickActionById("plaPlanChooserView_planChooserFormButtons-1");
-        
+
         wait.until(url -> driver.getCurrentUrl().contains("PLAN"));
     }
-    
+
     public void setPlanDatePerspective(String date) {
         setPerspective(PLAN);
         Wizard dataChooser = createWizard(driver, wait);
@@ -70,17 +70,22 @@ public class PerspectiveChooser {
         dataChooser.clickActionById("plaPlanChooserView_planChooserFormButtons-1");
         wait.until(url -> driver.getCurrentUrl().contains(date));
     }
-    
+
     public void setWithRemove() {
         setPerspective(WITH_REMOVE);
         wait.until(url -> driver.getCurrentUrl().contains("withRemoved=true"));
     }
-    
+
     public void setWithoutRemoved() {
         setPerspective(WITHOUT_REMOVED);
         wait.until(url -> driver.getCurrentUrl().contains("withRemoved=false"));
     }
-    
+
+    public void setCurrentTask() {
+        setPerspective(CURRENT_TASK);
+        wait.until(url -> driver.getCurrentUrl().contains("current-task"));
+    }
+
     private void setPerspective(String perspective) {
         ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
         toolbar.openQueryContextContainer();
