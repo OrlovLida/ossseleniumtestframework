@@ -24,23 +24,37 @@ public class ListGroup {
         this.wait = wait;
     }
 
+    public void selectItemByName(String itemName) {
+        if (notSelected(itemName)) {
+            Actions action = new Actions(driver);
+            action.moveToElement(getItem(itemName)).click();
+        }
+    }
+
+    public void clickOnIcon(String itemName) {
+        Actions action = new Actions(driver);
+        action.moveToElement(getIconForItem(itemName)).pause(500).build().perform();
+        action.moveToElement(getIconForItem(itemName)).click().perform();
+    }
+
+    public boolean notVisible(String itemName) {
+        return getListGroup().findElements(By.xpath("//*[@class='" + ITEM_LIST_CLASS + "']//*[text() = '" + itemName + "']")).isEmpty();
+    }
+
+    private boolean notSelected(String itemName) {
+        return getListGroup().findElements(By.xpath("//*[@class='" + SELECTED_ITEM_CLASS + "']//*[text() = '" + itemName + "']")).isEmpty();
+    }
+
     private WebElement getListGroup() {
         DelayUtils.waitByXPath(wait, "//*[@class = '" + LIST_GROUP_CLASS + "']");
         return driver.findElement(By.className(LIST_GROUP_CLASS));
     }
 
-    public void selectItemByName(String itemName) {
-        if (notSelected(itemName)) {
-            Actions action = new Actions(driver);
-            action.moveToElement(getListGroup().findElement(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + itemName + "']"))).click();
-        }
+    private WebElement getItem(String itemName) {
+        return getListGroup().findElement(By.xpath("//*[contains (@class, '" + ITEM_LIST_CLASS + "')]//*[text() = '" + itemName + "']"));
     }
 
-    public boolean notVisible(String itemName) {
-        return getListGroup().findElements(By.xpath("//button[@class='" + ITEM_LIST_CLASS + "' and text() = '" + itemName + "']")).isEmpty();
-    }
-
-    private boolean notSelected(String itemName) {
-        return getListGroup().findElements(By.xpath("//button[@class='" + SELECTED_ITEM_CLASS + "' and text() = '" + itemName + "']")).isEmpty();
+    private WebElement getIconForItem(String itemName) {
+        return getItem(itemName).findElement(By.xpath(".//..//span[@class='icon-button']"));
     }
 }
