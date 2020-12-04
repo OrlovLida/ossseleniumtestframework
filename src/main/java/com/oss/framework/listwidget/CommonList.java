@@ -35,7 +35,7 @@ public class CommonList {
     private static final String FAVORITE_ICON_XPATH = ".//i[contains(@class, 'star-o')]";
 
     public static CommonList create(WebDriver driver, WebDriverWait wait, String commonListAppId) {
-        DelayUtils.waitBy(wait, By.xpath("//div[contains(@"+ CSSUtils.TEST_ID +", '" + commonListAppId + "')]"));
+        DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + commonListAppId + "')]"));
         return new CommonList(driver, wait, commonListAppId);
     }
 
@@ -46,8 +46,8 @@ public class CommonList {
     }
 
     private WebElement getCommonList() {
-        DelayUtils.waitByXPath(wait, "//div[contains(@"+ CSSUtils.TEST_ID +", '" + id + "')]");
-        return driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + id + "']"));
+        DelayUtils.waitByXPath(wait, "//div[contains(@" + CSSUtils.TEST_ID + ", '" + id + "')]");
+        return driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']"));
     }
 
     public void expandListElementKebab(String name) {
@@ -64,8 +64,9 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<WebElement> kebabs = getCommonList().findElements(By.xpath(ALL_LIST_ELEMENT_KEBABS_XPATH));
         for (int i = kebabs.size(); i > 0; i--) {
+            expandAllCategories();
             DelayUtils.waitForPageToLoad(driver, wait);
-            kebabs.get(i - 1).click();
+            getCommonList().findElements(By.xpath(ALL_LIST_ELEMENT_KEBABS_XPATH)).get(i - 1).click();
             DelayUtils.waitForPageToLoad(driver, wait);
             chooseDelete();
             DelayUtils.waitForPageToLoad(driver, wait);
@@ -77,7 +78,7 @@ public class CommonList {
         List<WebElement> kebabs = getCommonList().findElements(By.xpath(ALL_CATEGORY_KEBABS_XPATH));
         for (int i = kebabs.size(); i > 1; i--) {
             DelayUtils.waitForPageToLoad(driver, wait);
-            kebabs.get(i - 1).click();
+            getCommonList().findElements(By.xpath(ALL_CATEGORY_KEBABS_XPATH)).get(i - 1).click();
             DelayUtils.waitForPageToLoad(driver, wait);
             chooseDelete();
             DelayUtils.waitForPageToLoad(driver, wait);
@@ -88,7 +89,7 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<WebElement> categoryLists = getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + EXPAND_ICON_XPATH));
         for (int i = categoryLists.size(); i > 0; i--) {
-            categoryLists.get(i - 1).click();
+            getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + EXPAND_ICON_XPATH)).get(i - 1).click();
         }
     }
 
@@ -96,7 +97,7 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<WebElement> categoryLists = getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + COLLAPSE_ICON_XPATH));
         for (int i = categoryLists.size(); i > 0; i--) {
-            categoryLists.get(i - 1).click();
+            getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + COLLAPSE_ICON_XPATH)).get(i - 1).click();
             DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
@@ -161,7 +162,7 @@ public class CommonList {
     }
 
     public boolean isNoData() {
-        List<WebElement> noData = this.driver.findElements(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + id + "']//h3[contains(@class,'emptyResultsText')]"));
+        List<WebElement> noData = this.driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']//h3[contains(@class,'emptyResultsText')]"));
         return !noData.isEmpty();
     }
 
@@ -192,6 +193,13 @@ public class CommonList {
 
     private WebElement getFavoriteButtonByListElementName(String name) {
         return getListElementByName(name).findElement(By.xpath(FAVORITE_BUTTON_XPATH));
+    }
+
+    public void selectRow(int row) {
+        List<WebElement> allRows = driver.findElements(By.xpath("//li[@class='listElement'] | //li[@class='listElement rowSelected']"));
+        if (!allRows.get(row).getAttribute("class").contains("rowSelected")){
+            allRows.get(row).click();
+        }
     }
 }
 

@@ -2,6 +2,8 @@ package com.oss.framework.widgets;
 
 import java.util.List;
 
+import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
@@ -185,6 +187,11 @@ public class Wizard {
         wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[text()='" + label + "']"))));
         driver.findElement(By.xpath("//*[text()='" + label + "']")).click();
         
+    }
+
+    public void callButtonByLabel(String label) {
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement, driver, wait);
+        buttonContainer.callActionByLabel(label);
     }
     
     public void rolloutByLabel(String text) {

@@ -43,8 +43,8 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + label + "']");
-        WebElement button = buttons.findElement(By.xpath("//a[text()='" + label + "']"));
+        DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + label + "'] | //*[text()='" + label + "']/ancestor::button");
+        WebElement button = buttons.findElement(By.xpath("//a[text()='" + label + "'] | //*[text()='" + label + "']/ancestor::button"));
         button.click();
     }
 
