@@ -64,8 +64,9 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<WebElement> kebabs = getCommonList().findElements(By.xpath(ALL_LIST_ELEMENT_KEBABS_XPATH));
         for (int i = kebabs.size(); i > 0; i--) {
+            expandAllCategories();
             DelayUtils.waitForPageToLoad(driver, wait);
-            kebabs.get(i - 1).click();
+            getCommonList().findElements(By.xpath(ALL_LIST_ELEMENT_KEBABS_XPATH)).get(i - 1).click();
             DelayUtils.waitForPageToLoad(driver, wait);
             chooseDelete();
             DelayUtils.waitForPageToLoad(driver, wait);
@@ -77,7 +78,7 @@ public class CommonList {
         List<WebElement> kebabs = getCommonList().findElements(By.xpath(ALL_CATEGORY_KEBABS_XPATH));
         for (int i = kebabs.size(); i > 1; i--) {
             DelayUtils.waitForPageToLoad(driver, wait);
-            kebabs.get(i - 1).click();
+            getCommonList().findElements(By.xpath(ALL_CATEGORY_KEBABS_XPATH)).get(i - 1).click();
             DelayUtils.waitForPageToLoad(driver, wait);
             chooseDelete();
             DelayUtils.waitForPageToLoad(driver, wait);
@@ -88,7 +89,7 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<WebElement> categoryLists = getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + EXPAND_ICON_XPATH));
         for (int i = categoryLists.size(); i > 0; i--) {
-            categoryLists.get(i - 1).click();
+            getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + EXPAND_ICON_XPATH)).get(i - 1).click();
         }
     }
 
@@ -96,7 +97,7 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<WebElement> categoryLists = getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + COLLAPSE_ICON_XPATH));
         for (int i = categoryLists.size(); i > 0; i--) {
-            categoryLists.get(i - 1).click();
+            getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + COLLAPSE_ICON_XPATH)).get(i - 1).click();
             DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
