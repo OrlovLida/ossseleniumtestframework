@@ -9,4 +9,6 @@ public interface NotificationsInterface {
     void clearAllNotification();
 
     int getAmountOfNotifications();
+
+    void openDetailsForSpecificNotification(String text, String notificationStatus);
 }
