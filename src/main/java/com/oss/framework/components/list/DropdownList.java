@@ -29,12 +29,17 @@ public class DropdownList {
     
     public static DropdownList create(WebDriver driver, WebDriverWait wait, String componentName) {
         DelayUtils.waitByXPath(wait, "//div[@class = 'DropdownList']//div[contains(text(),'" + componentName + "')]");
-        //TODO: get rid of stream after fix OSSWEB-10056
+        // TODO: get rid of stream after fix OSSWEB-10056
         List<WebElement> allLists = driver.findElements(By.xpath(DROPDOWN_LIST_XPATH));
         WebElement dropdownList = allLists.stream()
-                .filter(target -> target.findElement(By.xpath(DROPDOWN_LIST_LABEL_XPATH)).getText().contains(componentName))
-                .findFirst().orElseThrow(() -> new RuntimeException("The List doesn't exist"));
+                .filter(list -> isContainsName(componentName, list))
+                .findFirst().orElseThrow(() -> new RuntimeException("The Dropdown List doesn't exist"));
         return new DropdownList(driver, wait, dropdownList);
+    }
+    
+    private static boolean isContainsName(String componentName, WebElement dropdownList) {
+        WebElement label = dropdownList.findElement(By.xpath(DROPDOWN_LIST_LABEL_XPATH));
+        return label.getText().contains(componentName);
     }
     
     private final WebDriver driver;
@@ -60,4 +65,5 @@ public class DropdownList {
         DragAndDrop.dragAndDrop(draggableElement.getWebElement(), target, driver);
         
     }
+    
 }
