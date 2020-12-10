@@ -54,6 +54,7 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String activePageBtn = ".//li[@class='page active']";
     private static final String rowsCounter = ".//div[@class='rowsCounter']/span[last()]";
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
+    private static final String selectAllCheckbox = ".//input[@id='checkbox-checkbox']";
 
     private PaginationComponent paginationComponent;
     private ExpandedTextTooltip expandedTextTooltip;
@@ -377,6 +378,10 @@ public class TableWidget extends Widget implements TableInterface {
     private void selectTableRow(int row) {
         if (!getTableRows().get(row).getAttribute("class").contains("selected"))
             getTableRows().get(row).click();
+    }
+
+    public void selectAllRows() {
+        this.webElement.findElement(By.xpath(selectAllCheckbox)).click();
     }
 
     public void unselectTableRow(int row) {
