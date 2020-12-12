@@ -6,13 +6,15 @@
  */
 package com.oss.framework.sidemenu;
 
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.utils.DelayUtils;
 
 /**
  * @author Kamil Szota
@@ -42,7 +44,10 @@ public class SideMenu {
         for (String s : path) {
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
             DelayUtils.waitByXPath(wait, actionXpath);
-            getSideMenu().findElement(By.xpath(actionXpath)).click();
+            WebElement foundedElement = getSideMenu().findElement(By.xpath(actionXpath));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
+            Actions action = new Actions(driver);
+            action.moveToElement(foundedElement).click().perform();
         }
         callAction(actionLabel);
     }
@@ -51,10 +56,9 @@ public class SideMenu {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
         DelayUtils.waitByXPath(wait, actionXpath);
         Actions actions = new Actions(driver);
-        actions.moveToElement(getSideMenu().findElement(By.xpath(actionXpath)))
-                .sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN)
-                .pause(500).build().perform();
-        actions.moveToElement(getSideMenu().findElement(By.xpath(actionXpath)))
-                .click().build().perform();
+        WebElement foundedElement = wait.until(
+                ExpectedConditions.elementToBeClickable(getSideMenu().findElement(By.xpath(actionXpath))));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
+        actions.moveToElement(foundedElement).click().perform();
     }
 }
