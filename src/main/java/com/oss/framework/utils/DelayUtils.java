@@ -93,7 +93,6 @@ public class DelayUtils {
         }
         if ((System.currentTimeMillis() - startTime) > 120000) {
             System.out.println("Page did not load for a two minutes!");
-            throw new RuntimeException("Page did not load for a two minutes!");
         }
     }
 
@@ -117,7 +116,6 @@ public class DelayUtils {
         }
         if ((System.currentTimeMillis() - startTime) > 120000) {
             System.out.println("Page did not load for a two minutes!");
-            throw new RuntimeException("Page did not load for a two minutes!");
         }
     }
 
