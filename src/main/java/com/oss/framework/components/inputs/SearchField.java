@@ -44,6 +44,11 @@ public class SearchField extends Input {
                 .perform();
     }
 
+    public void chooseFirstResult(Data value) {
+        LocatingUtils.waitUsingXpath(searchFirstResultXpath(value.getStringValue()), webDriverWait);
+        webElement.findElement(By.xpath(searchFirstResultXpath(value.getStringValue()))).click();
+    }
+
     @Override
     public void setValue(Data value) {
         DelayUtils.waitForClickability(webDriverWait, webElement);
@@ -51,8 +56,7 @@ public class SearchField extends Input {
         DelayUtils.sleep();//wait for cursor
         clear();
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
-        LocatingUtils.waitUsingXpath(searchFirstResultXpath(value.getStringValue()), webDriverWait);
-        webElement.findElement(By.xpath(searchFirstResultXpath(value.getStringValue()))).click();
+        chooseFirstResult(value);
     }
 
     @Override
