@@ -41,23 +41,24 @@ public class SideMenu {
 
     public void callActionByLabel(String actionLabel, String... path) {
         String actionXpath;
+        WebElement latestPath = getSideMenu();
         for (String s : path) {
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
             DelayUtils.waitByXPath(wait, actionXpath);
-            WebElement foundedElement = getSideMenu().findElement(By.xpath(actionXpath));
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
+            latestPath = latestPath.findElement(By.xpath(actionXpath));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", latestPath);
             Actions action = new Actions(driver);
-            action.moveToElement(foundedElement).click().perform();
+            action.moveToElement(latestPath).click().perform();
         }
-        callAction(actionLabel);
+        callAction(actionLabel, latestPath);
     }
 
-    private void callAction(String actionLabel) {
+    private void callAction(String actionLabel, WebElement parent) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
         DelayUtils.waitByXPath(wait, actionXpath);
         Actions actions = new Actions(driver);
         WebElement foundedElement = wait.until(
-                ExpectedConditions.elementToBeClickable(getSideMenu().findElement(By.xpath(actionXpath))));
+                ExpectedConditions.elementToBeClickable(parent.findElement(By.xpath(actionXpath))));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
         actions.moveToElement(foundedElement).click().perform();
     }
