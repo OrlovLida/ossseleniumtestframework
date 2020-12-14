@@ -47,6 +47,7 @@ public class SideMenu {
             DelayUtils.waitByXPath(wait, actionXpath);
             latestPath = latestPath.findElement(By.xpath(actionXpath));
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", latestPath);
+            DelayUtils.sleep(500);
             Actions action = new Actions(driver);
             action.moveToElement(latestPath).click().perform();
         }
@@ -60,6 +61,7 @@ public class SideMenu {
         WebElement foundedElement = wait.until(
                 ExpectedConditions.elementToBeClickable(parent.findElement(By.xpath(actionXpath))));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
+        DelayUtils.sleep(500);
         actions.moveToElement(foundedElement).click().perform();
     }
 }
