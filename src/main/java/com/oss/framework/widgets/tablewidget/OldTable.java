@@ -1,5 +1,21 @@
 package com.oss.framework.widgets.tablewidget;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -10,20 +26,11 @@ import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.tabswidget.TabsWidget;
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class OldTable implements TableInterface {
 
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
+    private static final String rowsCounterSpansPath = ".//div[@class='rowsCounter']//span";
     private static final int REFRESH_INTERVAL = 2000;
     private static final String REFRESH_BUTTON_LABEL = "";
 
@@ -275,6 +282,25 @@ public class OldTable implements TableInterface {
         column.selectLink();
     }
 
+    public int getTableObjectsCount() {
+        List<WebElement> rowsCounterSpans = table
+                .findElements(By.xpath(rowsCounterSpansPath));
+        try {
+            return Integer.parseInt(rowsCounterSpans.get(rowsCounterSpans.size() - 1).getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Problem with getting table object count. Value is not a number.");
+            return 0;
+        }
+    }
+
+    public void changeItemsPerPageValue(int pageOption) {
+        WebElement pagination = table
+                .findElement(By.className("OSSPagination"));
+        pagination.findElement(By.xpath(".//button")).click();
+        pagination.findElement(By.xpath(".//li[text()='" + pageOption + "']")).click();
+        DelayUtils.waitForPageToLoad(driver, wait);
+    }
+
     public int getRowNumber(String value, String attributeLabel) {
         DelayUtils.waitForNestedElements(wait, this.table, "//*[contains(text(),'" + value + "')]");
         Map<String, Column> columns = createColumnsFilters();
@@ -386,6 +412,7 @@ public class OldTable implements TableInterface {
 
         private String getValueCell(int index) {
             WebElement cell = getCellByIndex(index);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cell);
             Actions action = new Actions(driver);
             action.moveToElement(cell).build().perform();
             return cell.getText();
