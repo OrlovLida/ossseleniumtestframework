@@ -11,5 +11,6 @@ package com.oss.framework.prompts;
  */
 public interface ConfirmationBoxInterface {
     void clickButtonByLabel(String label);
+    void clickButtonByDataAttributeName(String dataAttributeName);
     String getMessage();
 }
