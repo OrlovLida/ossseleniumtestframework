@@ -8,6 +8,7 @@ package com.oss.framework.sidemenu;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -50,6 +51,8 @@ public class SideMenu {
             DelayUtils.sleep(500);
             Actions action = new Actions(driver);
             action.moveToElement(latestPath).click().perform();
+            DelayUtils.sleep(500);
+            action.moveToElement(latestPath).sendKeys(Keys.PAGE_DOWN).perform();
         }
         callAction(actionLabel, latestPath);
     }
