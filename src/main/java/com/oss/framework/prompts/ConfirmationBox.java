@@ -6,6 +6,7 @@
  */
 package com.oss.framework.prompts;
 
+import com.oss.framework.utils.CSSUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -22,6 +23,8 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement prompt;
+
+    private static final String BUTTON_BY_DATA_ATTRIBUTE_NAME = "//button[@"+ CSSUtils.TEST_ID +"='%s']";
 
     private ConfirmationBox(WebDriver driver, WebDriverWait wait, WebElement prompt) {
         this.driver = driver;
@@ -40,6 +43,16 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
         DelayUtils.waitForNestedElements(wait, this.prompt, ".//button[contains(text(),'" + label + "')]|.//a[contains(text(),'" + label + "')]");
         WebElement button = wait.until(ExpectedConditions
                 .elementToBeClickable(this.prompt.findElement(By.xpath(".//button[contains(text(),'" + label + "')]|.//a[contains(text(),'" + label + "')]"))));
+        button.click();
+        wait.until(ExpectedConditions.invisibilityOf(button));
+    }
+
+    @Override
+    public void clickButtonByDataAttributeName(String dataAttributeName) {
+        String xpath = String.format(BUTTON_BY_DATA_ATTRIBUTE_NAME, dataAttributeName);
+        DelayUtils.waitForNestedElements(wait, this.prompt, xpath);
+        WebElement button = wait.until(ExpectedConditions
+                .elementToBeClickable(this.prompt.findElement(By.xpath(xpath))));
         button.click();
         wait.until(ExpectedConditions.invisibilityOf(button));
     }

@@ -107,7 +107,7 @@ public class CommonList {
     }
 
     public boolean isListElementVisible(String name) {
-        DelayUtils.waitForPageToLoad(driver, wait);
+        DelayUtils.waitForPageToLoadWithoutAppPreloader(driver, wait);
         return !getCommonList().findElements(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']")).isEmpty();
     }
 
