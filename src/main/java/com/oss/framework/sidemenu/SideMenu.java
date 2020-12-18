@@ -45,14 +45,12 @@ public class SideMenu {
         WebElement latestPath = getSideMenu();
         for (String s : path) {
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
-            DelayUtils.waitByXPath(wait, actionXpath);
+            searchElement(latestPath, actionXpath);
             latestPath = latestPath.findElement(By.xpath(actionXpath));
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", latestPath);
             DelayUtils.sleep(500);
             Actions action = new Actions(driver);
             action.moveToElement(latestPath).click().perform();
-            DelayUtils.sleep(500);
-            action.moveToElement(latestPath).sendKeys(Keys.PAGE_DOWN).perform();
         }
         callAction(actionLabel, latestPath);
     }
@@ -66,5 +64,16 @@ public class SideMenu {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
         DelayUtils.sleep(500);
         actions.moveToElement(foundedElement).click().perform();
+    }
+
+    public void searchElement(WebElement webElement, String xpath) {
+        for (int scrollDownCount = 0; scrollDownCount < 3; scrollDownCount++) {
+            if (!(webElement.findElements(By.xpath(xpath)).isEmpty())) {
+                return;
+            }
+            Actions action = new Actions(driver);
+            action.moveToElement(webElement).sendKeys(Keys.PAGE_DOWN).perform();
+            DelayUtils.sleep(500);
+        }
     }
 }
