@@ -19,6 +19,8 @@ import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.widgets.Widget;
+import com.oss.framework.widgets.Widget.WidgetType;
 
 public class TabsWidget implements TabsInterface {
 
@@ -67,6 +69,11 @@ public class TabsWidget implements TabsInterface {
                 "//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@" + CSSUtils.TEST_ID + ", '" + id + "')]");
         return driver
                 .findElement(By.xpath("//div[contains(@class,'" + TABS_WIDGET_CLASS + "') and contains(@" + CSSUtils.TEST_ID + ",'" + id + "')]"));
+    }
+
+    public Widget getWidget(String widgetId, WidgetType widgetType) {
+
+        return null;
     }
 
     @Deprecated

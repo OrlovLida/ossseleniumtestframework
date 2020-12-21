@@ -21,6 +21,11 @@ public abstract class Widget {
     protected final WebDriverWait webDriverWait;
     protected WebElement ossWindow;
 
+    public enum WidgetType{
+        TABLE_WIDGET, OLD_TABLE_WIDGET, PROPERTY_PANEL
+
+    }
+
     public Widget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         this.driver = driver;
         this.webElement = driver.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]"));
