@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -14,13 +15,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.portals.ChooseConfigurationWizard;
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.components.portals.SaveConfigurationWizard;
-import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
+import com.oss.framework.components.portals.ChooseConfigurationWizard;
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.components.portals.ExpandedTextTooltip;
+import com.oss.framework.components.portals.SaveConfigurationWizard;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
@@ -40,7 +41,7 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String checkboxes = ".//div[contains(@class,'stickyColumn')]//div[contains(@class, 'Row')]";
     private static final String tableRows = ".//div[@class='TableBody']//div[@class='custom-scrollbars']//div[contains(@class, 'Row')]";
     private static final String columnResizeGrips = ".//div[@class='resizeGrip']";
-    private static final String headers = ".//div[@class='headerItem text-align']";
+    private static final String headers = ".//div[@class='headerItem text-align'] | .//div[@class='headerItem date-align']";
     private static final String gearIcon = ".//div[@id='management-btn']";
     private static final String horizontalTableScroller = ".//div[contains(@style,'position: relative; display: block; height: 100%; cursor: pointer;')]";
 
@@ -409,7 +410,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private AdvancedSearch getAdvancedSearch() {
-        if(advancedSearch == null) {
+        if (advancedSearch == null) {
             advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
         }
         return advancedSearch;
@@ -424,7 +425,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
-        Input input =  getAdvancedSearch().getComponent(componentId, componentType);
+        Input input = getAdvancedSearch().getComponent(componentId, componentType);
         input.setSingleStringValueContains(value);
     }
 
@@ -478,8 +479,7 @@ public class TableWidget extends Widget implements TableInterface {
         }
 
         public String getText() {
-            Actions action = new Actions(driver);
-            action.moveToElement(webElement).click(webElement).perform();
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
             return webElement.findElement(By.xpath(".//p")).getText();
         }
 
