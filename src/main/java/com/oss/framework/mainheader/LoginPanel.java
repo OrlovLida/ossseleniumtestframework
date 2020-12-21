@@ -47,7 +47,6 @@ public class LoginPanel {
             DelayUtils.waitForPageToLoad(driver, wait);
         } else {
             toolbar.closeLoginPanel();
-            //test comment2
         }
     }
 
