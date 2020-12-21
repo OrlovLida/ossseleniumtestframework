@@ -53,12 +53,16 @@ public class OldTable implements TableInterface {
     public static OldTable createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
         DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')] | //div[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
         WebElement table = driver.findElement(By.xpath("//div[@id='" + componentId + "'] | //div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(table).build().perform();
         return new OldTable(driver, wait, componentId, table);
     }
 
     public static OldTable createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
         DelayUtils.waitByXPath(wait, "//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']");
         WebElement table = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']"));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(table).build().perform();
         WebElement window = table.findElement(
                 By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
         return new OldTable(driver, wait, dataAttributeName, table, window);
