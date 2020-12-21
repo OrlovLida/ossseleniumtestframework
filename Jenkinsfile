@@ -25,7 +25,6 @@ pipeline {
     agent any
     triggers {
         gitlab(triggerOnPush: true)
-        cron(cron_string)
     }
     options {
         skipDefaultCheckout(true)
