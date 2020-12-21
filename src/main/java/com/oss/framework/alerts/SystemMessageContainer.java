@@ -6,17 +6,18 @@
  */
 package com.oss.framework.alerts;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 
 /**
  * @author Gabriela Kasza
@@ -27,7 +28,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private WebDriverWait wait;
     private WebElement messageContainer;
 
-    private static final String PATH_TO_CLOSEBUTTON = "//div[contains(@class,'closeButton')]";
+    private static final String PATH_TO_CLOSEBUTTON = ".//div[contains(@class,'closeButton')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_CONTAINER = "//div[contains(@class, 'systemMessagesContainer')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_ITEM = "//div[contains(@class,'systemMessageItem')]";
     private static final String DANGER_MESSAGE_TYPE_CLASS = "danger";
