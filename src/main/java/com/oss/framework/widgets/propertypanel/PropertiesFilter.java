@@ -27,20 +27,10 @@ public class PropertiesFilter {
     protected final WebDriverWait wait;
     private PropertiesFilterPanel propertiesFilterPanel;
 
-    public PropertiesFilter(WebDriver driver, WebDriverWait wait) {
+    private PropertiesFilter(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
         this.webElement = driver.findElement(By.className(PROPERTIES_FILTER_CLASS));
-    }
-
-    public PropertiesFilter(WebDriver driver, WebDriverWait wait, PropertyPanel propertyPanel) {
-        this.driver = driver;
-        this.webElement = propertyPanel.webElement.findElement(By.xpath(".//../*[@class = '" + PROPERTIES_FILTER_CLASS + "']"));
-        this.wait = wait;
-    }
-
-    public static PropertiesFilter createByPropertyPanel(WebDriver driver, WebDriverWait wait, PropertyPanel propertyPanel) {
-        return new PropertiesFilter(driver, wait, propertyPanel);
     }
 
     public static PropertiesFilter create(WebDriver driver, WebDriverWait wait) {

@@ -26,6 +26,7 @@ public abstract class Widget {
 
     }
 
+    @Deprecated
     public Widget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         this.driver = driver;
         this.webElement = driver.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]"));

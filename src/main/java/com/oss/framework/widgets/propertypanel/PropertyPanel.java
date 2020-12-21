@@ -1,18 +1,19 @@
 package com.oss.framework.widgets.propertypanel;
 
-import com.google.common.collect.Maps;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DragAndDrop;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class PropertyPanel implements PropertyPanelInterface {
+import com.google.common.collect.Maps;
+import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.widgets.Widget;
+
+public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
 
@@ -21,27 +22,34 @@ public class PropertyPanel implements PropertyPanelInterface {
     private static final String PROPERTY_VALUE_PATH = ".//div[@class='propertyPanelRow-value']";
     private final Map<String, WebElement> properties = Maps.newHashMap();
 
-    protected final WebDriver driver;
-    protected final WebElement webElement;
 
-
-    private PropertyPanel(WebDriver driver) {
-        this.driver = driver;
-        this.webElement = driver.findElement(By.className(PROPERTY_PANEL_CLASS));
-    }
-
-    private PropertyPanel(WebDriver driver, String id) {
-        this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//*[@"+ CSSUtils.TEST_ID +" = '" + id + "']"));
-    }
-
+    @Deprecated
     public static PropertyPanel create(WebDriver driver) {
-        return new PropertyPanel(driver);
+        WebDriverWait wait = new WebDriverWait(driver, 45);
+        Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
+        return new PropertyPanel(driver, wait);
     }
 
+    @Deprecated
     public static PropertyPanel createById(WebDriver driver, String id) {
-        return new PropertyPanel(driver, id);
+        WebDriverWait wait = new WebDriverWait(driver, 45);
+        Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
+        return new PropertyPanel(driver, wait, id);
     }
+
+    public static PropertyPanel createById(WebDriver driver, WebDriverWait wait, String testId) {
+        Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
+        return new PropertyPanel(driver, wait, testId);
+    }
+
+    private PropertyPanel(WebDriver driver, WebDriverWait wait) {
+        super(driver, PROPERTY_PANEL_CLASS, wait);
+    }
+
+    private PropertyPanel(WebDriver driver, WebDriverWait wait, String id) {
+        super(driver, wait, id);
+    }
+
 
     private List<WebElement> getProperties() {
         return this.webElement.findElements(By.xpath(PROPERTY_PATH));

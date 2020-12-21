@@ -21,6 +21,7 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.Widget.WidgetType;
+import com.oss.framework.widgets.WidgetFactory;
 
 public class TabsWidget implements TabsInterface {
 
@@ -72,8 +73,7 @@ public class TabsWidget implements TabsInterface {
     }
 
     public Widget getWidget(String widgetId, WidgetType widgetType) {
-
-        return null;
+        return WidgetFactory.getWidget(widgetId, widgetType, driver, webDriverWait);
     }
 
     @Deprecated
