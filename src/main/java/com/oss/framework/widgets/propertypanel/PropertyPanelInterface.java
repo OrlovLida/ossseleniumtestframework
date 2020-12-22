@@ -6,24 +6,10 @@
  */
 package com.oss.framework.widgets.propertypanel;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author Kamil Szota
  */
 public interface PropertyPanelInterface {
-
-//    List<WebElement> getProperties();
-
-//    List<String> getPropertyLabels();
-//
-//    String getNthPropertyLabel(int n);
-//
-//    Map<String, WebElement> getPropertiesMap();
 
     String getPropertyValue(String propertyName);
 }
