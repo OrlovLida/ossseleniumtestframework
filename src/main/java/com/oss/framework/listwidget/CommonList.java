@@ -37,7 +37,6 @@ public class CommonList {
     public static CommonList create(WebDriver driver, WebDriverWait wait, String commonListAppId) {
         DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + commonListAppId + "')]"));
         return new CommonList(driver, wait, commonListAppId);
-        //test comment
     }
 
     private CommonList(WebDriver driver, WebDriverWait wait, String commonListAppId) {
