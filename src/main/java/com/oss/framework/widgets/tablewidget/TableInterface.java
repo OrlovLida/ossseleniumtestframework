@@ -46,7 +46,7 @@ public interface TableInterface {
 
     void selectRowByAttributeValueWithLabel(String attributeLabel, String value);
 
-    String getValueCell(int index, String attributeLabel);
+    String getCellValue(int index, String attributeLabel);
 
     void searchByAttribute(String attributeId, Input.ComponentType componentType, String value);
 

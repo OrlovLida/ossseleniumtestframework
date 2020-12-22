@@ -156,8 +156,9 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public String getValueCell(int index, String attributeLabel) {
-        throw new RuntimeException("Not implemented yet");
+    public String getCellValue(int index, String attributeLabel) {
+        int rowId = index + 1;
+        return getValueFromNthRow(attributeLabel, rowId);
     }
 
     @Override
@@ -461,7 +462,8 @@ public class TableWidget extends Widget implements TableInterface {
         action.dragAndDropBy(getColumnResizeGrips().get(column), offset, 0).perform();
     }
 
-    public String getValueFromNthRow(String columnLabel, int rowNumber) {
+    @Deprecated
+    private String getValueFromNthRow(String columnLabel, int rowNumber) {
         int index = getActiveColumnHeaders().indexOf(columnLabel);
         List<WebElement> valueCells = this.webElement.findElements(By.xpath("(.//div[@id='table-wrapper']/div[@class='TableBody']//div[@class='Row' or @class='Row selected'])[" + rowNumber + "]/div[@class='Cell']/div/div"));
         return valueCells.get(index).getText();

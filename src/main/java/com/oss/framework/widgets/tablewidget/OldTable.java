@@ -191,7 +191,7 @@ public class OldTable implements TableInterface {
         throw new RuntimeException("Not implemented for the old table widget");
     }
 
-    public String getValueCell(int index, String attributeLabel) {
+    public String getCellValue(int index, String attributeLabel) {
         Map<String, Column> columns = createColumnsFilters();
         Column column = columns.get(attributeLabel);
         return column.getValueCell(index);
