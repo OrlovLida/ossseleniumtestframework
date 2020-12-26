@@ -3,6 +3,7 @@ package com.oss.framework.components.search;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.inputs.ComponentFactory;
@@ -30,7 +31,7 @@ public class SearchPanel {
     }
 
     public void applyFilter() {
-        this.webElement.findElement(By.xpath(APPLY_BTN_PATH)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(APPLY_BTN_PATH)))).click();
     }
 
     public void cancel() {

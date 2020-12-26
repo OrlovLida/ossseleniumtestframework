@@ -29,12 +29,14 @@ public class TextField extends Input {
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.clear();
         input.sendKeys(value.getStringValue());
-
     }
 
     @Override
     public void setValueContains(Data value) {
-
+        WebElement input = webElement.findElement(By.xpath(".//input"));
+        input.clear();
+        input.click(); //before click element is not reachable by keyboard and after the click element is refreshed
+        webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
     }
 
     @Override
