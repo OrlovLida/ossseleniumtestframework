@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.gisMap;
 
+import com.oss.framework.alerts.SystemMessageContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.CSSUtils;
@@ -58,6 +59,16 @@ public class GisMap implements GisMapInterface {
         DelayUtils.waitForPageToLoad(driver, wait);
         search.sendKeys(Keys.ARROW_DOWN);
         search.sendKeys(Keys.ENTER);
+    }
+
+    @Override
+    public void searchResult(String value) {
+        DelayUtils.waitByXPath(wait, gisMapSearchXpath);
+        WebElement search = gisMap.findElement(By.xpath(gisMapSearchXpath));
+        search.clear();
+        search.sendKeys(value);
+        DelayUtils.waitForPageToLoad(driver, wait);
+        search.findElement(By.xpath("//ul[@class='dropdown-menu searchResults']/li[@class='result']/span[text()='" + value + "']")).click();
     }
 
     @Override
