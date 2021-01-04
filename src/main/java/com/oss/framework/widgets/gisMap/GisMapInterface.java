@@ -8,6 +8,8 @@ public interface GisMapInterface {
 
     void searchFirstResult(String value);
 
+    void searchResult(String value);
+
     void clickOnMapByCoordinates(int x, int y);
 
     void doubleClickOnMapByCoordinates(int x, int y);
