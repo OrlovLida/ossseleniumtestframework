@@ -142,7 +142,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void selectTabByLabel(String tabLabel, String id) {
-
+        //TODO: remove that method
     }
 
     @Override
@@ -168,6 +168,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public Map<String, String> getPropertyNamesToValues() {
+        //TODO: Remove that method
         throw new RuntimeException("Not implemented for TableWidget");
     }
 
@@ -214,6 +215,10 @@ public class TableWidget extends Widget implements TableInterface {
 
     public void changeColumnsOrder(int sourcePosition, int targetPosition) {
         changeColumnsPosition(getColumns().get(sourcePosition).getWebElement(), getColumns().get(targetPosition).getWebElement());
+    }
+
+    public void clearAllFilters() {
+        getAdvancedSearch().clearAllFilters();
     }
 
     private void changeColumnsPosition(WebElement source, WebElement target) {

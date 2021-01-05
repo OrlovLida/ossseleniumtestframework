@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.HashMultimap;
@@ -61,16 +63,41 @@ public class AdvancedSearch {
     }
 
     public void fullTextSearch(String text) {
+        getFullTextSearch().sendKeys(text);
+    }
+
+    private WebElement getFullTextSearch() {
         WebElement search = this.webElement.findElement(By.xpath(".//div[@"+ CSSUtils.TEST_ID +"='search']"));
-        search.findElement(By.xpath(".//input")).sendKeys(text);
+        return search.findElement(By.xpath(".//input"));
+    }
+
+    private Tags getTags() {
+        DelayUtils.waitBy(this.wait, By.className(TAGS_CLASS));
+        return new Tags(this.webElement);
     }
 
     public Multimap<String, String> getAppliedFilters() {
-        if (tags == null) {
-            DelayUtils.waitBy(this.wait, By.className(TAGS_CLASS));
-            tags = new Tags(this.webElement);
+        return parseTags(getTags().getTags());
+    }
+
+    public void clearFullText() {
+        getFullTextSearch().sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);;
+    }
+
+    public void clearAllFilters() {
+        clearFullText();
+        clearTags();
+    }
+
+    private boolean hasTags() {
+        List<WebElement> tags = this.webElement.findElements(By.className(TAGS_CLASS));
+        return !tags.isEmpty();
+    }
+
+    private void clearTags() {
+        if(hasTags()) {
+            getTags().clear();
         }
-        return parseTags(tags.getTags());
     }
 
     private Multimap<String, String> parseTags(List<String> tags) {
@@ -112,6 +139,7 @@ public class AdvancedSearch {
         this.searchPanel = null;
     }
 
+    @Deprecated
     public void clickOnTagByLabel(String label) {
         this.webElement.findElement(By.xpath("//div[@class='" + TAGS_CLASS + "']//*[contains (text(), '" + label + "')]")).click();
     }
@@ -135,6 +163,10 @@ public class AdvancedSearch {
             List<String> values = this.webElement.findElements(By.xpath(TAGS_ITEMS)).stream()
                     .map(WebElement::getText).collect(Collectors.toList());
             return values;
+        }
+
+        private void clear() {
+            this.webElement.findElement(By.xpath(".//a")).click();
         }
     }
 }
