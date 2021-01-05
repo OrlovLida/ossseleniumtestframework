@@ -57,6 +57,7 @@ public class SideMenu {
 
     private void callAction(String actionLabel, WebElement parent) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
+        searchElement(parent, actionXpath);
         DelayUtils.waitByXPath(wait, actionXpath);
         Actions actions = new Actions(driver);
         WebElement foundedElement = wait.until(
