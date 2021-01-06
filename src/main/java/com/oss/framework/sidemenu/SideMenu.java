@@ -12,7 +12,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
@@ -45,8 +44,7 @@ public class SideMenu {
         WebElement latestPath = getSideMenu();
         for (String s : path) {
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
-            searchElement(latestPath, actionXpath);
-            latestPath = latestPath.findElement(By.xpath(actionXpath));
+            latestPath = searchElement(latestPath, actionXpath);
             DelayUtils.sleep(500);
             Actions action = new Actions(driver);
             action.moveToElement(latestPath).click().perform();
@@ -56,23 +54,23 @@ public class SideMenu {
 
     private void callAction(String actionLabel, WebElement parent) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
-        searchElement(parent, actionXpath);
-        WebElement foundedElement = wait.until(
-                ExpectedConditions.elementToBeClickable(parent.findElement(By.xpath(actionXpath))));
+        WebElement foundedElement = searchElement(parent, actionXpath);
         DelayUtils.sleep(500);
         Actions actions = new Actions(driver);
         actions.moveToElement(foundedElement).click().perform();
     }
 
-    public void searchElement(WebElement webElement, String xpath) {
+    private WebElement searchElement(WebElement webElement, String xpath) {
         for (int scrollDownCount = 0; scrollDownCount < 3; scrollDownCount++) {
             if (!(webElement.findElements(By.xpath(xpath)).isEmpty())) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement.findElement(By.xpath(xpath)));
-                return;
+                WebElement foundElement = webElement.findElement(By.xpath(xpath));
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundElement);
+                return foundElement;
             }
             Actions action = new Actions(driver);
             action.moveToElement(webElement).sendKeys(Keys.PAGE_DOWN).perform();
             DelayUtils.sleep(500);
         }
+        return webElement.findElement(By.xpath(xpath));
     }
 }
