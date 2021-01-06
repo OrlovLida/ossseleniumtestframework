@@ -29,7 +29,7 @@ public class TextArea extends Input {
     @Override
     public void setValue(Data value) {
         WebElement input = webElement.findElement(By.xpath(".//textarea"));
-        input.clear();
+        clear();
         input.sendKeys(value.getStringValue());
     }
 
