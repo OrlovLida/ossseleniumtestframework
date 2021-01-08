@@ -45,7 +45,7 @@ public class SideMenu {
         for (String s : path) {
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
             latestPath = searchElement(latestPath, actionXpath);
-            DelayUtils.sleep(500);
+            DelayUtils.sleep(1000);
             Actions action = new Actions(driver);
             action.moveToElement(latestPath).click().perform();
         }
