@@ -1,10 +1,12 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.data.Data;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.data.Data;
 
 public class TextField extends Input {
 
@@ -27,7 +29,7 @@ public class TextField extends Input {
     @Override
     public void setValue(Data value) {
         WebElement input = webElement.findElement(By.xpath(".//input"));
-        input.clear();
+        clear();
         input.sendKeys(value.getStringValue());
     }
 
@@ -46,6 +48,8 @@ public class TextField extends Input {
 
     @Override
     public void clear() {
-        webElement.findElement(By.xpath(".//input")).clear();
+        WebElement input = webElement.findElement(By.xpath(".//input"));
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
     }
 }
