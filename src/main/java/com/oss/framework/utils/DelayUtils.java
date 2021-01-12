@@ -1,14 +1,14 @@
 package com.oss.framework.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DelayUtils {
     public static int HUMAN_REACTION_MS = 250;
