@@ -73,39 +73,55 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String id) {
+        DelayUtils.waitForVisibility(wait, toolbar);
         String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, id, id);
         if (isElementPresent(toolbar, By.xpath(actionXpath))) {
             clickActionByXpath(actionXpath);
         } else {
-            wait.until(ExpectedConditions.elementToBeClickable(this.toolbar.findElement(By.xpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, MORE_GROUP_DATA_GROUP_ID))))).click();
-            DelayUtils.waitForNestedElements(wait, toolbar, actionXpath);
+            clickGroupByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, MORE_GROUP_DATA_GROUP_ID));
             clickActionByXpath(actionXpath);
         }
     }
 
+    @Override
+    public void callActionById(String groupId, String actionDataAttributeName) {
+        clickGroupByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId));
+        clickActionByXpath(String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName));
+    }
+
+    public void callActionById(String groupId, String innerGroupDataAttributeName, String actionDataAttributeName) {
+        DelayUtils.waitForVisibility(wait, toolbar);
+        String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId);
+        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName);
+        if (isElementPresent(toolbar, By.xpath(groupXpath))) {
+            clickGroupByXpath(groupXpath);
+            clickActionByXpath(actionXpath);
+        } else {
+            clickGroupByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, MORE_GROUP_DATA_GROUP_ID));
+            moveToInnerActionByXpath(String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, innerGroupDataAttributeName, innerGroupDataAttributeName));
+            clickActionByXpath(actionXpath);
+        }
+    }
+
+    private void clickGroupByXpath(String groupXpath){
+        DelayUtils.waitForNestedElements(wait, toolbar, groupXpath);
+        wait.until(ExpectedConditions.elementToBeClickable(this.toolbar.findElement(By.xpath(groupXpath)))).click();
+    }
+
+    private void moveToInnerActionByXpath(String innerActionXpath){
+        DelayUtils.waitForNestedElements(wait, toolbar, innerActionXpath);
+        Actions action = new Actions(driver);
+        WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(innerActionXpath))));
+        action.moveToElement(foundedElement).perform();
+    }
+
     private void clickActionByXpath(String xpath){
+        DelayUtils.waitForNestedElements(wait, toolbar, xpath);
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
                 toolbar.findElement(By.xpath(xpath)))))
                 .click()
                 .perform();
-    }
-
-    @Override
-    public void callActionById(String groupId, String actionDataAttributeName) {
-        DelayUtils.waitForNestedElements(wait, toolbar, String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId));
-        wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId))))).click();
-        DelayUtils.waitForNestedElements(wait, toolbar, String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName));
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName)))).click();
-    }
-
-    public void callActionById(String groupId, String innerGroupId, String actionDataAttributeName) {
-        DelayUtils.waitForNestedElements(wait, toolbar, String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId));
-        wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId))))).click();
-        Actions action = new Actions(driver);
-        WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(String.format(INNER_GROUP_BY_DATA_ATTRIBUTE_NAME_XPATH, innerGroupId)))));
-        action.moveToElement(foundedElement).perform();
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName)))).click();
     }
 
     private static boolean isElementPresent(WebElement webElement, By by) {
