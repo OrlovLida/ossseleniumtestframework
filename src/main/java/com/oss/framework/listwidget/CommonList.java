@@ -176,10 +176,10 @@ public class CommonList {
     }
 
     private WebElement getListElementByName(String name) {
-        if (isElementPresent(getCommonList(), By.xpath((LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../..")))) {
-            return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../.."));
+        if (isElementPresent(getCommonList(), By.xpath((LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../../..")))) {
+            return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../../.."));
         } else {
-            return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[contains(text(),'" + name + "')]/../../../.."));
+            return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[contains(text(),'" + name + "')]/../../../../.."));
         }
     }
 
@@ -197,7 +197,7 @@ public class CommonList {
 
     public void selectRow(int row) {
         List<WebElement> allRows = driver.findElements(By.xpath("//li[@class='listElement'] | //li[@class='listElement rowSelected']"));
-        if (!allRows.get(row).getAttribute("class").contains("rowSelected")){
+        if (!allRows.get(row).getAttribute("class").contains("rowSelected")) {
             allRows.get(row).click();
         }
     }
