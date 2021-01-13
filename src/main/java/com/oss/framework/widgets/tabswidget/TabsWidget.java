@@ -167,7 +167,7 @@ public class TabsWidget implements TabsInterface {
     }
     
     public void changeTabsOrder(String tabLabel, int position) {
-        DragAndDrop.dragAndDrop(getDraggableElement(tabLabel), getDropElement(position), 60, driver);
+        DragAndDrop.dragAndDrop(getDraggableElement(tabLabel), getDropElement(position), 60,0, driver);
     }
     
     private DragAndDrop.DraggableElement getDraggableElement(String tabLabel) {

@@ -29,11 +29,12 @@ public class DragAndDrop {
                 .moveToElement(target.getWebElement())
                 .moveByOffset(1, 0).pause(100).release().perform();
     }
-    public static void dragAndDrop(DraggableElement source, DropElement target,int xOffset,WebDriver driver) {
+    
+    public static void dragAndDrop(DraggableElement source, DropElement target, int xOffset, int yOffset, WebDriver driver) {
         Actions action = new Actions(driver);
         action.moveToElement(source.getWebElement()).pause(100).clickAndHold(source.getWebElement()).pause(100).moveByOffset(10, 10)
                 .moveToElement(target.getWebElement())
-                .moveByOffset(xOffset, 0).pause(100).release().perform();
+                .moveByOffset(xOffset, yOffset).pause(100).release().perform();
     }
     
     public static void dragAndDrop(WebElement source, WebElement target, int pauseInMs, WebDriver driver) {
@@ -61,7 +62,9 @@ public class DragAndDrop {
             this.webElement = webElement;
         }
         
-        private WebElement getWebElement(){return webElement;}
+        private WebElement getWebElement() {
+            return webElement;
+        }
     }
     
 }
