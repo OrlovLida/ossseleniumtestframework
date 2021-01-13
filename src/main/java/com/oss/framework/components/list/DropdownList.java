@@ -12,8 +12,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.oss.framework.components.common.DraggableElement;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 
@@ -52,17 +50,17 @@ public class DropdownList {
         this.dropdownList = dropdownList;
     }
     
-    public DraggableElement getDraggableElement(String value) {
+    public DragAndDrop.DraggableElement getDraggableElement(String value) {
         List<WebElement> allSource = dropdownList.findElements(By.xpath(DRAGGABLE_ELEMENT_XPATH));
         WebElement row = allSource.stream().filter(object -> object.getText().contains(value)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Object not available on the list"));
         WebElement source = row.findElement(By.xpath(DRAG_BUTTON_XPATH));
-        return new DraggableElement(source);
+        return new DragAndDrop.DraggableElement(source);
     }
     
-    public void drop(DraggableElement draggableElement) {
+    public void drop(DragAndDrop.DraggableElement draggableElement) {
         WebElement target = dropdownList.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
-        DragAndDrop.dragAndDrop(draggableElement.getWebElement(), target, driver);
+        DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), driver);
         
     }
     

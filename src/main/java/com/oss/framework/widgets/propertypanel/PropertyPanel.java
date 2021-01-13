@@ -95,8 +95,16 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public void changePropertyOrder(String id, int position) {
-        DragAndDrop.dragAndDrop(getPropertyById(id).findElement(By.xpath(".//div[@class = 'btn-drag']")),
-                this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH)).get(position), driver);
+        DragAndDrop.dragAndDrop(getDraggableElement(id), getDropElement(position), driver);
+    }
+    private DragAndDrop.DraggableElement getDraggableElement (String id){
+        WebElement source = getPropertyById(id).findElement(By.xpath(".//div[@class = 'btn-drag']"));
+        return new DragAndDrop.DraggableElement(source);
+    }
+
+    private DragAndDrop.DropElement getDropElement (int position) {
+        WebElement target = this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH)).get(position);
+        return new DragAndDrop.DropElement(target);
     }
 
     private AttributesChooser getAttributesChooser() {
