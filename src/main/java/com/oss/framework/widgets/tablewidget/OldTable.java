@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -15,7 +14,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -66,6 +64,21 @@ public class OldTable implements TableInterface {
         WebElement window = table.findElement(
                 By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
         return new OldTable(driver, wait, dataAttributeName, table, window);
+    }
+
+    public static OldTable createForOldInventoryView(WebDriver driver, WebDriverWait wait){
+        return createByComponentDataAttributeName(driver, wait, "table(" + getTypeBasedOnUrl(driver.getCurrentUrl()) + ")");
+    }
+
+    private static String getTypeBasedOnUrl(String url){
+        String normalizedUrl = url.replace('?', '/');
+        String[] urlParts = normalizedUrl.split("/");
+        for(int i = 0; i < urlParts.length - 1; i++){
+            if(urlParts[i].equals("type")){
+                return urlParts[i + 1];
+            }
+        }
+        throw new IllegalStateException("Current page does not corresponds with Old Inventory View");
     }
 
     private final WebDriver driver;
