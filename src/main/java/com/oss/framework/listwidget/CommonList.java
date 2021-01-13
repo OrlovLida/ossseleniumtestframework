@@ -27,7 +27,10 @@ public class CommonList {
     private static final String EDIT_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Edit')]";
     private static final String DELETE_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Delete')]";
     private static final String CATEGORY_XPATH = "//div[@class='categoryLabel-text']";
-    private static final String LIST_ELEMENT_XPATH = ".//div[@class='text-wrapper']";
+    private static final String TEXT_WRAPPER_XPATH = ".//div[@class='text-wrapper']";
+    private static final String ANCESTOR_LIST_ELEMENT_XPATH = "/ancestor::li[@class='listElement']";
+    private static final String TEXT_EQUALS_XPATH = "[text()='%s']";
+    private static final String TEXT_CONTAINS_XPATH = "[contains(text(),'%s')]";
     private static final String COLLAPSE_ICON_XPATH = "//i[contains (@class, 'chevron-up')]";
     private static final String EXPAND_ICON_XPATH = "//i[contains (@class, 'chevron-down')]";
     private static final String SHARE_ACTION_ID = "share_action";
@@ -108,15 +111,15 @@ public class CommonList {
 
     public boolean isListElementVisible(String name) {
         DelayUtils.waitForPageToLoadWithoutAppPreloader(driver, wait);
-        return !getCommonList().findElements(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']")).isEmpty();
+        return !getCommonList().findElements(By.xpath(TEXT_WRAPPER_XPATH + String.format(TEXT_EQUALS_XPATH, name))).isEmpty();
     }
 
     public boolean isCategoryVisible(String name) {
-        return !getCommonList().findElements(By.xpath(CATEGORY_XPATH + "[text()='" + name + "']")).isEmpty();
+        return !getCommonList().findElements(By.xpath(CATEGORY_XPATH + String.format(TEXT_EQUALS_XPATH, name))).isEmpty();
     }
 
     public boolean isEditActionVisible(String name) {
-        return !getCommonList().findElements(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../.." + EDIT_BUTTON_XPATH)).isEmpty();
+        return !getCommonList().findElements(By.xpath(TEXT_WRAPPER_XPATH + String.format(TEXT_EQUALS_XPATH, name) + ANCESTOR_LIST_ELEMENT_XPATH + EDIT_BUTTON_XPATH)).isEmpty();
     }
 
     public boolean isFavorite(String name) {
@@ -126,7 +129,7 @@ public class CommonList {
     }
 
     public int howManyListElements() {
-        return getCommonList().findElements(By.xpath(LIST_ELEMENT_XPATH + "/../../../../../li[@class='listElement']")).size();
+        return getCommonList().findElements(By.xpath(TEXT_WRAPPER_XPATH + ANCESTOR_LIST_ELEMENT_XPATH)).size();
     }
 
     public int howManyCategories() {
@@ -176,15 +179,16 @@ public class CommonList {
     }
 
     private WebElement getListElementByName(String name) {
-        if (isElementPresent(getCommonList(), By.xpath((LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../../..")))) {
-            return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[text()='" + name + "']/../../../../.."));
+        String xpathWithTextEqual = TEXT_WRAPPER_XPATH + String.format(TEXT_EQUALS_XPATH, name) + ANCESTOR_LIST_ELEMENT_XPATH;
+        if (isElementPresent(getCommonList(), By.xpath(xpathWithTextEqual))) {
+            return getCommonList().findElement(By.xpath(xpathWithTextEqual));
         } else {
-            return getCommonList().findElement(By.xpath(LIST_ELEMENT_XPATH + "[contains(text(),'" + name + "')]/../../../../.."));
+            return getCommonList().findElement(By.xpath(TEXT_WRAPPER_XPATH + String.format(TEXT_CONTAINS_XPATH, name) + ANCESTOR_LIST_ELEMENT_XPATH));
         }
     }
 
     private WebElement getCategoryByName(String name) {
-        return getCommonList().findElement(By.xpath(CATEGORY_XPATH + "[text()='" + name + "']/../.."));
+        return getCommonList().findElement(By.xpath(CATEGORY_XPATH + String.format(TEXT_EQUALS_XPATH, name) +"/../.."));
     }
 
     private WebElement getEditButtonByListElementName(String name) {
@@ -197,7 +201,7 @@ public class CommonList {
 
     public void selectRow(int row) {
         List<WebElement> allRows = driver.findElements(By.xpath("//li[@class='listElement'] | //li[@class='listElement rowSelected']"));
-        if (!allRows.get(row).getAttribute("class").contains("rowSelected")) {
+        if (!allRows.get(row).getAttribute("class").contains("rowSelected")){
             allRows.get(row).click();
         }
     }
