@@ -16,8 +16,8 @@ public class OldActionsContainer implements ActionsInterface {
     private static String WINDOW_TOOLBAR_CLASS = "windowToolbar";
     private static String MORE_GROUP_DATA_GROUP_ID = "__more-group";
     private static String GROUP_BY_DATA_GROUP_ID_XPATH = ".//li[@data-group-id='%s']//button";
-    private static String INNER_GROUP_BY_DATA_ATTRIBUTE_NAME_XPATH = "//a[contains(@"+ CSSUtils.TEST_ID +", '%s')]";
-    private static String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@"+ CSSUtils.TEST_ID +"='%s'] | //*[@id='%s']";
+    private static String INNER_GROUP_BY_DATA_ATTRIBUTE_NAME_XPATH = "//a[contains(@" + CSSUtils.TEST_ID + ", '%s')]";
+    private static String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
 
     public static OldActionsContainer createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitForNestedElements(wait, parent, "//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]");
@@ -28,12 +28,6 @@ public class OldActionsContainer implements ActionsInterface {
             WebElement toolbar = parent.findElement(By.xpath("./../..//div[contains(@class, '" + WINDOW_TOOLBAR_CLASS + "')]"));
             return new OldActionsContainer(driver, wait, toolbar);
         }
-    }
-
-    public static OldActionsContainer createFromXPath(WebDriver driver, WebDriverWait wait, String xpath) {
-        DelayUtils.waitByXPath(wait, xpath);
-        WebElement toolbar = driver.findElement(By.xpath(xpath));
-        return new OldActionsContainer(driver, wait, toolbar);
     }
 
     private final WebDriver driver;
@@ -103,19 +97,19 @@ public class OldActionsContainer implements ActionsInterface {
         }
     }
 
-    private void clickGroupByXpath(String groupXpath){
+    private void clickGroupByXpath(String groupXpath) {
         DelayUtils.waitForNestedElements(wait, toolbar, groupXpath);
         wait.until(ExpectedConditions.elementToBeClickable(this.toolbar.findElement(By.xpath(groupXpath)))).click();
     }
 
-    private void moveToInnerActionByXpath(String innerActionXpath){
+    private void moveToInnerActionByXpath(String innerActionXpath) {
         DelayUtils.waitForNestedElements(wait, toolbar, innerActionXpath);
         Actions action = new Actions(driver);
         WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(innerActionXpath))));
         action.moveToElement(foundedElement).perform();
     }
 
-    private void clickActionByXpath(String xpath){
+    private void clickActionByXpath(String xpath) {
         DelayUtils.waitForNestedElements(wait, toolbar, xpath);
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
