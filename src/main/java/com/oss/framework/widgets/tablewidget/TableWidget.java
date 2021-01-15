@@ -41,7 +41,7 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String checkboxes = ".//div[contains(@class,'stickyColumn')]//div[contains(@class, 'Row')]";
     private static final String tableRows = ".//div[@class='TableBody']//div[@class='custom-scrollbars']//div[contains(@class, 'Row')]";
     private static final String columnResizeGrips = ".//div[@class='resizeGrip']";
-    private static final String headers = ".//div[@class='headerItem text-align'] | .//div[@class='headerItem date-align']";
+    private static final String headers = ".//div[@data-rbd-droppable-id='header-container']//div[contains(@class, 'headerItem')]";
     private static final String gearIcon = ".//div[@id='management-btn']";
     private static final String horizontalTableScroller =
             ".//div[contains(@style,'position: relative; display: block; height: 100%; cursor: pointer;')]";
