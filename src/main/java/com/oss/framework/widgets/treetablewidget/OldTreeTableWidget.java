@@ -70,6 +70,9 @@ public class OldTreeTableWidget extends Widget {
     }
     
     public static class Node {
+        private static final String TREE_NODE_EXPAND_ICON_XPATH = ".//i[contains(@class,'tree-node-expand-icon')]";
+        private static final String TREE_NODE_ADD_ICON_XPATH = ".//i[@aria-label='ADD']";
+        private static final String TREE_NODE_MINUS_ICON_XPATH = ".//i[@aria-label='MINUS']";
         final private int row;
         final private WebDriver driver;
         final private WebDriverWait wait;
@@ -81,16 +84,16 @@ public class OldTreeTableWidget extends Widget {
         }
         
         private List<WebElement> getNodeExpandIcons() {
-            DelayUtils.waitBy(wait, By.xpath(".//i[contains(@class,'tree-node-expand-icon')]"));
-            return driver.findElements(By.xpath(".//i[contains(@class,'tree-node-expand-icon')]"));
+            DelayUtils.waitBy(wait, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
+            return driver.findElements(By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
         }
         
         private void expandNode() {
 
             WebElement node = getNodeExpandIcons().get(row);
             if (!isExpanded(node)){
-                wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(".//i[@aria-label='ADD']"))));
-                node.findElement(By.xpath(".//i[@aria-label='ADD']")).click();
+                wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH))));
+                node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH)).click();
                 DelayUtils.waitForPageToLoad(driver,wait);
 
             }
@@ -99,14 +102,14 @@ public class OldTreeTableWidget extends Widget {
         private void collapseNode() {
             WebElement node = getNodeExpandIcons().get(row);
             if (isExpanded(node)) {
-                wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(".//i[@aria-label='MINUS']"))));
-                node.findElement(By.xpath(".//i[@aria-label='MINUS']")).click();
+                wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(TREE_NODE_MINUS_ICON_XPATH))));
+                node.findElement(By.xpath(TREE_NODE_MINUS_ICON_XPATH)).click();
                 DelayUtils.waitForPageToLoad(driver,wait);
             }
         }
         
         private boolean isExpanded(WebElement node) {
-            List<WebElement> notExpandedNode = node.findElements(By.xpath(".//i[@aria-label='ADD']"));
+            List<WebElement> notExpandedNode = node.findElements(By.xpath(TREE_NODE_ADD_ICON_XPATH));
             return notExpandedNode.isEmpty();
         }
     }
