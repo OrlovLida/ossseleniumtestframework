@@ -108,7 +108,7 @@ public class OldTable implements TableInterface {
     @Override
     public void selectRow(int row) {
         Map<String, Column> columns = createColumnsFilters();
-        Lists.newArrayList(columns.values()).get(0).selectCell(0);
+        Lists.newArrayList(columns.values()).get(0).selectCell(row);
     }
 
     @Override

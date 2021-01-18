@@ -69,6 +69,7 @@ public class OldActionsContainer implements ActionsInterface {
     public void callActionById(String id) {
         DelayUtils.waitForVisibility(wait, toolbar);
         String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, id, id);
+        DelayUtils.waitForPageToLoad(driver,wait);
         if (isElementPresent(toolbar, By.xpath(actionXpath))) {
             clickActionByXpath(actionXpath);
         } else {
@@ -118,7 +119,7 @@ public class OldActionsContainer implements ActionsInterface {
                 .perform();
     }
 
-    private static boolean isElementPresent(WebElement webElement, By by) {
+    private static boolean isElementPresent( WebElement webElement, By by) {
         try {
             webElement.findElement(by);
             return true;
@@ -126,4 +127,5 @@ public class OldActionsContainer implements ActionsInterface {
             return false;
         }
     }
-}
+    }
+
