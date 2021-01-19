@@ -14,6 +14,8 @@ import com.oss.framework.utils.DelayUtils;
 
 public class ComboboxV2 extends Input {
 
+    private static final String COMBOOBOX_INPUT = "//*[@class='combo-box__dropdown__search']//input";
+
     static ComboboxV2 create(WebDriver driver, WebDriverWait wait, String comboboxId) {
         return new ComboboxV2(driver, wait, comboboxId);
     }
@@ -32,7 +34,8 @@ public class ComboboxV2 extends Input {
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//span");
         webElement.click();
-        WebElement input = driver.findElement(By.xpath("//*[@class='combo-box__dropdown__search']//input"));
+        DelayUtils.waitByXPath(webDriverWait, COMBOOBOX_INPUT);
+        WebElement input = driver.findElement(By.xpath(COMBOOBOX_INPUT));
         input.sendKeys(value.getStringValue());
         input.sendKeys(Keys.DOWN);
         input.sendKeys(Keys.ENTER);
@@ -43,7 +46,8 @@ public class ComboboxV2 extends Input {
     public void setValueContains(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//span");
         webElement.click();
-        WebElement input = driver.findElement(By.xpath("//*[@class='combo-box__dropdown__search']//input"));
+        DelayUtils.waitByXPath(webDriverWait, COMBOOBOX_INPUT);
+        WebElement input = driver.findElement(By.xpath(COMBOOBOX_INPUT));
         input.sendKeys(value.getStringValue());
         input.sendKeys(Keys.DOWN);
         input.sendKeys(Keys.ENTER);
