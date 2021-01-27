@@ -1,5 +1,6 @@
 package com.oss.framework.floorPlan;
 
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -46,6 +47,7 @@ public class FloorPlanTable {
     }
 
     private List<WebElement> getTableRows() {
+        DelayUtils.waitForComponent(webDriverWait, tableRows);
         return driver.findElements(By.xpath(tableRows));
     }
 }
