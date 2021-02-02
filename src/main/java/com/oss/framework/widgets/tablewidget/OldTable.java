@@ -227,13 +227,6 @@ public class OldTable implements TableInterface {
     }
 
     @Override
-    public void clickOnAction(String actionName) {
-        WebElement foundedElement = this.table.findElement(By.xpath("//a[text()='" + actionName + "']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
-        foundedElement.click();
-    }
-
-    @Override
     public void doRefreshWhileNoData(int waitTime, String refreshLabel) {
         if (this.widgetId == null) {
             throw new RuntimeException("widgetId property is missing");

@@ -42,7 +42,7 @@ public class Combobox extends Input {
         DataWrapper wrapper = value.getWrapper();
 
         WebElement input = webElement.findElement(By.xpath(".//input"));
-        input.clear();
+        clear();
         input.sendKeys(wrapper.getReadableValue());
 
         if (wrapper.isFindFirst()) {

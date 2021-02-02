@@ -278,10 +278,7 @@ public class TableWidget extends Widget implements TableInterface {
     public void clickOnKebabMenu() {
         getKebabMenuBtn().click();
     }
-    
-    public void clickOnAction(String actionName) {
-    }
-    
+
     private WebElement getKebabMenuBtn() {
         return this.webElement.findElement(By.xpath(kebabMenuBtn));
     }
