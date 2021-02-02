@@ -65,9 +65,6 @@ public interface TableInterface {
     @Deprecated //TODO: we can treat kebab menu as a special group, so this method should be removed
     void clickOnKebabMenu();
 
-    @Deprecated //TODO we already have callAction method
-    void clickOnAction(String actionName);
-
     void doRefreshWhileNoData(int waitTime, String refreshLabel);
 
     Multimap<String, String> getAppliedFilters();
