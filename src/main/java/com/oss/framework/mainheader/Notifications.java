@@ -79,7 +79,7 @@ public class Notifications implements NotificationsInterface {
         }
     }
 
-    private void closeNotificationContainter() {
+    private void closeNotificationContainer() {
         if (isElementPresent(driver, NOTIFICATION_OPENED)) {
             driver.findElement(NOTIFICATION_BUTTON).click();
             DelayUtils.waitBy(wait, NOTIFICATION_CLOSED);
