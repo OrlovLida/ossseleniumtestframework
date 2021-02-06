@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -12,8 +13,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -66,15 +67,15 @@ public class OldTable implements TableInterface {
         return new OldTable(driver, wait, dataAttributeName, table, window);
     }
 
-    public static OldTable createForOldInventoryView(WebDriver driver, WebDriverWait wait){
+    public static OldTable createForOldInventoryView(WebDriver driver, WebDriverWait wait) {
         return createByComponentDataAttributeName(driver, wait, "table(" + getTypeBasedOnUrl(driver.getCurrentUrl()) + ")");
     }
 
-    private static String getTypeBasedOnUrl(String url){
+    private static String getTypeBasedOnUrl(String url) {
         String normalizedUrl = url.replace('?', '/');
         String[] urlParts = normalizedUrl.split("/");
-        for(int i = 0; i < urlParts.length - 1; i++){
-            if(urlParts[i].equals("type")){
+        for (int i = 0; i < urlParts.length - 1; i++) {
+            if (urlParts[i].equals("type")) {
                 return urlParts[i + 1];
             }
         }
@@ -376,8 +377,7 @@ public class OldTable implements TableInterface {
 
         private WebElement moveToHeader() {
             WebElement header = this.column.findElement(By.xpath(".//div[contains(@class, 'Header')]"));
-            Actions action = new Actions(driver);
-            action.moveToElement(header).perform();
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", header);
             return header;
         }
 
