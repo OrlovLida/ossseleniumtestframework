@@ -1,8 +1,10 @@
 package com.oss.framework.widgets.gisMap;
 
 import com.oss.framework.alerts.SystemMessageContainer;
+import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.components.inputs.Button;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
@@ -36,18 +38,9 @@ public class GisMap implements GisMapInterface {
     }
 
     @Override
-    public void callActionById(String actionId) {
+    public void callActionByLabel(String actionLabel) {
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, wait, gisMap);
-        actions.callActionById(actionId);
-    }
-
-    //TODO temporaty due OSSWEB-9476
-    @Override
-    public void callActionByLabel(String group, String label) {
-        DelayUtils.waitBy(wait, By.xpath("//div[text()='" + group + "']/.."));
-        driver.findElement(By.xpath("//div[text()='" + group + "']/..")).click();
-        DelayUtils.waitBy(wait, By.xpath("//a[@"+ CSSUtils.TEST_ID +"='" + label + "']"));
-        driver.findElement(By.xpath("//a[@"+ CSSUtils.TEST_ID +"='" + label + "']")).click();
+        actions.callActionByLabel(actionLabel);
     }
 
     @Override

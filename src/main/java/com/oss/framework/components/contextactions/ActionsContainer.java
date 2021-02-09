@@ -17,6 +17,7 @@ public class ActionsContainer implements ActionsInterface {
     public static final String KEBAB_GROUP_LABEL = "KEBAB";
     public static final String CREATE_GROUP_ID = "CREATE";
     public static final String EDIT_GROUP_ID = "EDIT";
+    public static final String OTHER_GROUP_ID = "OTHER";
     public static final String SHOW_ON_GROUP_ID = "NAVIGATION";
 
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";

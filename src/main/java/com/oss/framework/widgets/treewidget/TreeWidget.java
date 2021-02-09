@@ -1,23 +1,18 @@
 package com.oss.framework.widgets.treewidget;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.oss.framework.components.inputs.Input.ComponentType.CHECKBOX;
 
@@ -173,6 +168,11 @@ public class TreeWidget extends Widget {
     public TreeWidget expandNode() {
         DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
         getNodesWithExpandState("collapsed").get(0).changeExpandState();
+        return this;
+    }
+
+    public TreeWidget expandNodeWithLabel(String label) {
+        findByLabel(label).changeExpandState();
         return this;
     }
 
