@@ -19,6 +19,7 @@ public abstract class Widget {
     protected final WebDriver driver;
     protected final WebElement webElement;
     protected final WebDriverWait webDriverWait;
+    protected final String id;
     protected WebElement ossWindow;
 
     public enum WidgetType{
@@ -31,12 +32,15 @@ public abstract class Widget {
         this.driver = driver;
         this.webElement = driver.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]"));
         this.webDriverWait = webDriverWait;
+        this.id = null;
     }
 
+    @Deprecated
     public Widget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         this.driver = driver;
         this.webElement = webElement;
         this.webDriverWait = webDriverWait;
+        this.id = null;
     }
 
     public static void waitForWidget(WebDriverWait wait, String widgetClass) {
@@ -47,6 +51,14 @@ public abstract class Widget {
         this.driver = driver;
         this.webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + dataAttributeName + "']"));
         this.webDriverWait = webDriverWait;
+        this.id = dataAttributeName;
+    }
+
+    protected WebElement refreshWidgetByID() {
+        if(this.id == null) {
+            throw new RuntimeException("Not supported if id is not defined, use constructor with id");
+        }
+        return driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + this.id + "']"));
     }
 
     private static String createWidgetPath(String widgetId) {

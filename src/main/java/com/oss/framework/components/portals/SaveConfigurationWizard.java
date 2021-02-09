@@ -28,6 +28,9 @@ public class SaveConfigurationWizard {
     private static final String GROUPS_ID = "groups-input";
     private static final String GROUPS_DROPDOWN_ID = "groups-dropdown-search";
 
+    public static final String DEFAULT_ME_VALUE = "Me";
+    public static final String DEFAULT_ALL_VALUE = "All";
+
     private SaveConfigurationWizard(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
@@ -72,7 +75,7 @@ public class SaveConfigurationWizard {
     }
 
     private SaveConfigurationWizard setAsDefaultForMe() {
-        getWizard().getComponent(DEFAULT_VIEW_COMBOBOX_ID, Input.ComponentType.COMBOBOX).setSingleStringValue("Me");
+        getWizard().getComponent(DEFAULT_VIEW_COMBOBOX_ID, Input.ComponentType.COMBOBOX).setSingleStringValue(DEFAULT_ME_VALUE);
         return this;
     }
 
@@ -88,7 +91,7 @@ public class SaveConfigurationWizard {
     }
 
     private SaveConfigurationWizard setAsDefaultForAll() {
-        getWizard().getComponent(DEFAULT_VIEW_COMBOBOX_ID, Input.ComponentType.COMBOBOX).setSingleStringValue("All");
+        getWizard().getComponent(DEFAULT_VIEW_COMBOBOX_ID, Input.ComponentType.COMBOBOX).setSingleStringValue(DEFAULT_ALL_VALUE);
         return this;
     }
 

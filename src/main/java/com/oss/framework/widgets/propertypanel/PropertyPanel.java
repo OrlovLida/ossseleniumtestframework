@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Maps;
 import com.oss.framework.components.common.AttributesChooser;
+import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.utils.CSSUtils;
@@ -95,7 +96,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public void changePropertyOrder(String id, int position) {
-        DragAndDrop.dragAndDrop(getDraggableElement(id), getDropElement(position), driver);
+        DragAndDrop.dragAndDrop(getDraggableElement(id), getDropElement(position), 0, -5, driver);
     }
     private DragAndDrop.DraggableElement getDraggableElement (String id){
         WebElement source = getPropertyById(id).findElement(By.xpath(".//div[@class = 'btn-drag']"));
@@ -161,10 +162,15 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         return ChooseConfigurationWizard.create(driver, this.webDriverWait);
     }
 
+    private WebElement getPropertyPanelParent() {
+        WebElement propertyPanel = refreshWidgetByID();
+        return propertyPanel.findElement(By.xpath("..//div"));
+    }
+
     public SaveConfigurationWizard openSaveAsNewConfigurationWizard() {
-        this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
-        DelayUtils.waitByXPath(this.webDriverWait, SAVE_NEW_CONFIGURATION_XPATH);
-        this.webElement.findElement(By.xpath(SAVE_NEW_CONFIGURATION_XPATH)).click();
+        WebElement parentElement = getPropertyPanelParent();
+        ActionsContainer actionsContainer = ActionsContainer.createFromParent(parentElement, this.driver, this.webDriverWait);
+        actionsContainer.callAction(ActionsContainer.KEBAB_GROUP_ID, "propertyPanelSave");
         return SaveConfigurationWizard.create(driver, this.webDriverWait);
     }
 }
