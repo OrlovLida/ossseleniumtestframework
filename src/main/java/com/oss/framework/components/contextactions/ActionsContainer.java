@@ -29,12 +29,14 @@ public class ActionsContainer implements ActionsInterface {
 
     public static ActionsContainer createFromParent(WebElement parentElement, WebDriver webDriver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.className(CONTEXT_ACTIONS_CLASS));
-        return new ActionsContainer(parentElement, webDriver, webDriverWait);
+        List<WebElement> allContextAction = parentElement.findElements(By.className(CONTEXT_ACTIONS_CLASS));
+        WebElement activeContextActions = allContextAction.stream().filter(WebElement::isDisplayed).findFirst().orElseThrow(() -> new RuntimeException("No active Context Action"));
+        return new ActionsContainer(activeContextActions, webDriver, webDriverWait);
     }
 
-    private ActionsContainer(WebElement parentElement, WebDriver webDriver, WebDriverWait webDriverWait) {
+    private ActionsContainer(WebElement activeContextActions, WebDriver webDriver, WebDriverWait webDriverWait) {
         this.webDriver = webDriver;
-        this.webElement = parentElement.findElement(By.className(CONTEXT_ACTIONS_CLASS));
+        this.webElement = activeContextActions;
         this.webDriverWait = webDriverWait;
     }
 
