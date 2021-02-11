@@ -21,7 +21,7 @@ public class TabWindowWidget implements TabsInterface {
     public static TabsInterface create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(500);
         DelayUtils.waitByXPath(wait, "//div[@class='OssWindow tabWindow']");
-        WebElement widget = driver.findElement(By.xpath("//div[@class='OssWindow tabWindow']"));
+        WebElement widget = driver.findElement(By.xpath("//div[@class='OssWindow tabWindow']//div[@class='appList']/div[not(contains(@class, 'hide'))]"));
         return new TabWindowWidget(driver, wait, widget);
     }
 
@@ -75,7 +75,7 @@ public class TabWindowWidget implements TabsInterface {
 
     @Override
     public boolean isNoData(String id) {
-        List<WebElement> noData = driver.findElements(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + id + "']//h3[contains(@class,'noDataWithColumns')]"));
+        List<WebElement> noData = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']//h3[contains(@class,'noDataWithColumns')]"));
         return !noData.isEmpty();
     }
 
