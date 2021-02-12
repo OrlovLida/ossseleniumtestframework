@@ -21,7 +21,7 @@ public class TabWindowWidget implements TabsInterface {
     public static TabsInterface create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(500);
         DelayUtils.waitByXPath(wait, "//div[@class='OssWindow tabWindow']");
-        WebElement widget = driver.findElement(By.xpath("//div[@class='OssWindow tabWindow']//div[@class='appList']/div[not(contains(@class, 'hide'))]"));
+        WebElement widget = driver.findElement(By.xpath("//div[@class='OssWindow tabWindow']"));
         return new TabWindowWidget(driver, wait, widget);
     }
 
