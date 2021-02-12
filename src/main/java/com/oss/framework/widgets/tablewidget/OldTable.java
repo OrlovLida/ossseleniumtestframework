@@ -455,7 +455,7 @@ public class OldTable implements TableInterface {
         }
 
         private void selectLink() {
-            DelayUtils.waitByXPath(this.wait, "//div[contains(@class, 'Cell')]//div[(@class, 'OSSRichText')]");
+            DelayUtils.waitByXPath(this.wait, "//div[contains(@class, 'Cell')]//div[contains(@class, 'OSSRichText')]");
             DelayUtils.waitForNestedElements(this.wait, column, ".//a[contains(@href, '#/')]");
             Actions action = new Actions(driver);
             action.click(column.findElement(By.xpath(".//div[contains(@class, 'Cell')]//a[contains(@href, '#/')]"))).perform();
