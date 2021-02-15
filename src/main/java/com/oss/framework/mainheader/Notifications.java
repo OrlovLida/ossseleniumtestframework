@@ -49,6 +49,7 @@ public class Notifications implements NotificationsInterface {
                         .visibilityOf(driver.findElement(By.xpath(".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span"))))
                         .getText();
         driver.findElement(CLEAR_NOTIFICATION).click();
+        closeNotificationContainer();
         return notificationText;
     }
 
