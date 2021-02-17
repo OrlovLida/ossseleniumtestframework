@@ -81,7 +81,9 @@ public class AdvancedSearch {
     }
 
     public void clearFullText() {
-        getFullTextSearch().sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);;
+        WebElement fullTextSearch = getFullTextSearch();
+        fullTextSearch.sendKeys(Keys.CONTROL + "a");
+        fullTextSearch.sendKeys(Keys.DELETE);
     }
 
     public void clearAllFilters() {
