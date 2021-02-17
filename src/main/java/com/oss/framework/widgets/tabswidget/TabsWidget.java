@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Lists;
 import com.oss.framework.components.common.WidgetChooser;
+import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.contextactions.OldActionsContainer;
@@ -123,30 +124,28 @@ public class TabsWidget implements TabsInterface {
     
     @Override
     public void callAction(String groupId, String actionId) {
-        ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
-        actionsContainer.callAction(groupId, actionId);
-    }
-    
-    @Override
-    public void callActionByLabel(String actionLabel) {
-        ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
-        actionsContainer.callActionByLabel(actionLabel);
-    }
-    
-    @Override
-    public void callActionByLabel(String groupLabel, String label) {
-        throw new RuntimeException("Method not implemented for the old tabs");
-    }
-    
-    @Override
-    public void callActionById(String groupLabel, String id) {
+        getActionsInterface().callAction(groupId, actionId);
         
     }
     
     @Override
+    public void callActionByLabel(String actionLabel) {
+        getActionsInterface().callActionByLabel(actionLabel);
+    }
+    
+    @Override
+    public void callActionByLabel(String groupLabel, String label) {
+        getActionsInterface().callActionByLabel(groupLabel, label);
+    }
+    
+    @Override
+    public void callActionById(String groupId, String actionId) {
+        getActionsInterface().callAction(groupId, actionId);
+    }
+    
+    @Override
     public void callActionById(String id) {
-        ActionsInterface actionsContainer = OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
-        actionsContainer.callActionById(id);
+        getActionsInterface().callActionById(id);
     }
     
     @Override
@@ -160,6 +159,21 @@ public class TabsWidget implements TabsInterface {
         buttonContainer.callActionByLabel(label);
     }
     
+    private ActionsInterface getActionsInterface() {
+        DelayUtils.waitForNestedElements(webDriverWait, createTabs(),
+                "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']");
+        boolean isNewActionContainer = isElementPresent(driver, By.className("actionsContainer"));
+        if (isNewActionContainer) {
+            return ActionsContainer.createFromParent(createTabs(), driver, webDriverWait);
+        } else {
+            return OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
+        }
+    }
+    
+    private boolean isElementPresent(WebDriver driver, By by) {
+        return !driver.findElements(by).isEmpty();
+    }
+    
     private boolean isMoreVisible() {
         DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
         List<WebElement> isMore = createTabs().findElements(By.xpath(DROPDOWN_TAB));
@@ -167,7 +181,7 @@ public class TabsWidget implements TabsInterface {
     }
     
     public void changeTabsOrder(String tabLabel, int position) {
-        DragAndDrop.dragAndDrop(getDraggableElement(tabLabel), getDropElement(position), 60,0, driver);
+        DragAndDrop.dragAndDrop(getDraggableElement(tabLabel), getDropElement(position), 60, 0, driver);
     }
     
     private DragAndDrop.DraggableElement getDraggableElement(String tabLabel) {
