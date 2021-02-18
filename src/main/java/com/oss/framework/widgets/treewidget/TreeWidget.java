@@ -1,18 +1,23 @@
 package com.oss.framework.widgets.treewidget;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.oss.framework.components.inputs.Input.ComponentType.CHECKBOX;
 
@@ -53,7 +58,7 @@ public class TreeWidget extends Widget {
     }
 
     public List<Node> getVisibleNodes() {
-        return this.webElement.findElements(By.className("tree-node")).stream()
+        return webElement.findElements(By.className("tree-node")).stream()
                 .map(Node::new).collect(Collectors.toList());
     }
 
@@ -271,7 +276,7 @@ public class TreeWidget extends Widget {
 
         // (tip: nodes are rendering in the virtual scroll, so they gonna disappear from DOM when invisible)
 
-        private final static String TREE_NODE_LABEL = ".//div[@class='tree-node-default-component-label']";
+        private final static String TREE_NODE_LABEL = ".//div[@class='tree-node-default-component-label']//div[contains(@class, 'OSSRichText')]";
         private final static String TREE_NODE_SELECTION = ".//div[contains(@class, 'tree-node-default-component')]";
         private final static String TREE_NODE_EXPAND = ".//div[contains(@class, 'tree-node-expand-icon')]";
         private final static String EXPAND_ALL_ICON = ".//i[contains(@class, 'expandAllIcon')]";
@@ -285,7 +290,7 @@ public class TreeWidget extends Widget {
         }
 
         private String getLabel() {
-            return this.webElement.findElement(By.xpath(TREE_NODE_LABEL)).getText();
+            return webElement.findElement(By.xpath(TREE_NODE_LABEL)).getText();
         }
 
         private void click() {
