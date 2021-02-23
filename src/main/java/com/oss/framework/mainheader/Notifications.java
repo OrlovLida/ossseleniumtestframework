@@ -1,11 +1,12 @@
 package com.oss.framework.mainheader;
 
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.utils.DelayUtils;
 
 public class Notifications implements NotificationsInterface {
     private static final By CLEAR_NOTIFICATION = By.xpath("//a[@class='clear-action']");
@@ -41,7 +42,7 @@ public class Notifications implements NotificationsInterface {
     @Override
     public String waitAndGetFinishedNotificationText() {
         openNotificationContainer();
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(".//div[@class='notificationLabel']"))));
+        DelayUtils.waitByXPath(wait, ".//div[@class='notificationLabel']");
         wait.until(ExpectedConditions.not(ExpectedConditions
                 .attributeToBe(driver.findElement(By.xpath("//div[@class='notificationContainer']/div")), "class", "notification progressNotification")));
         String notificationText =
