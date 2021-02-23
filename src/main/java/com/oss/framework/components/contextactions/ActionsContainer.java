@@ -14,11 +14,11 @@ import com.oss.framework.utils.DelayUtils;
 
 public class ActionsContainer implements ActionsInterface {
     public static final String KEBAB_GROUP_ID = "KEBAB";
-    public static final String KEBAB_GROUP_LABEL = "KEBAB";
     public static final String CREATE_GROUP_ID = "CREATE";
     public static final String EDIT_GROUP_ID = "EDIT";
     public static final String OTHER_GROUP_ID = "OTHER";
     public static final String SHOW_ON_GROUP_ID = "NAVIGATION";
+    public static final String MORE_GROUP_ID = "moreActions";
 
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";
     private static final String KEBAB_BUTTON_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
@@ -87,18 +87,14 @@ public class ActionsContainer implements ActionsInterface {
         return this.webElement.findElement(By.xpath(KEBAB_BUTTON_XPATH));
     }
 
-    private void callActionFromKebabByLabel(String actionLabel) {
-
-    }
-
     private void clickOnGroup(String groupId) {
         DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//div[@class='actionsGroup-default']");
         if (isElementPresent(webDriver, By.id(groupId))) {
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement.findElement(By.id(groupId)));
             webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(groupId)))).click();
         } else {
-            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement.findElement(By.id(groupId)));
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id("moreActions")))).click();
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement.findElement(By.id(MORE_GROUP_ID)));
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(MORE_GROUP_ID)))).click();
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(groupId);
         }
@@ -109,7 +105,7 @@ public class ActionsContainer implements ActionsInterface {
         if (isElementPresent(webDriver, By.id(id))) {
             webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(id)))).click();
         } else {
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id("moreActions")))).click();
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(MORE_GROUP_ID)))).click();
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(id);
         }
