@@ -35,6 +35,7 @@ public class SearchField extends Input {
     }
 
     public void typeValue(String value) {
+        DelayUtils.waitForClickability(webDriverWait, webElement);
         webElement.click();
         webElement.findElement(By.xpath("./..//input")).sendKeys(value);
         Actions action = new Actions(driver);

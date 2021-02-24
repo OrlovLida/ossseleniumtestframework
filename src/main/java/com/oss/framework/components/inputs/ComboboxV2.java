@@ -33,7 +33,8 @@ public class ComboboxV2 extends Input {
     @Override
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//span");
-        webElement.click();
+        WebElement chevron = webElement.findElement(By.xpath(".//span[@class='combo-box__chevron']"));
+        chevron.click();
         DelayUtils.waitByXPath(webDriverWait, COMBOOBOX_INPUT);
         WebElement input = driver.findElement(By.xpath(COMBOOBOX_INPUT));
         input.sendKeys(value.getStringValue());
@@ -45,7 +46,8 @@ public class ComboboxV2 extends Input {
     @Override
     public void setValueContains(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//span");
-        webElement.click();
+        WebElement chevron = webElement.findElement(By.xpath(".//span[@class='combo-box__chevron']"));
+        chevron.click();
         DelayUtils.waitByXPath(webDriverWait, COMBOOBOX_INPUT);
         WebElement input = driver.findElement(By.xpath(COMBOOBOX_INPUT));
         input.sendKeys(value.getStringValue());
