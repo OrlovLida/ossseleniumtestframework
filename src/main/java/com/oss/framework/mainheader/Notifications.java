@@ -92,5 +92,6 @@ public class Notifications implements NotificationsInterface {
         openNotificationContainer();
         DelayUtils.waitByXPath(wait, ".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span[contains(text(), '" + text + "') and contains(text(), '" + notificationStatus + "')]");
         driver.findElement(NOTIFICATION_DETAILS).click();
+        closeNotificationContainer();
     }
 }
