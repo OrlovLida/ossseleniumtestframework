@@ -14,7 +14,7 @@ public class ToolbarWidget {
     private final WebElement toolbarWidget;
 
     private static final String TOOLBAR_WIDGET_XPATH = "//div[@class='oss-header-toolbar']";
-    private static final String LOGIN_PANEL_XPATH = ".//div[@class='toolbarWidget loginPanel']";
+    private static final String LOGIN_PANEL_XPATH = ".//div[contains(@class,'toolbarWidget login')]";
     private static final String NOTIFICATION_XPATH = ".//div[@class='toolbarWidget globalNotification']";
     private static final String QUERY_CONTEXT_CONTAINER_XPATH = ".//div[@class='toolbarWidget queryContextContainer']";
     private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='ExtendedSearchComponent']";
