@@ -59,7 +59,6 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
     private static final String selectAllCheckbox = ".//input[@id='checkbox-checkbox']";
     
-    private PaginationComponent paginationComponent;
     private ExpandedTextTooltip expandedTextTooltip;
     private AdvancedSearch advancedSearch;
     
@@ -77,16 +76,10 @@ public class TableWidget extends Widget implements TableInterface {
     
     private TableWidget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         super(driver, widgetClass, webDriverWait);
-        if (webElement.findElements(By.className(PAGINATION_COMPONENT_CLASS)).size() > 0) {
-            this.paginationComponent = new PaginationComponent(this.webElement);
-        }
     }
     
     private TableWidget(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
         super(driver, wait, tableWidgetId);
-        if (webElement.findElements(By.className(PAGINATION_COMPONENT_CLASS)).size() > 0) {
-            this.paginationComponent = new PaginationComponent(this.webElement);
-        }
     }
     
     public ActionsContainer getContextActions() {
