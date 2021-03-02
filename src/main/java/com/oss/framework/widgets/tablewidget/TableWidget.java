@@ -59,21 +59,27 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
     private static final String selectAllCheckbox = ".//input[@id='checkbox-checkbox']";
     
-    private PaginationComponent paginationComponent;
     private ExpandedTextTooltip expandedTextTooltip;
     private AdvancedSearch advancedSearch;
     
+    @Deprecated
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.className(widgetClass)); // TODO: change to id
         // DelayUtils.waitBy(webDriverWait, By.className(PAGINATION_COMPONENT_CLASS));
         return new TableWidget(driver, widgetClass, webDriverWait);
     }
     
+    public static TableWidget createById(WebDriver driver, String tableWidgetId, WebDriverWait webDriverWait) {
+        DelayUtils.waitBy(webDriverWait, By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']"));
+        return new TableWidget(driver, webDriverWait, tableWidgetId);
+    }
+    
     private TableWidget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         super(driver, widgetClass, webDriverWait);
-        if (webElement.findElements(By.className(PAGINATION_COMPONENT_CLASS)).size() > 0) {
-            this.paginationComponent = new PaginationComponent(this.webElement);
-        }
+    }
+    
+    private TableWidget(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
+        super(driver, wait, tableWidgetId);
     }
     
     public ActionsContainer getContextActions() {
@@ -278,7 +284,7 @@ public class TableWidget extends Widget implements TableInterface {
     public void clickOnKebabMenu() {
         getKebabMenuBtn().click();
     }
-
+    
     private WebElement getKebabMenuBtn() {
         return this.webElement.findElement(By.xpath(kebabMenuBtn));
     }

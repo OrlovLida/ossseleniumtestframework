@@ -47,4 +47,11 @@ public class PopupV2 {
     public Input getComponent(String componentId, Input.ComponentType componentType) {
         return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
+    public void clickButtonByLabel(String label){
+        DelayUtils.waitForNestedElements(this.wait,this.webElement,".//a[contains(text(),'" + label + "')]");
+        WebElement button = wait.until(ExpectedConditions
+                .elementToBeClickable(this.webElement.findElement(By.xpath(".//a[contains(text(),'" + label + "')]"))));
+        button.click();
+        wait.until(ExpectedConditions.invisibilityOf(button));
+    }
 }
