@@ -69,21 +69,6 @@ public class OldTable implements TableInterface {
         return new OldTable(driver, wait, dataAttributeName, table, window);
     }
     
-    public static OldTable createForOldInventoryView(WebDriver driver, WebDriverWait wait) {
-        return createByComponentDataAttributeName(driver, wait, "table(" + getTypeBasedOnUrl(driver.getCurrentUrl()) + ")");
-    }
-    
-    private static String getTypeBasedOnUrl(String url) {
-        String normalizedUrl = url.replace('?', '/');
-        String[] urlParts = normalizedUrl.split("/");
-        for (int i = 0; i < (urlParts.length - 1); i++) {
-            if (urlParts[i].equals("type")) {
-                return urlParts[i + 1];
-            }
-        }
-        throw new IllegalStateException("Current page does not corresponds with Old Inventory View");
-    }
-    
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final String widgetId;
