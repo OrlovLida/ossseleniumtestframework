@@ -101,7 +101,6 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//div[@class='actionsGroup-default']");
         if (isElementPresent(webDriver, By.id(id))) {
             webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(id)))).click();
         } else {
