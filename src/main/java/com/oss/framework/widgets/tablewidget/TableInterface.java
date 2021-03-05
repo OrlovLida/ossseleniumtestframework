@@ -1,10 +1,10 @@
 package com.oss.framework.widgets.tablewidget;
 
-import com.google.common.collect.Multimap;
-import com.oss.framework.components.inputs.Input;
-
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Multimap;
+import com.oss.framework.components.inputs.Input;
 
 public interface TableInterface {
 
@@ -62,14 +62,16 @@ public interface TableInterface {
 
     void callActionByLabel(String groupLabel, String actionLabel);
 
-    @Deprecated //TODO: we can treat kebab menu as a special group, so this method should be removed
+    @Deprecated
+        //TODO: we can treat kebab menu as a special group, so this method should be removed
     void clickOnKebabMenu();
 
-    void doRefreshWhileNoData(int waitTime, String refreshLabel);
+    void doRefreshWhileNoData(int waitTime, String refreshId);
 
     Multimap<String, String> getAppliedFilters();
 
-    @Deprecated //TODO: this method does not belongs here, it should be moved to property panel implementation
+    @Deprecated
+        //TODO: this method does not belongs here, it should be moved to property panel implementation
     Map<String, String> getPropertyNamesToValues();
 
     List<TableRow> getSelectedRows();
