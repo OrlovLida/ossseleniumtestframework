@@ -46,6 +46,7 @@ public class AggregatesManagerWidget extends Widget {
 
     public void clickAdd() {
         this.webElement.findElement(By.xpath(ADD_BTN_PATH)).click();
+        DelayUtils.waitByXPath(wait, AggregateSingleConfiguration.AGGREGATE_FORM_PATH);
     }
 
     public static class AggregateSingleConfiguration {
