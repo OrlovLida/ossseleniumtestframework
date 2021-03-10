@@ -4,6 +4,7 @@ import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.MultiCombobox;
 import com.oss.framework.components.inputs.TextField;
+import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
@@ -93,6 +94,30 @@ public class AggregatesManagerWidget extends Widget {
 
         public MultiCombobox getDimensionsInput(){
             return (MultiCombobox) getComponent(INPUT_DIMENSIONS_PATH, Input.ComponentType.MULTI_COMBOBOX);
+        }
+
+        public void setName(String value){
+            getNameInput().setSingleStringValue(value);
+        }
+
+        public String getName(){
+            return getNameInput().getStringValue();
+        }
+
+        public void setBaseTableName(String value){
+            getBaseTableNameInput().setSingleStringValue(value);
+        }
+
+        public String getBaseTableName(){
+            return getBaseTableNameInput().getStringValue();
+        }
+
+        public void setDimensions(String value){
+            getDimensionsInput().setSingleStringValue(value);
+        }
+
+        public Data getDimensions(){
+            return getDimensionsInput().getValue();
         }
 
         private Input getComponent(String componentId, Input.ComponentType componentType) {
