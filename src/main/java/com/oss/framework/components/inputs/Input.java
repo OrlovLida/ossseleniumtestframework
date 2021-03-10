@@ -20,6 +20,7 @@ public abstract class Input {
     protected final WebDriver driver;
     protected final WebDriverWait webDriverWait;
     protected final WebElement webElement;
+    protected final String componentId;
 
     public enum ComponentType {
         TEXT_FIELD, TEXT_AREA, PASSWORD_FIELD, NUMBER_FIELD,
@@ -37,12 +38,14 @@ public abstract class Input {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.webElement = driver.findElement(By.xpath(createComponentPath(componentId)));
+        this.componentId = componentId;
     }
 
     Input(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.webElement = parent.findElement(By.xpath(createComponentPath(componentId)));
+        this.componentId = componentId;
     }
 
     public final void hover() {

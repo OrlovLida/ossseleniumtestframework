@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class MultiCombobox extends Input {
 
-    private final String componentId;
+
 
     static MultiCombobox create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new MultiCombobox(driver, wait, componentId);
@@ -22,21 +22,19 @@ public class MultiCombobox extends Input {
         return new MultiCombobox(parent, driver, wait, componentId);
     }
 
-    private MultiCombobox(WebDriver driver, WebDriverWait wait, String label) {
-        super(driver, wait, label);
-        this.componentId = label;
+    private MultiCombobox(WebDriver driver, WebDriverWait wait, String componentId) {
+        super(driver, wait, componentId);
     }
 
-    private MultiCombobox(WebElement parent, WebDriver driver, WebDriverWait wait, String label) {
-        super(parent, driver, wait, label);
-        this.componentId = label;
+    private MultiCombobox(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        super(parent, driver, wait, componentId);
     }
 
     @Override
     public void setValue(Data value) {
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
-        WebElement input = webElement.findElement(By.xpath(createDropdownSearchInputPath(componentId)));
+        WebElement input = webElement.findElement(By.xpath(createDropdownSearchInputPath()));
         input.sendKeys(value.getStringValue());
         DelayUtils.sleep(); //TODO: wait for spinners
         acceptStringValue(input);
@@ -46,7 +44,7 @@ public class MultiCombobox extends Input {
     public void setValueContains(Data value) {
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
-        WebElement input = webElement.findElement(By.xpath(createDropdownSearchInputPath(componentId)));
+        WebElement input = webElement.findElement(By.xpath(createDropdownSearchInputPath()));
         input.sendKeys(value.getStringValue());
         DelayUtils.sleep(); //TODO: wait for spinners
         acceptStringValue(input);
@@ -60,15 +58,15 @@ public class MultiCombobox extends Input {
 
     @Override
     public Data getValue() {
-        return Data.createSingleData(webElement.findElement(By.xpath(createDropdownSearchInputPath(componentId))).getAttribute("value"));
+        return Data.createSingleData(webElement.findElement(By.xpath(createDropdownSearchInputPath())).getAttribute("value"));
     }
 
     @Override
     public void clear() {
-        webElement.findElement(By.xpath(createDropdownSearchInputPath(componentId))).clear();
+        webElement.findElement(By.xpath(createDropdownSearchInputPath())).clear();
     }
 
-    private String createDropdownSearchInputPath(String componentId) {
+    private String createDropdownSearchInputPath() {
         return "//input[@id='" + componentId + "-dropdown-search']";
     }
 
