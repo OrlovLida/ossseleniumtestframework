@@ -4,12 +4,12 @@
 
     <groupId>com.comarch.oss.tests.webframework</groupId>
     <artifactId>OSSSeleniumTestFramework</artifactId>
-    <version>0.6.0.Final</version>
+    <version>0.6.1-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:ssh://git@makumba-vm-1.krakow.comarch/ossseleniumtests/ossseleniumtestframework.git</connection>
         <developerConnection>scm:git:ssh://git@makumba-vm-1.krakow.comarch/ossseleniumtests/ossseleniumtestframework.git</developerConnection>
-        <tag>0.6.0.Final</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
