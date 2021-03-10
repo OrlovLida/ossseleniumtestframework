@@ -144,10 +144,13 @@ public class TreeWidget extends Widget {
         return this;
     }
 
-    public TreeWidget selectNodeByPosition(int position) {
+    public void selectNodeByPosition(int position) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         getVisibleNodes().get(position).click();
-        return this;
+    }
+
+    public void selectNodeByLabel(String label) {
+        findByLabel(label).click();
     }
 
     public void waitForTreeExpansion() {
