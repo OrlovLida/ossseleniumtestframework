@@ -20,15 +20,8 @@ public class AggregatesManagerWidget extends Widget {
     private static final String ADD_BTN_PATH = "//button[@class='btn btn-primary btn-add-aggregate']";
     private static final String AGGREGATES_MANAGER_PATH = "//div[@class='AggregatesManagerContainer']";
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-    private final WebElement webElement;
-
     private AggregatesManagerWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
-        this.driver = driver;
-        this.wait = webDriverWait;
-        this.webElement = webElement;
     }
 
     public static AggregatesManagerWidget create(WebDriver driver, WebDriverWait wait){
@@ -41,13 +34,13 @@ public class AggregatesManagerWidget extends Widget {
     public List<AggregateSingleConfiguration> getAggregateConfigurations() {
         return webElement.findElements(By.xpath(AggregateSingleConfiguration.AGGREGATE_COMPONENT_PATH))
                 .stream()
-                .map(element -> AggregateSingleConfiguration.create(driver, wait, element))
+                .map(element -> AggregateSingleConfiguration.create(driver, webDriverWait, element))
                 .collect(Collectors.toList());
     }
 
     public void clickAdd() {
         this.webElement.findElement(By.xpath(ADD_BTN_PATH)).click();
-        DelayUtils.waitByXPath(wait, AggregateSingleConfiguration.AGGREGATE_FORM_PATH);
+        DelayUtils.waitByXPath(webDriverWait, AggregateSingleConfiguration.AGGREGATE_FORM_PATH);
     }
 
     public static class AggregateSingleConfiguration {
