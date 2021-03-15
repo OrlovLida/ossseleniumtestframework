@@ -30,52 +30,65 @@ public class EditableList extends Widget {
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
     private static final String XPATH_ROWS_OF_LIST = "//li[contains(@class,'editableListElement')]";
     private static final String TEXT_CONTAINER = "textContainer";
+    private static final String TEXT_WRAPPER = "text-wrapper";
 
-    public static EditableList create(WebDriver driver, WebDriverWait webDriverWait){
-        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '"+LIST_WIDGET_CLASS+ "')]"));
-        return new EditableList(driver,LIST_WIDGET_CLASS,webDriverWait);
+
+    public static EditableList create(WebDriver driver, WebDriverWait webDriverWait) {
+        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]"));
+        return new EditableList(driver, LIST_WIDGET_CLASS, webDriverWait);
     }
-    public static EditableList createById(WebDriver driver, WebDriverWait webDriverWait, String componentId){
-        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@"+ CSSUtils.TEST_ID +", '"+componentId+"')]"));
-        WebElement webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + componentId + "']"));
-        return new EditableList(driver,webElement,webDriverWait);
+
+    public static EditableList createById(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
+        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + componentId + "')]"));
+        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
+        return new EditableList(driver, webElement, webDriverWait);
     }
 
     private EditableList(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         super(driver, widgetClass, webDriverWait);
     }
+
     private EditableList(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
     }
 
-    public void addRow(){
-        DelayUtils.waitByXPath(webDriverWait,XPATH_ADD_ROW);
+    public void addRow() {
+        DelayUtils.waitByXPath(webDriverWait, XPATH_ADD_ROW);
         WebElement row = driver.findElement(By.xpath(XPATH_ADD_ROW));
         row.click();
     }
-    public void setValue(String value, String columnId, int row, String componentId, Input.ComponentType componentType){
+
+    public void setValue(String value, String columnId, int row, String componentId, Input.ComponentType componentType) {
         WebElement webElement = selectRow(row - 1);
-        WebElement element = selectCell(columnId,webElement);
-        setValue(value,element,componentId,componentType);
+        WebElement element = selectCell(columnId, webElement);
+        setValue(value, element, componentId, componentType);
 
     }
+
+    public void setValue(WebElement selectedRow, String columnId, String value,  String componentId, Input.ComponentType componentType) {
+        WebElement cell = selectCell(columnId, selectedRow);
+        setValue(value, cell, componentId, componentType);
+    }
+
     public void callActionByLabel(String actionLabel, int row) {
         selectRow(row - 1).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
-        action.callActionByLabel("frameworkObjectButtonsGroup",actionLabel);
+        action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
 
     }
-    public  void callActionByLabel(String actionLabel, String columnId, String value){
-        selectRowByAttributeValue(columnId,value).click();
+
+    public void callActionByLabel(String actionLabel, String columnId, String value) {
+        selectRowByEditableAttributeValue(columnId, value).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
-        action.callActionByLabel("frameworkObjectButtonsGroup",actionLabel);
+        action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
 
     }
-    public List<String> getValues(){
+
+    public List<String> getValues() {
         List<String> values = new ArrayList<String>();
-        DelayUtils.waitForNestedElements(webDriverWait,webElement,"//div[contains(@class,'rowData')]");
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, "//div[contains(@class,'rowData')]");
         List<WebElement> allRows = webElement.findElements(By.xpath(".//div[contains(@class,'rowData')]"));
-        for (WebElement value:allRows) {
+        for (WebElement value : allRows) {
             values.add(value.getText());
         }
         return values;
@@ -83,38 +96,45 @@ public class EditableList extends Widget {
 
     private WebElement selectRow(int row) {
         List<WebElement> allRows = driver.findElements(By.xpath(XPATH_ROWS_OF_LIST));
-         return allRows.get(row);
+        return allRows.get(row);
+    }
+
+    private void setValue(String value, WebElement element, String componentId, Input.ComponentType componentType) {
+        Actions action = new Actions(driver);
+        action.moveToElement(element.findElement(By.className(TEXT_CONTAINER))).click().build().perform();
+
+        InlineForm inlineForm = InlineForm.create(driver, webDriverWait);
+        Input component = inlineForm.getComponent(componentId, componentType);
+        DelayUtils.sleep(500);
+        component.setSingleStringValue(value);
+        inlineForm.clickButtonByLabel("Save");
+    }
+
+    private WebElement selectCell(String columnId, WebElement row) {
+        DelayUtils.waitByXPath(webDriverWait, "//div[contains(@class,'" + columnId + "')]");
+        return row.findElement(By.xpath(".//div[contains(@class,'" + columnId + "')]"));
 
     }
-   private void setValue(String value, WebElement element,String componentId, Input.ComponentType componentType){
-       Actions action = new Actions(driver);
-       action.moveToElement(element.findElement(By.className(TEXT_CONTAINER))).click().build().perform();
 
-       InlineForm inlineForm = InlineForm.create(driver, webDriverWait);
-       Input component = inlineForm.getComponent(componentId, componentType);
-       DelayUtils.sleep(500);
-       component.setSingleStringValue(value);
-       inlineForm.clickButtonByLabel("Save");
-   }
-   private WebElement selectCell(String columnId, WebElement row){
-       DelayUtils.waitByXPath(webDriverWait, "//div[contains(@class,'"+columnId+"')]");
-       return row.findElement(By.xpath(".//div[contains(@class,'"+columnId+"')]"));
+    private WebElement selectRowByEditableAttributeValue(String columnId, String value){
+        return selectRowByAttributeValue(columnId, value, TEXT_CONTAINER);
+    }
 
-   }
+    public WebElement selectRowByStaticAttributeValue(String columnId, String value){
+        return selectRowByAttributeValue(columnId, value, TEXT_WRAPPER);
+    }
 
-    private WebElement selectRowByAttributeValue(String columnId, String value) {
+    private WebElement selectRowByAttributeValue(String columnId, String value, String columnClassName) {
         List<WebElement> allRows = driver.findElements(By.xpath(XPATH_ROWS_OF_LIST));
-        for (WebElement row : allRows){
+        for (WebElement row : allRows) {
             WebElement element = selectCell(columnId, row);
-            String getValue = element.findElement(By.className(TEXT_CONTAINER)).getText();
-            if (getValue.equals(value)){
+            String getValue = element.findElement(By.className(columnClassName)).getText();
+            if (getValue.equals(value)) {
                 return row;
             }
         }
         throw new RuntimeException("Cannot find a row with the provided value");
     }
-
-
 
 
 }
