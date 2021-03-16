@@ -63,18 +63,18 @@ public class EditableList extends Widget {
     }
 
     @Deprecated
-    public void setValue(String value, String columnId, int row, String componentId, Input.ComponentType componentType) {
-        Row webElement = selectRow(row - 1);
-        Row.Cell element = webElement.selectCell(columnId);
-        element.setValue(value, componentId, componentType);
+    public void setValue(String value, String columnId, int rowIndex, String componentId, Input.ComponentType componentType) {
+        Row row = selectRow(rowIndex - 1);
+        Row.Cell cell = row.selectCell(columnId);
+        cell.setValue(value, componentId, componentType);
 
     }
 
     @Deprecated
-    public void clearValue (String columnId, int row, String componentId, Input.ComponentType componentType){
-        Row webElement = selectRow(row - 1);
-        Row.Cell element = webElement.selectCell(columnId);
-        element.clearValue(componentId, componentType);
+    public void clearValue (String columnId, int rowIndex, String componentId, Input.ComponentType componentType){
+        Row row = selectRow(rowIndex - 1);
+        Row.Cell cell = row.selectCell(columnId);
+        cell.clearValue(componentId, componentType);
     }
 
     public void callActionByLabel(String actionLabel, int row) {
@@ -171,11 +171,11 @@ public class EditableList extends Widget {
         }
 
         public static class Cell {
+
+            private static final String SAVE_BUTTON = "Save";
             private final WebDriver driver;
             private final WebDriverWait wait;
             private final WebElement webElement;
-
-            private static final String SAVE_BUTTON = "Save";
 
             public Cell(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
                 this.driver = driver;
@@ -206,7 +206,7 @@ public class EditableList extends Widget {
                 Actions action = new Actions(driver);
                 action.moveToElement(webElement).click().build().perform();
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
-                    Input input = ComponentFactory.create(componentId, componentType, driver, webDriverWait);
+                    Input input = ComponentFactory.create(componentId, componentType, driver, wait);
                     input.clear();
                     return;
                 }
