@@ -32,6 +32,7 @@ public class EditableList extends Widget {
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
     private static final String XPATH_ROWS_OF_LIST = "//li[contains(@class,'editableListElement')]";
     private static final String TEXT_CONTAINER = "textContainer";
+    private static final String SAVE_BUTTON = "Save";
     
     public static EditableList create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]"));
@@ -65,10 +66,10 @@ public class EditableList extends Widget {
         
     }
 
-    public void cleanValue (String columnId, int row, String componentId, Input.ComponentType componentType){
+    public void clearValue (String columnId, int row, String componentId, Input.ComponentType componentType){
         WebElement webElement = selectRow(row - 1);
         WebElement element = selectCell(columnId, webElement);
-        cleanValue(element, componentId, componentType);
+        clearValue(element, componentId, componentType);
     }
     
     public void callActionByLabel(String actionLabel, int row) {
@@ -114,11 +115,11 @@ public class EditableList extends Widget {
         Input component = inlineForm.getComponent(componentId, componentType);
         DelayUtils.sleep(500);
         component.setSingleStringValue(value);
-        inlineForm.clickButtonByLabel("Save");
+        inlineForm.clickButtonByLabel(SAVE_BUTTON);
         
     }
 
-    private void cleanValue(WebElement element, String componentId, Input.ComponentType componentType){
+    private void clearValue(WebElement element, String componentId, Input.ComponentType componentType){
         Actions action = new Actions(driver);
         action.moveToElement(element).click().build().perform();
         if (componentType.equals(Input.ComponentType.CHECKBOX)) {
@@ -129,7 +130,7 @@ public class EditableList extends Widget {
         InlineForm inlineForm = InlineForm.create(driver, webDriverWait);
         Input component = inlineForm.getComponent(componentId, componentType);
         component.clear();
-        inlineForm.clickButtonByLabel("Save");
+        inlineForm.clickButtonByLabel(SAVE_BUTTON);
     }
     
     private WebElement selectCell(String columnId, WebElement row) {
