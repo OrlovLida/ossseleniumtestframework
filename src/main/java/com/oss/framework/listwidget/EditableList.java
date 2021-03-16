@@ -16,6 +16,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.inputs.Checkbox;
+import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.InlineForm;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.contextactions.ActionsContainer;
@@ -68,6 +70,13 @@ public class EditableList extends Widget {
 
     }
 
+    @Deprecated
+    public void clearValue (String columnId, int row, String componentId, Input.ComponentType componentType){
+        Row webElement = selectRow(row - 1);
+        Row.Cell element = webElement.selectCell(columnId);
+        element.clearValue(componentId, componentType);
+    }
+
     public void callActionByLabel(String actionLabel, int row) {
         selectRow(row - 1).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
@@ -87,7 +96,7 @@ public class EditableList extends Widget {
         List<String> values = new ArrayList<String>();
         DelayUtils.waitForNestedElements(webDriverWait, webElement, "//div[contains(@class,'rowData')]");
         List<WebElement> allRows = webElement.findElements(By.xpath(".//div[contains(@class,'rowData')]"));
-        for (WebElement value : allRows) {
+        for (WebElement value: allRows) {
             values.add(value.getText());
         }
         return values;
@@ -165,7 +174,9 @@ public class EditableList extends Widget {
             private final WebDriver driver;
             private final WebDriverWait wait;
             private final WebElement webElement;
-            
+
+            private static final String SAVE_BUTTON = "Save";
+
             public Cell(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
                 this.driver = driver;
                 this.wait = webDriverWait;
@@ -179,12 +190,30 @@ public class EditableList extends Widget {
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
                 Actions action = new Actions(driver);
                 action.moveToElement(webElement.findElement(By.className(TEXT_CONTAINER))).click().build().perform();
-
+                if (componentType.equals(Input.ComponentType.CHECKBOX)) {
+                    Input input = ComponentFactory.create(componentId, componentType, driver, wait);
+                    input.setSingleStringValue(value);
+                    return;
+                }
                 InlineForm inlineForm = InlineForm.create(driver, wait);
                 Input component = inlineForm.getComponent(componentId, componentType);
                 DelayUtils.sleep(500);
                 component.setSingleStringValue(value);
-                inlineForm.clickButtonByLabel("Save");
+                inlineForm.clickButtonByLabel(SAVE_BUTTON);
+            }
+
+            public void clearValue(String componentId, Input.ComponentType componentType){
+                Actions action = new Actions(driver);
+                action.moveToElement(webElement).click().build().perform();
+                if (componentType.equals(Input.ComponentType.CHECKBOX)) {
+                    Input input = ComponentFactory.create(componentId, componentType, driver, webDriverWait);
+                    input.clear();
+                    return;
+                }
+                InlineForm inlineForm = InlineForm.create(driver, wait);
+                Input component = inlineForm.getComponent(componentId, componentType);
+                component.clear();
+                inlineForm.clickButtonByLabel(SAVE_BUTTON);
             }
 
         }
