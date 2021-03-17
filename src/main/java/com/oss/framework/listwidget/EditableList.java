@@ -127,7 +127,7 @@ public class EditableList extends Widget {
     }
 
     public List<Row> getVisibleRows(){
-        return driver.findElements(By.xpath(XPATH_ROWS_OF_LIST))
+        return webElement.findElements(By.xpath(XPATH_ROWS_OF_LIST))
                 .stream()
                 .map(element -> new Row(driver, webDriverWait, element))
                 .collect(Collectors.toList());
@@ -142,7 +142,7 @@ public class EditableList extends Widget {
         private final WebDriverWait wait;
         private final WebElement webElement;
 
-        public Row(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+        private Row(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
             this.driver = driver;
             this.wait = webDriverWait;
             this.webElement = webElement;
@@ -177,7 +177,7 @@ public class EditableList extends Widget {
             private final WebDriverWait wait;
             private final WebElement webElement;
 
-            public Cell(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+            private Cell(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
                 this.driver = driver;
                 this.wait = webDriverWait;
                 this.webElement = webElement;
