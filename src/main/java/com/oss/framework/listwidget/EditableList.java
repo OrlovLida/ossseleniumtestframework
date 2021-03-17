@@ -189,7 +189,7 @@ public class EditableList extends Widget {
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
                 Actions action = new Actions(driver);
-                action.moveToElement(webElement.findElement(By.className(TEXT_CONTAINER))).click().build().perform();
+                action.moveToElement(webElement).click().build().perform();
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
                     Input input = ComponentFactory.create(componentId, componentType, driver, wait);
                     input.setSingleStringValue(value);
