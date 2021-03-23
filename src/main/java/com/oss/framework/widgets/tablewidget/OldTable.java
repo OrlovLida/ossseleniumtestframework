@@ -372,17 +372,12 @@ public class OldTable implements TableInterface {
 
         private WebElement moveToHeader() {
             WebElement header = column.findElement(By.xpath(".//div[contains(@class, 'Header')]"));
-            DelayUtils.waitForPageToLoad(driver, wait);
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", header);
-            DelayUtils.waitForPageToLoad(driver, wait);
             return header;
         }
 
         private boolean checkIfLabelExist() {
-            WebElement header = moveToHeader();
-            System.out.println("Header getText return : '" + header.getText() + "'");
-            return !header.getText().isEmpty();
-//            return !moveToHeader().getText().isEmpty();
+            return !moveToHeader().getText().isEmpty();
         }
 
         private void selectCell(String value) {
