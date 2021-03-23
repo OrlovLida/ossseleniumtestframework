@@ -144,9 +144,7 @@ public class OldTable implements TableInterface {
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(attributeLabel);
-        column.selectCell(value);
+        getColumn(attributeLabel).selectCell(value);
     }
 
     @Override
@@ -159,8 +157,7 @@ public class OldTable implements TableInterface {
         if (componentType != ComponentType.TEXT_FIELD) {
             throw new RuntimeException("Old table widget supports" + ComponentType.TEXT_FIELD + "only");
         }
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(attributeLabel);
+        Column column = getColumn(attributeLabel);
         column.clear();
         column.setValue(value);
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -195,14 +192,17 @@ public class OldTable implements TableInterface {
     }
 
     public String getCellValue(int index, String attributeLabel) {
+        return getColumn(attributeLabel).getValueCell(index);
+    }
+
+    private Column getColumn(String columnLabel) {
         Map<String, Column> columns = createColumnsFilters();
-        if (columns.containsKey(attributeLabel)) {
-            Column column = columns.get(attributeLabel);
-            return column.getValueCell(index);
+        if (columns.containsKey(columnLabel)) {
+            return columns.get(columnLabel);
         } else {
             System.out.println("Available columns:");
             columns.forEach((key, value) -> System.out.println(key));
-            throw new RuntimeException("Cannot find a column with label = " + attributeLabel);
+            throw new RuntimeException("Cannot find a column with label = " + columnLabel);
         }
     }
 
@@ -211,9 +211,7 @@ public class OldTable implements TableInterface {
      * @return number of rows in table
      */
     public int getNumberOfRowsInTable(String anyLabelInTable) {
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(anyLabelInTable);
-        return column.getNumberOfRows();
+        return getColumn(anyLabelInTable).getNumberOfRows();
     }
 
     @Override
@@ -283,9 +281,7 @@ public class OldTable implements TableInterface {
     @Override
     public void selectLinkInSpecificColumn(String columnName) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(columnName);
-        column.selectLink();
+        getColumn(columnName).selectLink();
     }
 
     public void selectRowByPartialNameAndIndex(String partialName, int index) {
@@ -315,9 +311,7 @@ public class OldTable implements TableInterface {
 
     public int getRowNumber(String value, String attributeLabel) {
         DelayUtils.waitForNestedElements(wait, table, "//*[contains(text(),'" + value + "')]");
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(attributeLabel);
-        return column.indexOf(value);
+        return getColumn(attributeLabel).indexOf(value);
     }
 
     public void selectPredefinedFilter(String filterName) {
