@@ -62,8 +62,8 @@ public class SideMenu {
 
     private WebElement searchElement(WebElement webElement, String xpath) {
         for (int scrollDownCount = 0; scrollDownCount < 3; scrollDownCount++) {
-            if (!(webElement.findElements(By.xpath(xpath)).isEmpty())) {
-                WebElement foundElement = webElement.findElement(By.xpath(xpath));
+            if (!(driver.findElements(By.xpath(xpath)).isEmpty())) {
+                WebElement foundElement = driver.findElement(By.xpath(xpath));
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundElement);
                 return foundElement;
             }
@@ -71,6 +71,6 @@ public class SideMenu {
             action.moveToElement(webElement).sendKeys(Keys.PAGE_DOWN).perform();
             DelayUtils.sleep(500);
         }
-        return webElement.findElement(By.xpath(xpath));
+        return driver.findElement(By.xpath(xpath));
     }
 }
