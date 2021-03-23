@@ -113,7 +113,7 @@ public class CommonList {
     }
     
     public boolean isListElementVisible(String name) {
-        DelayUtils.waitForPageToLoadWithoutAppPreloader(driver, wait);
+        DelayUtils.waitForPageToLoad(driver, wait);
         return !getCommonList().findElements(By.xpath(TEXT_WRAPPER_XPATH + String.format(TEXT_EQUALS_XPATH, name))).isEmpty();
     }
     
