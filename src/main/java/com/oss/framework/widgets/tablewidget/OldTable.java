@@ -377,7 +377,7 @@ public class OldTable implements TableInterface {
         }
 
         private boolean checkIfLabelExist() {
-            return column.findElements(By.xpath(".//span | .//*[@class='text-ellipsis']")).size() > 0;
+            return !moveToHeader().getText().isEmpty();
         }
 
         private void selectCell(String value) {
