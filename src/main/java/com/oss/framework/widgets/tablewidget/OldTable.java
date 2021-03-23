@@ -196,8 +196,14 @@ public class OldTable implements TableInterface {
 
     public String getCellValue(int index, String attributeLabel) {
         Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(attributeLabel);
-        return column.getValueCell(index);
+        if (columns.containsKey(attributeLabel)) {
+            Column column = columns.get(attributeLabel);
+            return column.getValueCell(index);
+        } else {
+            System.out.println("Available columns:");
+            columns.forEach((key, value) -> System.out.println(key));
+            throw new RuntimeException("Cannot find a column with label = " + attributeLabel);
+        }
     }
 
     /**
