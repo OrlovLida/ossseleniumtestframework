@@ -377,7 +377,11 @@ public class OldTable implements TableInterface {
         }
 
         private boolean checkIfLabelExist() {
-            return !moveToHeader().getText().isEmpty();
+            WebElement header = moveToHeader();
+            System.out.println("Header isDisplayed is " + header.isDisplayed());
+            System.out.println("Header getText return : '" + header.getText() + "'");
+            return !header.getText().isEmpty();
+//            return !moveToHeader().getText().isEmpty();
         }
 
         private void selectCell(String value) {
