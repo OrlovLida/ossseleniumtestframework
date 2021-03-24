@@ -329,8 +329,6 @@ public class OldTable implements TableInterface {
         for (Column column : Lists.reverse(columns2)) {
             if (column.checkIfLabelExist()) {
                 columns.put(column.getLabel(), column);
-            } else {
-                columns.put("", column);
             }
         }
         System.out.println("FINISH GETTING LABELS");
