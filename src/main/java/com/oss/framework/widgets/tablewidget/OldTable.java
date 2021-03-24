@@ -323,12 +323,13 @@ public class OldTable implements TableInterface {
         Map<String, Column> columns = Maps.newHashMap();
         DelayUtils.waitForNestedElements(wait, table, ".//div[contains(@class, 'OSSTableComponent')]");
         List<Column> columns2 =
-                table.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn')]"))
+                table.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn') and not(@data-order='-1')]"))
                         .stream().map(columnElement -> new Column(columnElement, wait, driver)).collect(Collectors.toList());
         System.out.println("START GETTING LABELS");
         for (Column column : Lists.reverse(columns2)) {
             if (column.checkIfLabelExist()) {
                 columns.put(column.getLabel(), column);
+                System.out.println("label = " + column.getLabel());
             }
         }
         System.out.println("FINISH GETTING LABELS");
@@ -370,13 +371,8 @@ public class OldTable implements TableInterface {
             try {
                 return header.findElement(By.xpath(".//input")).getAttribute("label");
             } catch (NoSuchElementException e) {
-                System.out.println("Exception for " + header.getText() + ". Exception=" + e);
+                return header.getText();
             }
-            String label = header.getText();
-            if (label.isEmpty()){
-                return "Empty label";
-            }
-            return label;
         }
 
         private WebElement moveToHeader() {
@@ -386,7 +382,12 @@ public class OldTable implements TableInterface {
         }
 
         private boolean checkIfLabelExist() {
-            return !getLabel().isEmpty();
+            WebElement header = moveToHeader();
+            try {
+                return !header.findElement(By.xpath(".//input")).getAttribute("label").equals("");
+            } catch (NoSuchElementException e) {
+                return !header.getText().isEmpty();
+            }
         }
 
         private void selectCell(String value) {
