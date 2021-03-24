@@ -371,8 +371,12 @@ public class OldTable implements TableInterface {
                 return header.findElement(By.xpath(".//input")).getAttribute("label");
             } catch (NoSuchElementException e) {
                 System.out.println("Exception for " + header.getText() + ". Exception=" + e);
-                return header.getText();
             }
+            String label = header.getText();
+            if (label.isEmpty()){
+                return "Empty label";
+            }
+            return label;
         }
 
         private WebElement moveToHeader() {
