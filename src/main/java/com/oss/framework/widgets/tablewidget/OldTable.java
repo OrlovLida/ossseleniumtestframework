@@ -325,7 +325,7 @@ public class OldTable implements TableInterface {
         List<Column> columns2 =
                 table.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn')]"))
                         .stream().map(columnElement -> new Column(columnElement, wait, driver)).collect(Collectors.toList());
-
+        System.out.println("START GETTING LABELS");
         for (Column column : Lists.reverse(columns2)) {
             if (column.checkIfLabelExist()) {
                 columns.put(column.getLabel(), column);
@@ -333,6 +333,7 @@ public class OldTable implements TableInterface {
                 columns.put("", column);
             }
         }
+        System.out.println("FINISH GETTING LABELS");
         return columns;
     }
 
@@ -377,6 +378,13 @@ public class OldTable implements TableInterface {
         }
 
         private boolean checkIfLabelExist() {
+            WebElement header = moveToHeader();
+            try{
+                System.out.println("text=" + header.getText());
+                System.out.println("value=" + header.findElement(By.xpath(".//input")).getAttribute("label"));
+            }catch (Exception e){
+                System.out.println("Exception for " + header.getText() + ". Exception=" + e);
+            }
             return !moveToHeader().getText().isEmpty();
         }
 
