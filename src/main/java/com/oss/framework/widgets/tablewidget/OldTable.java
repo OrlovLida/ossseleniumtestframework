@@ -368,7 +368,13 @@ public class OldTable implements TableInterface {
         }
 
         private String getLabel() {
-            return moveToHeader().getText();
+            WebElement header = moveToHeader();
+            try {
+                return header.findElement(By.xpath(".//input")).getAttribute("label");
+            } catch (NoSuchElementException e) {
+                System.out.println("Exception for " + header.getText() + ". Exception=" + e);
+                return header.getText();
+            }
         }
 
         private WebElement moveToHeader() {
@@ -378,14 +384,7 @@ public class OldTable implements TableInterface {
         }
 
         private boolean checkIfLabelExist() {
-            WebElement header = moveToHeader();
-            try{
-                System.out.println("text=" + header.getText());
-                System.out.println("value=" + header.findElement(By.xpath(".//input")).getAttribute("label"));
-            }catch (Exception e){
-                System.out.println("Exception for " + header.getText() + ". Exception=" + e);
-            }
-            return !moveToHeader().getText().isEmpty();
+            return !getLabel().isEmpty();
         }
 
         private void selectCell(String value) {
