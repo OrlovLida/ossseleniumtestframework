@@ -46,7 +46,7 @@ public class OldTable implements TableInterface {
     private static final String HEADER = ".//div[contains(@class, 'Header')]";
     private static final String RICH_TEXT = ".//div[contains(@class, 'OSSRichText')]";
     private static final String TOGGLE_BUTTON = ".//span[contains(@class,'ToggleButton')]";
-    private static final String CELL = ".//span[contains(@class,'ToggleButton')]";
+    private static final String CELL = ".//div[contains(@class, 'Cell')]";
 
     // to be removed after adding data-attributeName OSSWEB-8398
     @Deprecated
