@@ -144,9 +144,7 @@ public class OldTable implements TableInterface {
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(attributeLabel);
-        column.selectCell(value);
+        getColumn(attributeLabel).selectCell(value);
     }
 
     @Override
@@ -159,8 +157,7 @@ public class OldTable implements TableInterface {
         if (componentType != ComponentType.TEXT_FIELD) {
             throw new RuntimeException("Old table widget supports" + ComponentType.TEXT_FIELD + "only");
         }
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(attributeLabel);
+        Column column = getColumn(attributeLabel);
         column.clear();
         column.setValue(value);
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -195,9 +192,18 @@ public class OldTable implements TableInterface {
     }
 
     public String getCellValue(int index, String attributeLabel) {
+        return getColumn(attributeLabel).getValueCell(index);
+    }
+
+    private Column getColumn(String columnLabel) {
         Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(attributeLabel);
-        return column.getValueCell(index);
+        if (columns.containsKey(columnLabel)) {
+            return columns.get(columnLabel);
+        } else {
+            System.out.println("Available columns:");
+            columns.forEach((key, value) -> System.out.println(key));
+            throw new RuntimeException("Cannot find a column with label = " + columnLabel);
+        }
     }
 
     /**
@@ -205,9 +211,7 @@ public class OldTable implements TableInterface {
      * @return number of rows in table
      */
     public int getNumberOfRowsInTable(String anyLabelInTable) {
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(anyLabelInTable);
-        return column.getNumberOfRows();
+        return getColumn(anyLabelInTable).getNumberOfRows();
     }
 
     @Override
@@ -277,9 +281,7 @@ public class OldTable implements TableInterface {
     @Override
     public void selectLinkInSpecificColumn(String columnName) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(columnName);
-        column.selectLink();
+        getColumn(columnName).selectLink();
     }
 
     public void selectRowByPartialNameAndIndex(String partialName, int index) {
@@ -309,9 +311,7 @@ public class OldTable implements TableInterface {
 
     public int getRowNumber(String value, String attributeLabel) {
         DelayUtils.waitForNestedElements(wait, table, "//*[contains(text(),'" + value + "')]");
-        Map<String, Column> columns = createColumnsFilters();
-        Column column = columns.get(attributeLabel);
-        return column.indexOf(value);
+        return getColumn(attributeLabel).indexOf(value);
     }
 
     public void selectPredefinedFilter(String filterName) {
@@ -323,16 +323,16 @@ public class OldTable implements TableInterface {
         Map<String, Column> columns = Maps.newHashMap();
         DelayUtils.waitForNestedElements(wait, table, ".//div[contains(@class, 'OSSTableComponent')]");
         List<Column> columns2 =
-                table.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn')]"))
+                table.findElements(By.xpath(".//div[contains(@class,'OSSTableColumn') and not(@data-order='-1')]"))
                         .stream().map(columnElement -> new Column(columnElement, wait, driver)).collect(Collectors.toList());
-
+        System.out.println("START GETTING LABELS");
         for (Column column : Lists.reverse(columns2)) {
             if (column.checkIfLabelExist()) {
                 columns.put(column.getLabel(), column);
-            } else {
-                columns.put("", column);
+                System.out.println("label = " + column.getLabel());
             }
         }
+        System.out.println("FINISH GETTING LABELS");
         return columns;
     }
 
@@ -367,7 +367,12 @@ public class OldTable implements TableInterface {
         }
 
         private String getLabel() {
-            return moveToHeader().getText();
+            WebElement header = moveToHeader();
+            try {
+                return header.findElement(By.xpath(".//input")).getAttribute("label");
+            } catch (NoSuchElementException e) {
+                return header.getText();
+            }
         }
 
         private WebElement moveToHeader() {
@@ -377,7 +382,12 @@ public class OldTable implements TableInterface {
         }
 
         private boolean checkIfLabelExist() {
-            return column.findElements(By.xpath(".//span | .//*[@class='text-ellipsis']")).size() > 0;
+            WebElement header = moveToHeader();
+            try {
+                return !header.findElement(By.xpath(".//input")).getAttribute("label").equals("");
+            } catch (NoSuchElementException e) {
+                return !header.getText().isEmpty();
+            }
         }
 
         private void selectCell(String value) {
