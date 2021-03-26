@@ -4,4 +4,7 @@ public interface TableRow {
 
     boolean isSelected();
     int getIndex();
+    void clickRow();
+    void selectRow();
+    void unselectRow();
 }

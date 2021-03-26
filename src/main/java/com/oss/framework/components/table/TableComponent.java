@@ -9,12 +9,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.search.AdvancedSearch;
+import com.google.common.collect.Lists;
+import com.oss.framework.components.common.AttributesChooser;
+import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.tablewidget.ColumnsManagement;
-import com.oss.framework.widgets.tablewidget.TableWidget.PaginationComponent;
+import com.oss.framework.widgets.tablewidget.TableRow;
 
 public class TableComponent {
 
@@ -27,72 +27,43 @@ public class TableComponent {
     private static final String verticalTableScroller = ".//div[contains(@style,'position: relative; display: block; width: 100%; cursor: pointer;')]";
     private static final String cells = ".//div[@class='Cell']//*//div[contains(@class,'OSSRichText')]";
 
-    private WebDriver driver;
-    private WebDriverWait webDriverWait;
+    private static final String TABLE_COMPONENT_CLASS = "TableContainer";
+    private static final String GRID_CONTAINER = "grid-container";
 
-    private AdvancedSearch advancedSearch;
-    private ActionsContainer contextActions;
-    private PaginationComponent paginationComponent;
-    private WebElement webElement;
+    private final WebDriver driver;
+    private final WebDriverWait webDriverWait;
+    private final WebElement webElement;
+    private final String widgetID;
 
-    public static TableComponent create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
-        DelayUtils.waitBy(webDriverWait, By.className(widgetClass)); //TODO: change to id
-        return new TableComponent(driver, widgetClass, webDriverWait);
+    public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetID) {
+        DelayUtils.waitByXPath(webDriverWait, "//div[@" + CSSUtils.TEST_ID + "='" + widgetID + "']/div[contains(@class,"+TABLE_COMPONENT_CLASS+")]");
+        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetID + "']//div[contains(@class,'"+TABLE_COMPONENT_CLASS+"')]"));
+        return new TableComponent(driver, webDriverWait, webElement, widgetID);
     }
 
-    private TableComponent(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
+    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String componentId) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
+        this.webElement = component;
+        this.widgetID = componentId;
     }
 
-    public int howManyRowsOnFirstPage(){
-        return driver.findElements(By.xpath(tableRows)).size();
+    public void selectRow(int row) {
+        getVisibleRows().get(row).selectRow();
     }
 
-    public void selectFirstRow(){
-        selectTableRow(0);
+    public void unselectRow(int row) {
+        getVisibleRows().get(row).unselectRow();
     }
 
-    public void selectTableRow(int row) {
-        this.contextActions = null;
-        getTableRows().get(row).click();
-    }
-
-    private List<WebElement> getTableRows(){
-        return this.webElement.findElements(By.xpath(tableRows));
-    }
-
-    public List<WebElement> getTableCells(){
-        return this.webElement.findElements(By.xpath(cells));
-    }
-
-    //TODO: Due to virtual scrolls returns only selected visible rows.
-    public List<TableComponent.Row> getSelectedVisibleRows() {
-        return getVisibleRows().stream().filter(TableComponent.Row::isSelected).collect(Collectors.toList());
-    }
-
-    public List<TableComponent.Row> getVisibleRows() {
-        int currentPage = this.paginationComponent.getCurrentPage();
-        int step = this.paginationComponent.getStep();
-        WebElement gridContainer = this.webElement.findElement(By.className("TableBody"))
-                .findElement(By.xpath(".//div[@class='grid-container']/div"));
-        List<TableComponent.Row> rows = gridContainer.findElements(By.xpath("./div")).stream().map(we -> new TableComponent.Row(we, currentPage, step))
-                .collect(Collectors.toList());
+    public List<TableRow> getVisibleRows() {
+        WebElement gridContainer = this.webElement.findElement(By.xpath(".//div[@class='grid-container']/div"));
+        List<WebElement> elements = gridContainer.findElements(By.xpath("./div"));
+        List<TableRow> rows = Lists.newArrayList();
+        for(int i = 0; i < elements.size(); i++) {
+            rows.add(new Row(elements.get(i), i));
+        }
         return rows;
-    }
-
-    public ColumnsManagement getColumnsManagement(){
-        DelayUtils.waitByXPath(this.webDriverWait, gearIcon);
-        this.webElement.findElement(By.xpath(gearIcon)).click();
-        return ColumnsManagement.create(this.driver);
-    }
-
-    private WebElement getHorizontalTableScroller(){
-        return this.webElement.findElement(By.xpath(horizontalTableScroller));
-    }
-
-    private WebElement getVerticalTableScroller(){
-        return this.webElement.findElement(By.xpath(verticalTableScroller));
     }
 
     public void scrollHorizontally(int offset){
@@ -113,63 +84,92 @@ public class TableComponent {
         action.perform();
     }
 
-    private List<WebElement> getColumnHeaders(){
-        return this.webElement.findElements(By.xpath(headers));
-    }
-
     public List<String> getActiveColumns() {
         return this.webElement.findElements(By.xpath(headers)).stream()
                 .map(WebElement::getText).collect(Collectors.toList());
     }
 
-    public int getFirstColumnSize() {
-        return CSSUtils.getWidthValue(getColumnHeaders().get(0));
+    public int getColumnSize(String columnId) {
+        int index = getColumnHeaders().indexOf(columnId);
+        return 0;
+//        return CSSUtils.getWidthValue(getColumnHeaders().get(index));
     }
 
-
-    public void resizeFirstColumn(int offset){
+    public void resizeColumn(String columnId, int size){
         Actions action = new Actions(this.driver);
-        action.dragAndDropBy(getColumnResizeGrips().get(0), offset,0).perform();
+        action.dragAndDropBy(getColumnResizeGrips().get(0), size,0).perform();
+    }
+
+    public String getCellValue(int row, String columnId) {
+        int index = getActiveColumns().indexOf(columnId);
+        List<WebElement> valueCells = this.webElement.findElements(By.xpath(".//div[@id='table-wrapper']/div[@class='TableBody']//div[@id='"+row+"' and contains(@class,'Row')]/div[@class='Cell']//div[contains(@class,'text-wrapper')]"));
+        return valueCells.get(index).getText();
+    }
+
+    public AttributesChooser getAttributesChooser() {
+        //Add click on the chooser
+        return AttributesChooser.create(this.driver, this.webDriverWait);
+    }
+
+    private PaginationComponent getPaginationComponent() {
+        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetID + "']"));
+        return PaginationComponent.createFromParent(this.driver, this.webDriverWait, webElement);
+    }
+
+    private WebElement getHorizontalTableScroller(){
+        return this.webElement.findElement(By.xpath(horizontalTableScroller));
+    }
+    private WebElement getVerticalTableScroller(){
+        return this.webElement.findElement(By.xpath(verticalTableScroller));
+    }
+
+    private List<String> getColumnHeaders(){
+        return this.webElement.findElements(By.xpath(headers)).stream()
+                .map(WebElement::getText).collect(Collectors.toList());
     }
 
     private List<WebElement> getColumnResizeGrips(){
         return this.webElement.findElements(By.xpath(columnResizeGrips));
     }
 
-    public String getValueFromRowWithID(String columnLabel, String id) {
-        int index = getActiveColumns().indexOf(columnLabel);
-        List<WebElement> valueCells = this.webElement.findElements(By.xpath(".//div[@id='table-wrapper']/div[@class='TableBody']//div[@id='"+id+"' and contains(@class,'Row')]/div[@class='Cell']//div[contains(@class,'text-wrapper')]"));
-        return valueCells.get(index).getText();
+    public static class Column {
+
     }
 
-    public String getValueFromNthRow(String columnLabel, String rowNumber) {
-        int index = getActiveColumns().indexOf(columnLabel);
-        List<WebElement> valueCells = this.webElement.findElements(By.xpath("(.//div[@id='table-wrapper']/div[@class='TableBody']//div[@class='Row' or @class='Row selected'])["+rowNumber+"]/div[@class='Cell']/div/div"));
-        return valueCells.get(index).getText();
-    }
-
-
-    public static class Row {
+    public static class Row implements TableRow {
         private final WebElement webElement;
-        private final int pageNumber;
-        private final int paginationStep;
+        private final int index;
 
-        private Row(WebElement webElement, int pageNumber, int paginationStep) {
+        private Row(WebElement webElement, int index) {
             this.webElement = webElement;
-            this.pageNumber = pageNumber;
-            this.paginationStep = paginationStep;
+            this.index = index;
         }
 
+        public void clickRow() {
+            this.webElement.click();
+        }
+
+        public void selectRow() {
+            if(!isSelected()) {
+                clickRow();
+            }
+        }
+
+        public void unselectRow() {
+            if(isSelected()) {
+                clickRow();
+            }
+        }
+
+        @Override
         public boolean isSelected() {
             return this.webElement.findElement(By.xpath("./div"))
                     .getAttribute("class").contains("selected");
         }
 
+        @Override
         public int getIndex() {
-            int topValue = CSSUtils.getTopValue(this.webElement);
-            int heightValue = CSSUtils.getHeightValue(this.webElement);
-            return ((topValue + heightValue) / heightValue) +
-                    ((pageNumber * paginationStep) - paginationStep);
+            return this.index;
         }
     }
 }

@@ -22,6 +22,7 @@ import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.components.portals.ExpandedTextTooltip;
 import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.components.search.AdvancedSearch;
+import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
@@ -33,13 +34,6 @@ public class TableWidget extends Widget implements TableInterface {
     private static final int REFRESH_INTERVAL = 2000;
     public static final String EXPORT_ACTION_ID = "exportButton";
 
-    public static final String PAGINATION_COMPONENT_CLASS = "OSSPagination";
-    private static final String ATTRIBUTES_MANAGEMENT_XPATH = "//div[@id='attributes-management']";
-    // private static final String PATH = "//div[@class='TableWidget']";
-//    private static final String FILTER_ICON_PATH =".//i[@class='fa fa-filter']";
-//    private static final String filterTiles = ".//span[@class='md-input-value']";
-//    private static final String typeTile = ".//span[@class='md-input-value']/span[contains(text(),'Type')]";
-    private static final String checkboxes = ".//div[contains(@class,'stickyColumn')]//div[contains(@class, 'Row')]";
     private static final String tableRows = ".//div[@class='TableBody']//div[@class='custom-scrollbars']//div[contains(@class, 'Row')]";
     private static final String columnResizeGrips = ".//div[@class='resizeGrip']";
     private static final String headers = ".//div[@data-rbd-droppable-id='header-container']//div[contains(@class, 'headerItem')]";
@@ -49,24 +43,16 @@ public class TableWidget extends Widget implements TableInterface {
 
     private static final String verticalTableScroller =
             ".//div[contains(@style,'position: relative; display: block; width: 100%; cursor: pointer;')]";
-    private static final String cells = ".//div[@class='Cell']//*//div[contains(@class,'OSSRichText')]";
-    private static final String expanders = ".//button[@class='btn-show-long-text-box']";
-    private static final String firstPageBtn = ".//li[contains(@class,'page')][2]";
-    private static final String nextPageBtn = ".//li[contains(@class,'pagesNavigation btn')][last()]";
-    private static final String previousPageBtn = ".//li[contains(@class,'page')][2]/..//li[1]";
-    private static final String lastPageBtn = ".//li[contains(@class,'page')][last()-1]";
     private static final String activePageBtn = ".//li[@class='page active']";
     private static final String rowsCounter = ".//div[@class='rowsCounter']/span[last()]";
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
     private static final String selectAllCheckbox = ".//input[@id='checkbox-checkbox']";
 
-    private ExpandedTextTooltip expandedTextTooltip;
     private AdvancedSearch advancedSearch;
 
     @Deprecated
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.className(widgetClass)); // TODO: change to id
-        // DelayUtils.waitBy(webDriverWait, By.className(PAGINATION_COMPONENT_CLASS));
         return new TableWidget(driver, widgetClass, webDriverWait);
     }
 
@@ -81,6 +67,10 @@ public class TableWidget extends Widget implements TableInterface {
 
     private TableWidget(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
         super(driver, wait, tableWidgetId);
+    }
+
+    private TableComponent getTableComponent() {
+        return TableComponent.create(this.driver, this.webDriverWait, this.id);
     }
 
     public ActionsContainer getContextActions() {
@@ -188,7 +178,8 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public List<TableRow> getSelectedRows() {
-        return getVisibleRows().stream().filter(Row::isSelected).collect(Collectors.toList());
+        return getTableComponent().getVisibleRows().stream()
+                .filter(TableRow::isSelected).collect(Collectors.toList());
     }
 
     @Override
@@ -316,10 +307,6 @@ public class TableWidget extends Widget implements TableInterface {
         return this.webElement.findElements(By.xpath(columnResizeGrips));
     }
 
-    private List<WebElement> getExpanders() {
-        return this.webElement.findElements(By.xpath(expanders));
-    }
-
     private WebElement getColumnByLabel(String label) {
         return driver.findElement(By.xpath(".//p[text()='" + label + "']/ancestor::div[@class='headerItem text-align']"));
     }
@@ -329,79 +316,16 @@ public class TableWidget extends Widget implements TableInterface {
         return this.webElement.findElement(By.xpath(activePageBtn));
     }
 
-    private WebElement getFirstPageBtn() {
-        return this.webElement.findElement(By.xpath(firstPageBtn));
-    }
-
-    private WebElement getLastPageBtn() {
-        return this.webElement.findElement(By.xpath(lastPageBtn));
-    }
-
-    private WebElement getPreviousPageBtn() {
-        return this.webElement.findElement(By.xpath(previousPageBtn));
-    }
-
-    private WebElement getNextPageBtn() {
-        return this.webElement.findElement(By.xpath(nextPageBtn));
-    }
-
     public String getLabelOfActivePageBtn() {
         return getActivePageBtn().getText();
-    }
-
-    public String getLabelOfLastPageBtn() {
-        return getLastPageBtn().getText();
     }
 
     public int getRowsNumber() {
         return Integer.valueOf(getRowsCounter().getText());
     }
 
-    public String getExpandedText() {
-        return expandedTextTooltip.getExpandedText();
-    }
-
-    public String getPopupTitle() {
-        return "";
-    }
-
     public boolean isFirstPageActive() {
         return getLabelOfActivePageBtn().equals("1");
-    }
-
-    public boolean isMoreThanOnePage() {
-        return !getLabelOfLastPageBtn().equals("1");
-    }
-
-    public boolean isPreviousPageClicable() {
-        return !getPreviousPageBtn().getAttribute("class").contains("disabled");
-    }
-
-    public boolean isNextPageClicable() {
-        return !getNextPageBtn().getAttribute("class").contains("disabled");
-    }
-
-    public void clickFirstPage() {
-        getFirstPageBtn().click();
-    }
-
-    public void clickLastPage() {
-        getLastPageBtn().click();
-    }
-
-    public void clickNextPage() {
-        getNextPageBtn().click();
-    }
-
-    public void clickPreviousPage() {
-        getPreviousPageBtn().click();
-    }
-
-    public void clickOnFirstExpander() {
-        getExpanders().get(0).click();
-        if (expandedTextTooltip == null) {
-            expandedTextTooltip = new ExpandedTextTooltip(this.driver);
-        }
     }
 
     public int howManyRowsOnFirstPage() {
@@ -409,8 +333,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private void selectTableRow(int row) {
-        if (!getTableRows().get(row).getAttribute("class").contains("selected"))
-            getTableRows().get(row).click();
+        getTableComponent().selectRow(row);
     }
 
     public void selectAllRows() {
@@ -418,28 +341,12 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public void unselectTableRow(int row) {
-        if (getTableRows().get(row).getAttribute("class").contains("selected"))
-            getTableRows().get(row).click();
+        getTableComponent().unselectRow(row);
     }
 
     @Deprecated //use hasNoData()
     public boolean checkIfTableIsEmpty() {
         return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size() > 0;
-    }
-
-    private List<Row> getVisibleRows() {
-        WebElement gridContainer = this.webElement.findElement(By.className("TableBody"))
-                .findElement(By.xpath(".//div[@class='grid-container']/div"));
-        List<Row> rows = gridContainer.findElements(By.xpath("./div")).stream().map(Row::new)
-                .collect(Collectors.toList());
-        return rows;
-    }
-
-    @Deprecated
-    private ColumnsManagement getColumnsManagement() {
-        DelayUtils.waitByXPath(this.webDriverWait, gearIcon);
-        this.webElement.findElement(By.xpath(gearIcon)).click();
-        return ColumnsManagement.create(this.driver);
     }
 
     private AdvancedSearch getAdvancedSearch() {
@@ -528,44 +435,4 @@ public class TableWidget extends Widget implements TableInterface {
         }
     }
 
-    public static class Row implements TableRow {
-        private final WebElement webElement;
-
-        private Row(WebElement webElement) {
-            this.webElement = webElement;
-        }
-
-        public boolean isSelected() {
-            return this.webElement.findElement(By.xpath("./div"))
-                    .getAttribute("class").contains("selected");
-        }
-
-        public int getIndex() {
-            int heightValue = CSSUtils.getHeightValue(this.webElement);
-            int topValue = CSSUtils.getTopValue(this.webElement) + heightValue;
-            return (topValue / heightValue);
-        }
-    }
-
-    // TODO: create component for this
-    public static class PaginationComponent {
-        private final WebElement webElement;
-
-        private PaginationComponent(WebElement webElement) {
-            this.webElement = webElement.findElement(By.className(PAGINATION_COMPONENT_CLASS));
-        }
-
-        @Deprecated
-        public int getStep() {
-            String step = this.webElement.findElement(By.className("pageSize")).getText();
-            return Integer.valueOf(step);
-        }
-
-        @Deprecated
-        public int getCurrentPage() {
-            WebElement pages = this.webElement.findElement(By.className("pagination"));
-            String currentPage = pages.findElement(By.className("active")).getText();
-            return Integer.valueOf(currentPage);
-        }
-    }
 }
