@@ -25,8 +25,6 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
-import static com.oss.framework.listwidget.EditableList.Row.TEXT_WRAPPER;
-import static com.oss.framework.listwidget.EditableList.Row.TEXT_CONTAINER;
 
 /**
  * @author Gabriela Kasza
@@ -71,7 +69,6 @@ public class EditableList extends Widget {
         cell.setValue(value, componentId, componentType);
         
     }
-
     
     public void callActionByLabel(String actionLabel, int row) {
         selectRow(row - 1).click();
@@ -97,25 +94,24 @@ public class EditableList extends Widget {
         }
         return values;
     }
-
+    
     private Row selectRow(int row) {
         return getVisibleRows().get(row);
     }
     
     public Row selectRowByStaticAttributeValue(String columnId, String value) {
-        return selectRowByAttributeValue(columnId, value, TEXT_WRAPPER);
+        return selectRowByAttributeValue(columnId, value);
     }
     
     private Row selectRowByEditableAttributeValue(String columnId, String value) {
-        return selectRowByAttributeValue(columnId, value, TEXT_CONTAINER);
+        return selectRowByAttributeValue(columnId, value);
     }
-
     
-    private Row selectRowByAttributeValue(String columnId, String value, String columnClassName) {
+    private Row selectRowByAttributeValue(String columnId, String value) {
         List<Row> allRows = getVisibleRows();
         for (Row row: allRows) {
             Row.Cell cell = row.selectCell(columnId);
-            String getValue = cell.getText(columnClassName);
+            String getValue = cell.getText();
             if (getValue.equals(value)) {
                 return row;
             }
@@ -131,9 +127,6 @@ public class EditableList extends Widget {
     }
     
     public static class Row {
-        
-        public static final String TEXT_CONTAINER = "textContainer";
-        public static final String TEXT_WRAPPER = "text-wrapper";
         
         private final WebDriver driver;
         private final WebDriverWait wait;
@@ -155,25 +148,21 @@ public class EditableList extends Widget {
             return new Cell(driver, wait, cell);
         }
         
-        public String getStaticAttributeValue(String columnId) {
-            return selectCell(columnId).getText(TEXT_WRAPPER);
-        }
-        
         public String getEditableAttributeValue(String columnId) {
-            return selectCell(columnId).getText(TEXT_CONTAINER);
+            return selectCell(columnId).getText();
         }
         
         public void setEditableAttributeValue(String value, String columnId, String componentId, Input.ComponentType componentType) {
             selectCell(columnId).setValue(value, componentId, componentType);
         }
-        public boolean isEditableAttribute(String columnId){
+        
+        public boolean isEditableAttribute(String columnId) {
             return !webElement.findElements(By.xpath(".//div[contains(@class,'" + columnId + "')]")).isEmpty();
         }
-
-
-
         
         public static class Cell {
+            public static final String TEXT_CONTAINER = "textContainer";
+            public static final String TEXT_WRAPPER = "text-wrapper";
             
             private static final String SAVE_BUTTON = "Save";
             private final WebDriver driver;
@@ -186,8 +175,8 @@ public class EditableList extends Widget {
                 this.webElement = webElement;
             }
             
-            public String getText(String columnClassName) {
-                return webElement.findElement(By.className(columnClassName)).getText();
+            public String getText() {
+                return webElement.findElement(By.xpath(".//div[@class= '" + TEXT_WRAPPER + "' or '" + TEXT_CONTAINER + "']")).getText();
             }
             
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
@@ -218,7 +207,7 @@ public class EditableList extends Widget {
                 component.clear();
                 inlineForm.clickButtonByLabel(SAVE_BUTTON);
             }
-
+            
         }
         
     }
