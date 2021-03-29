@@ -155,6 +155,10 @@ public class EditableList extends Widget {
         public void setEditableAttributeValue(String value, String columnId, String componentId, Input.ComponentType componentType) {
             selectCell(columnId).setValue(value, componentId, componentType);
         }
+
+        public void clearValue(String columnId, String componentId, Input.ComponentType componentType){
+            selectCell(columnId).clearValue(componentId,componentType);
+        }
         
         public boolean isEditableAttribute(String columnId) {
             return !webElement.findElements(By.xpath(".//div[contains(@class,'" + columnId + "')]")).isEmpty();
