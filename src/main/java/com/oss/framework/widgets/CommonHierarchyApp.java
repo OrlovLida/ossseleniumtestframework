@@ -114,12 +114,13 @@ public class CommonHierarchyApp extends Widget {
         String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
         if(isSearchFieldPresent(depthLevel)){
             WebElement searchField = webElement.findElement(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH));
-            searchField.clear();
+//            searchField.clear();
+            searchField.sendKeys(Keys.CONTROL + "a");
+            searchField.sendKeys(Keys.DELETE);
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             searchField.sendKeys(phraseToSearchFor);
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             searchField.sendKeys(Keys.ENTER);
-            System.out.println("Searched text = " + searchField.getText());
             System.out.println("Search complete");
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
