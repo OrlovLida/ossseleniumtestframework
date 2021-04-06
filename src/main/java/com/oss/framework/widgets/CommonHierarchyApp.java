@@ -69,7 +69,6 @@ public class CommonHierarchyApp extends Widget {
             searchIfAvailable(pathLabels.length, valueLabel);
             List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
                     SINGLE_CHOOSABLE_ELEMENT_PATH));
-            System.out.println("Row candidates = " + rowCandidates.size());
             makeActionOnCorrectElement(valueLabel, rowCandidates, actionName);
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
@@ -110,18 +109,13 @@ public class CommonHierarchyApp extends Widget {
     }
 
     private void searchIfAvailable(int depthLevel, String phraseToSearchFor) {
-        System.out.println("Search if available for" + phraseToSearchFor);
         String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
         if(isSearchFieldPresent(depthLevel)){
             WebElement searchField = webElement.findElement(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH));
-//            searchField.clear();
             searchField.sendKeys(Keys.CONTROL + "a");
             searchField.sendKeys(Keys.DELETE);
-            DelayUtils.waitForPageToLoad(driver, webDriverWait);
             searchField.sendKeys(phraseToSearchFor);
-            DelayUtils.waitForPageToLoad(driver, webDriverWait);
             searchField.sendKeys(Keys.ENTER);
-            System.out.println("Search complete");
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
     }
