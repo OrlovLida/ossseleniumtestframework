@@ -66,10 +66,11 @@ public class CommonHierarchyApp extends Widget {
         navigateToPath(pathLabels);
         String deepestHorizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, pathLabels.length + 1);
         for(String valueLabel: valueLabels) {
-            System.out.println("Call action for " + valueLabel);
             searchIfAvailable(pathLabels.length, valueLabel);
+            System.out.println("deepestHorizontalSectionPath = " + deepestHorizontalSectionPath);
             List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
                     SINGLE_CHOOSABLE_ELEMENT_PATH));
+            System.out.println("Found row candidate");
             makeActionOnCorrectElement(valueLabel, rowCandidates, actionName);
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
@@ -100,9 +101,7 @@ public class CommonHierarchyApp extends Widget {
 
     private void makeActionOnCorrectElement(String valueLabel, List<WebElement> rowCandidates, String action) {
         for (WebElement correctRowCandidate : rowCandidates) {
-            System.out.println("Checking for " + correctRowCandidate);
             String elementText = correctRowCandidate.getText();
-            System.out.println("Checking candidate with text = " + elementText + "; valueLabel = " + valueLabel + "; action = " + action);
             if (elementText.contains(valueLabel) && elementText.contains(action)) {
                 WebElement optionButton = correctRowCandidate.findElement(By.xpath(ACTION_BUTTON_PATH));
                 optionButton.click();
@@ -117,7 +116,9 @@ public class CommonHierarchyApp extends Widget {
         if(isSearchFieldPresent(depthLevel)){
             WebElement searchField = webElement.findElement(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH));
             searchField.clear();
+            DelayUtils.waitForPageToLoad(driver, webDriverWait);
             searchField.sendKeys(phraseToSearchFor);
+            DelayUtils.waitForPageToLoad(driver, webDriverWait);
             searchField.sendKeys(Keys.ENTER);
             System.out.println("Search complete");
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
