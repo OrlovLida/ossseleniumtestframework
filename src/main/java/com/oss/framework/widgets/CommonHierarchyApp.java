@@ -66,6 +66,7 @@ public class CommonHierarchyApp extends Widget {
         navigateToPath(pathLabels);
         String deepestHorizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, pathLabels.length + 1);
         for(String valueLabel: valueLabels) {
+            System.out.println("Call action for " + valueLabel);
             searchIfAvailable(pathLabels.length, valueLabel);
             List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
                     SINGLE_CHOOSABLE_ELEMENT_PATH));
@@ -99,6 +100,7 @@ public class CommonHierarchyApp extends Widget {
 
     private void makeActionOnCorrectElement(String valueLabel, List<WebElement> rowCandidates, String action) {
         for (WebElement correctRowCandidate : rowCandidates) {
+            System.out.println("Checking for " + correctRowCandidate);
             String elementText = correctRowCandidate.getText();
             System.out.println("Checking candidate with text = " + elementText + "; valueLabel = " + valueLabel + "; action = " + action);
             if (elementText.contains(valueLabel) && elementText.contains(action)) {
@@ -110,12 +112,14 @@ public class CommonHierarchyApp extends Widget {
     }
 
     private void searchIfAvailable(int depthLevel, String phraseToSearchFor) {
+        System.out.println("Search if available for" + phraseToSearchFor);
         String horizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, depthLevel + 1);
         if(isSearchFieldPresent(depthLevel)){
             WebElement searchField = webElement.findElement(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH));
             searchField.clear();
             searchField.sendKeys(phraseToSearchFor);
             searchField.sendKeys(Keys.ENTER);
+            System.out.println("Search complete");
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
     }
