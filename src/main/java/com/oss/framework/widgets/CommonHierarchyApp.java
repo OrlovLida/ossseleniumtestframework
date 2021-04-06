@@ -100,6 +100,7 @@ public class CommonHierarchyApp extends Widget {
     private void makeActionOnCorrectElement(String valueLabel, List<WebElement> rowCandidates, String action) {
         for (WebElement correctRowCandidate : rowCandidates) {
             String elementText = correctRowCandidate.getText();
+            System.out.println("Checking candidate with text = " + elementText + "; valueLabel = " + valueLabel + "; action = " + action);
             if (elementText.contains(valueLabel) && elementText.contains(action)) {
                 WebElement optionButton = correctRowCandidate.findElement(By.xpath(ACTION_BUTTON_PATH));
                 optionButton.click();
