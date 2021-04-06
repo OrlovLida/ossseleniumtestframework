@@ -70,7 +70,7 @@ public class CommonHierarchyApp extends Widget {
             System.out.println("deepestHorizontalSectionPath = " + deepestHorizontalSectionPath);
             List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
                     SINGLE_CHOOSABLE_ELEMENT_PATH));
-            System.out.println("Found row candidate");
+            System.out.println("Row candidates = " + rowCandidates.size());
             makeActionOnCorrectElement(valueLabel, rowCandidates, actionName);
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
