@@ -67,7 +67,6 @@ public class CommonHierarchyApp extends Widget {
         String deepestHorizontalSectionPath = String.format(HORIZONTAL_SECTION_PATTERN, pathLabels.length + 1);
         for(String valueLabel: valueLabels) {
             searchIfAvailable(pathLabels.length, valueLabel);
-            System.out.println("deepestHorizontalSectionPath = " + deepestHorizontalSectionPath);
             List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
                     SINGLE_CHOOSABLE_ELEMENT_PATH));
             System.out.println("Row candidates = " + rowCandidates.size());
@@ -120,6 +119,7 @@ public class CommonHierarchyApp extends Widget {
             searchField.sendKeys(phraseToSearchFor);
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             searchField.sendKeys(Keys.ENTER);
+            System.out.println("Searched text = " + searchField.getText());
             System.out.println("Search complete");
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
