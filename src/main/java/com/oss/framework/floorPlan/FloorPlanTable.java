@@ -1,12 +1,13 @@
 package com.oss.framework.floorPlan;
 
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
+import com.oss.framework.utils.DelayUtils;
 
 public class FloorPlanTable {
     private static final String tableRows = ".//div[@class='grid-canvas']/div[contains(@class, 'slick-row')]";
@@ -47,7 +48,7 @@ public class FloorPlanTable {
     }
 
     private List<WebElement> getTableRows() {
-        DelayUtils.waitForComponent(webDriverWait, tableRows);
+        DelayUtils.waitByXPath(webDriverWait, tableRows);
         return driver.findElements(By.xpath(tableRows));
     }
 }
