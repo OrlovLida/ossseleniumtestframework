@@ -96,8 +96,4 @@ public class DelayUtils {
         }
     }
 
-    public static void waitForComponent(WebDriverWait wait, String xpath) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
-    }
-
 }
