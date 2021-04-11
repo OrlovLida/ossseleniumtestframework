@@ -63,6 +63,7 @@ public class SearchField extends Input {
     public void setValueContains(Data value) {
         webElement.click();
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
     }

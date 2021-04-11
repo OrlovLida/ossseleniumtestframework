@@ -162,10 +162,15 @@ public class OldTable implements TableInterface {
         if (componentType != ComponentType.TEXT_FIELD) {
             throw new RuntimeException("Old table widget supports" + ComponentType.TEXT_FIELD + "only");
         }
+        clearColumnValue(attributeLabel).setValue(value);
+        DelayUtils.waitForPageToLoad(driver, wait);
+    }
+
+    public Column clearColumnValue(String attributeLabel) {
         Column column = getColumn(attributeLabel);
         column.clear();
-        column.setValue(value);
         DelayUtils.waitForPageToLoad(driver, wait);
+        return column;
     }
 
     @Override
