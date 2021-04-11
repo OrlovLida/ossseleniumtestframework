@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -171,6 +172,7 @@ public class EditableList extends Widget {
             }
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
                 Actions action = new Actions(driver);
                 action.moveToElement(webElement).click().build().perform();
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
