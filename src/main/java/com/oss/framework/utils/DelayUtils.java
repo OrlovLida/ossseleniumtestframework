@@ -49,6 +49,10 @@ public class DelayUtils {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOf(webelement));
     }
 
+    public static void waitForPresence(WebDriverWait wait, By locator){
+        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
     public static void waitForPresenceAndVisibility(WebDriverWait wait, By locator) {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
