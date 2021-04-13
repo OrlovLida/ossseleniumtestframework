@@ -47,6 +47,7 @@ public class OldTable implements TableInterface {
     private static final String RICH_TEXT = ".//div[contains(@class, 'OSSRichText')]";
     private static final String TOGGLE_BUTTON = ".//span[contains(@class,'ToggleButton')]";
     private static final String CELL = ".//div[contains(@class, 'Cell')]";
+    private static final String TABLE_IN_ACTIVE_TAB_XPATH = "//div[@data-attributename='TableTabsApp']//div[@class='tabsContainerSingleContent active']//div[@class='AppComponentContainer']/div";
 
     // to be removed after adding data-attributeName OSSWEB-8398
     @Deprecated
@@ -74,6 +75,12 @@ public class OldTable implements TableInterface {
         WebElement window = table.findElement(
                 By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
         return new OldTable(driver, wait, dataAttributeName, table, window);
+    }
+
+    public static OldTable createTableForActiveTab(WebDriver driver, WebDriverWait wait){
+        DelayUtils.waitForPageToLoad(driver, wait);
+        String tableIdFromActiveTab = driver.findElement(By.xpath(TABLE_IN_ACTIVE_TAB_XPATH)).getAttribute(CSSUtils.TEST_ID);
+        return createByComponentDataAttributeName(driver, wait, tableIdFromActiveTab);
     }
 
     private final WebDriver driver;
@@ -168,6 +175,7 @@ public class OldTable implements TableInterface {
 
     public Column clearColumnValue(String attributeLabel) {
         Column column = getColumn(attributeLabel);
+        DelayUtils.waitForPageToLoad(driver, wait);
         column.clear();
         DelayUtils.waitForPageToLoad(driver, wait);
         return column;
