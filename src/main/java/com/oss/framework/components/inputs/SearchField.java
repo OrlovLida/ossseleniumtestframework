@@ -76,7 +76,8 @@ public class SearchField extends Input {
     @Override
     public void clear() {
         WebElement input = webElement.findElement(By.xpath(".//input"));
-        input.clear();
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
     }
 
     @Override
