@@ -1,4 +1,4 @@
-package com.oss.framework.components.dpe.kpitoolbarpanel;
+package com.oss.framework.widgets.dpe.toolbarpanel;
 
 import com.oss.framework.components.inputs.Button;
 import com.oss.framework.utils.DelayUtils;
@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
+import static com.oss.framework.widgets.dpe.toolbarpanel.KpiToolbarPanel.KPI_TOOLBAR_PATH;
 
 public class FiltersPanel {
 
@@ -28,7 +29,9 @@ public class FiltersPanel {
     private final WebDriverWait wait;
     private final WebElement webElement;
 
-    public static FiltersPanel create(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+    static FiltersPanel create(WebDriver driver, WebDriverWait webDriverWait){
+        WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
+
         return new FiltersPanel(driver, webDriverWait, webElement);
     }
 

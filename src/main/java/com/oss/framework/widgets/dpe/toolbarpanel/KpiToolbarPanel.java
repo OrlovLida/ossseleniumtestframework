@@ -1,8 +1,5 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
-import com.oss.framework.components.dpe.kpitoolbarpanel.ExportPanel;
-import com.oss.framework.components.dpe.kpitoolbarpanel.FiltersPanel;
-import com.oss.framework.components.dpe.kpitoolbarpanel.LayoutPanel;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
@@ -13,15 +10,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.logging.Filter;
-
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 
 public class KpiToolbarPanel extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(KpiToolbarPanel.class);
 
-    private final static String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
+    final static String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
     private final static String APPLY_BUTTON_TEXT = "Apply";
 
     private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
@@ -36,15 +31,15 @@ public class KpiToolbarPanel extends Widget {
     }
 
     public FiltersPanel getFiltersPanel(){
-        return FiltersPanel.create(driver, webDriverWait, webElement);
+        return FiltersPanel.create(driver, webDriverWait);
     }
 
     public ExportPanel getExportPanel(){
-        return ExportPanel.create(driver, webDriverWait, webElement);
+        return ExportPanel.create(driver, webDriverWait);
     }
 
     public LayoutPanel getLayoutPanel(){
-        return LayoutPanel.create(driver, webDriverWait, webElement);
+        return LayoutPanel.create(driver, webDriverWait);
     }
 
     public void clickApply(){

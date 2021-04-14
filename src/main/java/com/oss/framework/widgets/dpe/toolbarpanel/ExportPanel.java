@@ -1,4 +1,4 @@
-package com.oss.framework.components.dpe.kpitoolbarpanel;
+package com.oss.framework.widgets.dpe.toolbarpanel;
 
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
+import static com.oss.framework.widgets.dpe.toolbarpanel.KpiToolbarPanel.KPI_TOOLBAR_PATH;
 
 public class ExportPanel {
 
@@ -24,7 +25,9 @@ public class ExportPanel {
         JPG, PNG, PDF, XLSX
     }
 
-    public static ExportPanel create(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+    static ExportPanel create(WebDriver driver, WebDriverWait webDriverWait){
+        WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
+
         return new ExportPanel(driver, webDriverWait, webElement);
     }
 
