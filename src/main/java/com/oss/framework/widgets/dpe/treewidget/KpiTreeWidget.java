@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.dpe.treewidget;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
@@ -12,20 +13,22 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class TreeWidget extends Widget {
+import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 
-    private static final Logger log = LoggerFactory.getLogger(TreeWidget.class);
+public class KpiTreeWidget extends Widget {
 
-    public TreeWidget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
+    private static final Logger log = LoggerFactory.getLogger(KpiTreeWidget.class);
+
+    public KpiTreeWidget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
     }
 
-    public static TreeWidget create(WebDriver driver, WebDriverWait wait, String componentId){
-        String xPath = "//div[@data-attributename='" + componentId + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
+    public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String componentId){
+        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
         DelayUtils.waitByXPath(wait, xPath);
         WebElement webElement = driver.findElement(By.xpath(xPath));
 
-        return new TreeWidget(driver, webElement, wait);
+        return new KpiTreeWidget(driver, webElement, wait);
     }
 
     public void selectNodes(List<String> nodesToExpand, List<String> nodesToSelect){
@@ -48,7 +51,7 @@ public class TreeWidget extends Widget {
     }
 
     private WebElement findNodeElementByXPath(String objectName){
-        return findElementByXpath("//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']");
+        return findElementByXpath(this.webElement, "//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']");
     }
 
     private void selectExpandedObjects(List<String> objectNames){
@@ -59,17 +62,13 @@ public class TreeWidget extends Widget {
     }
 
     private void selectNode(String objectName) {
-        WebElement objectNode = findElementByXpath("//div[@title='" + objectName + "']")
+        WebElement objectNode = findElementByXpath(this.webElement, "//div[@title='" + objectName + "']")
                 .findElement(By.xpath("following-sibling::*"))
                 .findElement(By.className("selectNode"));
 
         scrollToNode(objectNode);
         objectNode.click();
         log.debug("Selecting node: {}", objectName);
-    }
-
-    private WebElement findElementByXpath(String xpath) {
-        return this.webElement.findElement(By.xpath(xpath));
     }
 
     private void scrollToNode(WebElement node) {
