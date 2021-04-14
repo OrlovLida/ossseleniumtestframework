@@ -12,4 +12,8 @@ public class WidgetUtils {
         WebElement title = driver.findElement(By.xpath("//div[contains(text(), '"+ windowTitle +"')]"));
         return title.findElement(By.xpath("//div[contains(@class, '"+className+"')]"));
     }
+
+    public static WebElement findElementByXpath(WebElement webElement, String xpath) {
+        return webElement.findElement(By.xpath(xpath));
+    }
 }
