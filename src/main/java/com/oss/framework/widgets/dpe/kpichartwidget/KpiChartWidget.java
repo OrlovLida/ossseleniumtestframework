@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static com.oss.framework.logging.LoggerMessages.clickButton;
+import static com.oss.framework.logging.LoggerMessages.elementPresentAndVisible;
+import static com.oss.framework.logging.LoggerMessages.moveMouseOver;
+
 public class KpiChartWidget extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(KpiChartWidget.class);
@@ -24,6 +28,9 @@ public class KpiChartWidget extends Widget {
     private static final String RESIZE_CHART_PATH = "//a[@class='btn btn-default btn-sm btn-border']";
     private static final String MAXIMIZE_CHART_PATH = "//i[@aria-label='MAXIMIZE']";
     private static final String MINIMIZE_CHART_PATH = "//i[@aria-label='REDUCE']";
+
+    private static final String CHART_COLUMN_PATH = "//div[@class='chart']/div/*[name()=\"svg\"]//*[name()=\"g\"]/*[name()=\"g\" and (@role=\"menuitem\")]";
+    private static final String CHART_LINE_PATH = "//div[@class='chart']/div/*[name()=\"svg\"]//*[name()=\"g\"]/*[name()=\"g\" and (@role=\"group\")]";
 
     public KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
@@ -38,7 +45,7 @@ public class KpiChartWidget extends Widget {
 
     public void waitForPresenceAndVisibility(){
         DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath(KPI_CHART_WIDGET_PATH));
-        log.debug("Chart is present and visible");
+        log.debug(elementPresentAndVisible("Chart"));
     }
 
     public void hoverMouseOverPoint(){
@@ -58,7 +65,7 @@ public class KpiChartWidget extends Widget {
     private void moveOverElement(WebElement webElement){
         Actions action = new Actions(driver);
         action.moveToElement(webElement).click().build().perform();
-        log.debug("Hovering mouse over point");
+        log.debug(moveMouseOver("point"));
     }
 
     public void maximizeChart(){
@@ -77,18 +84,18 @@ public class KpiChartWidget extends Widget {
 
     private void showChartActions(){
         clickChartActionsBar(COLLAPSED_GRAPH_MENU_PATH);
-        log.debug("Clicking 'Show chart actions'");
+        log.debug(clickButton("Show chart actions"));
     }
 
     private void hideChartActions(){
         clickChartActionsBar(EXPANDED_GRAPH_MENU_PATH);
-        log.debug("Clicking 'Hide chart actions'");
+        log.debug(clickButton("Hide chart actions"));
     }
 
     private void clickChartActionsBar(String actionBarXpath){
         moveOverElement(GRAPH_LOCATOR_PATH);
 
-        log.debug("Moving mouse over first chart");
+        log.debug(moveMouseOver("first chart"));
 
         WebElement graphMenu = findElementByXpath(actionBarXpath);
         DelayUtils.waitForClickability(webDriverWait, graphMenu);
@@ -101,7 +108,7 @@ public class KpiChartWidget extends Widget {
         DelayUtils.waitForPresence(webDriverWait, By.xpath(MAXIMIZE_CHART_PATH));
         findElementByXpath(RESIZE_CHART_PATH).click();
 
-        log.debug("Clicking 'MAXIMIZE' button");
+        log.debug(clickButton("MAXIMIZE"));
     }
 
     private void clickMinimize(){
@@ -109,12 +116,24 @@ public class KpiChartWidget extends Widget {
         DelayUtils.waitForPresence(webDriverWait, By.xpath(MINIMIZE_CHART_PATH));
         findElementByXpath(RESIZE_CHART_PATH).click();
 
-        log.debug("Clicking 'MINIMIZE' button");
+        log.debug(clickButton("MINIMIZE"));
     }
 
     private void moveOverElement(String resizeChartPath) {
         Actions action = new Actions(driver);
         action.moveToElement(findElementByXpath(resizeChartPath)).build().perform();
+    }
+
+    public int countColumns(){
+        int columnsCount = this.webElement.findElements(By.xpath(CHART_COLUMN_PATH)).size();
+        log.debug("Columns count: {}", columnsCount);
+        return columnsCount;
+    }
+
+    public int countLines(){
+        int linesCount = this.webElement.findElements(By.xpath(CHART_LINE_PATH)).size();
+        log.debug("Lines count: {}", linesCount);
+        return linesCount;
     }
 
     private WebElement findElementByXpath(String xpath) {
