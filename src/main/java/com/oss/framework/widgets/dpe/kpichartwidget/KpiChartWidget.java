@@ -29,8 +29,8 @@ public class KpiChartWidget extends Widget {
     private static final String MAXIMIZE_CHART_PATH = "//i[@aria-label='MAXIMIZE']";
     private static final String MINIMIZE_CHART_PATH = "//i[@aria-label='REDUCE']";
 
-    private static final String CHART_COLUMN_PATH = "//div[@class='chart']/div/*[name()=\"svg\"]//*[name()=\"g\"]/*[name()=\"g\" and (@role=\"menuitem\")]";
-    private static final String CHART_LINE_PATH = "//div[@class='chart']/div/*[name()=\"svg\"]//*[name()=\"g\"]/*[name()=\"g\" and (@role=\"group\")]";
+    private static final String CHART_COLUMN_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='menuitem')]";
+    private static final String CHART_LINE_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='group')]";
 
     public KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
