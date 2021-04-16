@@ -44,10 +44,6 @@ public class KpiToolbarPanel extends Widget {
         return LayoutPanel.create(driver, webDriverWait);
     }
 
-    public TopNPanel getTopNPanel(){
-        return TopNPanel.create(driver, webDriverWait, webElement);
-    }
-
     public void clickApply(){
         DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]"));
         WebElement applyButton = findElementByXpath(this.webElement, "//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]");
