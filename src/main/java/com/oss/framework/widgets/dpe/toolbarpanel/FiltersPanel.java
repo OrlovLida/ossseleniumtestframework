@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import static com.oss.framework.logging.LoggerMessages.clickButton;
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 import static com.oss.framework.widgets.dpe.toolbarpanel.KpiToolbarPanel.KPI_TOOLBAR_PATH;
 
@@ -48,12 +49,12 @@ public class FiltersPanel {
         DelayUtils.waitForClickability(wait, filters);
         DelayUtils.sleep();
         filters.click();
-        log.debug("Clicking 'Filters' button");
+        log.debug(clickButton("Filters"));
     }
 
     public void clearFilters() {
         Button.create(driver, FILTERS_CLEAR_BUTTON_TEXT).click();
-        log.debug("Clicking 'Clear All' button");
+        log.debug(clickButton("Clear All"));
     }
 
     public void turnOnFilters(List<String> filtersToEnable) {
@@ -75,5 +76,6 @@ public class FiltersPanel {
 
     public void clickConfirm(){
         Button.create(driver, FILTERS_CONFIRM_BUTTON_TEXT).click();
+        log.debug(clickButton("Confirm"));
     }
 }

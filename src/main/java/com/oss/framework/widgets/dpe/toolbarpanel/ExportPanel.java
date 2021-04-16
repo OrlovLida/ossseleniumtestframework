@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.oss.framework.logging.LoggerMessages.clickButton;
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 import static com.oss.framework.widgets.dpe.toolbarpanel.KpiToolbarPanel.KPI_TOOLBAR_PATH;
 
@@ -41,10 +42,10 @@ public class ExportPanel {
         DelayUtils.waitForClickability(wait, findElementByXpath(this.webElement, DOWNLOAD_BUTTON_PATH));
         DelayUtils.sleep();
         clickDownload();
-        log.debug("Clicking 'Download' button");
+        log.debug(clickButton("Download"));
         DelayUtils.waitForPageToLoad(driver, wait);
         getExportButtonWithExtension(exportType).click();
-        log.debug("Clicking {} export type button", exportType);
+        log.debug(clickButton(exportType + "export type"));
         clickExport();
         log.info("Exporting chart as {}", exportType);
     }
@@ -60,6 +61,6 @@ public class ExportPanel {
 
     private void clickExport(){
         findElementByXpath(this.webElement, "//button[@class='btn export']").click();
-        log.debug("Clicking 'Export' button");
+        log.debug(clickButton("Export"));
     }
 }

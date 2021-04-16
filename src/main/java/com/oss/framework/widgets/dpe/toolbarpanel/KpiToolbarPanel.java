@@ -5,11 +5,13 @@ import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.oss.framework.logging.LoggerMessages.clickButton;
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 
 public class KpiToolbarPanel extends Widget {
@@ -47,7 +49,10 @@ public class KpiToolbarPanel extends Widget {
         WebElement applyButton = findElementByXpath(this.webElement, "//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]");
         DelayUtils.waitForClickability(webDriverWait, applyButton);
         DelayUtils.sleep();
-        applyButton.click();
-        log.debug("Clicking 'Apply' button");
+
+        Actions action = new Actions(driver);
+        action.moveToElement(applyButton).click().build().perform();
+
+        log.debug(clickButton("Apply"));
     }
 }
