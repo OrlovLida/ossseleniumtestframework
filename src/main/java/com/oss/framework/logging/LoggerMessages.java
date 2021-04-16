@@ -15,7 +15,7 @@ public class LoggerMessages {
     }
 
     public static String moveMouseOver(String element){
-        return String.format("Hovering mouse over %s", element);
+        return String.format("Moving mouse over %s", element);
     }
 
     public static String elementPresentAndVisible(String element){
