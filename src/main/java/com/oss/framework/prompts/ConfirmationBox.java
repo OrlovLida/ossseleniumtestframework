@@ -20,6 +20,10 @@ import com.oss.framework.utils.DelayUtils;
  */
 public class ConfirmationBox implements ConfirmationBoxInterface {
 
+    public static final String PROCEED = "Proceed";
+    public static final String DELETE = "Delete";
+    public static final String YES = "Yes";
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement prompt;
