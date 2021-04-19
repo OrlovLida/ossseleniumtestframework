@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static com.oss.framework.logging.LoggerMessages.clickButton;
+import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 import static com.oss.framework.widgets.dpe.toolbarpanel.KpiToolbarPanel.KPI_TOOLBAR_PATH;
 
@@ -49,12 +49,12 @@ public class FiltersPanel {
         DelayUtils.waitForClickability(wait, filters);
         DelayUtils.sleep();
         filters.click();
-        log.debug(clickButton("Filters"));
+        log.debug(CLICK_BTN + "Filters");
     }
 
     public void clearFilters() {
         Button.create(driver, FILTERS_CLEAR_BUTTON_TEXT).click();
-        log.debug(clickButton("Clear All"));
+        log.debug(CLICK_BTN + "Clear All");
     }
 
     public void turnOnFilters(List<String> filtersToEnable) {
@@ -71,11 +71,14 @@ public class FiltersPanel {
             throw new NoSuchElementException("Can't find some filters to enable from list: " + filtersToEnable);
         }
         filterElements
-                .forEach(WebElement::click);
+                .forEach(webElement -> {
+                    webElement.click();
+                    log.debug("Enabling filter: {}", webElement.getText());
+                });
     }
 
     public void clickConfirm(){
         Button.create(driver, FILTERS_CONFIRM_BUTTON_TEXT).click();
-        log.debug(clickButton("Confirm"));
+        log.debug(CLICK_BTN + "Confirm");
     }
 }

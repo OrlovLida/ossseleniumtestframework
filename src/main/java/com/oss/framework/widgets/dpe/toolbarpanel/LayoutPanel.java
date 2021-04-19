@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.oss.framework.logging.LoggerMessages.clickButton;
+import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 import static com.oss.framework.widgets.dpe.toolbarpanel.KpiToolbarPanel.KPI_TOOLBAR_PATH;
 
@@ -54,11 +54,11 @@ public class LayoutPanel {
         DelayUtils.sleep();
         findElementByXpath(this.webElement, LAYOUT_BUTTON_PATH).click();
 
-        log.debug(clickButton("Layout"));
+        log.debug(CLICK_BTN + "Layout");
 
         findElementByXpath(this.webElement, "//i[@class='OSSIcon ossfont-layout-" + layout.label + "']").click();
 
-        log.debug(clickButton(layout.label + " layout"));
+        log.debug(CLICK_BTN + layout.label + " layout");
         log.info("Changed layout to {}", layout.label);
     }
 }
