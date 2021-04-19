@@ -1,7 +1,5 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
-import com.oss.framework.components.inputs.ComponentFactory;
-import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.oss.framework.logging.LoggerMessages.clickButton;
-import static com.oss.framework.logging.LoggerMessages.clickElement;
-import static com.oss.framework.logging.LoggerMessages.setElementWithValue;
+import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
+import static com.oss.framework.logging.LoggerMessages.CLICK_ELEMENT;
+import static com.oss.framework.logging.LoggerMessages.SET_ELEMENT;
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 
 public class TopNPanel {
@@ -51,14 +49,14 @@ public class TopNPanel {
     public void openTopNPanel(){
         DelayUtils.waitForClickability(wait, findElementByXpath(this.webElement, TOP_N_BUTTON_PATH));
         findElementByXpath(this.webElement, TOP_N_BUTTON_PATH).click();
-        log.debug(clickButton("TopN"));
+        log.debug(CLICK_BTN + "TopN");
     }
 
     public void setTopNDimension(String dimension){
         getTopNDimensionInput().click();
-        log.debug(clickElement("TopN dimension combo box"));
+        log.debug(CLICK_ELEMENT + "TopN dimension combo box");
         chooseOptionFromDropDownInRow(dimension);
-        log.debug(setElementWithValue("Top N dimension", dimension));
+        log.debug(SET_ELEMENT + "Top N dimension = " + dimension);
     }
 
     private WebElement getTopNDimensionInput(){
@@ -68,9 +66,9 @@ public class TopNPanel {
 
     public void setNthLevel(String nthLevel){
         getNthLevelInput().click();
-        log.debug(clickElement("nth level combo box"));
+        log.debug(CLICK_BTN + "nth level combo box");
         chooseOptionFromDropDownInRow(nthLevel);
-        log.debug(setElementWithValue("nth level", nthLevel));
+        log.debug(SET_ELEMENT + "nth level " + nthLevel);
     }
 
     private WebElement getNthLevelInput(){
@@ -88,7 +86,7 @@ public class TopNPanel {
             String innerHTML = option.getAttribute("innerHTML");
             if (innerHTML.contains(choice)) {
                 option.click();
-                log.debug(clickElement(choice));
+                log.debug(CLICK_ELEMENT + choice);
                 break;
             }
         }
@@ -98,10 +96,6 @@ public class TopNPanel {
         WebElement performButton = findElementByXpath(this.webElement, PERFORM_BUTTON_PATH);
         DelayUtils.waitForClickability(wait, performButton);
         performButton.click();
-        log.debug(clickButton("Perform"));
-    }
-
-    private Input getComponent(String componentId, Input.ComponentType componentType) {
-        return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
+        log.debug(CLICK_BTN + "Perform");
     }
 }

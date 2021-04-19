@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static com.oss.framework.logging.LoggerMessages.EXPAND_NODE;
+import static com.oss.framework.logging.LoggerMessages.SELECT_NODE;
 import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 
 public class KpiTreeWidget extends Widget {
@@ -47,7 +49,7 @@ public class KpiTreeWidget extends Widget {
         WebElement expandButton = findNodeElementByXPath(objectName);
         scrollToNode(expandButton);
         expandButton.click();
-        log.debug("Expanding node: {}", objectName);
+        log.debug(EXPAND_NODE + objectName);
     }
 
     private WebElement findNodeElementByXPath(String objectName){
@@ -68,7 +70,7 @@ public class KpiTreeWidget extends Widget {
 
         scrollToNode(objectNode);
         objectNode.click();
-        log.debug("Selecting node: {}", objectName);
+        log.debug(SELECT_NODE + objectName);
     }
 
     private void scrollToNode(WebElement node) {

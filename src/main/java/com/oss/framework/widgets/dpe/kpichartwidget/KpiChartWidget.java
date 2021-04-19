@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.oss.framework.logging.LoggerMessages.clickButton;
-import static com.oss.framework.logging.LoggerMessages.elementPresentAndVisible;
-import static com.oss.framework.logging.LoggerMessages.moveMouseOver;
+import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
+import static com.oss.framework.logging.LoggerMessages.ELEMENT_PRESENT_AND_VISIBLE;
+import static com.oss.framework.logging.LoggerMessages.MOVE_MOUSE_OVER;
 
 public class KpiChartWidget extends Widget {
 
@@ -45,7 +45,7 @@ public class KpiChartWidget extends Widget {
 
     public void waitForPresenceAndVisibility(){
         DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath(KPI_CHART_WIDGET_PATH));
-        log.debug(elementPresentAndVisible("Chart"));
+        log.debug(ELEMENT_PRESENT_AND_VISIBLE + "Chart");
     }
 
     public void hoverMouseOverPoint(){
@@ -65,7 +65,7 @@ public class KpiChartWidget extends Widget {
     private void moveOverElement(WebElement webElement){
         Actions action = new Actions(driver);
         action.moveToElement(webElement).click().build().perform();
-        log.debug(moveMouseOver("point"));
+        log.debug(MOVE_MOUSE_OVER + "point");
     }
 
     public void maximizeChart(){
@@ -84,18 +84,18 @@ public class KpiChartWidget extends Widget {
 
     private void showChartActions(){
         clickChartActionsBar(COLLAPSED_GRAPH_MENU_PATH);
-        log.debug(clickButton("Show chart actions"));
+        log.debug(CLICK_BTN + "Show chart actions");
     }
 
     private void hideChartActions(){
         clickChartActionsBar(EXPANDED_GRAPH_MENU_PATH);
-        log.debug(clickButton("Hide chart actions"));
+        log.debug(CLICK_BTN + "Hide chart actions");
     }
 
     private void clickChartActionsBar(String actionBarXpath){
         moveOverElement(GRAPH_LOCATOR_PATH);
 
-        log.debug(moveMouseOver("first chart"));
+        log.debug(MOVE_MOUSE_OVER + "first chart");
 
         WebElement graphMenu = findElementByXpath(actionBarXpath);
         DelayUtils.waitForClickability(webDriverWait, graphMenu);
@@ -108,7 +108,7 @@ public class KpiChartWidget extends Widget {
         DelayUtils.waitForPresence(webDriverWait, By.xpath(MAXIMIZE_CHART_PATH));
         findElementByXpath(RESIZE_CHART_PATH).click();
 
-        log.debug(clickButton("MAXIMIZE"));
+        log.debug(CLICK_BTN + "MAXIMIZE");
     }
 
     private void clickMinimize(){
@@ -116,7 +116,7 @@ public class KpiChartWidget extends Widget {
         DelayUtils.waitForPresence(webDriverWait, By.xpath(MINIMIZE_CHART_PATH));
         findElementByXpath(RESIZE_CHART_PATH).click();
 
-        log.debug(clickButton("MINIMIZE"));
+        log.debug(CLICK_BTN + "MINIMIZE");
     }
 
     private void moveOverElement(String resizeChartPath) {
