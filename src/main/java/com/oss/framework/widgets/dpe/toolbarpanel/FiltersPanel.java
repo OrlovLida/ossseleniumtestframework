@@ -71,7 +71,10 @@ public class FiltersPanel {
             throw new NoSuchElementException("Can't find some filters to enable from list: " + filtersToEnable);
         }
         filterElements
-                .forEach(WebElement::click);
+                .forEach(webElement -> {
+                    webElement.click();
+                    log.debug("Enabling filter: {}", webElement.getText());
+                });
     }
 
     public void clickConfirm(){
