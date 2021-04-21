@@ -1,14 +1,14 @@
 package com.oss.framework.components.portals;
 
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.LocatingUtils;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+import com.oss.framework.utils.DelayUtils;
 
 public class DatePicker {
     private final WebElement webElement;
@@ -23,7 +23,7 @@ public class DatePicker {
 
     public static DatePicker create(WebDriverWait wait, WebElement webElement) {
         webElement.findElement(By.xpath(".//i[contains(@class,'fa-calendar')]")).click();
-        LocatingUtils.waitUsingXpath(".//span[contains(@class,'next')]", wait);
+        DelayUtils.waitByXPath(wait, ".//span[contains(@class,'next')]");
         return new DatePicker(webElement);
     }
 

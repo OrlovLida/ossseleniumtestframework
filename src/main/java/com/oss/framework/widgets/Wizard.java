@@ -20,6 +20,7 @@ import com.oss.framework.utils.DelayUtils;
 
 public class Wizard {
 
+    private static final String POPUP_ID = "Popup";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
@@ -34,6 +35,10 @@ public class Wizard {
         DelayUtils.waitByXPath(wait, "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
         WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
         return new Wizard(driver, wait, webElement);
+    }
+
+    public static Wizard createPopupWizard(WebDriver driver, WebDriverWait wait) {
+        return createByComponentId(driver, wait, POPUP_ID);
     }
 
     //TODO: temporary method due to OSSWEB-9886 and OSSWEB-9896
