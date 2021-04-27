@@ -69,14 +69,20 @@ public class EditableList extends Widget {
         selectRow(row - 1).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
-        
     }
     
     public void callActionByLabel(String actionLabel, String columnId, String value) {
         selectRowByAttributeValue(columnId, value).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
-        
+    }
+    
+    public void callActionIcon(String actionLabel, int row) {
+        selectRow(row - 1).callActionIcon(actionLabel);
+    }
+    
+    public void callActionIcon(String actionLabel, String columnId, String value) {
+        selectRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
     }
     
     // TODO update xpath
@@ -161,6 +167,16 @@ public class EditableList extends Widget {
         public boolean isEditableAttribute(String columnId) {
             return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
                     .contains("editable");
+        }
+        
+        public void callActionIcon(String ariaLabel) {
+            DelayUtils.waitByXPath(wait, ".//div[@class='placeholdersAndActions']");
+            WebElement placeholdersAndActions = webElement.findElement(By.className("placeholdersAndActions"));
+            WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
+            DelayUtils.waitForClickability(wait, icon);
+            Actions action = new Actions(driver);
+            action.moveToElement(icon).click().build().perform();
+            
         }
         
         public static class Cell {
