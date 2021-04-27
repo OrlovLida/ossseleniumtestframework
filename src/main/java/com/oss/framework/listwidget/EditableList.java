@@ -91,7 +91,7 @@ public class EditableList extends Widget {
     }
     
     public Row selectRow(int row) {
-        return getVisibleRows().get(row - 1);
+        return getVisibleRows().get(row);
     }
     
     public Row selectRowByAttributeValue(String columnId, String value) {
