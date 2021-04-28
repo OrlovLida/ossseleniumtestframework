@@ -113,6 +113,7 @@ public class EditableList extends Widget {
     }
     
     public List<Row> getVisibleRows() {
+        DelayUtils.waitByXPath(webDriverWait, XPATH_ROWS_OF_LIST);
         List<WebElement> listElements = webElement.findElements(By.xpath(XPATH_ROWS_OF_LIST));
         List<Row> rows = new ArrayList<Row>();
         for (int index = 0; index < listElements.size(); index++) {
@@ -170,13 +171,12 @@ public class EditableList extends Widget {
         }
         
         public void callActionIcon(String ariaLabel) {
-            DelayUtils.waitByXPath(wait, ".//div[@class='placeholdersAndActions']");
-            WebElement placeholdersAndActions = webElement.findElement(By.className("placeholdersAndActions"));
+            DelayUtils.waitForNestedElements(wait, webElement, ".//div[contains(@class,'placeholders')]");
+            WebElement placeholdersAndActions = webElement.findElement(By.xpath(".//div[contains(@class,'placeholders')]"));
             WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
             DelayUtils.waitForClickability(wait, icon);
             Actions action = new Actions(driver);
             action.moveToElement(icon).click().build().perform();
-            
         }
         
         public static class Cell {
