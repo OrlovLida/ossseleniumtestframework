@@ -8,7 +8,6 @@ package com.oss.framework.listwidget;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -70,14 +69,20 @@ public class EditableList extends Widget {
         selectRow(row - 1).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
-        
     }
     
     public void callActionByLabel(String actionLabel, String columnId, String value) {
         selectRowByAttributeValue(columnId, value).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
-        
+    }
+    
+    public void callActionIcon(String actionLabel, int row) {
+        selectRow(row - 1).callActionIcon(actionLabel);
+    }
+    
+    public void callActionIcon(String actionLabel, String columnId, String value) {
+        selectRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
     }
     
     // TODO update xpath
@@ -108,10 +113,14 @@ public class EditableList extends Widget {
     }
     
     public List<Row> getVisibleRows() {
-        return webElement.findElements(By.xpath(XPATH_ROWS_OF_LIST))
-                .stream()
-                .map(element -> new Row(driver, webDriverWait, element))
-                .collect(Collectors.toList());
+        DelayUtils.waitByXPath(webDriverWait, XPATH_ROWS_OF_LIST);
+        List<WebElement> listElements = webElement.findElements(By.xpath(XPATH_ROWS_OF_LIST));
+        List<Row> rows = new ArrayList<Row>();
+        for (int index = 0; index < listElements.size(); index++) {
+            rows.add(new Row(driver, webDriverWait, listElements.get(index), index + 1));
+        }
+        return rows;
+        
     }
     
     public static class Row {
@@ -119,11 +128,13 @@ public class EditableList extends Widget {
         private final WebDriver driver;
         private final WebDriverWait wait;
         private final WebElement webElement;
+        private final int index;
         
-        private Row(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
+        private Row(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, int index) {
             this.driver = driver;
             this.wait = webDriverWait;
             this.webElement = webElement;
+            this.index = index;
         }
         
         public void click() {
@@ -131,9 +142,15 @@ public class EditableList extends Widget {
         }
         
         public Cell selectCell(String columnId) {
-            DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']");
-            WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']"));
-            return new Cell(driver, wait, cell);
+            if (columnId.contains(String.valueOf(index))) {
+                DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']");
+                WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']"));
+                return new Cell(driver, wait, cell);
+            } else {
+                DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']");
+                WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']"));
+                return new Cell(driver, wait, cell);
+            }
         }
         
         public String getAttributeValue(String columnId) {
@@ -151,6 +168,15 @@ public class EditableList extends Widget {
         public boolean isEditableAttribute(String columnId) {
             return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
                     .contains("editable");
+        }
+        
+        public void callActionIcon(String ariaLabel) {
+            DelayUtils.waitForNestedElements(wait, webElement, ".//div[contains(@class,'placeholders')]");
+            WebElement placeholdersAndActions = webElement.findElement(By.xpath(".//div[contains(@class,'placeholders')]"));
+            WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
+            DelayUtils.waitForClickability(wait, icon);
+            Actions action = new Actions(driver);
+            action.moveToElement(icon).click().build().perform();
         }
         
         public static class Cell {
