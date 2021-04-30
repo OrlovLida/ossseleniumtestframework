@@ -31,7 +31,7 @@ public class EditableList extends Widget {
     
     private static final String LIST_WIDGET_CLASS = "ExtendedList";
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
-    private static final String XPATH_ROWS_OF_LIST = "//li[contains(@class,'editableListElement')]";
+    private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
     
     public static EditableList create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]"));
