@@ -366,7 +366,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
         Input input = getAdvancedSearch().getComponent(componentId, componentType);
-        input.setSingleStringValueContains(value);
+        input.setSingleStringValue(value);
     }
 
     public String getAttribute(int rowIndex, String attribute) {

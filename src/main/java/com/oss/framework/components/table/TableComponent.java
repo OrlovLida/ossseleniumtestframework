@@ -1,6 +1,9 @@
 package com.oss.framework.components.table;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -9,7 +12,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.utils.CSSUtils;
@@ -20,14 +25,15 @@ public class TableComponent {
 
     private static final String tableRows = ".//div[@class='TableBody']//div[@class='custom-scrollbars']//div[contains(@class, 'Row')]";
     private static final String columnResizeGrips = ".//div[@class='resizeGrip']";
-    private static final String headers = ".//div[@class='headerItem']";
+    private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div/div";
+    private static final String HEADERS2_XPATH = ".//div[@class='sticky-table__header']/div";
     private static final String gearIcon = ".//i[contains(@class,'fa-cog')]";
     private static final String horizontalTableScroller = ".//div[contains(@style,'position: relative; display: block; height: 100%; cursor: pointer;')]";
 
     private static final String verticalTableScroller = ".//div[contains(@style,'position: relative; display: block; width: 100%; cursor: pointer;')]";
     private static final String cells = ".//div[@class='Cell']//*//div[contains(@class,'OSSRichText')]";
 
-    private static final String TABLE_COMPONENT_CLASS = "TableContainer";
+    private static final String TABLE_COMPONENT_CLASS = "table-component";
     private static final String GRID_CONTAINER = "grid-container";
 
     private final WebDriver driver;
@@ -57,6 +63,8 @@ public class TableComponent {
     }
 
     public List<TableRow> getVisibleRows() {
+        List<String> headers = getColumnHeaders();
+
         WebElement gridContainer = this.webElement.findElement(By.xpath(".//div[@class='grid-container']/div"));
         List<WebElement> elements = gridContainer.findElements(By.xpath("./div"));
         List<TableRow> rows = Lists.newArrayList();
@@ -66,26 +74,22 @@ public class TableComponent {
         return rows;
     }
 
+    private CustomScrolls getCustomScrolls() {
+        return CustomScrolls.create(driver, webDriverWait, webElement);
+    }
+
     public void scrollHorizontally(int offset){
-        getHorizontalTableScroller().click();
-        Actions action = new Actions(this.driver);
-        action.moveToElement(getHorizontalTableScroller()).clickAndHold();
-        action.moveByOffset(offset,0);
-        action.release();
-        action.perform();
+        CustomScrolls customScrolls = getCustomScrolls();
+        customScrolls.scrollHorizontally(offset);
     }
 
     public void scrollVertically(int offset){
-        getVerticalTableScroller().click();
-        Actions action = new Actions(this.driver);
-        action.moveToElement(getVerticalTableScroller()).clickAndHold();
-        action.moveByOffset(0,offset);
-        action.release();
-        action.perform();
+        CustomScrolls customScrolls = getCustomScrolls();
+        customScrolls.scrollVertically(offset);
     }
 
     public List<String> getActiveColumns() {
-        return this.webElement.findElements(By.xpath(headers)).stream()
+        return this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream()
                 .map(WebElement::getText).collect(Collectors.toList());
     }
 
@@ -123,17 +127,79 @@ public class TableComponent {
         return this.webElement.findElement(By.xpath(verticalTableScroller));
     }
 
-    private List<String> getColumnHeaders(){
-        return this.webElement.findElements(By.xpath(headers)).stream()
-                .map(WebElement::getText).collect(Collectors.toList());
+    private List<String > getColumnHeaders(){
+        List<String> headers = Lists.newArrayList();
+        List<Cell> tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream().map(Cell::new)
+                .filter(cell -> !cell.getText().equals("")).collect(Collectors.toList());
+
+        Cell lastElement = null;
+        Cell tempElement = tempHeaders.get(tempHeaders.size() - 1);
+
+        while(lastElement == null || !lastElement.getText().equals(tempElement.getText())) {
+            headers.addAll(tempHeaders.stream().map(Cell::getText).filter(text -> !headers.contains(text)).collect(Collectors.toList()));
+
+            lastElement = tempHeaders.get(tempHeaders.size() -1);
+            scrollToHeader(lastElement);
+
+            tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream().map(Cell::new)
+                    .filter(cell -> !cell.getText().equals("")).collect(Collectors.toList());
+            tempElement = tempHeaders.get(tempHeaders.size() -1);
+        }
+
+        return headers;
+    }
+
+    private BigDecimal getContentWidth() {
+        WebElement headersBody = this.webElement.findElement(By.xpath(HEADERS2_XPATH));
+        return BigDecimal.valueOf(CSSUtils.getDecimalWidthValue(headersBody));
+    }
+
+    private void scrollToHeader(Cell cell) {
+        CustomScrolls scrolls = getCustomScrolls();
+
+        BigDecimal contentWidth =  getContentWidth();
+        BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getVerticalScrollWidth());
+        BigDecimal cellLeft = BigDecimal.valueOf(cell.getLeft());
+        BigDecimal ratio = contentWidth.divide(scrollWidth,2, RoundingMode.FLOOR);
+
+        scrolls.scrollVertically(cellLeft.divide(ratio, 2, RoundingMode.FLOOR).toBigInteger().intValue());
     }
 
     private List<WebElement> getColumnResizeGrips(){
         return this.webElement.findElements(By.xpath(columnResizeGrips));
     }
 
-    public static class Column {
+    public static class Cell {
+        private final WebElement cell;
 
+        private Cell(WebElement cell) {
+            this.cell = cell;
+        }
+
+        public double getWidth() {
+            return CSSUtils.getDecimalWidthValue(cell);
+        }
+
+        public int getLeft() {
+            return CSSUtils.getLeftValue(cell);
+        }
+
+        public String getText() {
+            return cell.getText();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Cell cell1 = (Cell) o;
+            return Objects.equal(cell.getText(), cell1.cell.getText());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(cell.getText());
+        }
     }
 
     public static class Row implements TableRow {
@@ -171,5 +237,58 @@ public class TableComponent {
         public int getIndex() {
             return this.index;
         }
+    }
+
+
+    public static class CustomScrolls {
+        private static final String SCROLLS_XPATH = ".//div[contains(@class, 'custom-scrollbars')]";
+
+        private final WebElement scrolls;
+        private final WebDriverWait wait;
+        private final WebDriver driver;
+
+        public static CustomScrolls create(WebDriver driver, WebDriverWait wait, WebElement parent) {
+            DelayUtils.waitForNestedElements(wait, parent, SCROLLS_XPATH);
+            WebElement scrolls = parent.findElement(By.xpath(SCROLLS_XPATH));
+            return new CustomScrolls(driver, wait, scrolls);
+        }
+
+        private CustomScrolls(WebDriver driver, WebDriverWait wait, WebElement scrolls) {
+            this.driver = driver;
+            this.wait = wait;
+            this.scrolls = scrolls;
+        }
+
+        public void scrollHorizontally(int offset) {
+        }
+
+        public void scrollVertically(int offset) {
+            List<WebElement> divs = scrolls.findElements(By.xpath("./div"));
+            WebElement horizontal = divs.get(1);
+            WebElement bar = horizontal.findElement(By.xpath("./div"));
+            Actions action = new Actions(this.driver);
+            action.moveToElement(bar).clickAndHold();
+            action.moveByOffset(offset,0);
+            action.release();
+            action.perform();
+        }
+
+        public int getVerticalScrollWidth() {
+            return 1610;
+        }
+
+        public void getHorizontalScrollSize() {
+
+        }
+
+        public void getVerticalScrollSize() {
+
+        }
+
+        public int getHorizontalScrollPosition() {
+            return 0;
+        }
+
+
     }
 }

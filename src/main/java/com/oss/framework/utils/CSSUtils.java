@@ -18,6 +18,7 @@ public class CSSUtils {
     public static String TOP_ATTRIBUTE = "top";
     public static String HEIGHT_ATTRIBUTE = "height";
     public static String WIDTH_ATTRIBUTE = "width";
+    public static String LEFT_ATTRIBUTE = "left";
     public static String TEST_ID = "data-attributename";
 
     private static Splitter attributeSplitter = Splitter.on(ATTRIBUTES_SEPARATOR);
@@ -53,9 +54,23 @@ public class CSSUtils {
         return getIntegerValue(WIDTH_ATTRIBUTE, webElement);
     }
 
+    public static double getDecimalWidthValue(WebElement webElement) {
+        return getDecimalValue(WIDTH_ATTRIBUTE, webElement);
+    }
+
+    public static int getLeftValue(WebElement webElement) {
+        return getIntegerValue(LEFT_ATTRIBUTE, webElement);
+    }
+
     private static int getIntegerValue(String attributeName, WebElement webElement) {
         String value = webElement.getCssValue(attributeName);
         value = value.replaceAll("[^\\d.]", "");
         return Integer.valueOf(value);
+    }
+
+    private static double getDecimalValue(String attributeName, WebElement webElement) {
+        String value = webElement.getCssValue(attributeName);
+        value = value.replaceAll("[^\\d.]", "");
+        return Double.valueOf(value);
     }
 }
