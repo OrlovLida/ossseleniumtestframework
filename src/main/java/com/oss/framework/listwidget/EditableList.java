@@ -122,6 +122,12 @@ public class EditableList extends Widget {
         return rows;
         
     }
+
+    public boolean isNoData() {
+        List<WebElement> noData = this.driver
+                .findElements(By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]"));
+        return !noData.isEmpty();
+    }
     
     public static class Row {
         
