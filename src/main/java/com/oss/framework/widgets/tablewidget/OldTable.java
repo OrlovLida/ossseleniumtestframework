@@ -74,9 +74,7 @@ public class OldTable implements TableInterface {
         actions.moveToElement(table).build().perform();
         WebElement window = table.findElement(
                 By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
-        String dataAttributeNameWindow = window.getAttribute("data-attributename");
-        WebElement tableWindow = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeNameWindow + "']"));
-        return new OldTable(driver, wait, dataAttributeName, table, tableWindow);
+        return new OldTable(driver, wait, dataAttributeName, table, window);
     }
 
     public static OldTable createTableForActiveTab(WebDriver driver, WebDriverWait wait){
