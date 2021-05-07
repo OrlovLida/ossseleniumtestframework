@@ -122,7 +122,7 @@ public class EditableList extends Widget {
         return rows;
         
     }
-
+    
     public boolean isNoData() {
         List<WebElement> noData = this.driver
                 .findElements(By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]"));
@@ -172,8 +172,14 @@ public class EditableList extends Widget {
         }
         
         public boolean isEditableAttribute(String columnId) {
-            return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
-                    .contains("editable");
+            if (columnId.contains(String.valueOf(index))) {
+                return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
+                        .contains("editable");
+            } else {
+                return webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']"))
+                        .getAttribute("class").contains("editable");
+            }
+            
         }
         
         public void callActionIcon(String ariaLabel) {
