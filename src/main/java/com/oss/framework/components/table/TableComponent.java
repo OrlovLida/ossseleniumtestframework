@@ -14,7 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.utils.CSSUtils;
@@ -35,6 +34,8 @@ public class TableComponent {
 
     private static final String TABLE_COMPONENT_CLASS = "table-component";
     private static final String GRID_CONTAINER = "grid-container";
+    private static final String STICKY_COLUMNS_XPATH = ".//div[contains(@class, 'sticky-table__sticky-column__content')]/div/div";
+    private static final String CONTENT_CELLS_XPATH = ".//div[contains(@class, 'sticky-table__content')]/div/div/div";
 
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
@@ -54,8 +55,13 @@ public class TableComponent {
         this.widgetID = componentId;
     }
 
-    public void selectRow(int row) {
-        getVisibleRows().get(row).selectRow();
+    public void selectRow(int index) {
+        Row row = getRow(index);
+        row.selectRow();
+    }
+
+    private Row getRow(int index) {
+        return new Row(webElement, index);
     }
 
     public void unselectRow(int row) {
@@ -63,15 +69,11 @@ public class TableComponent {
     }
 
     public List<TableRow> getVisibleRows() {
-        List<String> headers = getColumnHeaders();
+        List<Integer> rowIds = this.webElement.findElements(By.xpath(".//div[contains(@data-testId, 'table-content-scrollbar')]//div[contains(@class, 'table-component__cell')]"))
+                .stream().filter(e -> e.getAttribute("data-row") != null).map(e -> e.getAttribute("data-row"))
+                .distinct().map(Integer::parseInt).sorted().collect(Collectors.toList());
 
-        WebElement gridContainer = this.webElement.findElement(By.xpath(".//div[@class='grid-container']/div"));
-        List<WebElement> elements = gridContainer.findElements(By.xpath("./div"));
-        List<TableRow> rows = Lists.newArrayList();
-        for(int i = 0; i < elements.size(); i++) {
-            rows.add(new Row(elements.get(i), i));
-        }
-        return rows;
+        return rowIds.stream().map( index -> new Row(this.webElement, index)).collect(Collectors.toList());
     }
 
     private CustomScrolls getCustomScrolls() {
@@ -96,7 +98,6 @@ public class TableComponent {
     public int getColumnSize(String columnId) {
         int index = getColumnHeaders().indexOf(columnId);
         return 0;
-//        return CSSUtils.getWidthValue(getColumnHeaders().get(index));
     }
 
     public void resizeColumn(String columnId, int size){
@@ -127,9 +128,9 @@ public class TableComponent {
         return this.webElement.findElement(By.xpath(verticalTableScroller));
     }
 
-    private List<String > getColumnHeaders(){
+    private List<String> getColumnHeaders(){
         List<String> headers = Lists.newArrayList();
-        List<Cell> tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream().map(Cell::new)
+        List<Cell> tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream().map(Cell::createFromWrapper)
                 .filter(cell -> !cell.getText().equals("")).collect(Collectors.toList());
 
         Cell lastElement = null;
@@ -141,7 +142,7 @@ public class TableComponent {
             lastElement = tempHeaders.get(tempHeaders.size() -1);
             scrollToHeader(lastElement);
 
-            tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream().map(Cell::new)
+            tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream().map(Cell::createFromWrapper)
                     .filter(cell -> !cell.getText().equals("")).collect(Collectors.toList());
             tempElement = tempHeaders.get(tempHeaders.size() -1);
         }
@@ -170,10 +171,34 @@ public class TableComponent {
     }
 
     public static class Cell {
-        private final WebElement cell;
+        private static final String SELECTED_CLASS = "table-component__cell--selected";
+        private static final String CHECKBOX_COLUMN_ID = "checkbox";
 
-        private Cell(WebElement cell) {
+        private final WebElement cell;
+        private final int index;
+        private final String columnId;
+
+        private static Cell createFromWrapper(WebElement wrapper) {
+            WebElement cell = wrapper.findElement(By.xpath("./div"));
+            int index = CSSUtils.getIntegerValue("data-row", cell);
+            String columnId = cell.getCssValue("data-col");
+            return new Cell(cell, index, columnId);
+        }
+
+        private static Cell createCheckBoxCell(WebElement tableComponent, int index) {
+            return createFromParent(tableComponent, index, CHECKBOX_COLUMN_ID);
+        }
+
+        private static Cell createFromParent(WebElement tableComponent, int index, String columnId) {
+            WebElement cell = tableComponent.findElements(By.xpath(".//div[@data-row='"+index+"' and @data-col='"+columnId+"']"))
+                    .stream().findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + index + " columnId: " + columnId));
+            return new Cell(cell, index, CHECKBOX_COLUMN_ID);
+        }
+
+        private Cell(WebElement cell, int index, String columnId) {
             this.cell = cell;
+            this.index = index;
+            this.columnId = columnId;
         }
 
         public double getWidth() {
@@ -185,7 +210,22 @@ public class TableComponent {
         }
 
         public String getText() {
+            if(isCheckBox()) {
+                if(isSelected()) {
+                    return "true";
+                }
+                return "false";
+            }
             return cell.getText();
+        }
+
+        private boolean isSelected() {
+            List<String> classes = CSSUtils.getAllClasses(cell);
+            return classes.contains(SELECTED_CLASS);
+        }
+
+        private boolean isCheckBox() {
+            return CHECKBOX_COLUMN_ID.equals(columnId);
         }
 
         @Override
@@ -203,16 +243,26 @@ public class TableComponent {
     }
 
     public static class Row implements TableRow {
-        private final WebElement webElement;
+
+        private final WebElement tableComponent;
         private final int index;
 
-        private Row(WebElement webElement, int index) {
-            this.webElement = webElement;
+        private Row(WebElement tableComponent, int index) {
+            this.tableComponent = tableComponent;
             this.index = index;
         }
 
         public void clickRow() {
-            this.webElement.click();
+            WebElement randomCell =
+                    this.tableComponent.findElements(By.xpath(".//div[@data-row='"+this.index+"']")).stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row "+ this.index));
+            randomCell.click();
+        }
+
+        public String getColumnValue(String columnId) {
+            WebElement cell =
+                    this.tableComponent.findElements(By.xpath(".//div[@data-row='"+this.index+"' and @data-col='"+columnId+"']")).stream()
+                            .findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId "+ this.index + " columnId: " + columnId));
+            return cell.getText();
         }
 
         public void selectRow() {
@@ -229,8 +279,8 @@ public class TableComponent {
 
         @Override
         public boolean isSelected() {
-            return this.webElement.findElement(By.xpath("./div"))
-                    .getAttribute("class").contains("selected");
+            Cell checkBox = Cell.createCheckBoxCell(tableComponent, index);
+            return checkBox.isSelected();
         }
 
         @Override
@@ -238,6 +288,8 @@ public class TableComponent {
             return this.index;
         }
     }
+
+
 
 
     public static class CustomScrolls {

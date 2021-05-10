@@ -6,14 +6,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PaginationComponent {
+    private static final String PAGINATION_XPATH = ".//div[contains(@class, 'OSSPagination')]";
+    private static final String PAGE_SIZE_OPTIONS_VALUE_XPATH = ".//div[contains(@class, 'pageSizeOptions')]//span[contains(@class, 'pageSize')]";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement paginationComponent;
 
     public static PaginationComponent createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
-        WebElement paginationComponent = null;
-
+        WebElement paginationComponent = parent.findElement(By.xpath(PAGINATION_XPATH));
         return new PaginationComponent(driver, wait, paginationComponent);
     }
 
@@ -23,15 +24,20 @@ public class PaginationComponent {
         this.paginationComponent = paginationComponent;
     }
 
-    public Integer getStep() {
-        String step = this.paginationComponent.findElement(By.className("pageSize")).getText();
+    public int getStep() {
+        String step = this.paginationComponent.findElement(By.xpath(PAGE_SIZE_OPTIONS_VALUE_XPATH)).getText();
         return Integer.valueOf(step);
     }
 
-    public Integer getCurrentPage() {
+    public int getCurrentPage() {
         WebElement pages = this.paginationComponent.findElement(By.className("pagination"));
         String currentPage = pages.findElement(By.className("active")).getText();
         return Integer.valueOf(currentPage);
+    }
+
+    public int getRowsCount() {
+
+        return 50;
     }
 
 

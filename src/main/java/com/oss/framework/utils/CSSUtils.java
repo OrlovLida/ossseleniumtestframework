@@ -19,7 +19,7 @@ public class CSSUtils {
     public static String HEIGHT_ATTRIBUTE = "height";
     public static String WIDTH_ATTRIBUTE = "width";
     public static String LEFT_ATTRIBUTE = "left";
-    public static String TEST_ID = "data-attributename";
+    public static String TEST_ID = "data-testid";
 
     private static Splitter attributeSplitter = Splitter.on(ATTRIBUTES_SEPARATOR);
     private static Splitter valueSplitter = Splitter.on(VALUE_SEPARATOR);
@@ -62,7 +62,7 @@ public class CSSUtils {
         return getIntegerValue(LEFT_ATTRIBUTE, webElement);
     }
 
-    private static int getIntegerValue(String attributeName, WebElement webElement) {
+    public static int getIntegerValue(String attributeName, WebElement webElement) {
         String value = webElement.getCssValue(attributeName);
         value = value.replaceAll("[^\\d.]", "");
         return Integer.valueOf(value);

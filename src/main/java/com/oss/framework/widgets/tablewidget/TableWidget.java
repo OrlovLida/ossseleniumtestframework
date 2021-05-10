@@ -19,7 +19,6 @@ import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.components.portals.ExpandedTextTooltip;
 import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.table.TableComponent;
@@ -155,9 +154,8 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public String getCellValue(int index, String attributeLabel) {
-        int rowId = index + 1;
-        return getValueFromNthRow(attributeLabel, rowId);
+    public String getCellValue(int rowIndex, String columnId) {
+        return getTableComponent().getCellValue(rowIndex, columnId);
     }
 
     @Override
@@ -171,6 +169,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
+    @Deprecated
     public Map<String, String> getPropertyNamesToValues() {
         // TODO: Remove that method
         throw new RuntimeException("Not implemented for TableWidget");
@@ -399,15 +398,6 @@ public class TableWidget extends Widget implements TableInterface {
     public void resizeColumn(int column, int offset) {
         Actions action = new Actions(this.driver);
         action.dragAndDropBy(getColumnResizeGrips().get(column), offset, 0).perform();
-    }
-
-    @Deprecated
-    private String getValueFromNthRow(String columnLabel, int rowNumber) {
-        int index = getActiveColumnHeaders().indexOf(columnLabel);
-        List<WebElement> valueCells = this.webElement
-                .findElements(By.xpath("(.//div[@id='table-wrapper']/div[@class='TableBody']//div[@class='Row' or @class='Row selected'])["
-                        + rowNumber + "]/div[@class='Cell']/div/div"));
-        return valueCells.get(index).getText();
     }
 
     public static class Column {
