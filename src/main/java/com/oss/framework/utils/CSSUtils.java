@@ -68,6 +68,10 @@ public class CSSUtils {
         return Integer.valueOf(value);
     }
 
+    public static String getAttributeValue(String attributeName, WebElement webElement) {
+        return webElement.getAttribute(attributeName);
+    }
+
     private static double getDecimalValue(String attributeName, WebElement webElement) {
         String value = webElement.getCssValue(attributeName);
         value = value.replaceAll("[^\\d.]", "");

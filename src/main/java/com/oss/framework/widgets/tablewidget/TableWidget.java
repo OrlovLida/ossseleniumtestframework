@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.google.common.collect.Lists;
+import com.google.common.base.Objects;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
@@ -33,15 +33,8 @@ public class TableWidget extends Widget implements TableInterface {
     private static final int REFRESH_INTERVAL = 2000;
     public static final String EXPORT_ACTION_ID = "exportButton";
 
-    private static final String tableRows = ".//div[@class='TableBody']//div[@class='custom-scrollbars']//div[contains(@class, 'Row')]";
-    private static final String columnResizeGrips = ".//div[@class='resizeGrip']";
     private static final String headers = ".//div[@data-rbd-droppable-id='header-container']//div[contains(@class, 'headerItem')]";
-    private static final String gearIcon = ".//div[@id='management-btn']";
-    private static final String horizontalTableScroller =
-            ".//div[contains(@style,'position: relative; display: block; height: 100%; cursor: pointer;')]";
 
-    private static final String verticalTableScroller =
-            ".//div[contains(@style,'position: relative; display: block; width: 100%; cursor: pointer;')]";
     private static final String activePageBtn = ".//li[@class='page active']";
     private static final String rowsCounter = ".//div[@class='rowsCounter']/span[last()]";
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
@@ -87,8 +80,8 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public int getColumnSize(int column) {
-        return getColumns().get(column).getWidth();
+    public int getColumnSize(int columnIndex) {
+        return getTableComponent().getColumnSizeByPosition(columnIndex);
     }
 
     @Override
@@ -149,7 +142,10 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public int getRowNumber(String value, String attributeLabel) {
+    public int getRowNumber(String value, String attributeLabel)
+    {
+        Column x = getColumns().stream().filter(column -> column.getText().equals(attributeLabel)).findFirst().get();
+    getColumns().indexOf(x);
         throw new RuntimeException("Not implemented yet");
     }
 
@@ -183,21 +179,18 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public List<String> getActiveColumnHeaders() {
-        List<Column> reverseOrder = Lists.reverse(getColumns());
-        List<String> reversedColumnsHeaders = reverseOrder.stream().map(Column::getText).collect(Collectors.toList());
-        return Lists.reverse(reversedColumnsHeaders);
+        return getTableComponent().getColumnHeaders();
     }
 
     @Override
-    public void disableColumn(String columnId) {
-        AttributesChooser attributesChooser = getAttributesChooser();
-        // TODO: implement after adding columns ids
+    public void disableColumn(String columnLabel) {
+        getAttributesChooser().disableAttributeByLabel(columnLabel, "")
+                .clickApply();
     }
 
     @Override
     public void disableColumnByLabel(String columnLabel, String... path) {
-        getAttributesChooser()
-                .disableAttributeByLabel(columnLabel, path)
+        getAttributesChooser().disableAttributeByLabel(columnLabel, path)
                 .clickApply();
     }
 
@@ -270,10 +263,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public AttributesChooser getAttributesChooser() {
-        if ((this.webElement.findElements(By.xpath(gearIcon + "[@class = 'open']")).isEmpty())) {
-            this.webElement.findElement(By.xpath(gearIcon)).click();
-        }
-        return AttributesChooser.create(driver, webDriverWait);
+        return getTableComponent().getAttributesChooser();
     }
 
     @Deprecated
@@ -287,23 +277,6 @@ public class TableWidget extends Widget implements TableInterface {
 
     private WebElement getRowsCounter() {
         return this.webElement.findElement(By.xpath(rowsCounter));
-    }
-
-    private List<WebElement> getTableRows() {
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, tableRows);
-        return this.webElement.findElements(By.xpath(tableRows));
-    }
-
-    private WebElement getHorizontalTableScroller() {
-        return this.webElement.findElement(By.xpath(horizontalTableScroller));
-    }
-
-    private WebElement getVerticalTableScroller() {
-        return this.webElement.findElement(By.xpath(verticalTableScroller));
-    }
-
-    private List<WebElement> getColumnResizeGrips() {
-        return this.webElement.findElements(By.xpath(columnResizeGrips));
     }
 
     private WebElement getColumnByLabel(String label) {
@@ -328,7 +301,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public int howManyRowsOnFirstPage() {
-        return driver.findElements(By.xpath(tableRows)).size();
+        return getTableComponent().getVisibleRows().size();
     }
 
     private void selectTableRow(int row) {
@@ -345,7 +318,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Deprecated //use hasNoData()
     public boolean checkIfTableIsEmpty() {
-        return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size() > 0;
+        return getTableComponent().getVisibleRows().size() == 0;
     }
 
     private AdvancedSearch getAdvancedSearch() {
@@ -368,36 +341,21 @@ public class TableWidget extends Widget implements TableInterface {
         input.setSingleStringValue(value);
     }
 
-    public String getAttribute(int rowIndex, String attribute) {
-        return getTableRows().get(rowIndex).getAttribute(attribute);
-    }
-
     public void typeIntoSearch(String text) {
         getAdvancedSearch().fullTextSearch(text);
     }
 
     public void scrollHorizontally(int offset) {
-        getHorizontalTableScroller().click();
-        Actions action = new Actions(this.driver);
-        action.moveToElement(getHorizontalTableScroller()).clickAndHold();
-        action.moveByOffset(offset, 0);
-        action.release();
-        action.perform();
+       getTableComponent().scrollHorizontally(offset);
     }
 
     public void scrollVertically(int offset) {
-        getVerticalTableScroller().click();
-        Actions action = new Actions(this.driver);
-        action.moveToElement(getVerticalTableScroller()).clickAndHold();
-        action.moveByOffset(0, offset);
-        action.release();
-        action.perform();
+        getTableComponent().scrollVertically(offset);
     }
 
     @Override
     public void resizeColumn(int column, int offset) {
-        Actions action = new Actions(this.driver);
-        action.dragAndDropBy(getColumnResizeGrips().get(column), offset, 0).perform();
+        getTableComponent().resizeColumnByPosition(column, offset);
     }
 
     public static class Column {
@@ -422,6 +380,19 @@ public class TableWidget extends Widget implements TableInterface {
 
         private WebElement getWebElement() {
             return webElement;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Column column = (Column) o;
+            return Objects.equal(getText(), column.getText());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(getText());
         }
     }
 
