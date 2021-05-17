@@ -62,10 +62,6 @@ public interface TableInterface {
 
     void callActionByLabel(String groupLabel, String actionLabel);
 
-    @Deprecated
-        //TODO: we can treat kebab menu as a special group, so this method should be removed
-    void clickOnKebabMenu();
-
     void doRefreshWhileNoData(int waitTime, String refreshId);
 
     Multimap<String, String> getAppliedFilters();

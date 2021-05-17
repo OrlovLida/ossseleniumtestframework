@@ -17,14 +17,14 @@ import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.DragAndDrop.DraggableElement;
+import com.oss.framework.utils.DragAndDrop.DropElement;
 import com.oss.framework.widgets.tablewidget.TableRow;
 
 public class TableComponent {
-
-    private static final String columnResizeGrips = ".//div[@class='resizeGrip']";
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div/div";
     private static final String HEADERS2_XPATH = ".//div[@class='sticky-table__header']/div";
-    private static final String gearIcon = ".//i[contains(@class,'fa-cog')]";
 
     private static final String TABLE_COMPONENT_CLASS = "table-component";
 
@@ -51,10 +51,6 @@ public class TableComponent {
         row.selectRow();
     }
 
-    private Row getRow(int index) {
-        return new Row(webElement, index);
-    }
-
     public void unselectRow(int row) {
         getVisibleRows().get(row).unselectRow();
     }
@@ -65,10 +61,6 @@ public class TableComponent {
                 .distinct().map(Integer::parseInt).sorted().collect(Collectors.toList());
 
         return rowIds.stream().map( index -> new Row(this.webElement, index)).collect(Collectors.toList());
-    }
-
-    private CustomScrolls getCustomScrolls() {
-        return CustomScrolls.create(driver, webDriverWait, webElement);
     }
 
     public void scrollHorizontally(int offset){
@@ -107,19 +99,25 @@ public class TableComponent {
     }
 
     public AttributesChooser getAttributesChooser() {
-        //Add click on the chooser
         Actions action = new Actions(this.driver);
         action.click(getColumnsManagement()).perform();
         return AttributesChooser.create(this.driver, this.webDriverWait);
     }
 
-    private WebElement getColumnsManagement() {
-        return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" +"']"));
+    public void changeColumnsOrder(String columnLabel, int position) {
+        List<Header> headers = getHeaders();
+        Header sourceHeader = headers.stream().filter(h->h.getText().equals(columnLabel))
+                .findFirst().orElseThrow( () -> new RuntimeException("Cant find column: " + columnLabel));
+        Header targetHeader = headers.get(position);
+        DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader.getDropElement(), driver);
     }
 
-    private PaginationComponent getPaginationComponent() {
-        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
-        return PaginationComponent.createFromParent(this.driver, this.webDriverWait, webElement);
+    private CustomScrolls getCustomScrolls() {
+        return CustomScrolls.create(driver, webDriverWait, webElement);
+    }
+
+    private WebElement getColumnsManagement() {
+        return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" +"']"));
     }
 
     public List<String> getColumnIds(){
@@ -132,7 +130,18 @@ public class TableComponent {
                 .map(Header::getText).collect(Collectors.toList());
     }
 
+    private PaginationComponent getPaginationComponent() {
+        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+        return PaginationComponent.createFromParent(this.driver, this.webDriverWait, webElement);
+    }
+
+    private Row getRow(int index) {
+        return new Row(webElement, index);
+    }
+
     private List<Header> getHeaders() {
+        scrollToFirstColumn();
+
         List<Header> headers = Lists.newArrayList();
         List<Header> tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream()
                 .map(e -> Header.createFromWrapper(this.driver, this.webDriverWait, this.webElement, e))
@@ -153,6 +162,7 @@ public class TableComponent {
                     .filter(header -> !header.getText().equals("")).collect(Collectors.toList());
             tempElement = tempHeaders.get(tempHeaders.size() -1);
         }
+
         scrollToFirstColumn();
         return headers;
     }
@@ -179,13 +189,9 @@ public class TableComponent {
         scrolls.scrollVertically(scrollWidth.negate().toBigInteger().intValue());
     }
 
-    private List<WebElement> getColumnResizeGrips(){
-        return this.webElement.findElements(By.xpath(columnResizeGrips));
-    }
-
     public static class Header {
         private static String HEADER_CLASS = "table-component__header";
-        private static String RESIZE_XPATH = ".//div[@data-testid='col-%s-resizer']";
+        private static String RESIZE_XPATH = ".//div[[@" + CSSUtils.TEST_ID + "='col-%s-resizer']";
 
         private final WebElement tableComponent;
         private final String columnId;
@@ -247,6 +253,17 @@ public class TableComponent {
 
         public int getLeft() {
             return CSSUtils.getLeftValue(getHeader(tableComponent, columnId).findElement(By.xpath("./..")));
+        }
+
+        public DropElement getDropElement() {
+            return new DropElement(getHeader(tableComponent, columnId));
+        }
+
+        public DraggableElement getDragElement() {
+            WebElement header = getHeader(tableComponent, columnId);
+            WebElement dragButton = header.findElement(By.xpath(".//div[@ "+ CSSUtils.TEST_ID + "='col-"+columnId+"-drag']"));
+
+            return new DraggableElement(dragButton);
         }
 
         @Override
@@ -351,7 +368,8 @@ public class TableComponent {
 
         public void clickRow() {
             WebElement randomCell =
-                    this.tableComponent.findElements(By.xpath(".//div[@data-row='"+this.index+"']")).stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row "+ this.index));
+                    this.tableComponent.findElements(By.xpath(".//div[@data-row='"+this.index+"']"))
+                            .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row "+ this.index));
             randomCell.click();
         }
 
@@ -423,19 +441,5 @@ public class TableComponent {
         public int getVerticalScrollWidth() {
             return 1610;
         }
-
-        public void getHorizontalScrollSize() {
-
-        }
-
-        public void getVerticalScrollSize() {
-
-        }
-
-        public int getHorizontalScrollPosition() {
-            return 0;
-        }
-
-
     }
 }
