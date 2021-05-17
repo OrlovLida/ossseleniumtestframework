@@ -3,7 +3,6 @@ package com.oss.framework.widgets.propertypanel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -150,7 +149,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         } else {
             return "";
         }
-
+        
     }
     
     // configuration
