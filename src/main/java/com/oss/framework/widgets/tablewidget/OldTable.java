@@ -347,7 +347,7 @@ public class OldTable implements TableInterface {
 
     private ActionsInterface getActionsInterface() {
         DelayUtils.waitForNestedElements(wait, window, CONTEXT_ACTIONS_CONTAINER);
-        boolean isNewActionContainer = isElementPresent(driver, By.className("actionsContainer"));
+        boolean isNewActionContainer = isElementPresent(window, By.className("actionsContainer"));
         if (isNewActionContainer) {
             return ActionsContainer.createFromParent(window, driver, wait);
         } else {
@@ -355,9 +355,9 @@ public class OldTable implements TableInterface {
         }
     }
 
-    private static boolean isElementPresent(WebDriver driver, By by) {
+    private static boolean isElementPresent(WebElement window, By by) {
         try {
-            driver.findElement(by);
+            window.findElement(by);
             return true;
         } catch (NoSuchElementException e) {
             return false;

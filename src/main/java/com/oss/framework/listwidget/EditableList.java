@@ -31,7 +31,7 @@ public class EditableList extends Widget {
     
     private static final String LIST_WIDGET_CLASS = "ExtendedList";
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
-    private static final String XPATH_ROWS_OF_LIST = "//li[contains(@class,'editableListElement')]";
+    private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
     
     public static EditableList create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]"));
@@ -123,6 +123,12 @@ public class EditableList extends Widget {
         
     }
     
+    public boolean isNoData() {
+        List<WebElement> noData = this.driver
+                .findElements(By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]"));
+        return !noData.isEmpty();
+    }
+    
     public static class Row {
         
         private final WebDriver driver;
@@ -166,8 +172,14 @@ public class EditableList extends Widget {
         }
         
         public boolean isEditableAttribute(String columnId) {
-            return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
-                    .contains("editable");
+            if (columnId.contains(String.valueOf(index))) {
+                return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
+                        .contains("editable");
+            } else {
+                return webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']"))
+                        .getAttribute("class").contains("editable");
+            }
+            
         }
         
         public void callActionIcon(String ariaLabel) {
