@@ -301,7 +301,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     private List<WebElement> getTableRows() {
         DelayUtils.waitForNestedElements(webDriverWait, webElement, tableRows);
-        return this.webElement.findElements(By.xpath(tableRows));
+        return webElement.findElements(By.xpath(tableRows));
     }
 
     private WebElement getHorizontalTableScroller() {
