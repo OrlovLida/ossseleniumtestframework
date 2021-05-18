@@ -40,7 +40,7 @@ public class OldTable implements TableInterface {
     private static final String FIND_BY_PARTIAL_NAME_AND_INDEX_PATTERN =
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
     private static final String TABLE_COMPONENT = ".//div[contains(@class, 'OSSTableComponent')]";
-    private static final String COLUMNS_WITHOUT_CHECKBOX = ".//div[contains(@class,'OSSTableColumn') and not(@data-order='-1')]";
+    private static final String COLUMNS_WITHOUT_CHECKBOX = ".//div[contains(@class,'OSSTableColumn') and not(contains(@class,'Col_SELECTION'))]";
     private static final String CONTEXT_ACTIONS_CONTAINER = "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']";
     private static final String INPUT = ".//input";
     private static final String HEADER = ".//div[contains(@class, 'Header')]";
