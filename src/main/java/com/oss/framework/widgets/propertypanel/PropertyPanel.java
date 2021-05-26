@@ -83,7 +83,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         List<String> propertyLabels = getPropertyLabels();
         return propertyLabels.get(n - 1);
     }
-    public List<String> getPropertyId(){
+    public List<String> getPropertyAttributeId(){
         List<String> propertyId = new ArrayList<String>();
         for (WebElement element: getProperties()){
              propertyId.add(element.getAttribute("id"));
