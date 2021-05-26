@@ -2,11 +2,14 @@ package com.oss.framework.components.contextactions;
 
 import java.util.List;
 
+import javax.swing.*;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -21,7 +24,7 @@ public class ActionsContainer implements ActionsInterface {
     public static final String MORE_GROUP_ID = "moreActions";
 
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";
-    private static final String KEBAB_BUTTON_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
+    private static final String KEBAB_BUTTON_XPATH = ".//div[@id='frameworkCustomButtonsGroup'] | .//div[@id='frameworkObjectButtonsGroup']";
 
     private final WebElement webElement;
     private final WebDriver webDriver;
