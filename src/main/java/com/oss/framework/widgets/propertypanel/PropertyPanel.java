@@ -33,7 +33,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public static final String PROPERTIES_FILTER_PANEL_CLASS = "settings-toggle";
     public static final String SWITCHER_CONTENT_CLASS = "switcher-content";
     
-    private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow')]";
+    private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow row')]";
     private static final String PROPERTY_NAME_PATH = ".//div[@class='propertyPanelRow-label']";
     private static final String PROPERTY_VALUE_PATH =
             ".//div[@class='propertyPanelRow-value']";
@@ -78,10 +78,17 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         }
         return labels;
     }
-    
+    @Deprecated
     public String getNthPropertyLabel(int n) {
         List<String> propertyLabels = getPropertyLabels();
         return propertyLabels.get(n - 1);
+    }
+    public List<String> getPropertyId(){
+        List<String> propertyId = new ArrayList<String>();
+        for (WebElement element: getProperties()){
+             propertyId.add(element.getAttribute("id"));
+        }
+        return propertyId;
     }
     
     private Map<String, WebElement> getPropertiesMap() {
@@ -149,7 +156,11 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         } else {
             return "";
         }
-        
+    }
+    
+    public void fullTextSearch(String value) {
+        Search search = new Search(driver, webDriverWait, webElement);
+        search.fullTextSearch(value);
     }
     
     // configuration
@@ -178,5 +189,26 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         ActionsContainer actionsContainer = ActionsContainer.createFromParent(parentElement, this.driver, this.webDriverWait);
         actionsContainer.callAction(ActionsContainer.KEBAB_GROUP_ID, "propertyPanelSave");
         return SaveConfigurationWizard.create(driver, this.webDriverWait);
+    }
+    
+    public static class Search {
+        final WebDriver driver;
+        final WebDriverWait webDriverWait;
+        final WebElement webElement;
+        
+        private Search(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
+            this.driver = driver;
+            this.webDriverWait = webDriverWait;
+            this.webElement = webElement;
+        }
+        
+        private WebElement createSearch() {
+            WebElement search = webElement.findElement(By.xpath("./../.."));
+            return search.findElement(By.xpath(".//input"));
+        }
+        
+        private void fullTextSearch(String value) {
+            createSearch().sendKeys(value);
+        }
     }
 }
