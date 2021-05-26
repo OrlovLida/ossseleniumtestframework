@@ -10,9 +10,13 @@ public class CategoryPopup extends PopupV2 {
 
     private static final String NAME_FIELD_ID_IN_CATEGORY_POPUP = "category-popup--input1";
     private static final String DESCRIPTION_FIELD_ID_IN_CATEGORY_POPUP = "category-popup--input2";
-    private static final String SECOND_ICON_FULL_XPATH = "/html/body/div[8]/div/div/div[2]/div/div[1]/div/div[4]/div/span[2]";
-    private static final String FIRST_ICON_FULL_XPATH = "/html/body/div[8]/div/div/div[2]/div/div[1]/div/div[4]/div/span[1]";
-    private static final String SAVE_BUTTON_FULL_XPATH = "/html/body/div[8]/div/div/div[2]/div/div[1]/div/div[5]/a[2]";
+    private static final String ADMINISTRATION_PANEL_ICON_FULL_XPATH = "//div[@class='popupBackground']//i[@class='OSSIcon ossfont-Administration-Panel']";
+    private static final String ANTENNA_ICON_FULL_XPATH = "//div[@class='popupBackground']//i[@class='OSSIcon ossfont-Antenna']";
+    private static final String AI_CONTROL_DESK_ICON_FULL_XPATH = "//div[@class='popupBackground']//i[@class='OSSIcon ossfont-AI-Control-Desk']";
+    private static final String ASSET_MANAGEMENT_ICON_FULL_XPATH = "//div[@class='popupBackground']//i[@class='OSSIcon ossfont-Asset-Management']";
+    private static final String SAVE_BUTTON_FULL_XPATH = "//div[@class='popupBackground']//a[@class='CommonButton btn btn-primary btn-md']";
+    private static final String ICONS_CLASS = "icons-chooser__icons";
+    private static final String ANTENNA_ICON = "OSSIcon ossfont-Antenna";
 
     public CategoryPopup(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
@@ -34,14 +38,24 @@ public class CategoryPopup extends PopupV2 {
         deleteComponentValue(DESCRIPTION_FIELD_ID_IN_CATEGORY_POPUP, Input.ComponentType.TEXT_AREA);
     }
 
-    public void clickOnFirstIcon() {
+    public void clickOnAntennaIcon() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        driver.findElement(By.xpath(FIRST_ICON_FULL_XPATH)).click();
+        driver.findElement(By.xpath(ANTENNA_ICON_FULL_XPATH)).click();
     }
 
-    public void clickOnSecondIcon() {
+    public void clickOnAdministrationPanelIcon() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        driver.findElement(By.xpath(SECOND_ICON_FULL_XPATH)).click();
+        driver.findElement(By.xpath(ADMINISTRATION_PANEL_ICON_FULL_XPATH)).click();
+    }
+
+    public void clickOnAIControlDeskIcon() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        driver.findElement(By.xpath(AI_CONTROL_DESK_ICON_FULL_XPATH)).click();
+    }
+
+    public void clickOnAssetManagementIcon() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        driver.findElement(By.xpath(ASSET_MANAGEMENT_ICON_FULL_XPATH)).click();
     }
 
     public void clickOnSaveButton() {
