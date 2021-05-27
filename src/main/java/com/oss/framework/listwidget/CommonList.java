@@ -82,32 +82,24 @@ public class CommonList {
     public void deleteAllListElements() {
         DelayUtils.waitForPageToLoad(driver, wait);
         expandAllCategories();
-        int rowSize = createRows().size();
         List<Row> rows = createRows();
-        for (int index = 0; index < rowSize; index++) {
+       // int rowSize = rows.size();
+        for (Row row : rows) {
             DelayUtils.waitForPageToLoad(driver, wait);
-            rows.get(index).callAction(ActionsContainer.KEBAB_GROUP_ID, "remove_action");
+            row.callAction(ActionsContainer.KEBAB_GROUP_ID, REMOVE_ACTION_ID);
             DelayUtils.waitForPageToLoad(driver, wait);
-            
         }
     }
     
     public void deleteAllCategories() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        List<Category> categories = createCategories();
-        for (Category category: categories) {
-            DelayUtils.waitForPageToLoad(driver, wait);
-            category.callAction(ActionsContainer.KEBAB_GROUP_ID, "remove_action");
-        }
+        createCategories().forEach(category -> category.callAction(ActionsContainer.KEBAB_GROUP_ID, REMOVE_ACTION_ID));
     }
     
     public void expandAllCategories() {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<Category> categories = createCategories();
-        for (Category category: categories) {
-            category.expandCategory();
-            DelayUtils.waitForPageToLoad(driver, wait);
-        }
+       categories.forEach(Category::expandCategory);
     }
     
     public void collapseAllCategories() {
@@ -152,10 +144,6 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         DelayUtils.waitForVisibility(wait, getListElementByName(name));
         return getFavoriteButtonByListElementName(name).findElements(By.xpath(FAVORITE_ICON_XPATH)).size() == 0;
-    }
-    
-    public boolean isFavorite(String attributeName, String value) {
-        return getRow(attributeName, value).isFavorite();
     }
     
     public int howManyListElements() {
@@ -386,6 +374,7 @@ public class CommonList {
             if (category.findElements(By.xpath(".//i[contains(@class,'chevron-up')]")).isEmpty()) {
                 actions.moveToElement(category.findElement(By.xpath(".//i[contains(@class,'chevron-down')]"))).click().build().perform();
             }
+            DelayUtils.waitForPageToLoad(driver,wait);
         }
         
         public void selectCategory() {
