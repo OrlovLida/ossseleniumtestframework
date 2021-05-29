@@ -30,7 +30,7 @@ public class CommonList {
     private static final String EDIT_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Edit')]";
     private static final String DELETE_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Delete')]";
     private static final String CATEGORY_XPATH = "//div[@class='categoryLabel-text']";
-    private static final String TEXT_WRAPPER_XPATH = ".//div[@class='text-wrapper']";
+    private static final String TEXT_WRAPPER_XPATH = ".//span[@class='long-text__wrapper']";
     private static final String ANCESTOR_LIST_ELEMENT_XPATH = "/ancestor::li[@class='listElement']";
     private static final String TEXT_EQUALS_XPATH = "[text()='%s']";
     private static final String TEXT_CONTAINS_XPATH = "[contains(text(),'%s')]";
