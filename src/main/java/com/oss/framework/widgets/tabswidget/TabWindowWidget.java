@@ -2,6 +2,7 @@ package com.oss.framework.widgets.tabswidget;
 
 import java.util.List;
 
+import com.oss.framework.components.contextactions.OldActionsContainer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -55,26 +56,37 @@ public class TabWindowWidget implements TabsInterface {
     
     @Override
     public void callActionByLabel(String label) {
-        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.tabs, driver, wait);
-        actionsContainer.callActionByLabel(label);
+        getActionsInterface().callActionByLabel(label);
     }
-    
+
     @Override
     public void callActionById(String id) {
-        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.tabs, driver, wait);
-        actionsContainer.callActionById(id);
+        getActionsInterface().callActionById(id);
     }
     
     @Override
     public void callActionByLabel(String groupLabel, String label) {
-        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.tabs, driver, wait);
-        actionsContainer.callActionByLabel(groupLabel, label);
+        getActionsInterface().callActionByLabel(groupLabel, label);
     }
     
     @Override
     public void callActionById(String groupLabel, String id) {
-        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.tabs, driver, wait);
-        actionsContainer.callActionById(groupLabel, id);
+        getActionsInterface().callActionById(groupLabel, id);
+    }
+
+    private ActionsInterface getActionsInterface() {
+        DelayUtils.waitForNestedElements(wait, this.tabs,
+                "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']");
+        boolean isNewActionContainer = isElementPresent(driver, By.className("actionsContainer"));
+        if (isNewActionContainer) {
+            return ActionsContainer.createFromParent(this.tabs, driver, wait);
+        } else {
+            return OldActionsContainer.createFromParent(driver, wait, this.tabs);
+        }
+    }
+
+    private boolean isElementPresent(WebDriver driver, By by) {
+        return !driver.findElements(by).isEmpty();
     }
     
     @Override

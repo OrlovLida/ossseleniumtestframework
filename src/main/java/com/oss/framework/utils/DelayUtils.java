@@ -1,14 +1,14 @@
 package com.oss.framework.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DelayUtils {
     public static int HUMAN_REACTION_MS = 250;
@@ -49,6 +49,10 @@ public class DelayUtils {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOf(webelement));
     }
 
+    public static void waitForPresence(WebDriverWait wait, By locator){
+        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
     public static void waitForPresenceAndVisibility(WebDriverWait wait, By locator) {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
@@ -73,7 +77,7 @@ public class DelayUtils {
         DelayUtils.sleep(1000);
         List<WebElement> spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
         List<WebElement> loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
-        List<WebElement> appPreloader = driver.findElements(By.xpath("//div[contains(@class,'appPreloader')]"));
+        List<WebElement> appPreloader = driver.findElements(By.xpath("//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
         List<WebElement> preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
         List<WebElement> newList = new ArrayList<>(spinners);
         newList.addAll(loadBars);
@@ -84,7 +88,7 @@ public class DelayUtils {
             wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
             spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
             loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
-            appPreloader = driver.findElements(By.xpath("//div[contains(@class,'appPreloader')]"));
+            appPreloader = driver.findElements(By.xpath("//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
             preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
             newList = new ArrayList<>(spinners);
             newList.addAll(loadBars);
@@ -94,33 +98,6 @@ public class DelayUtils {
         if ((System.currentTimeMillis() - startTime) > 120000) {
             System.out.println("Page did not load for a two minutes!");
         }
-    }
-
-    public static void waitForPageToLoadWithoutAppPreloader(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.sleep(1500);
-        List<WebElement> spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
-        List<WebElement> loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
-        List<WebElement> preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
-        List<WebElement> newList = new ArrayList<>(spinners);
-        newList.addAll(loadBars);
-        newList.addAll(preloaderWrapper);
-        long startTime = System.currentTimeMillis();
-        while ((newList.size() > 0) && ((System.currentTimeMillis() - startTime) < 120000)) {
-            wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
-            spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
-            loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
-            preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
-            newList = new ArrayList<>(spinners);
-            newList.addAll(loadBars);
-            newList.addAll(preloaderWrapper);
-        }
-        if ((System.currentTimeMillis() - startTime) > 120000) {
-            System.out.println("Page did not load for a two minutes!");
-        }
-    }
-
-    public static void waitForComponent(WebDriverWait wait, String xpath) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
     }
 
 }

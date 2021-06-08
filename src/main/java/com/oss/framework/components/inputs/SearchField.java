@@ -10,7 +10,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.LocatingUtils;
 
 public class SearchField extends Input {
 
@@ -46,7 +45,7 @@ public class SearchField extends Input {
     }
 
     public void chooseFirstResult(Data value) {
-        LocatingUtils.waitUsingXpath(searchFirstResultXpath(value.getStringValue()), webDriverWait);
+        DelayUtils.waitByXPath(webDriverWait, searchFirstResultXpath(value.getStringValue()));
         webElement.findElement(By.xpath(searchFirstResultXpath(value.getStringValue()))).click();
     }
 
@@ -64,6 +63,7 @@ public class SearchField extends Input {
     public void setValueContains(Data value) {
         webElement.click();
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
     }
@@ -76,7 +76,8 @@ public class SearchField extends Input {
     @Override
     public void clear() {
         WebElement input = webElement.findElement(By.xpath(".//input"));
-        input.clear();
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
     }
 
     @Override

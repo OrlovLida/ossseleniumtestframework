@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.data.Data;
@@ -29,6 +30,8 @@ public class TextField extends Input {
     @Override
     public void setValue(Data value) {
         WebElement input = webElement.findElement(By.xpath(".//input"));
+        Actions action = new Actions(driver);
+        action.moveToElement(input).build().perform();
         clear();
         input.sendKeys(value.getStringValue());
     }
@@ -37,7 +40,8 @@ public class TextField extends Input {
     public void setValueContains(Data value) {
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.clear();
-        input.click(); //before click element is not reachable by keyboard and after the click element is refreshed
+        Actions action = new Actions(driver);
+        action.moveToElement(input).click().build().perform();; //before click element is not reachable by keyboard and after the click element is refreshed
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
     }
 
