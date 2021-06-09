@@ -272,7 +272,7 @@ public class TreeWidget extends Widget {
 
     public void callActionById(String groupLabel, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
-        actionsContainer.callActionById(groupLabel, id);
+        actionsContainer.callAction(groupLabel, id);
     }
 
     private static class Node {
