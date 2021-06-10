@@ -75,6 +75,7 @@ public class TabsWidget implements TabsInterface {
     }
     
     public Widget getWidget(String widgetId, WidgetType widgetType) {
+
         return WidgetFactory.getWidget(widgetId, widgetType, driver, webDriverWait);
     }
     

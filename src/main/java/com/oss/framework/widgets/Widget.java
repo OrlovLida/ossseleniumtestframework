@@ -47,12 +47,20 @@ public abstract class Widget {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
     }
 
-    public Widget(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
+    public Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + dataAttributeName + "']"));
+        this.webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + widgetId + "']"));
         this.webDriverWait = webDriverWait;
-        this.id = dataAttributeName;
+        this.id = widgetId;
     }
+
+    public Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
+        this.driver = driver;
+        this.webElement = widget;
+        this.webDriverWait = webDriverWait;
+        this.id = widgetId;
+    }
+
 
     protected WebElement refreshWidgetByID() {
         if(this.id == null) {
