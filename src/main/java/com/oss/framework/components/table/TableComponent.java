@@ -51,6 +51,11 @@ public class TableComponent {
         row.selectRow();
     }
 
+    public void selectAll(){
+       Cell cell = Cell.createCheckBoxCell(webElement, 0);
+       cell.click();
+    }
+
     public void unselectRow(int row) {
         getVisibleRows().get(row).unselectRow();
     }
@@ -331,6 +336,10 @@ public class TableComponent {
                 return "false";
             }
             return cell.getText();
+        }
+
+        public void click() {
+            cell.click();
         }
 
         private boolean isSelected() {

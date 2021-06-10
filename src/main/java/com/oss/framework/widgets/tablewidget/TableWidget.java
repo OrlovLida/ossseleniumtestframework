@@ -30,7 +30,6 @@ public class TableWidget extends Widget implements TableInterface {
     public static final String EXPORT_ACTION_ID = "exportButton";
 
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
-    private static final String selectAllCheckbox = ".//input[@id='checkbox-checkbox']";
 
     private AdvancedSearch advancedSearch;
 
@@ -236,7 +235,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public void selectAllRows() {
-        this.webElement.findElement(By.xpath(selectAllCheckbox)).click();
+        getTableComponent().selectAll();
     }
 
     public void unselectTableRow(int row) {
