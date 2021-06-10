@@ -196,7 +196,7 @@ public class TableComponent {
 
     public static class Header {
         private static String HEADER_CLASS = "table-component__header";
-        private static String RESIZE_XPATH = ".//div[[@" + CSSUtils.TEST_ID + "='col-%s-resizer']";
+        private static String RESIZE_XPATH = ".//div[@" + CSSUtils.TEST_ID + "='col-%s-resizer']";
 
         private final WebElement tableComponent;
         private final String columnId;
