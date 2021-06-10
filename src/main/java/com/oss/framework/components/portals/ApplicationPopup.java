@@ -6,14 +6,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class AddApplicationPopup extends PopupV2 {
+public class ApplicationPopup extends PopupV2 {
 
     private static final String APPLICATION_INPUT_ID = "application-input";
     private static final String NAME_TEXT_FIELD_ID = "name";
     private static final String DESCRIPTION_TEXT_AREA_ID = "description";
     private static final String SAVE_BUTTON_FULL_XPATH = "//div[@class='popupBackground']//a[@class='CommonButton btn btn-primary btn-md']";
 
-    public AddApplicationPopup(WebDriver driver, WebDriverWait wait) {
+    public ApplicationPopup(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
 
