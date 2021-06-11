@@ -45,8 +45,8 @@ public class AdvancedSearch {
 
     //change id to data-attributeName after adding this attribute in web
     public static AdvancedSearch createById(WebDriver driver, WebDriverWait wait, String id) {
-        DelayUtils.waitByXPath(wait, "//*[@id='" + id + "']");
-        WebElement webElement = driver.findElement(By.xpath("//*[@id='" + id + "']"));
+        DelayUtils.waitByXPath(wait, "//*[@"+ CSSUtils.TEST_ID +"='" + id + "']");
+        WebElement webElement = driver.findElement(By.xpath("//*[@"+ CSSUtils.TEST_ID +"='" + id + "']"));
         return new AdvancedSearch(driver, wait, webElement);
     }
 
@@ -63,6 +63,7 @@ public class AdvancedSearch {
     }
 
     public void fullTextSearch(String text) {
+       clearFullText();
         getFullTextSearch().sendKeys(text);
     }
 
