@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.prompts.ConfirmationBox;
 import com.oss.framework.prompts.ConfirmationBoxInterface;
 import com.oss.framework.utils.CSSUtils;
@@ -25,6 +26,7 @@ public class LoginPanel {
     private WebDriverWait wait;
     private final static String LANGUAGE_CHOOSER = "language-chooser";
     private final static String LOGIN_BUTTON_ID = "logout-button";
+    private final static String ALPHA_MODE_SWITCHER = "alpha-mode-switcher";
 
     public static LoginPanel create(WebDriver driver, WebDriverWait wait) {
         return new LoginPanel(driver, wait);
@@ -54,6 +56,15 @@ public class LoginPanel {
         ToolbarWidget.create(driver, wait).openLoginPanel();
         DelayUtils.waitByXPath(wait, "//button[contains (@"+ CSSUtils.TEST_ID +", " + LOGIN_BUTTON_ID + ")]");
         return this;
+    }
+
+    public void switchToAlphaMode() {
+        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
+        toolbar.openLoginPanel();
+        Input input = ComponentFactory.create(ALPHA_MODE_SWITCHER, ComponentType.SWITCHER, driver, wait);
+        input.setSingleStringValue("true");
+        DelayUtils.waitForPageToLoad(driver, wait);
+
     }
 
     public void logOut() {

@@ -233,12 +233,6 @@ public class OldTable implements TableInterface {
     }
 
     @Override
-    public void clickOnKebabMenu() {
-        WebElement foundedElement = table.findElement(By.xpath(kebabMenuBtn));
-        foundedElement.click();
-    }
-
-    @Override
     public void doRefreshWhileNoData(int waitTime, String refreshId) {
         if (widgetId == null) {
             throw new RuntimeException("widgetId property is missing");

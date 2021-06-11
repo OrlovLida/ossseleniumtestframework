@@ -203,7 +203,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         }
         
         private WebElement createSearch() {
-            WebElement search = webElement.findElement(By.xpath("./../.."));
+            WebElement search = webElement.findElement(By.xpath("//ancestor::div[@" + CSSUtils.TEST_ID + "='PropertyPanelWidget-search']"));
             return search.findElement(By.xpath(".//input"));
         }
         

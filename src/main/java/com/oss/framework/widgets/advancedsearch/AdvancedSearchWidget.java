@@ -44,6 +44,7 @@ public class AdvancedSearchWidget {
         return getSearchPanel().getComponent(componentId, componentType);
     }
 
+    //TODO: use table component instead of table widget
     public TableWidget getTableWidget() {
         Widget.waitForWidget(wait, "right-side");
         return TableWidget.create(driver, "right-side", wait);
