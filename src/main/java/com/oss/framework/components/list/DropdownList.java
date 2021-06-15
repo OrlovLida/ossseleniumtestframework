@@ -63,9 +63,4 @@ public class DropdownList {
         DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), driver);
     }
 
-    public int sizeDropdownList(){
-        return dropdownList.findElements(By.xpath(DRAGGABLE_ELEMENT_XPATH)).size();
-
-    }
-    
 }
