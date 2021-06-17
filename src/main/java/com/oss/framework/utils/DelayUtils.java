@@ -5,12 +5,16 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DelayUtils {
+    private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
     public static int HUMAN_REACTION_MS = 250;
 
     public static void sleep() {
@@ -85,7 +89,11 @@ public class DelayUtils {
         newList.addAll(preloaderWrapper);
         long startTime = System.currentTimeMillis();
         while ((newList.size() > 0) && ((System.currentTimeMillis() - startTime) < 120000)) {
-            wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
+            try {
+                wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
+            }catch (TimeoutException e){
+                log.warn("Some element(s) could not be loaded in the expected time");
+            }
             spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
             loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
             appPreloader = driver.findElements(By.xpath("//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
@@ -96,7 +104,7 @@ public class DelayUtils {
             newList.addAll(preloaderWrapper);
         }
         if ((System.currentTimeMillis() - startTime) > 120000) {
-            System.out.println("Page did not load for a two minutes!");
+            log.warn("Page did not load for a two minutes!");
         }
     }
 
