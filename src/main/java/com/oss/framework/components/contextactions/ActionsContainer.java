@@ -119,12 +119,7 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private static boolean isElementPresent(WebElement webElement, By by) {
-        try {
-            webElement.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return !webElement.findElements(by).isEmpty();
     }
 
     private void clickOnAction(String actionId) {
