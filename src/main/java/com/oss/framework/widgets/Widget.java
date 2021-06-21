@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
@@ -78,6 +79,9 @@ public abstract class Widget {
         DelayUtils.waitForBy(webDriverWait, By.xpath(searchInput));
         return this.webElement.findElement(By.xpath(searchInput));
     }
+    public void fullSearchText (String text) {
+        AdvancedSearch.createById(driver, webDriverWait,webElement.getAttribute(CSSUtils.TEST_ID)).fullTextSearch(text);
+    }
 
     //TODO: create wrapper for actions
     private WebElement getAction(String actionId) {
@@ -90,7 +94,7 @@ public abstract class Widget {
 
     //TODO: rewrite method
     public Boolean isActionDisplayed(String expectedAction) {
-        Boolean result = false;
+        boolean result = false;
         DelayUtils.waitForBy(webDriverWait, By.xpath(".//div[@id='CREATE']/div"));
         for (WebElement e : getActions()) {
             if (e.getAttribute("id").equals(expectedAction)) {
