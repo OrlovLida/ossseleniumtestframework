@@ -70,6 +70,9 @@ public class ComponentFactory {
         case RADIO_BUTTON: {
             return RadioButton.create(webDriver, wait, componentId);
         }
+        case SCRIPT_COMPONENT: {
+            return ScriptComponent.create(webDriver, wait, componentId);
+        }
         }
         
         throw new RuntimeException("Not supported component type: " + componentType);
@@ -130,6 +133,9 @@ public class ComponentFactory {
         }
         case TIME: {
             return Time.create(parent, webDriver, wait, componentId);
+        }
+        case SCRIPT_COMPONENT: {
+                return ScriptComponent.create(parent, webDriver, wait, componentId);
         }
         }
         
