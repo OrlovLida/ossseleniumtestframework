@@ -27,7 +27,7 @@ public abstract class Input {
         DATE_TIME_RANGE, DATE_TIME, TIME, CHECKBOX, DATE,
         SWITCHER, SEARCH_FIELD, MULTI_SEARCH_FIELD, COMBOBOX, COMBOBOXV2,
         MULTI_COMBOBOX, FILE_CHOOSER, COORDINATES, PHONE_FIELD,
-        RADIO_BUTTON
+        RADIO_BUTTON, SCRIPT_COMPONENT
     }
     
     static String createComponentPath(String componentId) {
