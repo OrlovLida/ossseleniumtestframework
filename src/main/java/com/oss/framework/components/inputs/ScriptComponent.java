@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ScriptComponent extends Input {
 
-    private static String XPATH = ".//pre";
+    private static String XPATH = ".//div[@class='CodeMirror-code']";
 
     static ScriptComponent create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new ScriptComponent(driver, wait, componentId);
@@ -54,10 +54,14 @@ public class ScriptComponent extends Input {
     public void clear() {
         WebElement input = webElement.findElement(By.xpath(XPATH));
         Actions action = new Actions(driver);
-        String ctrPlusA = Keys.chord(Keys.CONTROL, "a");
-        action.moveToElement(input).click()
-                .sendKeys(ctrPlusA)
+        action.moveToElement(input)
+                .click()
+                .keyDown(Keys.CONTROL)
+                .sendKeys("a")
+                .keyUp(Keys.CONTROL)
                 .sendKeys(Keys.DELETE)
+                .build()
                 .perform();
+
     }
 }
