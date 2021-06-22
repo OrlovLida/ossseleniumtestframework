@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -238,7 +237,6 @@ public class TableComponent {
         public void resize(int offset) {
             WebElement resize = getHeader(tableComponent, columnId).findElement(By.xpath(getResizeXpath()));
             Actions action = new Actions(this.driver);
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", resize);
             action.dragAndDropBy(resize, offset,0).perform();
         }
 
