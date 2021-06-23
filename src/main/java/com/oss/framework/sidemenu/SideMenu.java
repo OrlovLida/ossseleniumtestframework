@@ -22,7 +22,7 @@ import com.oss.framework.utils.DelayUtils;
 public class SideMenu {
 
     private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menu__item-label' and text()='%s']";
-    private static final String SIDE_MENU_CLASS = "sideMenu";
+    private static final String SIDE_MENU_CLASS = ".//div[@class='sideMenu'] | .//div[@class='sideMenu alpha-mode']";
     private final WebDriver driver;
     private final WebDriverWait wait;
 
@@ -36,7 +36,9 @@ public class SideMenu {
     }
 
     private WebElement getSideMenu() {
-        return driver.findElement(By.className(SIDE_MENU_CLASS));
+        DelayUtils.waitByXPath(wait, SIDE_MENU_CLASS);
+        return driver.findElement(By.xpath(SIDE_MENU_CLASS));
+
     }
 
     public void callActionByLabel(String actionLabel, String... path) {
