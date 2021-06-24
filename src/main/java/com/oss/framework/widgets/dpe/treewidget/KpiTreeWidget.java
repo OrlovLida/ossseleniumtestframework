@@ -56,7 +56,7 @@ public class KpiTreeWidget extends Widget {
         return findElementByXpath(this.webElement, "//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']");
     }
 
-    private void selectExpandedObjects(List<String> objectNames){
+    public void selectExpandedObjects(List<String> objectNames){
         for(String objectName: objectNames){
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             selectNode(objectName);

@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
@@ -48,8 +49,10 @@ public class KpiToolbarPanel extends Widget {
     }
 
     public void clickApply(){
-        DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]"));
-        WebElement applyButton = findElementByXpath(this.webElement, "//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]");
+//        DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]"));
+       DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//button[@"+ CSSUtils.TEST_ID +"='" + "apply-button" + "']"));
+//        WebElement applyButton = findElementByXpath(this.webElement, "//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]");
+        WebElement applyButton = findElementByXpath(this.webElement, "//button[@"+ CSSUtils.TEST_ID +"='" + "apply-button" + "']");
         DelayUtils.waitForClickability(webDriverWait, applyButton);
         DelayUtils.sleep(5000);
 
