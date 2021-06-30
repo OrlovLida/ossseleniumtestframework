@@ -1,18 +1,16 @@
 package com.oss.framework.components.inputs;
 
+import com.oss.framework.data.Data;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
-import com.oss.framework.data.Data;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class MultiCombobox extends Input {
-
-
 
     static MultiCombobox create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new MultiCombobox(driver, wait, componentId);
@@ -64,6 +62,10 @@ public class MultiCombobox extends Input {
     @Override
     public void clear() {
         webElement.findElement(By.xpath(createDropdownSearchInputPath())).clear();
+    }
+
+    public void clickClearValue() {
+        webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + componentId + "-input']//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]")).click();
     }
 
     private String createDropdownSearchInputPath() {
