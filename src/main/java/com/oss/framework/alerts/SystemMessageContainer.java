@@ -74,7 +74,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     private Message toMessage(WebElement messageItem) {
-        String text = messageItem.findElement(By.xpath(".//p")).getText();
+        String text = messageItem.findElement(By.xpath(".//p | .//a")).getText();
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);
         return new Message(text, mapToMassageType(allClasses));
     }
