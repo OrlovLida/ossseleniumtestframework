@@ -61,10 +61,6 @@ public class MultiCombobox extends Input {
 
     @Override
     public void clear() {
-        webElement.findElement(By.xpath(createDropdownSearchInputPath())).clear();
-    }
-
-    public void clickClearValue() {
         webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + componentId + "-input']//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]")).click();
     }
 

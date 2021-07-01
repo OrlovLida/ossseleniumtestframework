@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ServiceDeskAdvancedSearch extends Widget {
 
-    public ServiceDeskAdvancedSearch(WebDriver driver, WebDriverWait webDriverWait, String windowId, WebElement webElement) {
+    private ServiceDeskAdvancedSearch(WebDriver driver, WebDriverWait webDriverWait, String windowId, WebElement webElement) {
         super(driver, webDriverWait, windowId, webElement);
     }
 

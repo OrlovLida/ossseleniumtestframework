@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.commonforms;
+package com.oss.framework.components.common;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -17,7 +17,7 @@ public class TimePeriodChooser extends Widget {
         PERIOD, RANGE, LAST
     }
 
-    public TimePeriodChooser(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement webElement) {
+    private TimePeriodChooser(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement webElement) {
         super(driver, webDriverWait, widgetId, webElement);
 
         this.componentId = widgetId;

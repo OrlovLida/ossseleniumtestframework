@@ -95,9 +95,6 @@ public abstract class Input {
     public abstract Data getValue();
     
     public abstract void clear();
-
-    public void clickClearValue() {
-    }
     
     public String getLabel() {
         WebElement label = webElement.findElement(By.xpath(".//label"));

@@ -16,7 +16,7 @@ public class ChartWidget extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(ChartWidget.class);
 
-    public ChartWidget(WebDriver driver, WebDriverWait webDriverWait, String windowId, WebElement webElement) {
+    private ChartWidget(WebDriver driver, WebDriverWait webDriverWait, String windowId, WebElement webElement) {
         super(driver, webDriverWait, windowId, webElement);
     }
 
@@ -35,6 +35,6 @@ public class ChartWidget extends Widget {
     }
 
     private static String createXPath(String windowId) {
-        return "//div[@" + CSSUtils.TEST_ID + "='" + windowId + "']/.//*[@class='amcharts-main-div']";
+        return "//div[@" + CSSUtils.TEST_ID + "='" + windowId + "']//*[@class='chartContainer']";
     }
 }

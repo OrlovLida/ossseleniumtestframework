@@ -31,25 +31,30 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValue(Data value) {
+        String selectListPath = "//div[@class='CustomSelectList-data' and @title= '" + value.getStringValue() + "']";
+
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
         WebElement input = webElement.findElement(By.xpath(MULTI_SEARCH_PATH));
         input.sendKeys(value.getStringValue());
-        DelayUtils.sleep();
-        input.sendKeys(Keys.DOWN);
-        input.sendKeys(Keys.ENTER);
+        DelayUtils.waitByXPath(webDriverWait, selectListPath);
+        WebElement dropdownElement = webElement.findElement(By.xpath(selectListPath));
+        actions.moveToElement(dropdownElement).click(dropdownElement).build().perform();
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }
 
     @Override
     public void setValueContains(Data value) {
+        String selectListPath = "//div[@class='CustomSelectList-data' and @title= '" + value.getStringValue() + "']";
+
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
         WebElement input = webElement.findElement(By.xpath(MULTI_SEARCH_PATH));
         input.sendKeys(value.getStringValue());
-        input.sendKeys(Keys.DOWN);
-        input.sendKeys(Keys.ENTER);
+        DelayUtils.waitByXPath(webDriverWait, selectListPath);
+        WebElement dropdownElement = webElement.findElement(By.xpath(selectListPath));
+        actions.moveToElement(dropdownElement).click(dropdownElement).build().perform();
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }
@@ -61,16 +66,11 @@ public class MultiSearchField extends Input {
 
     @Override
     public void clear() {
-        webElement.findElement(By.xpath(MULTI_SEARCH_PATH)).clear();
+        webElement.findElement(By.xpath(".//i[contains(@class,'OSSIcon ossfont-close')]")).click();
     }
 
     @Override
     public String getLabel() {
         return webElement.findElement(By.xpath(".//span")).getText();
-    }
-
-    @Override
-    public void clickClearValue() {
-        webElement.findElement(By.xpath(".//i[contains(@class,'OSSIcon ossfont-close')]")).click();
     }
 }
