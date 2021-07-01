@@ -1,13 +1,12 @@
 package com.oss.framework.utils;
 
-import java.util.List;
-import java.util.Map;
-
-import org.openqa.selenium.WebElement;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
+import java.util.Map;
 
 public class CSSUtils {
 
@@ -20,6 +19,7 @@ public class CSSUtils {
     public static String WIDTH_ATTRIBUTE = "width";
     public static String LEFT_ATTRIBUTE = "left";
     public static String TEST_ID = "data-testid";
+    public static String DATA_WIDGET_ID = "data-widget-id";
 
     private static Splitter attributeSplitter = Splitter.on(ATTRIBUTES_SEPARATOR);
     private static Splitter valueSplitter = Splitter.on(VALUE_SEPARATOR);

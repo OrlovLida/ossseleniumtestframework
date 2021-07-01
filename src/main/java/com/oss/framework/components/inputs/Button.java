@@ -29,6 +29,10 @@ public class Button {
         return new Button(iconClass, driver, buttonClass);
     }
 
+    public static Button createByXpath(String componentId, String webElement, String selector, WebDriver driver) {
+        return new Button(componentId, webElement, selector, driver);
+    }
+
     private Button(WebDriver driver, String text) {
         this.webElement = driver.findElement(By.xpath("//button[text()='" + text + "']"));
     }
@@ -38,15 +42,19 @@ public class Button {
     }
 
     private Button(String componentId, WebDriver driver) {
-        this.webElement = driver.findElement(By.xpath("//button[@"+ CSSUtils.TEST_ID +"='" + componentId + "']"));
+        this.webElement = driver.findElement(By.xpath("//button[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
     }
 
     private Button(String selector, String componentId, WebDriver driver) {
-        this.webElement = driver.findElement(By.xpath("//" + selector + "[@"+ CSSUtils.TEST_ID +"='" + componentId + "']"));
+        this.webElement = driver.findElement(By.xpath("//" + selector + "[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
     }
 
     private Button(String iconClass, WebDriver driver, String buttonClass) {
         this.webElement = driver.findElement(By.xpath("//button[contains (@class,'" + buttonClass + "')]/i[contains(@class,'" + iconClass + "')]"));
+    }
+
+    private Button(String componentId, String webElement, String selector, WebDriver driver) {
+        this.webElement = driver.findElement(By.xpath("//" + webElement + "[@" + selector + "='" + componentId + "']"));
     }
 
     public void click() {
