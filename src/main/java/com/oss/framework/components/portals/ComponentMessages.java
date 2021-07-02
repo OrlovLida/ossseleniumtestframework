@@ -16,6 +16,6 @@ public class ComponentMessages {
     public List<String> getMessages() {
         List<WebElement> messages =
                 webElement.findElement(By.xpath(".//div[@class='error-message-list']")).findElements(By.xpath(".//li"));
-        return messages.stream().map(WebElement::getText).collect(Collectors.toList());
+        return messages.stream().map(message->message.getAttribute("textContent")).collect(Collectors.toList());
     }
 }
