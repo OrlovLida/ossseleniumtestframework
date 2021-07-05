@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class DelayUtils {
     private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
-    public static int HUMAN_REACTION_MS = 250;
+    public static final int HUMAN_REACTION_MS = 250;
 
     public static void sleep() {
         sleep(1000);
@@ -81,7 +81,7 @@ public class DelayUtils {
         DelayUtils.sleep(1000);
         List<WebElement> newList = listOfLoaders(driver);
         long startTime = System.currentTimeMillis();
-        while ((newList.size() > 0) && ((System.currentTimeMillis() - startTime) < 120000)) {
+        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
             try {
                 wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
             } catch (TimeoutException e) {
