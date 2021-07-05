@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
+import com.oss.framework.components.inputs.Button;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -20,6 +21,7 @@ public class KpiToolbarPanel extends Widget {
 
     final static String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
     private final static String APPLY_BUTTON_TEXT = "Apply";
+    private final static String APPLY_BUTTON_ID = "apply-button";
 
     private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -50,14 +52,16 @@ public class KpiToolbarPanel extends Widget {
 
     public void clickApply(){
 //        DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]"));
-       DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//button[@"+ CSSUtils.TEST_ID +"='" + "apply-button" + "']"));
+       DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//button[@"+ CSSUtils.TEST_ID +"='" + APPLY_BUTTON_ID + "']"));
 //        WebElement applyButton = findElementByXpath(this.webElement, "//div[contains(text(),'" + APPLY_BUTTON_TEXT + "')]");
-        WebElement applyButton = findElementByXpath(this.webElement, "//button[@"+ CSSUtils.TEST_ID +"='" + "apply-button" + "']");
-        DelayUtils.waitForClickability(webDriverWait, applyButton);
+//        WebElement applyButton = findElementByXpath(this.webElement, "//button[@"+ CSSUtils.TEST_ID +"='" + "apply-button" + "']");
+        Button applyButton = Button.createById(driver, APPLY_BUTTON_ID);
+        DelayUtils.waitForClickability(webDriverWait, webElement.findElement(By.xpath("//button[@"+ CSSUtils.TEST_ID +"='" + APPLY_BUTTON_ID + "']")));
         DelayUtils.sleep(5000);
 
-        Actions action = new Actions(driver);
-        action.moveToElement(applyButton).click().build().perform();
+//        Actions action = new Actions(driver);
+//        action.moveToElement(applyButton).click().build().perform();
+        applyButton.click();
 
         log.debug(CLICK_BTN + "Apply");
     }

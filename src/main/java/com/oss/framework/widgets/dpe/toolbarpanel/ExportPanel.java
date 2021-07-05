@@ -1,5 +1,7 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,6 +19,8 @@ public class ExportPanel {
     private static final Logger log = LoggerFactory.getLogger(ExportPanel.class);
 
     private final static String DOWNLOAD_BUTTON_PATH = "//i[@aria-label='DOWNLOAD']";
+    private final static String DOWNLOAD_BUTTON_ID = "export-button";
+    private final static String EXPORT_BUTTON_ID = "export-menu-button";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -51,16 +55,22 @@ public class ExportPanel {
     }
 
     private void clickDownload(){
-        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath(DOWNLOAD_BUTTON_PATH)));
-        findElementByXpath(this.webElement, DOWNLOAD_BUTTON_PATH).click();
+        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath("//button[@"+ CSSUtils.TEST_ID +"='" + DOWNLOAD_BUTTON_ID + "']")));
+//        findElementByXpath(this.webElement, DOWNLOAD_BUTTON_PATH).click();
+        Button downloadButton = Button.createById(driver, DOWNLOAD_BUTTON_ID);
+        downloadButton.click();
     }
 
-    private WebElement getExportButtonWithExtension(ExportType exportType){
-        return findElementByXpath(this.webElement, "//button[contains(text(),'" + exportType + "')]");
+    private Button getExportButtonWithExtension(ExportType exportType){
+//        return findElementByXpath(this.webElement, "//button[contains(text(),'" + exportType + "')]");
+        Button exportButtonWithExtension = Button.createById(driver, EXPORT_BUTTON_ID + "-" + exportType);
+        return exportButtonWithExtension;
     }
 
     private void clickExport(){
-        findElementByXpath(this.webElement, "//button[@class='btn export']").click();
+//        findElementByXpath(this.webElement, "//button[@class='btn export']").click();
+        Button exportButton = Button.createById(driver, EXPORT_BUTTON_ID);
+        exportButton.click();
         log.debug(CLICK_BTN + "Export");
     }
 }
