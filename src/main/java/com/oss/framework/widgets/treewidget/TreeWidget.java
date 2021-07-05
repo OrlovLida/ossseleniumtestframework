@@ -22,6 +22,7 @@ public class TreeWidget extends Widget {
     // TODO: fix order of variables and methods
 
     private static final String CHECKBOXES = ".//div[@class='tree-node-selection']";
+    private static final String CLASS = "class";
     private static final String INLINE_ACTIONS_MENU_BTN = ".//div[@class='actionsGroup-inline']";
     private static final String PATH_TO_TREE_ROW =
             "//p[contains(@class,'TreeViewLabel')][text()='%s']//..//..//div[contains(@class,'TreeRow')]";
@@ -66,7 +67,7 @@ public class TreeWidget extends Widget {
     public void setValueOnCheckboxByNodeLabel(String nodeLabel, boolean checkboxValue) {
         Actions action = new Actions(driver);
         action.moveToElement(getNodeByLabel(nodeLabel)).perform();
-        if (getNodeByLabel(nodeLabel).findElements(By.xpath(".//input[@checked]")).size() > 0 == !checkboxValue)
+        if (!getNodeByLabel(nodeLabel).findElements(By.xpath(".//input[@checked]")).isEmpty() == !checkboxValue)
             getNodeByLabel(nodeLabel).findElement(By.xpath(".//input/..")).click();
     }
 
@@ -315,11 +316,11 @@ public class TreeWidget extends Widget {
         }
 
         private String getExpandNodeClass() {
-            return this.webElement.findElement(By.xpath(TREE_NODE_EXPAND)).getAttribute("class");
+            return this.webElement.findElement(By.xpath(TREE_NODE_EXPAND)).getAttribute(CLASS);
         }
 
         private String getDescendantNodeExpandClass() {
-            return this.webElement.findElement(By.xpath(DESCENDANT_TREE_NODE)).getAttribute("class");
+            return this.webElement.findElement(By.xpath(DESCENDANT_TREE_NODE)).getAttribute(CLASS);
         }
 
         private void changeExpandState() {
@@ -331,7 +332,7 @@ public class TreeWidget extends Widget {
         }
 
         private boolean isSelected() {
-            return this.webElement.findElement(By.xpath(TREE_NODE_SELECTION)).getAttribute("class").contains(
+            return this.webElement.findElement(By.xpath(TREE_NODE_SELECTION)).getAttribute(CLASS).contains(
                     "selected");
         }
 
@@ -368,7 +369,7 @@ public class TreeWidget extends Widget {
 
     private static class TreeRow {
         private static final String TREE_ROW_LABEL = ".//p[contains(@class,'TreeViewLabel')]";
-        private static final String EXPAND_TREE_ROW = "//div[@class='tree-view-icon tree-view-close']";
+        private static final String EXPAND_TREE_ROW = ".//div[@class='tree-view-icon tree-view-close']";
 
         private final WebElement webElement;
         private final WebDriverWait webDriverWait;
@@ -392,7 +393,7 @@ public class TreeWidget extends Widget {
         }
 
         private boolean isSelected() {
-            return this.webElement.getAttribute("class").contains(
+            return this.webElement.getAttribute(CLASS).contains(
                     "selected");
         }
 
