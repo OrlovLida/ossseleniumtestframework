@@ -2,14 +2,10 @@ package com.oss.framework.components.contextactions;
 
 import java.util.List;
 
-import javax.swing.*;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,6 +18,7 @@ public class ActionsContainer implements ActionsInterface {
     public static final String OTHER_GROUP_ID = "OTHER";
     public static final String SHOW_ON_GROUP_ID = "NAVIGATION";
     public static final String MORE_GROUP_ID = "moreActions";
+    public static final String ACTIONS_LIST = "actionsList";
 
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";
     private static final String KEBAB_BUTTON_XPATH = ".//div[@id='frameworkCustomButtonsGroup'] | .//div[@id='frameworkObjectButtonsGroup']";
@@ -49,7 +46,7 @@ public class ActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String label) {
-
+        throw new UnsupportedOperationException("Method not implemented for Actions Container");
     }
 
     public void callAction(String groupId, String actionId) {
@@ -93,7 +90,7 @@ public class ActionsContainer implements ActionsInterface {
     private void clickOnGroup(String groupId) {
         DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//div[@class='actionsGroup-default']");
         // Info: Action for inline
-        if (!webDriver.findElements(By.className("actionsList")).isEmpty()){
+        if (!webDriver.findElements(By.className(ACTIONS_LIST)).isEmpty()) {
             Dropdown.create(webDriver, webDriverWait).callAction(groupId);
             return;
         }
@@ -124,7 +121,7 @@ public class ActionsContainer implements ActionsInterface {
 
     private void clickOnAction(String actionId) {
         // Info: Action for inline
-        if (!webDriver.findElements(By.className("actionsList")).isEmpty()){
+        if (!webDriver.findElements(By.className(ACTIONS_LIST)).isEmpty()) {
             Dropdown.create(webDriver, webDriverWait).callAction(actionId);
             return;
         }
@@ -137,13 +134,13 @@ public class ActionsContainer implements ActionsInterface {
         private final WebDriverWait webDriverWait;
 
         private static Dropdown create(WebDriver webDriver, WebDriverWait webDriverWait) {
-            DelayUtils.waitBy(webDriverWait, By.className("actionsList"));
+            DelayUtils.waitBy(webDriverWait, By.className(ACTIONS_LIST));
             return new Dropdown(webDriver, webDriverWait);
         }
 
         private Dropdown(WebDriver driver, WebDriverWait webDriverWait) {
             this.webDriverWait = webDriverWait;
-            List<WebElement> actionsLists = driver.findElements(By.className("actionsList"));
+            List<WebElement> actionsLists = driver.findElements(By.className(ACTIONS_LIST));
             this.webElement = actionsLists.get(actionsLists.size() - 1);
         }
 

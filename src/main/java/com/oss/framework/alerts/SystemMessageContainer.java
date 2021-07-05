@@ -74,7 +74,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     private Message toMessage(WebElement messageItem) {
-        String text = messageItem.findElement(By.xpath(".//p")).getText();
+        String text = messageItem.findElement(By.xpath(".//p | .//a")).getText();
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);
         return new Message(text, mapToMassageType(allClasses));
     }
@@ -120,7 +120,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void clickMessageLink() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, "//div[contains(@class,'systemMessageItem')]");
+        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
         messageContainer.findElement(By.xpath(".//a[contains(@href, '#/')]")).click();
     }
 

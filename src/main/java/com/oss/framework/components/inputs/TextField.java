@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
 
 public class TextField extends Input {
 
@@ -33,6 +34,7 @@ public class TextField extends Input {
         Actions action = new Actions(driver);
         action.moveToElement(input).build().perform();
         clear();
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         input.sendKeys(value.getStringValue());
     }
 

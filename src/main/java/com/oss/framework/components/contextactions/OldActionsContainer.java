@@ -16,10 +16,11 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String WINDOW_TOOLBAR_XPATH = "//div[contains(@class, 'windowToolbar')]";
     private static final String CONTEXT_WINDOW_TOOLBAR_XPATH = "." + WINDOW_TOOLBAR_XPATH;
     private static final String MAIN_WINDOW_TOOLBAR = "//div[@class='OssWindow']//div[@class='windowHeader']//div[@class='windowToolbar']";
-    private static final String MORE_GROUP_DATA_GROUP_ID = "__more-group";
+    private static final String MORE_GROUP_DATA_GROUP_ID = "frameworkCustomMore";
     private static final String GROUP_BY_DATA_GROUP_ID_XPATH = ".//li[@data-group-id='%s']//button";
     private static final String ACTION_FROM_LIST_XPATH = "//ul[contains(@class,'widgetList')]//a[@data-attributename='%s']";
     private static final String ACTION_BY_LABEL_XPATH = ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')]";
+    private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for the old actions container";
     private static String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
 
     public static OldActionsContainer createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
@@ -52,7 +53,7 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callAction(String actionId) {
-        throw new RuntimeException("Method not implemented for the old actions container");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
 
     @Override

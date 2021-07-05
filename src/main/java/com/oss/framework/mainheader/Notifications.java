@@ -5,10 +5,14 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oss.framework.utils.DelayUtils;
 
 public class Notifications implements NotificationsInterface {
+
+    private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
     private static final By CLEAR_NOTIFICATION = By.xpath("//a[@class='clear-action']");
     private static final By NOTIFICATION_BUTTON = By.xpath("//div[@class='notificationHoveringContainer']");
     private static final By NOTIFICATION_OPENED = By.xpath("//a[(@class='clicked badge') or (@class = 'clicked notificationType badge')]");
@@ -51,6 +55,7 @@ public class Notifications implements NotificationsInterface {
                         .getText();
         driver.findElement(CLEAR_NOTIFICATION).click();
         closeNotificationContainer();
+        log.info("Notification finished with message: " + notificationText);
         return notificationText;
     }
 
@@ -71,7 +76,9 @@ public class Notifications implements NotificationsInterface {
 
     @Override
     public int getAmountOfNotifications() {
-        return driver.findElements(NOTIFICATION_LIST).size();
+        int amount = driver.findElements(NOTIFICATION_LIST).size();
+        log.info("The list of notifications includes " + amount + " elements");
+        return amount;
     }
 
     private void openNotificationContainer() {

@@ -1,4 +1,4 @@
-package com.oss.framework.floorPlan;
+package com.oss.framework.floor_plan;
 
 import java.util.List;
 

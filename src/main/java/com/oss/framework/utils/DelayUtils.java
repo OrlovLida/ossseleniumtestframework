@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class DelayUtils {
     private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
-    public static int HUMAN_REACTION_MS = 250;
+    public static final int HUMAN_REACTION_MS = 250;
 
     public static void sleep() {
         sleep(1000);
@@ -53,7 +53,7 @@ public class DelayUtils {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOf(webelement));
     }
 
-    public static void waitForPresence(WebDriverWait wait, By locator){
+    public static void waitForPresence(WebDriverWait wait, By locator) {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
@@ -79,33 +79,33 @@ public class DelayUtils {
 
     public static void waitForPageToLoad(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(1000);
-        List<WebElement> spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
-        List<WebElement> loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
-        List<WebElement> appPreloader = driver.findElements(By.xpath("//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
-        List<WebElement> preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
-        List<WebElement> newList = new ArrayList<>(spinners);
-        newList.addAll(loadBars);
-        newList.addAll(appPreloader);
-        newList.addAll(preloaderWrapper);
+        List<WebElement> newList = listOfLoaders(driver);
         long startTime = System.currentTimeMillis();
-        while ((newList.size() > 0) && ((System.currentTimeMillis() - startTime) < 120000)) {
+        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
             try {
                 wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
-            }catch (TimeoutException e){
+            } catch (TimeoutException e) {
                 log.warn("Some element(s) could not be loaded in the expected time");
             }
-            spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
-            loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
-            appPreloader = driver.findElements(By.xpath("//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
-            preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
-            newList = new ArrayList<>(spinners);
-            newList.addAll(loadBars);
-            newList.addAll(appPreloader);
-            newList.addAll(preloaderWrapper);
+            newList = listOfLoaders(driver);
         }
         if ((System.currentTimeMillis() - startTime) > 120000) {
             log.warn("Page did not load for a two minutes!");
         }
+    }
+
+    private static List<WebElement> listOfLoaders(WebDriver driver) {
+        List<WebElement> spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
+        List<WebElement> loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
+        List<WebElement> appPreloader = driver.findElements(By.xpath("//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
+        List<WebElement> preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
+        List<WebElement> actionInProgress = driver.findElements(By.xpath("//a[@class='action inProgress']"));
+        List<WebElement> newList = new ArrayList<>(spinners);
+        newList.addAll(loadBars);
+        newList.addAll(appPreloader);
+        newList.addAll(preloaderWrapper);
+        newList.addAll(actionInProgress);
+        return newList;
     }
 
 }
