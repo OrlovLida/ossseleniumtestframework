@@ -285,7 +285,7 @@ public class TreeWidget extends Widget {
         // (tip: nodes are rendering in the virtual scroll, so they gonna disappear from DOM when invisible)
 
         private static final String TREE_NODE_LABEL =
-                ".//div[@class='tree-node-default-component-label']//div[contains(@class, 'OSSRichText')]";
+                ".//div[contains(@class,'tree-node-default-component-label')]//div[contains(@class, 'OSSRichText')]";
         private static final String TREE_NODE_SELECTION = ".//div[contains(@class, 'tree-node-default-component')]";
         private static final String TREE_NODE_EXPAND = ".//div[contains(@class, 'tree-node-expand-icon')]";
         private static final String EXPAND_ALL_ICON = ".//i[contains(@class, 'expandAllIcon')]";
