@@ -34,8 +34,8 @@ public class TableComponent {
     private final String widgetId;
 
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
-        DelayUtils.waitByXPath(webDriverWait, "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']/div[contains(@class,"+TABLE_COMPONENT_CLASS+")]");
-        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'"+TABLE_COMPONENT_CLASS+"')]"));
+        DelayUtils.waitByXPath(webDriverWait, "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class," + TABLE_COMPONENT_CLASS + ")]");
+        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'" + TABLE_COMPONENT_CLASS + "')]"));
         return new TableComponent(driver, webDriverWait, webElement, widgetId);
     }
 
@@ -51,9 +51,8 @@ public class TableComponent {
         row.selectRow();
     }
 
-    public void selectAll(){
-       Cell cell = Cell.createCheckBoxCell(webElement, 0);
-       cell.click();
+    public void selectAll() {
+        Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).click();
     }
 
     public void unselectRow(int row) {
@@ -61,19 +60,19 @@ public class TableComponent {
     }
 
     public List<TableRow> getVisibleRows() {
-        List<Integer> rowIds = this.webElement.findElements(By.xpath(".//div[contains(@"+CSSUtils.TEST_ID+", 'table-content-scrollbar')]//div[contains(@class, 'table-component__cell')]"))
+        List<Integer> rowIds = this.webElement.findElements(By.xpath(".//div[contains(@" + CSSUtils.TEST_ID + ", 'table-content-scrollbar')]//div[contains(@class, 'table-component__cell')]"))
                 .stream().filter(e -> e.getAttribute("data-row") != null).map(e -> e.getAttribute("data-row"))
                 .distinct().map(Integer::parseInt).sorted().collect(Collectors.toList());
 
-        return rowIds.stream().map( index -> new Row(this.webElement, index)).collect(Collectors.toList());
+        return rowIds.stream().map(index -> new Row(this.webElement, index)).collect(Collectors.toList());
     }
 
-    public void scrollHorizontally(int offset){
+    public void scrollHorizontally(int offset) {
         CustomScrolls customScrolls = getCustomScrolls();
         customScrolls.scrollHorizontally(offset);
     }
 
-    public void scrollVertically(int offset){
+    public void scrollVertically(int offset) {
         CustomScrolls customScrolls = getCustomScrolls();
         customScrolls.scrollVertically(offset);
     }
@@ -93,7 +92,7 @@ public class TableComponent {
         resizeColumn(columnId, size);
     }
 
-    public void resizeColumn(String columnId, int size){
+    public void resizeColumn(String columnId, int size) {
         Header header = Header.createHeader(this.driver, this.webDriverWait, this.webElement, columnId);
         header.resize(size);
     }
@@ -111,8 +110,8 @@ public class TableComponent {
 
     public void changeColumnsOrder(String columnLabel, int position) {
         List<Header> headers = getHeaders();
-        Header sourceHeader = headers.stream().filter(h->h.getText().equals(columnLabel))
-                .findFirst().orElseThrow( () -> new RuntimeException("Cant find column: " + columnLabel));
+        Header sourceHeader = headers.stream().filter(h -> h.getText().equals(columnLabel))
+                .findFirst().orElseThrow(() -> new RuntimeException("Cant find column: " + columnLabel));
         Header targetHeader = headers.get(position);
         DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader.getDropElement(), driver);
     }
@@ -122,10 +121,10 @@ public class TableComponent {
     }
 
     private WebElement getColumnsManagement() {
-        return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" +"']"));
+        return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" + "']"));
     }
 
-    public List<String> getColumnIds(){
+    public List<String> getColumnIds() {
         return getHeaders().stream()
                 .map(Header::getColumnId).collect(Collectors.toList());
     }
@@ -148,24 +147,24 @@ public class TableComponent {
         scrollToFirstColumn();
 
         List<Header> headers = Lists.newArrayList();
-        List<Header> tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream()
+        List<Header> tempHeaders = this.webElement.findElements(By.xpath(HEADERS_XPATH)).stream()
                 .map(e -> Header.createFromWrapper(this.driver, this.webDriverWait, this.webElement, e))
                 .filter(header -> !header.getText().equals("")).collect(Collectors.toList());
 
         Header lastElement = null;
         Header tempElement = tempHeaders.get(tempHeaders.size() - 1);
 
-        while(lastElement == null || !lastElement.equals(tempElement)) {
+        while (lastElement == null || !lastElement.equals(tempElement)) {
             tempHeaders.stream().filter(h -> !headers.contains(h))
                     .forEach(headers::add);
 
-            lastElement = tempHeaders.get(tempHeaders.size() -1);
+            lastElement = tempHeaders.get(tempHeaders.size() - 1);
             scrollRightToHeader(lastElement);
 
-            tempHeaders =  this.webElement.findElements(By.xpath(HEADERS_XPATH))
+            tempHeaders = this.webElement.findElements(By.xpath(HEADERS_XPATH))
                     .stream().map(e -> Header.createFromWrapper(this.driver, this.webDriverWait, this.webElement, e))
                     .filter(header -> !header.getText().equals("")).collect(Collectors.toList());
-            tempElement = tempHeaders.get(tempHeaders.size() -1);
+            tempElement = tempHeaders.get(tempHeaders.size() - 1);
         }
 
         scrollToFirstColumn();
@@ -180,10 +179,10 @@ public class TableComponent {
     private void scrollRightToHeader(Header header) {
         CustomScrolls scrolls = getCustomScrolls();
 
-        BigDecimal contentWidth =  getContentWidth();
+        BigDecimal contentWidth = getContentWidth();
         BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getVerticalScrollWidth());
         BigDecimal cellLeft = BigDecimal.valueOf(header.getLeft());
-        BigDecimal ratio = contentWidth.divide(scrollWidth,2, RoundingMode.FLOOR);
+        BigDecimal ratio = contentWidth.divide(scrollWidth, 2, RoundingMode.FLOOR);
 
         scrolls.scrollVertically(cellLeft.divide(ratio, 2, RoundingMode.FLOOR).toBigInteger().intValue());
     }
@@ -195,8 +194,8 @@ public class TableComponent {
     }
 
     public static class Header {
-        private static String HEADER_CLASS = "table-component__header";
-        private static String RESIZE_XPATH = ".//div[@" + CSSUtils.TEST_ID + "='col-%s-resizer']";
+        private static final String HEADER_CLASS = "table-component__header";
+        private static final String RESIZE_XPATH = ".//div[@" + CSSUtils.TEST_ID + "='col-%s-resizer']";
 
         private final WebElement tableComponent;
         private final String columnId;
@@ -211,7 +210,7 @@ public class TableComponent {
             return new Header(driver, webDriverWait, tableComponent, columnId, label);
         }
 
-        private static Header createFromWrapper(WebDriver driver, WebDriverWait webDriverWait,  WebElement tableComponent, WebElement wrapper) {
+        private static Header createFromWrapper(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent, WebElement wrapper) {
             WebElement header = wrapper.findElement(By.xpath("./div"));
             String columnId = CSSUtils.getAttributeValue("data-col", header);
             String label = header.getText();
@@ -219,7 +218,7 @@ public class TableComponent {
         }
 
         private static WebElement getHeader(WebElement parent, String columnId) {
-            return parent.findElement(By.xpath(".//div[contains(@class, '"+HEADER_CLASS+"') and @data-col='"+columnId+"']"));
+            return parent.findElement(By.xpath(".//div[contains(@class, '" + HEADER_CLASS + "') and @data-col='" + columnId + "']"));
         }
 
         private Header(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent, String columnId, String label) {
@@ -237,7 +236,7 @@ public class TableComponent {
         public void resize(int offset) {
             WebElement resize = getHeader(tableComponent, columnId).findElement(By.xpath(getResizeXpath()));
             Actions action = new Actions(this.driver);
-            action.dragAndDropBy(resize, offset,0).perform();
+            action.dragAndDropBy(resize, offset, 0).perform();
         }
 
         public int getSize() {
@@ -266,7 +265,7 @@ public class TableComponent {
 
         public DraggableElement getDragElement() {
             WebElement header = getHeader(tableComponent, columnId);
-            WebElement dragButton = header.findElement(By.xpath(".//div[@ "+ CSSUtils.TEST_ID + "='col-"+columnId+"-drag']"));
+            WebElement dragButton = header.findElement(By.xpath(".//div[@ " + CSSUtils.TEST_ID + "='col-" + columnId + "-drag']"));
 
             return new DraggableElement(dragButton);
         }
@@ -305,7 +304,7 @@ public class TableComponent {
         }
 
         private static Cell createFromParent(WebElement tableComponent, int index, String columnId) {
-            WebElement cell = tableComponent.findElements(By.xpath(".//div[@data-row='"+index+"' and @data-col='"+columnId+"']"))
+            WebElement cell = tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "' and @data-col='" + columnId + "']"))
                     .stream().findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + index + " columnId: " + columnId));
             return new Cell(cell, index, CHECKBOX_COLUMN_ID);
         }
@@ -329,8 +328,8 @@ public class TableComponent {
         }
 
         public String getText() {
-            if(!isCheckBox()) {
-                if(isSelected()) {
+            if (!isCheckBox()) {
+                if (isSelected()) {
                     return "true";
                 }
                 return "false";
@@ -377,26 +376,26 @@ public class TableComponent {
 
         public void clickRow() {
             WebElement randomCell =
-                    this.tableComponent.findElements(By.xpath(".//div[@data-row='"+this.index+"']"))
-                            .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row "+ this.index));
+                    this.tableComponent.findElements(By.xpath(".//div[@data-row='" + this.index + "']"))
+                            .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
             randomCell.click();
         }
 
         public String getColumnValue(String columnId) {
             WebElement cell =
-                    this.tableComponent.findElements(By.xpath(".//div[@data-row='"+this.index+"' and @data-col='"+columnId+"']")).stream()
-                            .findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId "+ this.index + " columnId: " + columnId));
+                    this.tableComponent.findElements(By.xpath(".//div[@data-row='" + this.index + "' and @data-col='" + columnId + "']")).stream()
+                            .findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + this.index + " columnId: " + columnId));
             return cell.getText();
         }
 
         public void selectRow() {
-            if(!isSelected()) {
+            if (!isSelected()) {
                 clickRow();
             }
         }
 
         public void unselectRow() {
-            if(isSelected()) {
+            if (isSelected()) {
                 clickRow();
             }
         }
@@ -412,7 +411,6 @@ public class TableComponent {
             return this.index;
         }
     }
-
 
     public static class CustomScrolls {
         private static final String SCROLLS_XPATH = ".//div[contains(@class, 'custom-scrollbars')]";
@@ -442,7 +440,7 @@ public class TableComponent {
             WebElement bar = horizontal.findElement(By.xpath("./div"));
             Actions action = new Actions(this.driver);
             action.moveToElement(bar).clickAndHold();
-            action.moveByOffset(offset,0);
+            action.moveByOffset(offset, 0);
             action.release();
             action.perform();
         }
