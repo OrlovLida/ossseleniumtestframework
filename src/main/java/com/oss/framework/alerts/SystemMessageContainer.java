@@ -11,10 +11,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -24,6 +27,9 @@ import com.oss.framework.utils.DelayUtils;
  */
 
 public class SystemMessageContainer implements SystemMessageInterface {
+
+    private static final Logger log = LoggerFactory.getLogger(SystemMessageContainer.class);
+
     private WebDriver driver;
     private WebDriverWait wait;
     private WebElement messageContainer;
@@ -67,10 +73,14 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void close() {
-        Actions builder = new Actions(driver);
-        builder.moveToElement(messageContainer).build().perform();
-        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_CLOSEBUTTON);
-        builder.click(messageContainer.findElement(By.xpath(PATH_TO_CLOSEBUTTON))).build().perform();
+        try {
+            Actions builder = new Actions(driver);
+            builder.moveToElement(messageContainer).build().perform();
+            DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_CLOSEBUTTON);
+            builder.click(messageContainer.findElement(By.xpath(PATH_TO_CLOSEBUTTON))).build().perform();
+        } catch (NoSuchElementException e) {
+            log.warn("Cannot click close button in system message");
+        }
     }
 
     private Message toMessage(WebElement messageItem) {
@@ -96,7 +106,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
                 }
             }
         }
-        throw new RuntimeException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);
+        throw new IllegalArgumentException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);
     }
 
     public static class Message {
