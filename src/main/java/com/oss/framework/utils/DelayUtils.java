@@ -108,4 +108,29 @@ public class DelayUtils {
         return newList;
     }
 
+    public static void waitForButtonDisappear(WebDriver driver, WebDriverWait wait, String buttonXpath) {
+        List<WebElement> newList = listOfButtonLoader(driver, buttonXpath);
+        long startTime = System.currentTimeMillis();
+        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
+            try {
+                wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
+            } catch (TimeoutException e) {
+                log.warn("Some element(s) could not be loaded in the expected time");
+            }
+            newList = listOfButtonLoader(driver, buttonXpath);
+        }
+        if ((System.currentTimeMillis() - startTime) > 120000) {
+            log.warn("Page did not load for a two minutes!");
+        }
+
+    }
+
+    private static List<WebElement> listOfButtonLoader(WebDriver driver, String buttonXpath) {
+        List<WebElement> button = driver.findElements(By.xpath(buttonXpath));
+        List<WebElement> actionInProgress = driver.findElements(By.xpath("//*[@class='action inProgress']"));
+        List<WebElement> newList = new ArrayList<>(button);
+        newList.addAll(actionInProgress);
+        return newList;
+    }
+
 }
