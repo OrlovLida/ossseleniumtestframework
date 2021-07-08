@@ -103,7 +103,7 @@ public class Wizard {
         DelayUtils.waitForNestedElements(wait, webElement, ACCEPT_BUTTON);
         WebElement accept = wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(ACCEPT_BUTTON))));
         accept.click();
-        wait.until(ExpectedConditions.invisibilityOf(accept));
+        waitForButtonDisappear(ACCEPT_BUTTON);
     }
 
     public void clickAcceptOldWizard() {
@@ -111,7 +111,7 @@ public class Wizard {
         WebElement wizardElement = driver.findElement(By.xpath(OSS_WINDOW));
         DelayUtils.waitForNestedElements(wait, wizardElement, ACCEPT_BUTTON);
         wait.until(ExpectedConditions.elementToBeClickable(wizardElement.findElement(By.xpath(ACCEPT_BUTTON)))).click();
-        wait.until(ExpectedConditions.invisibilityOf(wizardElement.findElement(By.xpath(ACCEPT_BUTTON))));
+        waitForButtonDisappear(ACCEPT_BUTTON);
     }
 
     public void waitToClose() {
@@ -151,7 +151,7 @@ public class Wizard {
         WebElement foundedElement =
                 wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(UPDATE_BUTTON))));
         action.moveToElement(foundedElement).click().perform();
-        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+        waitForButtonDisappear(UPDATE_BUTTON);
     }
 
     public void clickOK() {
@@ -160,7 +160,7 @@ public class Wizard {
         WebElement foundedElement =
                 wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(OK_BUTTON))));
         action.moveToElement(foundedElement).click().perform();
-        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+        waitForButtonDisappear(OK_BUTTON);
     }
 
     public void clickDelete() {
@@ -177,14 +177,13 @@ public class Wizard {
                 ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "']"))));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
         action.moveToElement(foundedElement).click().perform();
-        wait.until(ExpectedConditions.invisibilityOf(foundedElement));
+        waitForButtonDisappear("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "']");
     }
 
     public void clickButtonByLabel(String label) {
         DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_TEXT_XPATH, label));
         wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(String.format(BY_TEXT_XPATH, label)))));
         driver.findElement(By.xpath(String.format(BY_TEXT_XPATH, label))).click();
-
     }
 
     public void callButtonByLabel(String label) {
@@ -229,5 +228,9 @@ public class Wizard {
         } catch (NoSuchElementException e) {
             return false;
         }
+    }
+
+    private void waitForButtonDisappear(String buttonXpath) {
+        DelayUtils.waitForButtonDisappear(driver, wait, buttonXpath);
     }
 }
