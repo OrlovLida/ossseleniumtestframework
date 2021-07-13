@@ -43,7 +43,6 @@ public class ExportPanel {
 
     public void exportKpiToFile(ExportType exportType) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        DelayUtils.sleep();
         clickDownload();
         log.debug(CLICK_BTN + "Download");
         DelayUtils.waitForPageToLoad(driver, wait);
