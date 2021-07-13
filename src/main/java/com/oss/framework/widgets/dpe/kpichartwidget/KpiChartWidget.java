@@ -122,8 +122,7 @@ public class KpiChartWidget extends Widget {
         moveOverElement(GRAPH_LOCATOR_PATH);
 
         log.debug(MOVE_MOUSE_OVER + "first chart");
-        Button graphMenuButton = Button.createById(driver, CHART_ACTIONS_BUTTON_ID);
-        graphMenuButton.click();
+        Button.createById(driver, CHART_ACTIONS_BUTTON_ID).click();
         log.debug("Click chart actions button");
         DelayUtils.sleep();
     }
@@ -134,9 +133,7 @@ public class KpiChartWidget extends Widget {
         moveOverElement(GRAPH_LOCATOR_PATH);
 
         log.debug(MOVE_MOUSE_OVER + "first chart");
-
-        Button graphMenuButton = Button.createById(driver, CHART_ACTIONS_BUTTON_ID);
-        graphMenuButton.click();
+        Button.createById(driver, CHART_ACTIONS_BUTTON_ID).click();
         DelayUtils.sleep();
     }
 
@@ -144,9 +141,7 @@ public class KpiChartWidget extends Widget {
     //TODO: it should be removed after changing DFE-SQM tests
     private void clickMaximize() {
         DelayUtils.waitForPresence(webDriverWait, By.xpath(MAXIMIZE_CHART_PATH));
-        WebElement expandButton = driver.findElement(By.xpath(EXPAND_DATA_VIEW_PATH));
-        expandButton.click();
-
+        findElementByXpath(EXPAND_DATA_VIEW_PATH).click();
         log.debug(CLICK_BTN + "MAXIMIZE");
     }
 
@@ -177,8 +172,7 @@ public class KpiChartWidget extends Widget {
     }
 
     public void clickChartColorButton() {
-        Button chartColorButton = Button.createById(driver, CHART_COLOR_BUTTON_ID);
-        chartColorButton.click();
+        Button.createById(driver, CHART_COLOR_BUTTON_ID).click();
         log.debug(CLICK_BTN + "Choose chart series color");
     }
 

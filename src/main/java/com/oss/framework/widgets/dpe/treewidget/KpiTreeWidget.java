@@ -25,7 +25,7 @@ public class KpiTreeWidget extends Widget {
         super(driver, webElement, webDriverWait);
     }
 
-    public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String componentId){
+    public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String componentId) {
         String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
         DelayUtils.waitByXPath(wait, xPath);
         WebElement webElement = driver.findElement(By.xpath(xPath));
@@ -33,31 +33,31 @@ public class KpiTreeWidget extends Widget {
         return new KpiTreeWidget(driver, webElement, wait);
     }
 
-    public void selectNodes(List<String> nodesToExpand, List<String> nodesToSelect){
+    public void selectNodes(List<String> nodesToExpand, List<String> nodesToSelect) {
         expandTree(nodesToExpand);
         selectExpandedObjects(nodesToSelect);
     }
 
-    private void expandTree(List<String> nodeNames){
-        for(String nodeName: nodeNames){
+    private void expandTree(List<String> nodeNames) {
+        for (String nodeName : nodeNames) {
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             expandNode(nodeName);
         }
     }
 
-    private void expandNode(String objectName){
+    private void expandNode(String objectName) {
         WebElement expandButton = findNodeElementByXPath(objectName);
         scrollToNode(expandButton);
         expandButton.click();
         log.debug(EXPAND_NODE + objectName);
     }
 
-    private WebElement findNodeElementByXPath(String objectName){
+    private WebElement findNodeElementByXPath(String objectName) {
         return findElementByXpath(this.webElement, "//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']");
     }
 
-    public void selectExpandedObjects(List<String> objectNames){
-        for(String objectName: objectNames){
+    public void selectExpandedObjects(List<String> objectNames) {
+        for (String objectName : objectNames) {
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             selectNode(objectName);
         }

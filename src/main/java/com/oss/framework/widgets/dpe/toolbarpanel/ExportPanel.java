@@ -30,19 +30,19 @@ public class ExportPanel {
         JPG, PNG, PDF, XLSX
     }
 
-    static ExportPanel create(WebDriver driver, WebDriverWait webDriverWait){
+    static ExportPanel create(WebDriver driver, WebDriverWait webDriverWait) {
         WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
 
         return new ExportPanel(driver, webDriverWait, webElement);
     }
 
-    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.wait = webDriverWait;
         this.webElement = webElement;
     }
 
-    public void exportKpiToFile(ExportType exportType){
+    public void exportKpiToFile(ExportType exportType) {
         DelayUtils.waitForClickability(wait, findElementByXpath(this.webElement, DOWNLOAD_BUTTON_PATH));
         DelayUtils.sleep();
         clickDownload();
@@ -54,23 +54,19 @@ public class ExportPanel {
         log.info("Exporting chart as {}", exportType);
     }
 
-    private void clickDownload(){
-        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath("//button[@"+ CSSUtils.TEST_ID +"='" + DOWNLOAD_BUTTON_ID + "']")));
-//        findElementByXpath(this.webElement, DOWNLOAD_BUTTON_PATH).click();
+    private void clickDownload() {
+        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath("//button[@" + CSSUtils.TEST_ID + "='" + DOWNLOAD_BUTTON_ID + "']")));
         Button downloadButton = Button.createById(driver, DOWNLOAD_BUTTON_ID);
         downloadButton.click();
     }
 
-    private Button getExportButtonWithExtension(ExportType exportType){
-//        return findElementByXpath(this.webElement, "//button[contains(text(),'" + exportType + "')]");
+    private Button getExportButtonWithExtension(ExportType exportType) {
         Button exportButtonWithExtension = Button.createById(driver, EXPORT_BUTTON_ID + "-" + exportType);
         return exportButtonWithExtension;
     }
 
-    private void clickExport(){
-//        findElementByXpath(this.webElement, "//button[@class='btn export']").click();
-        Button exportButton = Button.createById(driver, EXPORT_BUTTON_ID);
-        exportButton.click();
+    private void clickExport() {
+        Button.createById(driver, EXPORT_BUTTON_ID).click();
         log.debug(CLICK_BTN + "Export");
     }
 }
