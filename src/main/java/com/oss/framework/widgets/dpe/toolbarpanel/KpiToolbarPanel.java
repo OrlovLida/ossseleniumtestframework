@@ -48,11 +48,8 @@ public class KpiToolbarPanel extends Widget {
     }
 
     public void clickApply() {
-        DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath("//button[@" + CSSUtils.TEST_ID + "='" + APPLY_BUTTON_ID + "']"));
         Button applyButton = Button.createById(driver, APPLY_BUTTON_ID);
-        DelayUtils.waitForClickability(webDriverWait, webElement.findElement(By.xpath("//button[@" + CSSUtils.TEST_ID + "='" + APPLY_BUTTON_ID + "']")));
         DelayUtils.sleep(5000);
-
         applyButton.click();
 
         log.debug(CLICK_BTN + "Apply");

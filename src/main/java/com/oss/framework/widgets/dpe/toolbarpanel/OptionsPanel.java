@@ -17,12 +17,13 @@ public class OptionsPanel {
 
     private static final Logger log = LoggerFactory.getLogger(OptionsPanel.class);
 
-    private final static String OPTIONS_BUTTON_ID = "options-menu-button";
-    private final static String TIME_PERIOD_CHOOSER_PATH = "//div[@data-testid = 'time-period-chooser']";
+    private static final String OPTIONS_BUTTON_ID = "options-menu-button";
+    private static final String TIME_PERIOD_CHOOSER_PATH = "//div[@data-testid = 'time-period-chooser']";
+    private static final String TIME_PERIOD_CHOOSER_INPUT_PATH = "//div[@class='md-input']//input[@label='%s']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement webElement;
+    private final WebElement input;
 
     public static OptionsPanel create(WebDriver driver, WebDriverWait webDriverWait) {
         WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
@@ -33,7 +34,7 @@ public class OptionsPanel {
     private OptionsPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.wait = webDriverWait;
-        this.webElement = webElement;
+        this.input = webElement;
     }
 
     public enum TimePeriodChooserOption {
@@ -54,20 +55,17 @@ public class OptionsPanel {
 
     public void setLastPeriodOption(Integer days, Integer hours, Integer minutes) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        WebElement daysInput = webElement.findElement(By.xpath("//div[@class='md-input']//input[@label='Days']"));
-        daysInput.sendKeys(Keys.CONTROL, Keys.chord("a"));
-        daysInput.sendKeys(Keys.DELETE);
-        daysInput.sendKeys(days.toString());
+        fillInput(days, "Days");
+        fillInput(hours, "Hours");
+        fillInput(minutes, "Minutes");
+    }
 
-        WebElement hoursInput = webElement.findElement(By.xpath("//div[@class='md-input']//input[@label='Hours']"));
-        hoursInput.sendKeys(Keys.CONTROL, Keys.chord("a"));
-        hoursInput.sendKeys(Keys.DELETE);
-        hoursInput.sendKeys(hours.toString());
-
-        WebElement minutesInput = webElement.findElement(By.xpath("//div[@class='md-input']//input[@label='Minutes']"));
-        minutesInput.sendKeys(Keys.CONTROL, Keys.chord("a"));
-        minutesInput.sendKeys(Keys.DELETE);
-        minutesInput.sendKeys(minutes.toString());
+    private void fillInput(Integer value, String label) {
+        String timePeriodInputXpath = String.format(TIME_PERIOD_CHOOSER_INPUT_PATH, label);
+        WebElement timePeriodInput = input.findElement(By.xpath(timePeriodInputXpath));
+        timePeriodInput.sendKeys(Keys.CONTROL, Keys.chord("a"));
+        timePeriodInput.sendKeys(Keys.DELETE);
+        timePeriodInput.sendKeys(value.toString());
     }
 
     public void chooseTimePeriodOption(TimePeriodChooserOption option) {
@@ -75,27 +73,27 @@ public class OptionsPanel {
 
         switch (option) {
             case LAST: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("LAST_2"))).click();
+                input.findElement(By.xpath(createChooseOptionXPath("LAST_2"))).click();
                 break;
             }
             case RANGE: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("RANGE_1"))).click();
+                input.findElement(By.xpath(createChooseOptionXPath("RANGE_1"))).click();
                 break;
             }
             case PERIOD: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("PERIOD_0"))).click();
+                input.findElement(By.xpath(createChooseOptionXPath("PERIOD_0"))).click();
                 break;
             }
             case MIDDLE: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("MIDDLE_3"))).click();
+                input.findElement(By.xpath(createChooseOptionXPath("MIDDLE_3"))).click();
                 break;
             }
             case SMART: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("SMART_4"))).click();
+                input.findElement(By.xpath(createChooseOptionXPath("SMART_4"))).click();
                 break;
             }
             case LATEST: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("LATEST_5"))).click();
+                input.findElement(By.xpath(createChooseOptionXPath("LATEST_5"))).click();
                 break;
             }
         }

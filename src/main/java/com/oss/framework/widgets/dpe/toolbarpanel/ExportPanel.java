@@ -18,7 +18,6 @@ public class ExportPanel {
 
     private static final Logger log = LoggerFactory.getLogger(ExportPanel.class);
 
-    private final static String DOWNLOAD_BUTTON_PATH = "//i[@aria-label='DOWNLOAD']";
     private final static String DOWNLOAD_BUTTON_ID = "export-button";
     private final static String EXPORT_BUTTON_ID = "export-menu-button";
 
@@ -43,7 +42,7 @@ public class ExportPanel {
     }
 
     public void exportKpiToFile(ExportType exportType) {
-        DelayUtils.waitForClickability(wait, findElementByXpath(this.webElement, DOWNLOAD_BUTTON_PATH));
+        DelayUtils.waitForPageToLoad(driver, wait);
         DelayUtils.sleep();
         clickDownload();
         log.debug(CLICK_BTN + "Download");
@@ -55,7 +54,7 @@ public class ExportPanel {
     }
 
     private void clickDownload() {
-        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath("//button[@" + CSSUtils.TEST_ID + "='" + DOWNLOAD_BUTTON_ID + "']")));
+        DelayUtils.waitForPageToLoad(driver, wait);
         Button downloadButton = Button.createById(driver, DOWNLOAD_BUTTON_ID);
         downloadButton.click();
     }
