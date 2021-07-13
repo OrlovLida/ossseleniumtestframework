@@ -42,6 +42,7 @@ public class KpiChartWidget extends Widget {
     private static final String CHART_COLOR_BUTTON_ID = "chart-color-button";
     private static final String DATA_SERIES_COLOR_BUTTON_PATH = "//div[@class='colorPickerWrapper']";
     private static final String FIRST_COLOR_BUTTON_PATH = "//div[@class='color-picker__color-table-cell']";
+    private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
 
     public KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
@@ -85,14 +86,16 @@ public class KpiChartWidget extends Widget {
         log.debug(MOVE_MOUSE_OVER + "point");
     }
 
+    @Deprecated
     //TODO: it should be removed after changing DFE-SQM tests
     public void maximizeChart() {
         showChartActions();
-        clickMaximize(); // to tak nie bedzie dzialac - niepotrzebne chart actions
+        clickMaximize();
         hideChartActions();
         log.info("Chart maximized");
     }
 
+    @Deprecated
     //TODO: it should be removed after changing DFE-SQM tests
     public void minimizeChart() {
         showChartActions();
@@ -101,12 +104,14 @@ public class KpiChartWidget extends Widget {
         log.info("Chart minimized");
     }
 
+    @Deprecated
     //TODO: it should be removed after changing DFE-SQM tests
     private void showChartActions() {
         clickChartActionsBar(COLLAPSED_GRAPH_MENU_PATH);
         log.debug(CLICK_BTN + "Show chart actions");
     }
 
+    @Deprecated
     //TODO: it should be removed after changing DFE-SQM tests
     private void hideChartActions() {
         clickChartActionsBar(EXPANDED_GRAPH_MENU_PATH);
@@ -123,6 +128,7 @@ public class KpiChartWidget extends Widget {
         DelayUtils.sleep();
     }
 
+    @Deprecated
     //TODO: it should be removed after changing DFE-SQM tests
     private void clickChartActionsBar(String actionBarXpath) {
         moveOverElement(GRAPH_LOCATOR_PATH);
@@ -134,17 +140,17 @@ public class KpiChartWidget extends Widget {
         DelayUtils.sleep();
     }
 
+    @Deprecated
     //TODO: it should be removed after changing DFE-SQM tests
     private void clickMaximize() {
-//        moveOverElement(RESIZE_CHART_PATH);
-        DelayUtils.waitForPresence(webDriverWait, By.xpath(MAXIMIZE_CHART_PATH)); // omija to - do zobaczenia czemu
-//        findElementByXpath(RESIZE_CHART_PATH).click();
+        DelayUtils.waitForPresence(webDriverWait, By.xpath(MAXIMIZE_CHART_PATH));
         WebElement expandButton = driver.findElement(By.xpath(EXPAND_DATA_VIEW_PATH));
         expandButton.click();
 
         log.debug(CLICK_BTN + "MAXIMIZE");
     }
 
+    @Deprecated
     //TODO: it should be removed after changing DFE-SQM tests
     private void clickMinimize() {
         moveOverElement(RESIZE_CHART_PATH);
@@ -153,6 +159,7 @@ public class KpiChartWidget extends Widget {
         log.debug(CLICK_BTN + "MINIMIZE");
     }
 
+    @Deprecated
     //TODO: move later to KpiViewPage - when data-testid will be added
     public void clickAreaChartButton() {
         findElementByXpath(AREA_CHART_BUTTON_PATH).click();
@@ -197,6 +204,12 @@ public class KpiChartWidget extends Widget {
         int linesCount = this.webElement.findElements(By.xpath(CHART_LINE_PATH)).size();
         log.debug("Lines count: {}", linesCount);
         return linesCount;
+    }
+
+    public int countHighlightedPoints() {
+        int pointsCount = this.webElement.findElements(By.xpath(DATA_SERIES_POINT_PATH)).size();
+        log.debug("Highlighted points count: {}", pointsCount);
+        return pointsCount;
     }
 
     public String dataSeriesLineWidth() {
