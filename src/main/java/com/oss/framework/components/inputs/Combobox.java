@@ -22,6 +22,10 @@ public class Combobox extends Input {
         return new Combobox(parent, driver, wait, comboboxId);
     }
 
+    public Combobox(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
+        super(driver, webDriverWait, webElement);
+    }
+
     private Combobox(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
