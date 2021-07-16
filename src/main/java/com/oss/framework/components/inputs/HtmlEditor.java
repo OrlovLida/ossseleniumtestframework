@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HtmlEditor extends Input {
 
+    // TODO: Use data-testId after resolving OSSSD-2039
     private static final String HTML_EDITOR_COMPONENT_XPATH = "//label[contains(@for, '%s')]/ancestor::div[contains(@class, 'html-editor-component')]";
     private static final String INPUT_XPATH = ".//div[contains(@role, 'textbox')]";
 
@@ -24,6 +25,7 @@ public class HtmlEditor extends Input {
         super(webDriver, webDriverWait, component);
     }
 
+    @Override
     public void setValue(Data value) {
         WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
         clear();
@@ -40,6 +42,7 @@ public class HtmlEditor extends Input {
         return Data.createSingleData(webElement.findElement(By.xpath(INPUT_XPATH)).getText());
     }
 
+    @Override
     public void clear() {
         WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
         input.sendKeys(Keys.CONTROL + "a");
