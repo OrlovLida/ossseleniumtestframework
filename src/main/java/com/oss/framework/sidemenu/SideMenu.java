@@ -45,6 +45,7 @@ public class SideMenu {
         String actionXpath;
         WebElement latestPath = getSideMenu();
         for (String s : path) {
+            DelayUtils.waitForPageToLoad(driver, wait);
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
             latestPath = searchElement(latestPath, actionXpath);
             DelayUtils.sleep(1000);
@@ -57,21 +58,23 @@ public class SideMenu {
     private void callAction(String actionLabel, WebElement parent) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
         WebElement foundedElement = searchElement(parent, actionXpath);
-        DelayUtils.sleep(500);
+        DelayUtils.waitForPageToLoad(driver, wait);
         Actions actions = new Actions(driver);
         actions.moveToElement(foundedElement).click().perform();
     }
 
     private WebElement searchElement(WebElement webElement, String xpath) {
         for (int scrollDownCount = 0; scrollDownCount < 3; scrollDownCount++) {
+            DelayUtils.waitForPageToLoad(driver, wait);
             if (!(driver.findElements(By.xpath(xpath)).isEmpty())) {
+                DelayUtils.waitForPageToLoad(driver, wait);
                 WebElement foundElement = driver.findElement(By.xpath(xpath));
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundElement);
                 return foundElement;
             }
             Actions action = new Actions(driver);
             action.moveToElement(webElement).sendKeys(Keys.PAGE_DOWN).perform();
-            DelayUtils.sleep(500);
+            DelayUtils.waitForPageToLoad(driver, wait);
         }
         return driver.findElement(By.xpath(xpath));
     }
