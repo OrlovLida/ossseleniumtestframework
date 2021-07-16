@@ -8,28 +8,36 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class HTMLEditor {
+public class HtmlEditor extends Input {
 
     private static final String HTML_EDITOR_COMPONENT_XPATH = "//label[contains(@for, '%s')]/ancestor::div[contains(@class, 'html-editor-component')]";
     private static final String INPUT_XPATH = ".//div[contains(@role, 'textbox')]";
 
-    private final WebElement webElement;
-
-    public static HTMLEditor create(WebDriver webDriver, WebDriverWait webDriverWait, String widgetId) {
+    public static HtmlEditor create(WebDriver webDriver, WebDriverWait webDriverWait, String widgetId) {
         String xPath = String.format(HTML_EDITOR_COMPONENT_XPATH, widgetId);
         DelayUtils.waitByXPath(webDriverWait, xPath);
         WebElement webElement = webDriver.findElement(By.xpath(xPath));
-        return new HTMLEditor(webElement);
+        return new HtmlEditor(webDriver, webDriverWait, webElement);
     }
 
-    public HTMLEditor(WebElement component) {
-        this.webElement = component;
+    public HtmlEditor(WebDriver webDriver, WebDriverWait webDriverWait, WebElement component) {
+        super(webDriver, webDriverWait, component);
     }
 
     public void setValue(Data value) {
         WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
         clear();
         input.sendKeys(value.getStringValue());
+    }
+
+    @Override
+    public void setValueContains(Data value) {
+        setValue(value);
+    }
+
+    @Override
+    public Data getValue() {
+        return Data.createSingleData(webElement.findElement(By.xpath(INPUT_XPATH)).getText());
     }
 
     public void clear() {
