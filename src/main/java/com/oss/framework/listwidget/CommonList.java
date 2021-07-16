@@ -330,8 +330,9 @@ public class CommonList {
         }
 
         public void callActionIcon(String ariaLabel) {
-            DelayUtils.waitForNestedElements(wait, row, ".//div[contains(@class,'placeholders')]");
-            WebElement placeholdersAndActions = row.findElement(By.xpath(".//div[contains(@class,'placeholders')]"));
+            String placeholdersXPath = ".//div[contains(@class,'placeholders')]";
+            DelayUtils.waitForNestedElements(wait, row, placeholdersXPath);
+            WebElement placeholdersAndActions = row.findElement(By.xpath(placeholdersXPath));
             WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
             DelayUtils.waitForClickability(wait, icon);
             Actions action = new Actions(driver);
