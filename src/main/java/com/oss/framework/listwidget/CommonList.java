@@ -238,7 +238,11 @@ public class CommonList {
     public void selectRow(int row) {
         createRows().get(row).selectRow();
     }
-    
+
+    public List<Row> getAllRows() {
+        return createRows();
+    }
+
     public Row getRow(String attributeName, String value) {
         return createRows().stream().filter(row -> row.getValue(attributeName).equals(value))
                 .findFirst()
@@ -324,7 +328,17 @@ public class CommonList {
                 
             }
         }
-        
+
+        public void callActionIcon(String ariaLabel) {
+            String placeholdersXPath = ".//div[contains(@class,'placeholders')]";
+            DelayUtils.waitForNestedElements(wait, row, placeholdersXPath);
+            WebElement placeholdersAndActions = row.findElement(By.xpath(placeholdersXPath));
+            WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
+            DelayUtils.waitForClickability(wait, icon);
+            Actions action = new Actions(driver);
+            action.moveToElement(icon).click().build().perform();
+        }
+
         public void callAction(String actionId) {
             callAction(null, actionId);
         }

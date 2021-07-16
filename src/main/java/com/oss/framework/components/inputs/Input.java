@@ -35,6 +35,13 @@ public abstract class Input {
         return "//*[@" + CSSUtils.TEST_ID + "='" + componentId + "']";
     }
 
+    Input(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
+        this.driver = driver;
+        this.webDriverWait = webDriverWait;
+        this.webElement = webElement;
+        this.componentId = null;
+    }
+
     Input(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
