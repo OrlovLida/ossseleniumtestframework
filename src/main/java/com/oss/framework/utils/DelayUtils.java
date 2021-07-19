@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ScriptTimeoutException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -114,7 +115,7 @@ public class DelayUtils {
         while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
             try {
                 wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
-            } catch (TimeoutException e) {
+            } catch (TimeoutException | ScriptTimeoutException e) {
                 log.warn("Some element(s) could not be loaded in the expected time");
             }
             newList = listOfButtonLoader(driver, buttonXpath);
