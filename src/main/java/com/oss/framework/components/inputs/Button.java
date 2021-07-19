@@ -2,12 +2,14 @@ package com.oss.framework.components.inputs;
 
 import com.oss.framework.utils.CSSUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class Button {
 
     private final WebElement webElement;
+    private final WebDriver webDriver;
 
     public static Button create(WebDriver driver, String text) {
         return new Button(driver, text);
@@ -34,30 +36,41 @@ public class Button {
     }
 
     private Button(WebDriver driver, String text) {
+        this.webDriver = driver;
         this.webElement = driver.findElement(By.xpath("//button[text()='" + text + "']"));
     }
 
     private Button(WebDriver driver, String text, String selector) {
+        this.webDriver = driver;
         this.webElement = driver.findElement(By.xpath("//" + selector + "[text()='" + text + "']"));
     }
 
     private Button(String componentId, WebDriver driver) {
+        this.webDriver = driver;
         this.webElement = driver.findElement(By.xpath("//button[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
     }
 
     private Button(String selector, String componentId, WebDriver driver) {
+        this.webDriver = driver;
         this.webElement = driver.findElement(By.xpath("//" + selector + "[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
     }
 
     private Button(String iconClass, WebDriver driver, String buttonClass) {
+        this.webDriver = driver;
         this.webElement = driver.findElement(By.xpath("//button[contains (@class,'" + buttonClass + "')]/i[contains(@class,'" + iconClass + "')]"));
     }
 
     private Button(String componentId, String webElement, String selector, WebDriver driver) {
+        this.webDriver = driver;
         this.webElement = driver.findElement(By.xpath("//" + webElement + "[@" + selector + "='" + componentId + "']"));
     }
 
     public void click() {
+        scrollToButton();
         this.webElement.click();
+    }
+
+    private void scrollToButton() {
+        ((JavascriptExecutor) this.webDriver).executeScript("arguments[0].scrollIntoView();", webElement);
     }
 }

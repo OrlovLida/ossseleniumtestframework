@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
@@ -16,11 +17,14 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String WINDOW_TOOLBAR_XPATH = "//div[contains(@class, 'windowToolbar')]";
     private static final String CONTEXT_WINDOW_TOOLBAR_XPATH = "." + WINDOW_TOOLBAR_XPATH;
     private static final String MAIN_WINDOW_TOOLBAR = "//div[@class='OssWindow']//div[@class='windowHeader']//div[@class='windowToolbar']";
-    private static final String MORE_GROUP_DATA_GROUP_ID = "__more-group";
+    private static final String MORE_GROUP_DATA_GROUP_ID = "frameworkCustomMore";
     private static final String GROUP_BY_DATA_GROUP_ID_XPATH = ".//li[@data-group-id='%s']//button";
     private static final String ACTION_FROM_LIST_XPATH = "//ul[contains(@class,'widgetList')]//a[@data-attributename='%s']";
     private static final String ACTION_BY_LABEL_XPATH = ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')]";
-    private static String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
+    private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for the old actions container";
+    private static final String KEBAB_BUTTON_XPATH = "//li[@data-group-id='frameworkCustomEllipsis']";
+    public static final String KEBAB_GROUP_ID = "frameworkCustomEllipsis";
+    private static final String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
 
     public static OldActionsContainer createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitForNestedElements(wait, parent, WINDOW_TOOLBAR_XPATH);
@@ -52,7 +56,7 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callAction(String actionId) {
-        throw new RuntimeException("Method not implemented for the old actions container");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
 
     @Override
@@ -67,18 +71,30 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callAction(String groupId, String actionId) {
+        if (KEBAB_GROUP_ID.equals(groupId)) {
+            callActionFromKebab(actionId);
+            return;
+        }
         DelayUtils.waitForNestedElements(wait, toolbar, String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId));
         wait.until(
                 ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId)))))
                 .click();
         wait.until(ExpectedConditions
                 .elementToBeClickable(By.xpath(String.format(ACTION_FROM_LIST_XPATH, actionId)))).click();
+    }
 
+    private void callActionFromKebab(String actionId) {
+        getKebabMenuBtn().click();
+        DropdownList.create(driver, wait).selectOptionWithId(actionId);
+    }
+
+    private WebElement getKebabMenuBtn() {
+        return this.toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH));
     }
 
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
 
     @Override

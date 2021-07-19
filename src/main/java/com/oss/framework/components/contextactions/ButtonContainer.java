@@ -21,6 +21,8 @@ import com.oss.framework.utils.DelayUtils;
  */
 public class ButtonContainer implements ActionsInterface {
 
+    private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for Button Container";
+
     public static ButtonContainer create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'commonButtons')] | //div[@class='windowIcons']");
         WebElement buttons = driver.findElement(By.xpath("//div[contains(@class,'commonButtons')] | //div[class='windowIcons']"));
@@ -50,31 +52,31 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//*[@"+ CSSUtils.TEST_ID +"='" + id + "'] | //*[@id='" + id + "'] ");
+        DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + id + "'] | //*[@id='" + id + "'] ");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                buttons.findElement(By.xpath("//*[@"+ CSSUtils.TEST_ID +"='" + id + "'] | //*[@id='" + id + "'] ")))))
+                buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + id + "'] | //*[@id='" + id + "'] ")))))
                 .click()
                 .perform();
     }
 
     @Override
     public void callAction(String actionId) {
-        throw new RuntimeException("Method not implemented for Button Container");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
 
     @Override
     public void callAction(String groupId, String actionId) {
-        throw new RuntimeException("Method not implemented for Button Container");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
 
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
-        throw new RuntimeException("Method not implemented for Button Container");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
 
     @Override
     public void callActionById(String groupLabel, String actionId) {
-        throw new RuntimeException("Method not implemented for Button Container");
+        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
 }

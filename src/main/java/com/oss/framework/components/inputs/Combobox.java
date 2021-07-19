@@ -14,12 +14,23 @@ import java.util.List;
 
 public class Combobox extends Input {
 
+    // TODO: remove after resolving OSSSD-2035 - setting data-testId in status Combobox
+    public static Combobox createServiceDeskStatusComboBox(WebDriver driver, WebDriverWait webDriverWait) {
+        String xPath = "//div[contains(@class, 'most-wanted__inputs')]//div[contains(@class, 'combo-box')]";
+        WebElement webElement = driver.findElement(By.xpath(xPath));
+        return new Combobox(driver, webDriverWait, webElement);
+    }
+
     static Combobox create(WebDriver driver, WebDriverWait wait, String comboboxId) {
         return new Combobox(driver, wait, comboboxId);
     }
 
     static Combobox createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String comboboxId) {
         return new Combobox(parent, driver, wait, comboboxId);
+    }
+
+    private Combobox(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
+        super(driver, webDriverWait, webElement);
     }
 
     private Combobox(WebDriver driver, WebDriverWait wait, String componentId) {

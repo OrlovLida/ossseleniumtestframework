@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class DelayUtils {
     private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
-    public static int HUMAN_REACTION_MS = 250;
+    public static final int HUMAN_REACTION_MS = 250;
 
     public static void sleep() {
         sleep(1000);
@@ -81,7 +81,7 @@ public class DelayUtils {
         DelayUtils.sleep(1000);
         List<WebElement> newList = listOfLoaders(driver);
         long startTime = System.currentTimeMillis();
-        while ((newList.size() > 0) && ((System.currentTimeMillis() - startTime) < 120000)) {
+        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
             try {
                 wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
             } catch (TimeoutException e) {
@@ -104,6 +104,31 @@ public class DelayUtils {
         newList.addAll(loadBars);
         newList.addAll(appPreloader);
         newList.addAll(preloaderWrapper);
+        newList.addAll(actionInProgress);
+        return newList;
+    }
+
+    public static void waitForButtonDisappear(WebDriver driver, WebDriverWait wait, String buttonXpath) {
+        List<WebElement> newList = listOfButtonLoader(driver, buttonXpath);
+        long startTime = System.currentTimeMillis();
+        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
+            try {
+                wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
+            } catch (TimeoutException e) {
+                log.warn("Some element(s) could not be loaded in the expected time");
+            }
+            newList = listOfButtonLoader(driver, buttonXpath);
+        }
+        if ((System.currentTimeMillis() - startTime) > 120000) {
+            log.warn("Page did not load for a two minutes!");
+        }
+
+    }
+
+    private static List<WebElement> listOfButtonLoader(WebDriver driver, String buttonXpath) {
+        List<WebElement> button = driver.findElements(By.xpath(buttonXpath));
+        List<WebElement> actionInProgress = driver.findElements(By.xpath("//*[@class='action inProgress']"));
+        List<WebElement> newList = new ArrayList<>(button);
         newList.addAll(actionInProgress);
         return newList;
     }
