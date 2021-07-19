@@ -72,8 +72,8 @@ public abstract class Input {
     
     public String cursor() {
         Actions action = new Actions(driver);
-        action.moveToElement(webElement.findElement(By.xpath(".//label"))).build().perform();
-        return webElement.findElement(By.xpath(".//label")).getCssValue("cursor");
+        action.moveToElement(webElement).build().perform();
+        return webElement.findElement(By.xpath(".//input")).getCssValue("cursor");
     }
     
     public final List<String> getHint() {
