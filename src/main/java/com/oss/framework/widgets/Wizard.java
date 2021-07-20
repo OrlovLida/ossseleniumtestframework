@@ -122,12 +122,14 @@ public class Wizard {
         DelayUtils.waitForNestedElements(wait, webElement, SUBMIT_BUTTON);
         Actions action = new Actions(driver);
         action.moveToElement(webElement.findElement(By.xpath(SUBMIT_BUTTON))).click().perform();
+        waitForButtonDisappear(SUBMIT_BUTTON);
     }
 
     public void cancel() {
         DelayUtils.waitForNestedElements(wait, webElement, CANCEL_BUTTON);
         Actions action = new Actions(driver);
         action.moveToElement(webElement.findElement(By.xpath(CANCEL_BUTTON))).click().perform();
+        waitForButtonDisappear(CANCEL_BUTTON);
     }
 
     public void proceed() {
@@ -136,6 +138,7 @@ public class Wizard {
         action.moveToElement(
                 wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(PROCEED_BUTTON))))).click()
                 .perform();
+        waitForButtonDisappear(PROCEED_BUTTON);
     }
 
     public void clickSave() {
@@ -143,6 +146,7 @@ public class Wizard {
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(SAVE_BUTTON)))))
                 .click().perform();
+        waitForButtonDisappear(SAVE_BUTTON);
     }
 
     public void clickUpdate() {
@@ -168,6 +172,7 @@ public class Wizard {
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(DELETE_BUTTON)))))
                 .click().perform();
+        waitForButtonDisappear(DELETE_BUTTON);
     }
 
     public void clickActionById(String actionId) {
