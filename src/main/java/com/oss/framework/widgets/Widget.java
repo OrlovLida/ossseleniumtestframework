@@ -28,6 +28,19 @@ public abstract class Widget {
 
     }
 
+    public static void waitForWidget(WebDriverWait wait, String widgetClass) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
+    }
+
+    private static String createWidgetPath(String widgetId) {
+        return "//div[@"+ CSSUtils.TEST_ID +"'" + widgetId + "']";
+    }
+
+    public static void waitForWidgetById(WebDriverWait wait, String widgetId) {
+        DelayUtils.waitBy(wait, By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+    }
+
+
     @Deprecated
     public Widget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         this.driver = driver;
@@ -44,9 +57,6 @@ public abstract class Widget {
         this.id = null;
     }
 
-    public static void waitForWidget(WebDriverWait wait, String widgetClass) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
-    }
 
     public Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         this.driver = driver;
@@ -68,10 +78,6 @@ public abstract class Widget {
             throw new RuntimeException("Not supported if id is not defined, use constructor with id");
         }
         return driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + this.id + "']"));
-    }
-
-    private static String createWidgetPath(String widgetId) {
-        return "//div[@"+ CSSUtils.TEST_ID +"'" + widgetId + "']";
     }
 
     //TODO: move to advanced search component

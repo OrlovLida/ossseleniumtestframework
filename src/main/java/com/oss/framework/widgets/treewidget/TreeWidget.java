@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.tree.TreeComponent;
+import com.oss.framework.components.tree.TreeComponent.Node;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -30,7 +31,9 @@ public class TreeWidget extends Widget {
     private static final String PATH_TO_TREE_ROW_CONTAINS =
             "//p[contains(@class,'TreeViewLabel')][contains(text(), '%s')]//..//..//div[@class='TreeRow']";
 
+    // move to get method
     private InlineMenu inlineMenu;
+
 
     @Deprecated
     public static TreeWidget createByClass(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
@@ -38,8 +41,9 @@ public class TreeWidget extends Widget {
                 widgetClass, webDriverWait);
     }
 
-    public static TreeWidget createByDataAttributeName(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
-        return new TreeWidget(driver, webDriverWait, dataAttributeName);
+    public static TreeWidget createById(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        Widget.waitForWidgetById(webDriverWait,widgetId);
+        return new TreeWidget(driver, webDriverWait, widgetId);
     }
 
     private TreeWidget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
@@ -48,25 +52,6 @@ public class TreeWidget extends Widget {
 
     private TreeWidget(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
         super(driver, webDriverWait, dataAttributeName);
-    }
-
-    public List<WebElement> getCheckboxes() {
-        return this.webElement.findElements(By.xpath(CHECKBOXES));
-    }
-
-    public List<Node> getVisibleNodes() {
-
-        List<WebElement> nodes = webElement.findElements(By.xpath(".//div[@class='ReactVirtualized__Grid__innerScrollContainer']/div"));
-
-        return nodes.stream().map(element -> {
-            WebElement node = element.findElement(By.className("tree-node"));
-            return new Node(driver, webDriverWait, node);
-        }).collect(Collectors.toList());
-
-    }
-
-    private TreeComponent getTreeComponent() {
-        return TreeComponent.create(driver, webDriverWait, webElement);
     }
 
     @Deprecated
@@ -111,62 +96,6 @@ public class TreeWidget extends Widget {
                 .map(webElement -> new TreeRow(webElement, webDriverWait)).collect(Collectors.toList());
     }
 
-    public List<Node> getRootNodeWithDescendants() {
-        return this.webElement.findElements(By.xpath("(//div[contains(@style,'margin-left: 0px;')])[2]/../." +
-                "./preceding-sibling::div")).stream()
-                .map(node -> new Node(driver, webDriverWait, webElement)).collect(Collectors.toList());
-    }
-
-    public List<Node> getSelectedNodes() {
-        return getVisibleNodes().stream().filter(Node::isSelected).collect(Collectors.toList());
-    }
-
-    public Node getNode(String label) {
-        Optional<Node> node = getVisibleNodes().stream().filter(n -> n.getLabel().equals(label)).findFirst();
-        if (node.isPresent()) {
-            return node.get();
-        }
-        throw new NoSuchElementException("Can't find node: " + label);
-    }
-
-    public String getFirstNodeLabel() {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        return getVisibleNodes().get(0).getLabel();
-    }
-
-    public Node getNode(int index) {
-        return getVisibleNodes().get(index);
-    }
-
-    public List<Node> getNodesWithExpandState(String expandState) {
-        return getVisibleNodes().stream().filter(n -> n.getExpandNodeClass().contains(expandState)).collect(Collectors.toList());
-    }
-
-    public List<Node> getDescendantNodesWithExpandState(String expandState) {
-        return getVisibleNodes().stream().filter(n -> n.getDescendantNodeExpandClass().contains(expandState)).collect(Collectors.toList());
-    }
-
-    public TreeWidget selectNode() {
-        Node firstNode = getFirstNode();
-        if (!firstNode.isSelected()) {
-            firstNode.click();
-        }
-        return this;
-    }
-
-    public Node getFirstNode() {
-        return getVisibleNodes().get(0);
-    }
-
-    public void selectNodeByPosition(int position) {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        getVisibleNodes().get(position).click();
-    }
-
-    public void selectNodeByLabel(String label) {
-        getNode(label).click();
-    }
-
     public void waitForTreeExpansion() {
         DelayUtils.waitForElementDisappear(webDriverWait, this.webElement.findElement(By.xpath("//i[contains(@class, 'list-plus')]")));
     }
@@ -182,25 +111,6 @@ public class TreeWidget extends Widget {
 
     public void selectTreeRowByOrder(Integer order) {
         getVisibleTreeRow().get(order).click();
-    }
-
-    public Boolean isNodeSelected() {
-        return getVisibleNodes().get(0).isSelected();
-    }
-
-    public TreeWidget expandNode() {
-        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
-        getNodesWithExpandState("collapsed").get(0).changeExpandState();
-        return this;
-    }
-
-    public void expandNode(String nodeLabel) {
-        getNode(nodeLabel).changeExpandState();
-    }
-
-    public TreeWidget expandNodeWithLabel(String label) {
-        getNode(label).changeExpandState();
-        return this;
     }
 
     public void expandLastTreeRow() {
@@ -234,28 +144,6 @@ public class TreeWidget extends Widget {
         treeRow.expandTreeRow();
     }
 
-    public TreeWidget selectRootCheckbox() {
-        DelayUtils.sleep();
-        getCheckboxes().get(0).click();
-        DelayUtils.sleep();
-        return this;
-    }
-
-    public TreeWidget selectExpandAllIcon() {
-        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
-        getVisibleNodes().get(0).clickExpandAllBtn();
-        return this;
-    }
-
-    public Boolean areNodesSelected() {
-        return (getRootNodeWithDescendants().size()) == getSelectedNodes().size();
-    }
-
-    public TreeWidget performSearch(String inputText) {
-        fullSearchText(inputText);
-        return this;
-    }
-
     public TreeWidget performSearchWithEnter(String inputText) {
         WebElement input = getSearchInput();
         input.sendKeys(Keys.CONTROL + "a");
@@ -265,112 +153,14 @@ public class TreeWidget extends Widget {
         return this;
     }
 
-    public Boolean isTreeWidgetEmpty() {
+    public void selectNodeByPosition(int position) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        return getVisibleNodes().isEmpty();
-    }
-
-    // TODO: ??
-    public Boolean isSearchingCorrect(String searchInput) {
-        int count = 0;
-        for (Node e : getVisibleNodes()) {
-            if (e.getLabel().contains(searchInput)) {
-                count++;
-            }
-        }
-        return getVisibleNodes().size() == count;
+//        getVisibleNodes().get(position).toggleNode();
     }
 
     public void callActionById(String groupLabel, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
         actionsContainer.callAction(groupLabel, id);
-    }
-
-    public static class Node {
-
-        // (tip: nodes are rendering in the virtual scroll, so they gonna disappear from DOM when invisible)
-
-        private static final String TREE_NODE_LABEL =
-                ".//div[contains(@class,'tree-node-default-component-label')]//div[contains(@class, 'OSSRichText')]";
-        private static final String TREE_NODE_SELECTION = ".//div[contains(@class, 'tree-node-default-component')]";
-        private static final String TREE_NODE_EXPAND = ".//div[contains(@class, 'tree-node-expand-icon')]";
-        private static final String EXPAND_ALL_ICON = ".//i[contains(@class, 'expandAllIcon')]";
-        private static final String DESCENDANT_TREE_NODE = "//div[not(contains(@style,'margin-left: 0px'))" +
-                "]/div/div[contains(@class, 'tree-node-expand-icon')]";
-        private static final String ICON_PLUS = ".//i[@aria-label='ADD']";
-        private static final String ICON_DISABLED = ".//div[@class='tree-node-expand tree-node-expand--disabled']";
-        private static final String ICON_EXPAND = "tree-node-expand";
-
-        private final WebElement webElement;
-        private final WebDriver driver;
-        private final WebDriverWait wait;
-
-        private Node(WebDriver driver, WebDriverWait wait, WebElement webElement) {
-            this.webElement = webElement;
-            this.driver = driver;
-            this.wait = wait;
-        }
-
-        private String getLabel() {
-            return webElement.findElement(By.xpath(TREE_NODE_LABEL)).getText();
-        }
-
-        public void click() {
-            WebElement checkbox = webElement.findElement(By.className("tree-node-selection"));
-            Actions actions = new Actions(driver);
-            actions.moveToElement(checkbox).click(checkbox).build().perform();
-        }
-
-        private String getExpandNodeClass() {
-            return this.webElement.findElement(By.xpath(TREE_NODE_EXPAND)).getAttribute(CLASS);
-        }
-
-        private String getDescendantNodeExpandClass() {
-            return this.webElement.findElement(By.xpath(DESCENDANT_TREE_NODE)).getAttribute(CLASS);
-        }
-
-        private void changeExpandState() {
-            this.webElement.findElement(By.xpath(TREE_NODE_EXPAND)).click();
-        }
-
-        private void clickExpandAllBtn() {
-            this.webElement.findElement(By.xpath(EXPAND_ALL_ICON)).click();
-        }
-
-        private boolean isSelected() {
-            return this.webElement.findElement(By.xpath(TREE_NODE_SELECTION)).getAttribute(CLASS).contains(
-                    "selected");
-        }
-
-        public boolean isExpanded() {
-            if (hasExpandButton()) {
-                return webElement.findElements(By.xpath(ICON_PLUS)).isEmpty();
-            }
-            throw new NoSuchElementException("Node doesn't have node expand");
-        }
-
-        private boolean hasExpandButton() {
-            return webElement.findElements(By.xpath(ICON_DISABLED)).stream().allMatch(node -> node.getText().isEmpty());
-        }
-
-        public void expandNode() {
-
-            if (!isExpanded()) {
-                webElement.findElement(By.className(ICON_EXPAND)).click();
-            }
-        }
-
-        public void callAction(String actionId) {
-            InlineMenu.create(webElement, driver, wait).callAction(actionId);
-        }
-
-        public void callAction(String groupId, String actionId) {
-            InlineMenu.create(webElement, driver, wait).callAction(groupId, actionId);
-        }
-
-        public boolean isInlineActionPresent() {
-            return InlineMenu.create(webElement, driver, wait).isActionListDisplayed();
-        }
     }
 
     private static class TreeRow {

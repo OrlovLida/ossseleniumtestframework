@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.utils.DelayUtils;
 
 public class TreeComponent {
@@ -22,7 +23,9 @@ public class TreeComponent {
     private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
 
-    private static final int LEFT_MARGIN_IN_PX = 28;
+    private static final int LEFT_MARGIN_IN_PX = 24;
+
+    private PaginationComponent paginationComponent;
 
     public static TreeComponent create(WebDriver driver, WebDriverWait webDriverWait, WebElement parent) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
@@ -40,6 +43,13 @@ public class TreeComponent {
         this.treeComponent = treeComponent;
     }
 
+    public PaginationComponent getPaginationComponent() {
+        if(paginationComponent == null) {
+            PaginationComponent.createFromParent(driver, webDriverWait, treeComponent);
+        }
+        return paginationComponent;
+    }
+
     public List<Node> getNodes(int level) {
         DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
@@ -47,6 +57,7 @@ public class TreeComponent {
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
     }
 
+    @Deprecated
     public List<Node> getNodesWithExpander(int level) {
         DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
