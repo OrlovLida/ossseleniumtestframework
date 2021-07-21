@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -31,6 +32,7 @@ public class TreeWidget extends Widget {
 
     private InlineMenu inlineMenu;
 
+    @Deprecated
     public static TreeWidget createByClass(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         return new TreeWidget(driver,
                 widgetClass, webDriverWait);
@@ -61,6 +63,10 @@ public class TreeWidget extends Widget {
             return new Node(driver, webDriverWait, node);
         }).collect(Collectors.toList());
 
+    }
+
+    private TreeComponent getTreeComponent() {
+        return TreeComponent.create(driver, webDriverWait, webElement);
     }
 
     @Deprecated
