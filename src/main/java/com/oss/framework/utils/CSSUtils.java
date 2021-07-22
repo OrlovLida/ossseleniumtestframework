@@ -64,7 +64,7 @@ public class CSSUtils {
 
     public static int getIntegerValue(String attributeName, WebElement webElement) {
         String value = webElement.getCssValue(attributeName);
-        value = value.replaceAll("[^\\d.]", "");
+        value = value.replaceAll("[a-z]|\\.(.*)", "");
         return Integer.valueOf(value);
     }
 

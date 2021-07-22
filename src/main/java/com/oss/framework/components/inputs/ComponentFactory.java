@@ -40,6 +40,9 @@ public class ComponentFactory {
             case MULTI_SEARCH_FIELD: {
                 return MultiSearchField.create(webDriver, wait, componentId);
             }
+            case OBJECT_SEARCH_FIELD: {
+                return ObjectSearchField.create(webDriver, wait, componentId);
+            }
             case NUMBER_FIELD: {
                 return NumberField.create(webDriver, wait, componentId);
             }

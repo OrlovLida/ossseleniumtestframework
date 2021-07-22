@@ -23,8 +23,7 @@ import com.oss.framework.utils.DragAndDrop.DropElement;
 import com.oss.framework.widgets.tablewidget.TableRow;
 
 public class TableComponent {
-    private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div/div";
-    private static final String HEADERS2_XPATH = ".//div[@class='sticky-table__header']/div";
+    private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
 
     private static final String TABLE_COMPONENT_CLASS = "table-component";
 
@@ -32,6 +31,8 @@ public class TableComponent {
     private final WebDriverWait webDriverWait;
     private final WebElement webElement;
     private final String widgetId;
+
+    private PaginationComponent paginationComponent;
 
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         DelayUtils.waitByXPath(webDriverWait, "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class," + TABLE_COMPONENT_CLASS + ")]");
@@ -92,6 +93,22 @@ public class TableComponent {
         resizeColumn(columnId, size);
     }
 
+    public Header getHeaderByIndex(String columnId) {
+        return Header.createHeader(this.driver, this.webDriverWait, this.webElement, columnId);
+    }
+
+    public void sortColumnByASC(String columnId) {
+        getHeaderByIndex(columnId).openSettings().sortByASC();
+    }
+
+    public void sortColumnByDESC(String columnId) {
+        getHeaderByIndex(columnId).openSettings().sortByDESC();
+    }
+
+    public void turnOffSorting(String columnId) {
+        getHeaderByIndex(columnId).openSettings().turnOffSorting();
+    }
+
     public void resizeColumn(String columnId, int size) {
         Header header = Header.createHeader(this.driver, this.webDriverWait, this.webElement, columnId);
         header.resize(size);
@@ -134,9 +151,13 @@ public class TableComponent {
                 .map(Header::getText).collect(Collectors.toList());
     }
 
-    private PaginationComponent getPaginationComponent() {
-        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
-        return PaginationComponent.createFromParent(this.driver, this.webDriverWait, webElement);
+    public PaginationComponent getPaginationComponent() {
+        if (paginationComponent == null) {
+            WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+            paginationComponent = PaginationComponent.createFromParent(this.driver, this.webDriverWait, webElement);
+        }
+
+        return paginationComponent;
     }
 
     private Row getRow(int index) {
@@ -172,30 +193,39 @@ public class TableComponent {
     }
 
     private BigDecimal getContentWidth() {
-        WebElement headersBody = this.webElement.findElement(By.xpath(HEADERS2_XPATH));
+        WebElement headersBody = this.webElement.findElement(By.xpath(HEADERS_XPATH));
         return BigDecimal.valueOf(CSSUtils.getDecimalWidthValue(headersBody));
     }
 
     private void scrollRightToHeader(Header header) {
         CustomScrolls scrolls = getCustomScrolls();
+        BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getHorizontalScrollWidth());
+        int contentVisibleWidth = scrolls.getHorizontalBar().getSize().width;
+        int diff = scrollWidth.toBigInteger().intValue() - contentVisibleWidth;
 
         BigDecimal contentWidth = getContentWidth();
-        BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getVerticalScrollWidth());
         BigDecimal cellLeft = BigDecimal.valueOf(header.getLeft());
         BigDecimal ratio = contentWidth.divide(scrollWidth, 2, RoundingMode.FLOOR);
 
-        scrolls.scrollVertically(cellLeft.divide(ratio, 2, RoundingMode.FLOOR).toBigInteger().intValue());
+        int offset = cellLeft.divide(ratio, 2, RoundingMode.FLOOR).toBigInteger().intValue();
+
+        scrolls.scrollHorizontally(Math.min(offset, diff));
     }
 
     private void scrollToFirstColumn() {
         CustomScrolls scrolls = getCustomScrolls();
-        BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getVerticalScrollWidth());
-        scrolls.scrollVertically(scrollWidth.negate().toBigInteger().intValue());
+        if (scrolls.getHorizontalBar().getSize().width == 0) return;
+
+        int translateX = scrolls.getTranslateXValue(scrolls.getHorizontalBar());
+        if (translateX == 0) return;
+
+        scrolls.scrollHorizontally(-translateX);
     }
 
     public static class Header {
         private static final String HEADER_CLASS = "table-component__header";
         private static final String RESIZE_XPATH = ".//div[@" + CSSUtils.TEST_ID + "='col-%s-resizer']";
+        private static String SETTINGS_XPATH = ".//div[@" + CSSUtils.TEST_ID + "='col-%s-settings']";
 
         private final WebElement tableComponent;
         private final String columnId;
@@ -233,10 +263,18 @@ public class TableComponent {
             return String.format(RESIZE_XPATH, columnId);
         }
 
+        private String getSettingsXpath() {
+            return String.format(SETTINGS_XPATH, columnId);
+        }
+
         public void resize(int offset) {
             WebElement resize = getHeader(tableComponent, columnId).findElement(By.xpath(getResizeXpath()));
             Actions action = new Actions(this.driver);
             action.dragAndDropBy(resize, offset, 0).perform();
+        }
+
+        public HeaderSettings getHeaderSettings() {
+            return HeaderSettings.createHeaderSettings(this.driver, this.webDriverWait);
         }
 
         public int getSize() {
@@ -257,6 +295,11 @@ public class TableComponent {
 
         public int getLeft() {
             return CSSUtils.getLeftValue(getHeader(tableComponent, columnId).findElement(By.xpath("./..")));
+        }
+
+        public HeaderSettings openSettings() {
+            getHeader(tableComponent, columnId).findElement(By.xpath(getSettingsXpath())).click();
+            return getHeaderSettings();
         }
 
         public DropElement getDropElement() {
@@ -281,6 +324,39 @@ public class TableComponent {
         @Override
         public int hashCode() {
             return Objects.hashCode(columnId);
+        }
+    }
+
+    public static class HeaderSettings {
+        private final WebElement webElement;
+        private final WebDriver driver;
+        private final WebDriverWait webDriverWait;
+
+        private static HeaderSettings createHeaderSettings(WebDriver driver, WebDriverWait webDriverWait) {
+            return new HeaderSettings(driver, webDriverWait);
+        }
+
+        private HeaderSettings(WebDriver driver, WebDriverWait webDriverWait) {
+            this.driver = driver;
+            this.webDriverWait = webDriverWait;
+            this.webElement = this.driver.findElement(By.xpath("//div[@class='column-panel-settings']"));
+        }
+
+        private List<WebElement> sortButtons() {
+            WebElement buttonsWrapper = this.webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='sort_btn']"));
+            return buttonsWrapper.findElements(By.cssSelector("div.radio"));
+        }
+
+        private void sortByASC() {
+            sortButtons().get(1).click();
+        }
+
+        private void sortByDESC() {
+            sortButtons().get(2).click();
+        }
+
+        private void turnOffSorting() {
+            sortButtons().get(0).click();
         }
     }
 
@@ -431,22 +507,35 @@ public class TableComponent {
             this.scrolls = scrolls;
         }
 
-        public void scrollHorizontally(int offset) {
+        private WebElement getHorizontalScroll() {
+            List<WebElement> divs = scrolls.findElements(By.xpath("./div"));
+            return divs.get(1);
         }
 
-        public void scrollVertically(int offset) {
-            List<WebElement> divs = scrolls.findElements(By.xpath("./div"));
-            WebElement horizontal = divs.get(1);
-            WebElement bar = horizontal.findElement(By.xpath("./div"));
+        private WebElement getHorizontalBar() {
+            WebElement horizontal = getHorizontalScroll();
+            return horizontal.findElement(By.xpath("./div"));
+        }
+
+        public void scrollHorizontally(int offset) {
             Actions action = new Actions(this.driver);
-            action.moveToElement(bar).clickAndHold();
+            action.moveToElement(getHorizontalBar()).clickAndHold();
             action.moveByOffset(offset, 0);
             action.release();
             action.perform();
         }
 
-        public int getVerticalScrollWidth() {
-            return 1610;
+        public int getTranslateXValue(WebElement bar) {
+            String barStyle = bar.getAttribute("style");
+            String translateX = barStyle.split("translateX\\(")[1];
+            return Integer.parseInt(translateX.split("px")[0]);
+        }
+
+        public void scrollVertically(int offset) {
+        }
+
+        public int getHorizontalScrollWidth() {
+            return getHorizontalScroll().getSize().width;
         }
     }
 }
