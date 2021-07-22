@@ -25,7 +25,7 @@ public class TreeComponent {
     private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
 
-    private static final int LEFT_MARGIN_IN_PX = 28;
+    private static final int LEFT_MARGIN_IN_PX = 24;
 
     public static TreeComponent create(WebDriver driver, WebDriverWait webDriverWait, WebElement parent) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
