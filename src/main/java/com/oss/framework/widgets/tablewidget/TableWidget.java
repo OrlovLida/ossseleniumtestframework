@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.oss.framework.components.common.PaginationComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -132,8 +133,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public int getRowNumber(String value, String attributeLabel)
-    {
+    public int getRowNumber(String value, String attributeLabel) {
         throw new RuntimeException("Not implemented yet");
     }
 
@@ -150,6 +150,20 @@ public class TableWidget extends Widget implements TableInterface {
             DelayUtils.sleep(REFRESH_INTERVAL);
             callAction(ActionsContainer.KEBAB_GROUP_ID, refreshId);
         }
+    }
+
+    public void toggleVisibilitySearchAttributes(List<String> attributeIds) {
+        openAdvancedSearch();
+        getAdvancedSearch().toggleAttributes(attributeIds);
+        getAdvancedSearch().clickApply();
+    }
+
+    public List<String> getAllVisibleFilters() {
+        openAdvancedSearch();
+        List<String> filters = getAdvancedSearch().getAllVisibleFilters();
+        getAdvancedSearch().clickCancel();
+
+        return filters;
     }
 
     @Override
@@ -199,8 +213,42 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().resizeColumnByPosition(column, offset);
     }
 
+    public void sortColumnByASC(String columnId) {
+        getTableComponent().sortColumnByASC(columnId);
+    }
+
+    public void sortColumnByDESC(String columnId) {
+        getTableComponent().sortColumnByDESC(columnId);
+    }
+
+    public void turnOffSortingForColumn(String columnId) {
+        getTableComponent().turnOffSorting(columnId);
+    }
+
     public void clearAllFilters() {
         getAdvancedSearch().clearAllFilters();
+    }
+
+    public void clearFilter(String filterName) {
+        getAdvancedSearch().clearFilter(filterName);
+    }
+
+    public void markFilterAsFavByLabel(String label) {
+        openAdvancedSearch();
+        getAdvancedSearch().markFilterAsFavByLabel(label);
+        getAdvancedSearch().clickCancel();
+    }
+
+    public void choseSavedFiltersByLabel(String label) {
+        openAdvancedSearch();
+        getAdvancedSearch().choseSavedFilterByLabel(label);
+        getAdvancedSearch().clickApply();
+    }
+
+    public void saveAsNewFilter(String name) {
+        openAdvancedSearch();
+        getAdvancedSearch().saveAsNewFilter(name);
+        getAdvancedSearch().clickCancel();
     }
 
     public SaveConfigurationWizard openSaveConfigurationWizard() {
@@ -231,6 +279,10 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getVisibleRows().size();
     }
 
+    public PaginationComponent getPagination() {
+        return getTableComponent().getPaginationComponent();
+    }
+
     private void selectTableRow(int row) {
         getTableComponent().selectRow(row);
     }
@@ -247,8 +299,12 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().fullTextSearch(text);
     }
 
+    public void setQuickFilter(String name) {
+        getAdvancedSearch().setQuickFilter(name);
+    }
+
     public void scrollHorizontally(int offset) {
-       getTableComponent().scrollHorizontally(offset);
+        getTableComponent().scrollHorizontally(offset);
     }
 
     public void scrollVertically(int offset) {
