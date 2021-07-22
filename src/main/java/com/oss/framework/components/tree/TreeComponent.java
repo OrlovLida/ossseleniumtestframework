@@ -10,6 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.common.PaginationComponent;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class TreeComponent {
@@ -50,6 +51,29 @@ public class TreeComponent {
         return paginationComponent;
     }
 
+    private Node getNodeByPath(String ... path) {
+        StringBuilder currentPath = new StringBuilder();
+        Node node = null;
+        for(String element : path) {
+            currentPath.append(element);
+            String tempPath = currentPath.toString();
+            List<Node> nodes = getVisibleNodes();
+            node = nodes.stream().filter(n -> n.getPath().equals(tempPath))
+                    .findFirst().orElseThrow(() ->  new RuntimeException("Cant find node: " + tempPath));
+            //if last element we can skip
+            node.expandNode();
+            currentPath.append(".");
+        }
+        return node;
+    }
+
+    private List<Node> getVisibleNodes() {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        return this.treeComponent.findElements(By.xpath(".//div[@class='" + NODE_CLASS + "']")).stream()
+                .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
+    }
+
+    @Deprecated
     public List<Node> getNodes(int level) {
         DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
@@ -75,6 +99,10 @@ public class TreeComponent {
             this.driver = driver;
             this.webDriverWait = webDriverWait;
             this.node = node;
+        }
+
+        public String getPath() {
+            return CSSUtils.getAttributeValue("data-guid", node);
         }
 
         public boolean isToggled() {

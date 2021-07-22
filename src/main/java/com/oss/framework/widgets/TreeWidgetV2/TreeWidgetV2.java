@@ -13,7 +13,6 @@ import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.components.tree.TreeComponent.Node;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
-import com.oss.framework.widgets.treewidget.TreeWidget;
 
 public class TreeWidgetV2 extends Widget {
 
@@ -59,6 +58,7 @@ public class TreeWidgetV2 extends Widget {
         actionsContainer.callAction(groupLabel, id);
     }
 
+
     public void selectNodeByLabel(String label) {
         getNode(label).toggleNode();
     }
@@ -93,5 +93,4 @@ public class TreeWidgetV2 extends Widget {
         }
         return treeComponent;
     }
-
 }

@@ -32,6 +32,7 @@ public class TableWidget extends Widget implements TableInterface {
     private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
 
     private AdvancedSearch advancedSearch;
+    private TableComponent tableComponent;
 
     @Deprecated
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
@@ -255,7 +256,10 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private TableComponent getTableComponent() {
-        return TableComponent.create(this.driver, this.webDriverWait, this.id);
+        if(tableComponent == null) {
+            tableComponent = TableComponent.create(this.driver, this.webDriverWait, this.id);
+        }
+        return tableComponent;
     }
 
 
