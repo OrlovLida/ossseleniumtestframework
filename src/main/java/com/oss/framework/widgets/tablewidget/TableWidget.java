@@ -184,6 +184,10 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getColumnHeaders();
     }
 
+    public List<String> getActiveColumnIds() {
+        return getTableComponent().getColumnIds();
+    }
+
     @Override
     public void disableColumn(String columnLabel) {
         getAttributesChooser().disableAttributeByLabel(columnLabel, "")

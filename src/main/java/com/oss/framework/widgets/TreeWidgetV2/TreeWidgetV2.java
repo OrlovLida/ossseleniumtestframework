@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.components.tree.TreeComponent.Node;
 import com.oss.framework.utils.DelayUtils;
@@ -17,6 +18,7 @@ import com.oss.framework.widgets.Widget;
 public class TreeWidgetV2 extends Widget {
 
     private TreeComponent treeComponent;
+    private AdvancedSearch advancedSearch;
 
     public static TreeWidgetV2 create(WebDriver driver, WebDriverWait wait, String widgetId) {
         Widget.waitForWidgetById(wait, widgetId);
@@ -27,11 +29,11 @@ public class TreeWidgetV2 extends Widget {
         super(driver, webDriverWait, widgetId);
     }
 
-    private List<Node> getVisibleNodes() {
-        return getTreeComponent().getNodes(0);
+    public List<Node> getVisibleNodes() {
+        return getTreeComponent().getVisibleNodes();
     }
 
-    public TreeComponent.Node getNode(String label) {
+    public Node getNode(String label) {
         Optional<Node> node = getVisibleNodes().stream().filter(n -> n.getLabel().equals(label)).findFirst();
         if (node.isPresent()) {
             return node.get();
@@ -40,17 +42,16 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public void selectFirstNode() {
-        List<TreeComponent.Node> nodes = getTreeComponent().getNodes(0);
+        List<Node> nodes = getTreeComponent().getVisibleNodes();
         nodes.get(0).toggleNode();
     }
 
-    public TreeComponent.Node getFirstNode() {
+    public Node getFirstNode() {
         return getVisibleNodes().get(0);
     }
 
-    public void selectNodeByPosition(int position) {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        getVisibleNodes().get(position).toggleNode();
+    public void typeIntoSearch(String text) {
+        getAdvancedSearch().fullTextSearch(text);
     }
 
     public void callActionById(String groupLabel, String id) {
@@ -78,11 +79,15 @@ public class TreeWidgetV2 extends Widget {
         getNode(label).expandNode();
     }
 
-    public void performSearch(String inputText) {
-        fullSearchText(inputText);
+    public void clearAllFilters() {
+        getAdvancedSearch().clearAllFilters();
     }
 
-    public Boolean isTreeWidgetEmpty() {
+    public void clearFilter(String filterName) {
+        getAdvancedSearch().clearFilter(filterName);
+    }
+
+    public boolean isEmpty() {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         return getVisibleNodes().isEmpty();
     }
@@ -92,5 +97,12 @@ public class TreeWidgetV2 extends Widget {
             treeComponent = TreeComponent.create(driver, webDriverWait, webElement);
         }
         return treeComponent;
+    }
+
+    private AdvancedSearch getAdvancedSearch() {
+        if (advancedSearch == null) {
+            advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
+        }
+        return advancedSearch;
     }
 }
