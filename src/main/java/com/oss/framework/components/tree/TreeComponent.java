@@ -4,15 +4,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.treewidget.InlineMenu;
 
 public class TreeComponent {
 
@@ -26,6 +28,8 @@ public class TreeComponent {
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
 
     private static final int LEFT_MARGIN_IN_PX = 24;
+
+    private PaginationComponent paginationComponent;
 
     public static TreeComponent create(WebDriver driver, WebDriverWait webDriverWait, WebElement parent) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
@@ -43,6 +47,60 @@ public class TreeComponent {
         this.treeComponent = treeComponent;
     }
 
+    public PaginationComponent getPaginationComponent() {
+        if(paginationComponent == null) {
+            PaginationComponent.createFromParent(driver, webDriverWait, treeComponent);
+        }
+        return paginationComponent;
+    }
+
+    public void expandNodeByPath(String path) {
+        Node node = getNodeByPath(path);
+        node.expandNode();
+    }
+
+    public void toggleNodeByPath(String path) {
+        Node node = getNodeByPath(path);
+        node.toggleNode();
+    }
+
+    public Node getNodeByPath(String path) {
+        List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(path));
+        return getNodeByPath(pathElements, false);
+    }
+
+    private Node getNodeByPath(List<String> pathElements, boolean isLabel) {
+        StringBuilder currentPath = new StringBuilder();
+        Node node = null;
+        for(int i = 0; i < pathElements.size(); i++) {
+            currentPath.append(pathElements.get(i));
+            String tempPath = currentPath.toString();
+            List<Node> nodes = getVisibleNodes();
+
+            if(isLabel) {
+                node = nodes.stream().filter(n -> n.getPathLabel().equals(tempPath))
+                        .findFirst().orElseThrow(() ->  new RuntimeException("Cant find node: " + tempPath));
+            } else {
+                node = nodes.stream().filter(n -> n.getPath().equals(tempPath))
+                        .findFirst().orElseThrow(() ->  new RuntimeException("Cant find node: " + tempPath));
+            }
+
+            if(i != pathElements.size() -1) {
+                node.expandNode();
+                currentPath.append(".");
+            }
+        }
+
+        return node;
+    }
+
+    public List<Node> getVisibleNodes() {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        return this.treeComponent.findElements(By.xpath(".//div[@class='" + NODE_CLASS + "']")).stream()
+                .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
+    }
+
+    @Deprecated
     public List<Node> getNodes(int level) {
         DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
@@ -50,6 +108,7 @@ public class TreeComponent {
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
     }
 
+    @Deprecated
     public List<Node> getNodesWithExpander(int level) {
         DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
@@ -58,15 +117,31 @@ public class TreeComponent {
     }
 
     public static class Node {
+             private static final String DATA_GUID_ATTR = "data-guid";
+        //TODO: change attribute name
+        private static final String DATA_PATH_LABEL_ATTR = "data-guid";
 
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement node;
 
+        private Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement node) {
+            //TODO: add path to equals
+            return new Node(driver, webDriverWait, node);
+        }
+
         private Node(WebDriver driver, WebDriverWait webDriverWait, WebElement node) {
             this.driver = driver;
             this.webDriverWait = webDriverWait;
             this.node = node;
+        }
+
+        public String getPath() {
+            return CSSUtils.getAttributeValue(DATA_GUID_ATTR, node);
+        }
+
+        public String getPathLabel() {
+            return CSSUtils.getAttributeValue(DATA_PATH_LABEL_ATTR, node);
         }
 
         public boolean isToggled() {
@@ -109,6 +184,14 @@ public class TreeComponent {
         public String getLabel() {
             WebElement richText = node.findElement(By.className(NODE_LABEL_CLASS));
             return richText.getText();
+        }
+
+        public void callAction(String groupId, String actionId) {
+            Actions actions = new Actions(driver);
+            actions.moveToElement(node).build().perform();
+
+            InlineMenu menu = InlineMenu.create(node, driver, webDriverWait);
+            menu.callAction(groupId, actionId);
         }
     }
 }
