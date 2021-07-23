@@ -123,7 +123,8 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
     
     private WebElement getSwitcher() {
-        return this.webElement.findElement(By.xpath(SWITCHER_XPATH));
+        WebElement propertyPanelWrapper = this.webElement.findElement(By.xpath(".//ancestor::div"));
+        return propertyPanelWrapper.findElement(By.cssSelector("div.switcher"));
     }
     
     public void hideEmpty() {
