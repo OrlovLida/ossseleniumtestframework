@@ -196,6 +196,11 @@ public class Wizard {
         buttonContainer.callActionByLabel(label);
     }
 
+    public void callButtonById(String id) {
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement, driver, wait);
+        buttonContainer.callActionById(id);
+    }
+
     public void rolloutByLabel(String text) {
         if (isElementPresent(webElement, By.xpath("//div[contains(@class, 'collapsedRollout')]" + String.format(BY_TEXT_XPATH, text)))) {
             webElement.findElement(By.xpath(String.format(BY_TEXT_XPATH, text))).click();
