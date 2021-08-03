@@ -20,6 +20,13 @@ public class OptionsPanel {
     private static final String OPTIONS_BUTTON_ID = "options-menu-button";
     private static final String TIME_PERIOD_CHOOSER_PATH = "//div[@data-testid = 'time-period-chooser']";
     private static final String TIME_PERIOD_CHOOSER_INPUT_PATH = "//div[@class='md-input']//input[@label='%s']";
+    private static final String AGGREGATION_METHOD_CHOOSER_PATH = "//div[@data-testid = 'aggregation-method-button']";
+    private static final String AGGREGATION_METHOD_CHOOSER_INPUT_PATH = "//*[contains(@class,'list-group')]//*[@data-testid='%s']";
+    private static final String Y_AXIS_SETTINGS_PATH = "//*[@data-testid = 'y-axis-options-button']";
+    private static final String Y_AXIS_SETTINGS_INPUT_PATH = "//label[contains(@for,'%s')]";
+    private static final String MISCELLANEOUS_OPTIONS_PATH = "//*[@data-testid = 'miscellaneous-options-common-form']";
+    private static final String OPTIONS_INPUT_ID = "//*[@data-testid = '%s']";
+    private static final String COMPARE_WITH_OTHER_PERIOD_OPTIONS_PATH = "//*[@data-testid = 'compare-with-period-common-form']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -39,6 +46,18 @@ public class OptionsPanel {
 
     public enum TimePeriodChooserOption {
         PERIOD, RANGE, LAST, MIDDLE, SMART, LATEST
+    }
+
+    public enum AggregationMethodOption {
+        MIN, MAX, AVG, SUM, COUNT
+    }
+
+    public enum YAxisOption {
+        AUTO, MANUAL
+    }
+
+    public enum MiscellaneousOption {
+        DATA_COMPLETENESS, LAST_SAMPLE_TIME
     }
 
     private void moveOverElement(String elementPath) {
@@ -101,5 +120,106 @@ public class OptionsPanel {
 
     private String createChooseOptionXPath(String option) {
         return "//div[contains(@class,'main-options common-options')]//label[@for='time-options_" + option + "']";
+    }
+
+    public void chooseAggregationMethodOption(AggregationMethodOption aggregationMethod) {
+        DelayUtils.waitForPageToLoad(driver, wait);
+
+        switch (aggregationMethod) {
+            case MIN: {
+                input.findElement(By.xpath(createChooseAggregationMethodXPath("Min"))).click();
+                break;
+            }
+            case MAX: {
+                input.findElement(By.xpath(createChooseAggregationMethodXPath("Max"))).click();
+                break;
+            }
+            case AVG: {
+                input.findElement(By.xpath(createChooseAggregationMethodXPath("Avg"))).click();
+                break;
+            }
+            case SUM: {
+                input.findElement(By.xpath(createChooseAggregationMethodXPath("Sum"))).click();
+                break;
+            }
+            case COUNT: {
+                input.findElement(By.xpath(createChooseAggregationMethodXPath("Count"))).click();
+                break;
+            }
+        }
+    }
+
+    private String createChooseAggregationMethodXPath(String option) {
+        String chooseAggregationMethodXPath = String.format(AGGREGATION_METHOD_CHOOSER_INPUT_PATH, option);
+        return chooseAggregationMethodXPath;
+    }
+
+    public void chooseAggregationMethod() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        Button.createById(driver, OPTIONS_BUTTON_ID).click();
+        log.debug("Click options button");
+        moveOverElement(AGGREGATION_METHOD_CHOOSER_PATH);
+    }
+
+    public void chooseYAxisOption() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        Button.createById(driver, OPTIONS_BUTTON_ID).click();
+        log.debug("Click options button");
+        moveOverElement(Y_AXIS_SETTINGS_PATH);
+    }
+
+    private String createChooseYAxisOptionXPath(String option) {
+        String chooseYAxisOptionXPath = String.format(Y_AXIS_SETTINGS_INPUT_PATH, option);
+        return chooseYAxisOptionXPath;
+    }
+
+    private String createXPathByDataTestId(String option) {
+        String dataTestIdXpath = String.format(OPTIONS_INPUT_ID, option);
+        return dataTestIdXpath;
+    }
+
+    public void setYAxisOption(YAxisOption yAxisOption) {
+        DelayUtils.waitForPageToLoad(driver, wait);
+
+        switch (yAxisOption) {
+            case MANUAL: {
+                input.findElement(By.xpath(createChooseYAxisOptionXPath("manual"))).click();
+                break;
+            }
+            case AUTO: {
+                input.findElement(By.xpath(createChooseYAxisOptionXPath("auto"))).click();
+                break;
+            }
+        }
+    }
+
+    public void chooseMiscellaneousOption() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        Button.createById(driver, OPTIONS_BUTTON_ID).click();
+        log.debug("Click options button");
+        moveOverElement(MISCELLANEOUS_OPTIONS_PATH);
+    }
+
+    public void setMiscellaneousOption(MiscellaneousOption miscellaneousOption) {
+        DelayUtils.waitForPageToLoad(driver, wait);
+
+        switch (miscellaneousOption) {
+            case LAST_SAMPLE_TIME: {
+                input.findElement(By.xpath(createXPathByDataTestId("ShowLastSampleChanged"))).click();
+                break;
+            }
+            case DATA_COMPLETENESS: {
+                input.findElement(By.xpath(createXPathByDataTestId("CompletenessChanged"))).click();
+                break;
+            }
+        }
+    }
+
+    public void setOtherPeriodOption() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        Button.createById(driver, OPTIONS_BUTTON_ID).click();
+        log.debug("Click options button");
+        moveOverElement(COMPARE_WITH_OTHER_PERIOD_OPTIONS_PATH);
+        input.findElement(By.xpath(createXPathByDataTestId("OtherPeriodEnabled"))).click();
     }
 }

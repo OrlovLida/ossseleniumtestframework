@@ -16,7 +16,7 @@ public class LayoutPanel {
 
     private static final Logger log = LoggerFactory.getLogger(LayoutPanel.class);
 
-    private final static String LAYOUT_BUTTON_PATH = "//i[@aria-label='LAYOUT']";
+    private final static String LAYOUT_BUTTON_ID = "//*[@data-testid='layout-button']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -50,9 +50,9 @@ public class LayoutPanel {
     }
 
     public void changeLayout(LayoutType layout){
-        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath(LAYOUT_BUTTON_PATH)));
+        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath(LAYOUT_BUTTON_ID)));
         DelayUtils.sleep();
-        findElementByXpath(this.webElement, LAYOUT_BUTTON_PATH).click();
+        findElementByXpath(this.webElement, LAYOUT_BUTTON_ID).click();
 
         log.debug(CLICK_BTN + "Layout");
 
