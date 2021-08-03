@@ -59,7 +59,6 @@ public class TreeWidgetV2 extends Widget {
         actionsContainer.callAction(groupLabel, id);
     }
 
-
     public void selectNodeByLabel(String label) {
         getNode(label).toggleNode();
     }
@@ -92,8 +91,16 @@ public class TreeWidgetV2 extends Widget {
         return getVisibleNodes().isEmpty();
     }
 
+    public Node getNodeByPath(String path) {
+        return getTreeComponent().getNodeByPath(path);
+    }
+
+    public Node getNodeByLabelsPath(String labels) {
+        return getTreeComponent().getNodeByPath(labels);
+    }
+
     private TreeComponent getTreeComponent() {
-        if(treeComponent == null) {
+        if (treeComponent == null) {
             treeComponent = TreeComponent.create(driver, webDriverWait, webElement);
         }
         return treeComponent;
