@@ -150,8 +150,7 @@ public class OptionsPanel {
     }
 
     private String createChooseAggregationMethodXPath(String option) {
-        String chooseAggregationMethodXPath = String.format(AGGREGATION_METHOD_CHOOSER_INPUT_PATH, option);
-        return chooseAggregationMethodXPath;
+        return String.format(AGGREGATION_METHOD_CHOOSER_INPUT_PATH, option);
     }
 
     public void chooseAggregationMethod() {
@@ -169,13 +168,11 @@ public class OptionsPanel {
     }
 
     private String createChooseYAxisOptionXPath(String option) {
-        String chooseYAxisOptionXPath = String.format(Y_AXIS_SETTINGS_INPUT_PATH, option);
-        return chooseYAxisOptionXPath;
+        return String.format(Y_AXIS_SETTINGS_INPUT_PATH, option);
     }
 
     private String createXPathByDataTestId(String option) {
-        String dataTestIdXpath = String.format(OPTIONS_INPUT_ID, option);
-        return dataTestIdXpath;
+        return String.format(OPTIONS_INPUT_ID, option);
     }
 
     public void setYAxisOption(YAxisOption yAxisOption) {
