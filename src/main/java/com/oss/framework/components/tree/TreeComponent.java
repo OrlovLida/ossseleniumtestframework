@@ -48,7 +48,7 @@ public class TreeComponent {
     }
 
     public PaginationComponent getPaginationComponent() {
-        if(paginationComponent == null) {
+        if (paginationComponent == null) {
             PaginationComponent.createFromParent(driver, webDriverWait, treeComponent);
         }
         return paginationComponent;
@@ -69,23 +69,28 @@ public class TreeComponent {
         return getNodeByPath(pathElements, false);
     }
 
+    public Node getNodeByLabelsPath(String labels) {
+        List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(labels));
+        return getNodeByPath(pathElements, true);
+    }
+
     private Node getNodeByPath(List<String> pathElements, boolean isLabel) {
         StringBuilder currentPath = new StringBuilder();
         Node node = null;
-        for(int i = 0; i < pathElements.size(); i++) {
+        for (int i = 0; i < pathElements.size(); i++) {
             currentPath.append(pathElements.get(i));
             String tempPath = currentPath.toString();
             List<Node> nodes = getVisibleNodes();
 
-            if(isLabel) {
+            if (isLabel) {
                 node = nodes.stream().filter(n -> n.getPathLabel().equals(tempPath))
-                        .findFirst().orElseThrow(() ->  new RuntimeException("Cant find node: " + tempPath));
+                        .findFirst().orElseThrow(() -> new RuntimeException("Cant find node: " + tempPath));
             } else {
                 node = nodes.stream().filter(n -> n.getPath().equals(tempPath))
-                        .findFirst().orElseThrow(() ->  new RuntimeException("Cant find node: " + tempPath));
+                        .findFirst().orElseThrow(() -> new RuntimeException("Cant find node: " + tempPath));
             }
 
-            if(i != pathElements.size() -1) {
+            if (i != pathElements.size() - 1) {
                 node.expandNode();
                 currentPath.append(".");
             }
@@ -117,9 +122,8 @@ public class TreeComponent {
     }
 
     public static class Node {
-             private static final String DATA_GUID_ATTR = "data-guid";
-        //TODO: change attribute name
-        private static final String DATA_PATH_LABEL_ATTR = "data-guid";
+        private static final String DATA_GUID_ATTR = "data-guid";
+        private static final String DATA_PATH_LABEL_ATTR = "data-testid";
 
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
