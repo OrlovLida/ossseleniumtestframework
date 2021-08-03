@@ -50,6 +50,11 @@ public class AdvancedSearch {
         WebElement webElement = driver.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + id + "']"));
         return new AdvancedSearch(driver, wait, webElement);
     }
+    public static AdvancedSearch createByWidgetId(WebDriver driver, WebDriverWait wait, String widgetId) {
+        WebElement widget = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+        WebElement search = widget.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='search']"));
+        return new AdvancedSearch(driver,wait,search);
+    }
 
     public AdvancedSearch(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
