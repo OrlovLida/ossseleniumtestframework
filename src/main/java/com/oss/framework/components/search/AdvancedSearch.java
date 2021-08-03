@@ -51,9 +51,9 @@ public class AdvancedSearch {
         return new AdvancedSearch(driver, wait, webElement);
     }
     public static AdvancedSearch createByWidgetId(WebDriver driver, WebDriverWait wait, String widgetId) {
+        DelayUtils.waitByXPath(wait, "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']");
         WebElement widget = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
-        WebElement search = widget.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='search']"));
-        return new AdvancedSearch(driver,wait,search);
+        return new AdvancedSearch(driver,wait,widget);
     }
 
     public AdvancedSearch(WebDriver driver, WebDriverWait wait) {
@@ -74,7 +74,8 @@ public class AdvancedSearch {
     }
 
     private WebElement getFullTextSearch() {
-        WebElement search = this.webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='search']"));
+        DelayUtils.waitForNestedElements(wait,webElement,".//div[@" + CSSUtils.TEST_ID + "='search']");
+        WebElement search = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='search']"));
         return search.findElement(By.xpath(".//input"));
     }
 
