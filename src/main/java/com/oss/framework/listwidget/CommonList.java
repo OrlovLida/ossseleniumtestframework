@@ -12,7 +12,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
@@ -269,6 +271,26 @@ public class CommonList {
         DelayUtils.waitForNestedElements(wait, getCommonList(), ".//li[@class='categoryListElement']");
         List<WebElement> categories = getCommonList().findElements(By.xpath(".//li[@class='categoryListElement']"));
         return categories.stream().map(category -> new Category(driver, wait, category)).collect(Collectors.toList());
+    }
+    public void fullTextSearch(String value){
+        getAdvanceSearch().fullTextSearch(value);
+    }
+
+    public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, componentType, value);
+        getAdvanceSearch().clickApply();
+    }
+    private void openAdvancedSearch() {
+        getAdvanceSearch().openSearchPanel();
+    }
+
+    private AdvancedSearch getAdvanceSearch(){
+        return AdvancedSearch.createByWidgetId(driver,wait,id);
+    }
+    private void setFilterContains(String componentId, Input.ComponentType componentType, String value) {
+        Input input = getAdvanceSearch().getComponent(componentId, componentType);
+        input.setSingleStringValue(value);
     }
     
     public static class Row {

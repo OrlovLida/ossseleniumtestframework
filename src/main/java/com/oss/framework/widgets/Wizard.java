@@ -32,6 +32,7 @@ public class Wizard {
     private static final String SAVE_BUTTON = ".//a[text()='Save']";
     private static final String PROCEED_BUTTON = ".//a[text()='Proceed']";
     private static final String BY_TEXT_XPATH = "//*[text()='%s']";
+    private static final String DATA_TEST_ID_XPATH = "//*[@" + CSSUtils.TEST_ID + "='%s']";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
@@ -43,8 +44,8 @@ public class Wizard {
     }
 
     public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
-        DelayUtils.waitByXPath(wait, "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
-        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
+        Widget.waitForWidgetById(wait, componentId);
+        WebElement webElement = driver.findElement(By.xpath(String.format(DATA_TEST_ID_XPATH, componentId)));
         return new Wizard(driver, wait, webElement);
     }
 
@@ -77,7 +78,7 @@ public class Wizard {
     }
 
     public Input setComponentValue(String componentId, String value, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, "//*[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
+        DelayUtils.waitForNestedElements(wait, webElement, String.format(DATA_TEST_ID_XPATH, componentId));
         Input input = getComponent(componentId, componentType);
         input.setSingleStringValue(value);
         return input;
@@ -176,13 +177,13 @@ public class Wizard {
     }
 
     public void clickActionById(String actionId) {
-        DelayUtils.waitForNestedElements(wait, webElement, "//*[@" + CSSUtils.TEST_ID + "='" + actionId + "']");
+        DelayUtils.waitForNestedElements(wait, webElement, String.format(DATA_TEST_ID_XPATH, actionId));
         Actions action = new Actions(driver);
         WebElement foundedElement = wait.until(
-                ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "']"))));
+                ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(String.format(DATA_TEST_ID_XPATH, actionId)))));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
         action.moveToElement(foundedElement).click().perform();
-        waitForButtonDisappear("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "']");
+        waitForButtonDisappear(String.format(DATA_TEST_ID_XPATH, actionId));
     }
 
     public void clickButtonByLabel(String label) {
@@ -201,9 +202,9 @@ public class Wizard {
         buttonContainer.callActionById(id);
     }
 
-    public void rolloutByLabel(String text) {
-        if (isElementPresent(webElement, By.xpath("//div[contains(@class, 'collapsedRollout')]" + String.format(BY_TEXT_XPATH, text)))) {
-            webElement.findElement(By.xpath(String.format(BY_TEXT_XPATH, text))).click();
+    public void rolloutById(String id) {
+        if (isElementPresent(webElement, By.xpath("//div[contains(@class, 'collapsedRollout')]/div[@" + CSSUtils.TEST_ID + "='" + id + "']"))) {
+            webElement.findElement(By.xpath(String.format(DATA_TEST_ID_XPATH, id) + "/span")).click();
         }
     }
 
