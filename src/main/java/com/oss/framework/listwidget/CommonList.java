@@ -262,7 +262,7 @@ public class CommonList {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
         
-        return getCommonList().findElements(By.xpath("//li[@class='listElement'] | //li[@class='listElement rowSelected']"))
+        return getCommonList().findElements(By.xpath(".//li[@class='listElement'] | .//li[@class='listElement rowSelected']"))
                 .stream().map(row -> new Row(driver, wait, row, headers)).collect(Collectors.toList());
         
     }
