@@ -155,7 +155,6 @@ public class TableWidget extends Widget implements TableInterface {
     public void toggleVisibilitySearchAttributes(List<String> attributeIds) {
         openAdvancedSearch();
         getAdvancedSearch().toggleAttributes(attributeIds);
-        getAdvancedSearch().clickApply();
     }
 
     public List<String> getAllVisibleFilters() {

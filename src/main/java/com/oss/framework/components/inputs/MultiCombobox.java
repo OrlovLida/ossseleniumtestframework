@@ -98,6 +98,7 @@ public class MultiCombobox extends Input {
         WebElement dropdown = webElement.findElement(By.xpath(createDropdownList()));
         WebElement item = dropdown.findElement(By.xpath(xpath));
         actions.moveToElement(item).click(item).build().perform();
+        actions.sendKeys(Keys.ESCAPE).build().perform();
     }
     
     private String createDropdownList() {
