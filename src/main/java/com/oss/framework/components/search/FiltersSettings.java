@@ -6,6 +6,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class FiltersSettings {
+    private static final Logger log = LoggerFactory.getLogger(FiltersSettings.class);
     private static final String FILTERS_SETTINGS_PANEL = "filters-settings as-component";
     private static final String FILTERS_BUTTONS_PATH = ".//div[@class='filters-settings-btn']//a | .//div[@class='filters-component-buttons']//a";
     private static final String SAVED_FILTERS_SELECTOR = ".filters-element-list > div.filters-element";
@@ -73,7 +76,14 @@ public class FiltersSettings {
 
     public void markFilterAsFavByLabel(String filterLabel) {
         Optional<WebElement> theFilter = getFilterByLabel(filterLabel);
-        theFilter.ifPresent(filter -> filter.findElement(By.className("filters-element-icon")).click());
+        if (theFilter.isPresent()){
+            WebElement filter = theFilter.get();
+            WebElement icon = filter.findElement(By.xpath(".//div[@class='filters-element-icon']//i"));
+            if(CSSUtils.getAttributeValue("aria-label", icon).equals("STAR")) {
+                icon.click();
+            }
+            log.info("Filter is already mark as favorite");
+        }
     }
 
     public void choseFilterByLabel(String filterLabel) {
@@ -89,4 +99,5 @@ public class FiltersSettings {
         attribute.forEach(element -> element.findElement(By.xpath(".//input")).click());
         getSaveButton(SAVE_LABEl).ifPresent(WebElement::click);
     }
+
 }
