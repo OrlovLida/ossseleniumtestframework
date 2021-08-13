@@ -49,7 +49,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     public static SystemMessageInterface create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, PATH_TO_SYSTEM_MESSAGE_CONTAINER);
+        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         WebElement messageContainer = driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         return new SystemMessageContainer(driver, wait, messageContainer);
     }
@@ -62,7 +62,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public List<Message> getMessages() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
+        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
