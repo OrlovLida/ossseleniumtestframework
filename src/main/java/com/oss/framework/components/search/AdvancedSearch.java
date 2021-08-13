@@ -139,7 +139,7 @@ public class AdvancedSearch {
     }
     
     public void openSearchPanel() {
-        if (isSearchPanelOpen()) {
+        if (!isSearchPanelOpen()) {
             this.webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)).click();
         }
         if (this.searchPanel == null) {
