@@ -208,8 +208,7 @@ public class AdvancedSearch {
     }
     
     private boolean isSearchPanelOpen() {
-        return webElement.findElements(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"))
-                .isEmpty();
+        return webElement.findElements(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']")).size()>0;
     }
     
     private static class Tags {
