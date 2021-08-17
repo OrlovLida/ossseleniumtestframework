@@ -1,22 +1,17 @@
 package com.oss.framework.listwidget;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommonList {
     
@@ -363,6 +358,15 @@ public class CommonList {
 
         public void callAction(String actionId) {
             callAction(null, actionId);
+        }
+
+        public void clickOnLink(String linkText) {
+            String linkXpath = ".//div[contains(@class,'hyperlink placeholder')]";
+            DelayUtils.waitForNestedElements(wait, row, linkXpath);
+            WebElement rowWithLink = row.findElement(By.xpath(linkXpath));
+            WebElement link = rowWithLink.findElement(By.xpath(String.format(".//*[contains(text(),'%s')]", linkText)));
+            Actions action = new Actions(driver);
+            action.moveToElement(link).click().build().perform();
         }
     }
     
