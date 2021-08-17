@@ -84,12 +84,13 @@ public class OldActionsContainer implements ActionsInterface {
     }
 
     private void callActionFromKebab(String actionId) {
-        getKebabMenuBtn().click();
+        Actions action = new Actions(driver);
+        action.moveToElement(getKebabMenuBtn()).click().perform();
         DropdownList.create(driver, wait).selectOptionWithId(actionId);
     }
 
     private WebElement getKebabMenuBtn() {
-        return this.toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH));
+        return wait.until(ExpectedConditions.elementToBeClickable(this.toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH))));
     }
 
     @Override
