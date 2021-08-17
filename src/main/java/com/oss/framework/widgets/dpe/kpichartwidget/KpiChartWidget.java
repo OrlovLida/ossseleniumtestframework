@@ -36,13 +36,18 @@ public class KpiChartWidget extends Widget {
             "//div[contains(@data-testid, '_Data_View')]//a[contains(@class, 'fullScreenButton')]";
     private static final String CHART_ACTIONS_BUTTON_ID = "context-action-panel";
     private static final String LEGEND_PATH = "//*[starts-with(@class,'amcharts-Container amcharts-Component amcharts-Legend')]";
-    private static final String AREA_CHART_BUTTON_PATH = "//i[@aria-label='AREA_CHART']";
-    private static final String LINE_CHART_BUTTON_PATH = "//i[@aria-label='LINE_CHART']";
-    private static final String BAR_CHART_BUTTON_PATH = "//i[@aria-label='BAR_CHART']";
-    private static final String CHART_COLOR_BUTTON_ID = "chart-color-button";
     private static final String DATA_SERIES_COLOR_BUTTON_PATH = "//div[@class='colorPickerWrapper']";
     private static final String FIRST_COLOR_BUTTON_PATH = "//div[@class='color-picker__color-table-cell']";
     private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
+
+    private static final String HIDDEN_Y_AXIS_PATH = "//*[@display = 'none' and contains (@class,'amcharts-v')]";
+    private static final String VISIBLE_Y_AXIS_PATH = "//*[not (contains(@display, 'none')) and contains (@class,'amcharts-v')]";
+    private static final String Y_AXIS_VALUES_PATH = "//*[contains(@class, 'amcharts-AxisLabel' and @style, 'user-select')]"; // do zbadania wartości na Y axis
+
+    //do przerobienia z datatest id
+    private static final String LAST_SAMPLE_DISPLAYED_PATH = "//*[contains(text(),'Last sample:')]/ancestor::*[contains(@class,'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and not (contains(@display, 'none'))]";
+    private static final String DATA_COMPLETENESS_DISPLAYED_PATH = "//*[contains(text(), '%')]/ancestor::*[contains(@class, 'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and contains(@style, 'pointer-events: none')]";
+    private static final String OTHER_PERIOD_DISPLAYED_PATH = "//*[contains(text(), 'Other')]/ancestor::*[contains(@class, 'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and contains(@style, 'pointer-events: none')]";
 
     public KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
@@ -154,28 +159,6 @@ public class KpiChartWidget extends Widget {
         log.debug(CLICK_BTN + "MINIMIZE");
     }
 
-    @Deprecated
-    //TODO: move later to KpiViewPage - when data-testid will be added
-    public void clickAreaChartButton() {
-        findElementByXpath(AREA_CHART_BUTTON_PATH).click();
-        log.debug(CLICK_BTN + "AREA CHART TYPE");
-    }
-
-    public void clickBarChartButton() {
-        findElementByXpath(BAR_CHART_BUTTON_PATH).click();
-        log.debug(CLICK_BTN + "BAR CHART TYPE");
-    }
-
-    public void clickLineChartButton() {
-        findElementByXpath(LINE_CHART_BUTTON_PATH).click();
-        log.debug(CLICK_BTN + "LINE CHART TYPE");
-    }
-
-    public void clickChartColorButton() {
-        Button.createById(driver, CHART_COLOR_BUTTON_ID).click();
-        log.debug(CLICK_BTN + "Choose chart series color");
-    }
-
     public void pickDataSeriesColorButton() {
         findElementByXpath(DATA_SERIES_COLOR_BUTTON_PATH).click();
         log.debug(CLICK_BTN + "DATA SERIES COLOR");
@@ -200,10 +183,40 @@ public class KpiChartWidget extends Widget {
         return linesCount;
     }
 
-    public int countHighlightedPoints() {
+    public int countVisiblePoints() {
         int pointsCount = this.webElement.findElements(By.xpath(DATA_SERIES_POINT_PATH)).size();
-        log.debug("Highlighted points count: {}", pointsCount);
+        log.debug("Visible points count: {}", pointsCount);
         return pointsCount;
+    }
+
+    public int countVisibleYAxis() {
+        int visibleYAxis = this.webElement.findElements(By.xpath(VISIBLE_Y_AXIS_PATH)).size();
+        log.debug("Visible Y axis count: {}", visibleYAxis);
+        return visibleYAxis;
+    }
+
+    public int countHiddenYAxis() {
+        int hiddenYAxis = this.webElement.findElements(By.xpath(HIDDEN_Y_AXIS_PATH)).size();
+        log.debug("Hidden Y axis count: {}", hiddenYAxis);
+        return hiddenYAxis;
+    }
+
+    public int countVisibleLastSampleTime() {
+        int visibleLastSampleTime = this.webElement.findElements(By.xpath(LAST_SAMPLE_DISPLAYED_PATH)).size();
+        log.debug("Visible last sample time count: {}", visibleLastSampleTime);
+        return visibleLastSampleTime;
+    }
+
+    public int countVisibleDataCompleteness() {
+        int visibleDataCompleteness = this.webElement.findElements(By.xpath(DATA_COMPLETENESS_DISPLAYED_PATH)).size();
+        log.debug("Visible data completeness in legend count: {}", visibleDataCompleteness);
+        return visibleDataCompleteness;
+    }
+
+    public int countVisibleOtherPeriod() {
+        int visibleOtherPeriod = this.webElement.findElements(By.xpath(OTHER_PERIOD_DISPLAYED_PATH)).size();
+        log.debug("Visible other period in legend count: {}", visibleOtherPeriod);
+        return visibleOtherPeriod;
     }
 
     public String dataSeriesLineWidth() {
