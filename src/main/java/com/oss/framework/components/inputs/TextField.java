@@ -60,6 +60,6 @@ public class TextField extends Input {
     }
 
     public boolean isMandatory(){
-        return !webElement.findElements(By.xpath(".//span")).isEmpty();
+        return !webElement.findElements(By.xpath(".//span[@class='asterisk']")).isEmpty();
     }
 }
