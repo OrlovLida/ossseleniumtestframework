@@ -1,6 +1,7 @@
 package com.oss.framework.widgets.dpe.kpichartwidget;
 
 import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
@@ -48,6 +49,10 @@ public class KpiChartWidget extends Widget {
     private static final String LAST_SAMPLE_DISPLAYED_PATH = "//*[contains(text(),'Last sample:')]/ancestor::*[contains(@class,'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and not (contains(@display, 'none'))]";
     private static final String DATA_COMPLETENESS_DISPLAYED_PATH = "//*[contains(text(), '%')]/ancestor::*[contains(@class, 'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and contains(@style, 'pointer-events: none')]";
     private static final String OTHER_PERIOD_DISPLAYED_PATH = "//*[contains(text(), 'Other')]/ancestor::*[contains(@class, 'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and contains(@style, 'pointer-events: none')]";
+
+    private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
+    private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
+    private static final String VISIBLE_DATA_VIEW_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
 
     public KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
@@ -254,6 +259,36 @@ public class KpiChartWidget extends Widget {
         WebElement legend = findElementByXpath(LEGEND_PATH);
         clickElementWithOffset(legend, 0, -5);
         log.debug("Clicking first data series on legend");
+    }
+
+    public Boolean dataViewPanelVisibility() {
+        int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DATA_VIEW_PATH)).size();
+        log.debug("Data View panel is visible: {}", visibleDataViewPanel);
+        if (visibleDataViewPanel == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean indicatorsTreeVisibility() {
+        int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_INDICATORS_TREE_PATH)).size();
+        log.debug("Indicators tree is visible: {}", visibleDataViewPanel);
+        if (visibleDataViewPanel == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean dimensionsTreeVisibility() {
+        int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DIMENSIONS_TREE_PATH)).size();
+        log.debug("Dimension tree is visible: {}", visibleDataViewPanel);
+        if (visibleDataViewPanel == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private WebElement findElementByXpath(String xpath) {
