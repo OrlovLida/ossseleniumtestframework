@@ -410,7 +410,7 @@ public class TableComponent {
                 }
                 return "false";
             }
-            return cell.getText();
+            return cell.getAttribute("textContent");
         }
 
         public void click() {
