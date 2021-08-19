@@ -86,9 +86,9 @@ public abstract class Input {
     }
 
     public final List<String> getHint() {
-        WebElement hint = this.webElement.findElement(By.xpath(".//span[contains(@class,'form-hint-tooltip')]"));
-        hint.click();
-        Tooltip tooltip = new Tooltip(this.driver);
+//        WebElement hint = this.webElement.findElement(By.xpath(".//span[contains(@class,'form-hint-tooltip')]"));
+//        hint.click();
+        Tooltip tooltip = Tooltip.create(driver,webDriverWait, componentId);
         return tooltip.getMessages();
     }
 
