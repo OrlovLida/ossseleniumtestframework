@@ -6,6 +6,8 @@ import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.treewidget.InlineMenu;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -83,14 +85,14 @@ public class CommonList {
        // int rowSize = rows.size();
         for (Row row : rows) {
             DelayUtils.waitForPageToLoad(driver, wait);
-            row.callAction(ActionsContainer.KEBAB_GROUP_ID, REMOVE_ACTION_ID);
+            row.callAction( REMOVE_ACTION_ID);
             DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
     
     public void deleteAllCategories() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        createCategories().forEach(category -> category.callAction(ActionsContainer.KEBAB_GROUP_ID, REMOVE_ACTION_ID));
+        createCategories().forEach(category -> category.callAction(REMOVE_ACTION_ID));
     }
     
     public void expandAllCategories() {
@@ -341,7 +343,7 @@ public class CommonList {
                 return;
             }
             if (!row.findElements(By.className("actionsContainer")).isEmpty()) {
-                ActionsContainer.createFromParent(row, driver, wait).callAction(groupId, actionId);
+                InlineMenu.create(row, driver, wait).callAction(groupId, actionId);
                 
             }
         }
@@ -393,7 +395,7 @@ public class CommonList {
                 return;
             }
             if (!category.findElements(By.className("actionsContainer")).isEmpty()) {
-                ActionsContainer.createFromParent(category, driver, wait).callAction(groupId, actionId);
+                InlineMenu.create(category, driver, wait).callAction(groupId, actionId);
             }
         }
         
@@ -405,7 +407,7 @@ public class CommonList {
                 return;
             }
             if (!category.findElements(By.className("actionsContainer")).isEmpty()) {
-                ActionsContainer.createFromParent(category, driver, wait).callAction(actionId);
+                InlineMenu.create(category, driver, wait).callAction(actionId);
             }
         }
         
