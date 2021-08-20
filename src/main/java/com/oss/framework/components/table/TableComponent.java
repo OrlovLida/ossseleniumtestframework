@@ -382,7 +382,15 @@ public class TableComponent {
         private static Cell createFromParent(WebElement tableComponent, int index, String columnId) {
             WebElement cell = tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "' and @data-col='" + columnId + "']"))
                     .stream().findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + index + " columnId: " + columnId));
-            return new Cell(cell, index, CHECKBOX_COLUMN_ID);
+            return new Cell(cell, index, columnId);
+        }
+
+        private static Cell createRandomCell(WebElement tableComponent, int index) {
+            WebElement randomCell =
+                    tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "']"))
+                            .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + index));
+            String columnId = CSSUtils.getAttributeValue("data-col", randomCell);
+            return new Cell(randomCell, index, columnId);
         }
 
         private Cell(WebElement cell, int index, String columnId) {
@@ -451,16 +459,12 @@ public class TableComponent {
         }
 
         public void clickRow() {
-            WebElement randomCell =
-                    this.tableComponent.findElements(By.xpath(".//div[@data-row='" + this.index + "']"))
-                            .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
-            randomCell.click();
+            Cell cell = Cell.createRandomCell(this.tableComponent, index);
+            cell.click();
         }
 
         public String getColumnValue(String columnId) {
-            WebElement cell =
-                    this.tableComponent.findElements(By.xpath(".//div[@data-row='" + this.index + "' and @data-col='" + columnId + "']")).stream()
-                            .findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + this.index + " columnId: " + columnId));
+            Cell cell = Cell.createFromParent(this.tableComponent, index, columnId);
             return cell.getText();
         }
 
@@ -478,8 +482,8 @@ public class TableComponent {
 
         @Override
         public boolean isSelected() {
-            Cell checkBox = Cell.createCheckBoxCell(tableComponent, index);
-            return checkBox.isSelected();
+            Cell cell = Cell.createRandomCell(this.tableComponent, index);
+            return cell.isSelected();
         }
 
         @Override
