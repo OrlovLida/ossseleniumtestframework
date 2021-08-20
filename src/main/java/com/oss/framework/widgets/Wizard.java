@@ -2,6 +2,8 @@ package com.oss.framework.widgets;
 
 import java.util.List;
 
+import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.widgets.treewidget.InlineMenu;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -218,6 +220,11 @@ public class Wizard {
         clickActionById(acceptButtonId);
     }
 
+    public void clickButtonByLabel(String groupLabel, String actionId) {
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement,driver,wait);
+        buttonContainer.callActionById(groupLabel, actionId);
+    }
+
     public int numberOfSteps() {
         if (isStepsPresent()) {
             DelayUtils.waitForNestedElements(wait, webElement, ".//div[@class='simple-progress-bar-item-label']");
@@ -226,6 +233,7 @@ public class Wizard {
         }
         return 1;
     }
+
 
     private boolean isStepsPresent() {
         List<WebElement> steps = this.webElement.findElements(By.xpath("//div[@class='simple-progress-bar']"));

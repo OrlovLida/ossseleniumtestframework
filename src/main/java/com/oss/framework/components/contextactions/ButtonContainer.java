@@ -77,6 +77,15 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String groupLabel, String actionId) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
+        DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + groupLabel + "'] | //*[text()='" + groupLabel + "']");
+        WebElement button = buttons.findElement(By.xpath("//a[text()='" + groupLabel + "'] | //*[text()='" + groupLabel + "']"));
+        button.click();
+        DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] ");
+        Actions action = new Actions(driver);
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
+                buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] ")))))
+                .click()
+                .perform();
+
     }
 }
