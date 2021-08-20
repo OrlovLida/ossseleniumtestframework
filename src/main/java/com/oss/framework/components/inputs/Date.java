@@ -4,6 +4,7 @@ import com.oss.framework.components.portals.DatePicker;
 import com.oss.framework.data.Data;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -35,12 +36,14 @@ public class Date extends Input {
 
     @Override
     public void clear() {
-        this.webElement.findElement(By.xpath(".//input")).clear();
+        WebElement input = this.webElement.findElement(By.xpath(".//input"));
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
     }
 
     @Override
     public void setValue(Data value) {
-        this.webElement.findElement(By.xpath(".//input")).clear();
+        clear();
         this.webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
     }
 

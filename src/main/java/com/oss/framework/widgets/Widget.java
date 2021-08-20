@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
@@ -25,6 +26,18 @@ public abstract class Widget {
     public enum WidgetType{
         TABLE_WIDGET, OLD_TABLE_WIDGET, PROPERTY_PANEL
 
+    }
+
+    public static void waitForWidget(WebDriverWait wait, String widgetClass) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
+    }
+
+    public static void waitForWidgetById(WebDriverWait wait, String widgetId) {
+        DelayUtils.waitBy(wait, By.xpath(createWidgetPath(widgetId)));
+    }
+
+    private static String createWidgetPath(String widgetId) {
+        return "//div[@"+ CSSUtils.TEST_ID +"='" + widgetId + "']";
     }
 
     @Deprecated
@@ -43,16 +56,21 @@ public abstract class Widget {
         this.id = null;
     }
 
-    public static void waitForWidget(WebDriverWait wait, String widgetClass) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
+
+    public Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        this.driver = driver;
+        this.webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + widgetId + "']"));
+        this.webDriverWait = webDriverWait;
+        this.id = widgetId;
     }
 
-    public Widget(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
+    public Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
         this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + dataAttributeName + "']"));
+        this.webElement = widget;
         this.webDriverWait = webDriverWait;
-        this.id = dataAttributeName;
+        this.id = widgetId;
     }
+
 
     protected WebElement refreshWidgetByID() {
         if(this.id == null) {
@@ -61,28 +79,26 @@ public abstract class Widget {
         return driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + this.id + "']"));
     }
 
-    private static String createWidgetPath(String widgetId) {
-        return "//div[@"+ CSSUtils.TEST_ID +"'" + widgetId + "']";
-    }
-
     //TODO: move to advanced search component
+    @Deprecated
     public WebElement getSearchInput() {
         DelayUtils.waitForBy(webDriverWait, By.xpath(searchInput));
         return this.webElement.findElement(By.xpath(searchInput));
     }
-
-    //TODO: create wrapper for actions
-    private WebElement getAction(String actionId) {
-        return this.webElement.findElement(By.xpath(".//div[@id='" + actionId + "']/div"));
+    @Deprecated
+    public void fullSearchText (String text) {
+        AdvancedSearch.createById(driver, webDriverWait,webElement.getAttribute(CSSUtils.TEST_ID)).fullTextSearch(text);
     }
 
+    @Deprecated
     private List<WebElement> getActions() {
         return this.webElement.findElements(By.xpath(".//div[@class='actionsContainer']/div"));
     }
 
     //TODO: rewrite method
+    @Deprecated
     public Boolean isActionDisplayed(String expectedAction) {
-        Boolean result = false;
+        boolean result = false;
         DelayUtils.waitForBy(webDriverWait, By.xpath(".//div[@id='CREATE']/div"));
         for (WebElement e : getActions()) {
             if (e.getAttribute("id").equals(expectedAction)) {
@@ -92,6 +108,7 @@ public abstract class Widget {
         return result;
     }
 
+    @Deprecated
     public void callOssWindowActionById(String groupId, String actionId) {
         this.ossWindow = webElement.findElement(By.xpath("//ancestor::div[contains(@class,'OssWindow')]"));
         ActionsInterface actions = ActionsContainer.createFromParent(ossWindow, driver, webDriverWait);

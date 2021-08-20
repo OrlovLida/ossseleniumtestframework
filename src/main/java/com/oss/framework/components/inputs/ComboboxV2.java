@@ -15,6 +15,7 @@ import com.oss.framework.utils.DelayUtils;
 public class ComboboxV2 extends Input {
 
     private static final String COMBOOBOX_INPUT = "//*[@class='combo-box__dropdown__search']//input";
+    private static final String COMBOBOX_LIST_ITEM = "//div[@class='combo-box__list-item']";
 
     static ComboboxV2 create(WebDriver driver, WebDriverWait wait, String comboboxId) {
         return new ComboboxV2(driver, wait, comboboxId);
@@ -32,25 +33,22 @@ public class ComboboxV2 extends Input {
 
     @Override
     public void setValue(Data value) {
-        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//span");
-        WebElement chevron = webElement.findElement(By.xpath(".//span[@class='combo-box__chevron']"));
-        chevron.click();
-        DelayUtils.waitByXPath(webDriverWait, COMBOOBOX_INPUT);
-        WebElement input = driver.findElement(By.xpath(COMBOOBOX_INPUT));
-        input.sendKeys(value.getStringValue());
-        input.sendKeys(Keys.DOWN);
-        input.sendKeys(Keys.ENTER);
-        input.sendKeys(Keys.ESCAPE);
+        setValue(value, false);
     }
 
     @Override
     public void setValueContains(Data value) {
+        setValue(value, true);
+    }
+
+    private void setValue(Data value, boolean isContains) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//span");
         WebElement chevron = webElement.findElement(By.xpath(".//span[@class='combo-box__chevron']"));
         chevron.click();
         DelayUtils.waitByXPath(webDriverWait, COMBOOBOX_INPUT);
         WebElement input = driver.findElement(By.xpath(COMBOOBOX_INPUT));
         input.sendKeys(value.getStringValue());
+        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, COMBOBOX_LIST_ITEM);
         input.sendKeys(Keys.DOWN);
         input.sendKeys(Keys.ENTER);
         input.sendKeys(Keys.ESCAPE);

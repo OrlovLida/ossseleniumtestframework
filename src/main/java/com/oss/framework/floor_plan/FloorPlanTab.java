@@ -1,4 +1,4 @@
-package com.oss.framework.floorPlan;
+package com.oss.framework.floor_plan;
 
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;

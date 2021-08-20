@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
 
 public class TextField extends Input {
 
@@ -33,6 +34,7 @@ public class TextField extends Input {
         Actions action = new Actions(driver);
         action.moveToElement(input).build().perform();
         clear();
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         input.sendKeys(value.getStringValue());
     }
 
@@ -41,7 +43,7 @@ public class TextField extends Input {
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.clear();
         Actions action = new Actions(driver);
-        action.moveToElement(input).click().build().perform();; //before click element is not reachable by keyboard and after the click element is refreshed
+        action.moveToElement(input).click().build().perform(); //before click element is not reachable by keyboard and after the click element is refreshed
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
     }
 
@@ -55,5 +57,9 @@ public class TextField extends Input {
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
+    }
+
+    public boolean isMandatory(){
+        return !webElement.findElements(By.xpath(".//span[@class='asterisk']")).isEmpty();
     }
 }

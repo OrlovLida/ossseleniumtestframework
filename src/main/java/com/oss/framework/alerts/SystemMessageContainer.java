@@ -11,10 +11,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -24,6 +28,9 @@ import com.oss.framework.utils.DelayUtils;
  */
 
 public class SystemMessageContainer implements SystemMessageInterface {
+
+    private static final Logger log = LoggerFactory.getLogger(SystemMessageContainer.class);
+
     private WebDriver driver;
     private WebDriverWait wait;
     private WebElement messageContainer;
@@ -42,7 +49,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     public static SystemMessageInterface create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, PATH_TO_SYSTEM_MESSAGE_CONTAINER);
+        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         WebElement messageContainer = driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         return new SystemMessageContainer(driver, wait, messageContainer);
     }
@@ -55,7 +62,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public List<Message> getMessages() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
+        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
@@ -67,14 +74,18 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void close() {
-        Actions builder = new Actions(driver);
-        builder.moveToElement(messageContainer).build().perform();
-        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_CLOSEBUTTON);
-        builder.click(messageContainer.findElement(By.xpath(PATH_TO_CLOSEBUTTON))).build().perform();
+        try {
+            Actions builder = new Actions(driver);
+            builder.moveToElement(messageContainer).build().perform();
+            DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_CLOSEBUTTON);
+            builder.click(messageContainer.findElement(By.xpath(PATH_TO_CLOSEBUTTON))).build().perform();
+        } catch (NoSuchElementException | TimeoutException e) {
+            log.warn("Cannot click close button in system message");
+        }
     }
 
     private Message toMessage(WebElement messageItem) {
-        String text = messageItem.findElement(By.xpath(".//p")).getText();
+        String text = messageItem.findElement(By.xpath(".//p | .//a")).getText();
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);
         return new Message(text, mapToMassageType(allClasses));
     }
@@ -96,7 +107,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
                 }
             }
         }
-        throw new RuntimeException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);
+        throw new IllegalArgumentException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);
     }
 
     public static class Message {
@@ -120,8 +131,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void clickMessageLink() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, "//div[contains(@class,'systemMessageItem')]");
-        messageContainer.findElement(By.xpath(".//a[contains(@href, '#/')]")).click();
+        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
+        messageContainer.findElement(By.xpath(".//a[contains(@href, '#')]")).click();
     }
 
     @Override

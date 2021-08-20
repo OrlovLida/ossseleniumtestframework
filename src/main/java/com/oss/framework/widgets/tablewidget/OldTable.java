@@ -14,6 +14,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -28,8 +30,8 @@ import com.oss.framework.widgets.tabswidget.TabsWidget;
 
 public class OldTable implements TableInterface {
 
-    private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
-    private static final String rowsCounterSpansPath = ".//div[@class='rowsCounter']//span";
+    private static final Logger log = LoggerFactory.getLogger(OldTable.class);
+    private static final String ROWS_COUNTER_SPANS_PATH = ".//div[@class='rowsCounter']//span";
     private static final int REFRESH_INTERVAL = 2000;
     private static final String PROPERTY_NAME_PATTERN =
             "//div[contains(@class, 'OSSTableColumn Col_PropertyName')]/div[contains(@class,'Cell Row_%s')]";
@@ -48,6 +50,7 @@ public class OldTable implements TableInterface {
     private static final String TOGGLE_BUTTON = ".//span[contains(@class,'ToggleButton')]";
     private static final String CELL = ".//div[contains(@class, 'Cell')]";
     private static final String TABLE_IN_ACTIVE_TAB_XPATH = "//div[@data-attributename='TableTabsApp']//div[@class='tabsContainerSingleContent active']//div[@class='AppComponentContainer']/div";
+    private static final String NOT_IMPLEMENTED = "Not implemented method in OldTable";
 
     // to be removed after adding data-attributeName OSSWEB-8398
     @Deprecated
@@ -77,7 +80,7 @@ public class OldTable implements TableInterface {
         return new OldTable(driver, wait, dataAttributeName, table, window);
     }
 
-    public static OldTable createTableForActiveTab(WebDriver driver, WebDriverWait wait){
+    public static OldTable createTableForActiveTab(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPageToLoad(driver, wait);
         String tableIdFromActiveTab = driver.findElement(By.xpath(TABLE_IN_ACTIVE_TAB_XPATH)).getAttribute(CSSUtils.TEST_ID);
         return createByComponentDataAttributeName(driver, wait, tableIdFromActiveTab);
@@ -115,42 +118,42 @@ public class OldTable implements TableInterface {
 
     @Override
     public int getColumnSize(int column) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
     public void resizeColumn(int column, int offset) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
     public List<String> getActiveColumnHeaders() {
-        return null;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
     public void disableColumn(String columnId) {
-
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
     public void disableColumnByLabel(String columnLabel, String... path) {
-
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
     public void enableColumnByLabel(String columnLabel, String... path) {
-
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
     public void changeColumnsOrder(String columnLabel, int position) {
-
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
     public void selectRowByAttributeValue(String attributeId, String value) {
-        throw new RuntimeException("Not implemented for the old table widget");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
@@ -161,13 +164,13 @@ public class OldTable implements TableInterface {
 
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
-        throw new RuntimeException("Not implemented for the old table widget");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     @Override
     public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
         if (componentType != ComponentType.TEXT_FIELD) {
-            throw new RuntimeException("Old table widget supports" + ComponentType.TEXT_FIELD + "only");
+            throw new IllegalArgumentException("Old table widget supports" + ComponentType.TEXT_FIELD + "only");
         }
         clearColumnValue(attributeLabel).setValue(value);
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -206,7 +209,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
-        throw new RuntimeException("Not implemented for the old table widget");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     public String getCellValue(int index, String attributeLabel) {
@@ -218,9 +221,9 @@ public class OldTable implements TableInterface {
         if (columns.containsKey(columnLabel)) {
             return columns.get(columnLabel);
         } else {
-            System.out.println("Available columns:");
-            columns.forEach((key, value) -> System.out.println(key));
-            throw new RuntimeException("Cannot find a column with label = " + columnLabel);
+            log.debug("Available columns:");
+            columns.forEach((key, value) -> log.debug(key));
+            throw new NoSuchElementException("Cannot find a column with label = " + columnLabel);
         }
     }
 
@@ -233,27 +236,21 @@ public class OldTable implements TableInterface {
     }
 
     @Override
-    public void clickOnKebabMenu() {
-        WebElement foundedElement = table.findElement(By.xpath(kebabMenuBtn));
-        foundedElement.click();
-    }
-
-    @Override
     public void doRefreshWhileNoData(int waitTime, String refreshId) {
         if (widgetId == null) {
-            throw new RuntimeException("widgetId property is missing");
+            throw new IllegalArgumentException("widgetId property is missing");
         }
         long currentTime = System.currentTimeMillis();
         long stopTime = currentTime + waitTime;
         while (hasNoData() && (stopTime > System.currentTimeMillis())) {
             DelayUtils.sleep(REFRESH_INTERVAL);
-            callAction(refreshId);
+            callAction(OldActionsContainer.KEBAB_GROUP_ID, refreshId);
         }
     }
 
     @Override
     public Multimap<String, String> getAppliedFilters() {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     public Map<String, String> getPropertyNamesToValues() {
@@ -280,7 +277,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public List<TableRow> getSelectedRows() {
-        throw new RuntimeException("not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     private void clickExpandPropertiesButton() {
@@ -310,11 +307,11 @@ public class OldTable implements TableInterface {
 
     public int getTableObjectsCount() {
         List<WebElement> rowsCounterSpans = table
-                .findElements(By.xpath(rowsCounterSpansPath));
+                .findElements(By.xpath(ROWS_COUNTER_SPANS_PATH));
         try {
             return Integer.parseInt(rowsCounterSpans.get(rowsCounterSpans.size() - 1).getText());
         } catch (NumberFormatException e) {
-            System.out.println("Problem with getting table object count. Value is not a number.");
+            log.debug("Problem with getting table object count. Value is not a number.");
             return 0;
         }
     }
@@ -430,7 +427,7 @@ public class OldTable implements TableInterface {
                     return cells.indexOf(cell);
                 }
             }
-            throw new RuntimeException("Cannot find a row with the provided value");
+            throw new NoSuchElementException("Cannot find a row with the provided value");
         }
 
         public void selectCell(int index) {

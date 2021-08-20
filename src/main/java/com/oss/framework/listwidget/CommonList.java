@@ -1,20 +1,19 @@
 package com.oss.framework.listwidget;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.components.search.AdvancedSearch;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.treewidget.InlineMenu;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommonList {
     
@@ -86,14 +85,14 @@ public class CommonList {
        // int rowSize = rows.size();
         for (Row row : rows) {
             DelayUtils.waitForPageToLoad(driver, wait);
-            row.callAction(ActionsContainer.KEBAB_GROUP_ID, REMOVE_ACTION_ID);
+            row.callAction( REMOVE_ACTION_ID);
             DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
     
     public void deleteAllCategories() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        createCategories().forEach(category -> category.callAction(ActionsContainer.KEBAB_GROUP_ID, REMOVE_ACTION_ID));
+        createCategories().forEach(category -> category.callAction(REMOVE_ACTION_ID));
     }
     
     public void expandAllCategories() {
@@ -238,7 +237,11 @@ public class CommonList {
     public void selectRow(int row) {
         createRows().get(row).selectRow();
     }
-    
+
+    public List<Row> getAllRows() {
+        return createRows();
+    }
+
     public Row getRow(String attributeName, String value) {
         return createRows().stream().filter(row -> row.getValue(attributeName).equals(value))
                 .findFirst()
@@ -256,7 +259,7 @@ public class CommonList {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
         
-        return getCommonList().findElements(By.xpath("//li[@class='listElement'] | //li[@class='listElement rowSelected']"))
+        return getCommonList().findElements(By.xpath(".//li[@class='listElement'] | .//li[@class='listElement rowSelected']"))
                 .stream().map(row -> new Row(driver, wait, row, headers)).collect(Collectors.toList());
         
     }
@@ -265,6 +268,26 @@ public class CommonList {
         DelayUtils.waitForNestedElements(wait, getCommonList(), ".//li[@class='categoryListElement']");
         List<WebElement> categories = getCommonList().findElements(By.xpath(".//li[@class='categoryListElement']"));
         return categories.stream().map(category -> new Category(driver, wait, category)).collect(Collectors.toList());
+    }
+    public void fullTextSearch(String value){
+        getAdvanceSearch().fullTextSearch(value);
+    }
+
+    public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, componentType, value);
+        getAdvanceSearch().clickApply();
+    }
+    private void openAdvancedSearch() {
+        getAdvanceSearch().openSearchPanel();
+    }
+
+    private AdvancedSearch getAdvanceSearch(){
+        return AdvancedSearch.createByWidgetId(driver,wait,id);
+    }
+    private void setFilterContains(String componentId, Input.ComponentType componentType, String value) {
+        Input input = getAdvanceSearch().getComponent(componentId, componentType);
+        input.setSingleStringValue(value);
     }
     
     public static class Row {
@@ -320,13 +343,32 @@ public class CommonList {
                 return;
             }
             if (!row.findElements(By.className("actionsContainer")).isEmpty()) {
-                ActionsContainer.createFromParent(row, driver, wait).callAction(groupId, actionId);
+                InlineMenu.create(row, driver, wait).callAction(groupId, actionId);
                 
             }
         }
-        
+
+        public void callActionIcon(String ariaLabel) {
+            String placeholdersXPath = ".//div[contains(@class,'placeholders')]";
+            DelayUtils.waitForNestedElements(wait, row, placeholdersXPath);
+            WebElement placeholdersAndActions = row.findElement(By.xpath(placeholdersXPath));
+            WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
+            DelayUtils.waitForClickability(wait, icon);
+            Actions action = new Actions(driver);
+            action.moveToElement(icon).click().build().perform();
+        }
+
         public void callAction(String actionId) {
             callAction(null, actionId);
+        }
+
+        public void clickOnLink(String linkText) {
+            String linkXpath = ".//div[contains(@class,'hyperlink placeholder')]";
+            DelayUtils.waitForNestedElements(wait, row, linkXpath);
+            WebElement rowWithLink = row.findElement(By.xpath(linkXpath));
+            WebElement link = rowWithLink.findElement(By.xpath(String.format(".//*[contains(text(),'%s')]", linkText)));
+            Actions action = new Actions(driver);
+            action.moveToElement(link).click().build().perform();
         }
     }
     
@@ -353,7 +395,7 @@ public class CommonList {
                 return;
             }
             if (!category.findElements(By.className("actionsContainer")).isEmpty()) {
-                ActionsContainer.createFromParent(category, driver, wait).callAction(groupId, actionId);
+                InlineMenu.create(category, driver, wait).callAction(groupId, actionId);
             }
         }
         
@@ -365,7 +407,7 @@ public class CommonList {
                 return;
             }
             if (!category.findElements(By.className("actionsContainer")).isEmpty()) {
-                ActionsContainer.createFromParent(category, driver, wait).callAction(actionId);
+                InlineMenu.create(category, driver, wait).callAction(actionId);
             }
         }
         

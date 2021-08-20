@@ -123,7 +123,8 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
     
     private WebElement getSwitcher() {
-        return this.webElement.findElement(By.xpath(SWITCHER_XPATH));
+        WebElement propertyPanelWrapper = this.webElement.findElement(By.xpath(".//ancestor::div"));
+        return propertyPanelWrapper.findElement(By.cssSelector("div.switcher"));
     }
     
     public void hideEmpty() {
@@ -203,7 +204,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         }
         
         private WebElement createSearch() {
-            WebElement search = webElement.findElement(By.xpath("./../.."));
+            WebElement search = webElement.findElement(By.xpath("//ancestor::div[@" + CSSUtils.TEST_ID + "='PropertyPanelWidget-search']"));
             return search.findElement(By.xpath(".//input"));
         }
         

@@ -1,13 +1,12 @@
 package com.oss.framework.utils;
 
-import java.util.List;
-import java.util.Map;
-
-import org.openqa.selenium.WebElement;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
+import java.util.Map;
 
 public class CSSUtils {
 
@@ -18,7 +17,9 @@ public class CSSUtils {
     public static String TOP_ATTRIBUTE = "top";
     public static String HEIGHT_ATTRIBUTE = "height";
     public static String WIDTH_ATTRIBUTE = "width";
-    public static String TEST_ID = "data-attributename";
+    public static String LEFT_ATTRIBUTE = "left";
+    public static String TEST_ID = "data-testid";
+    public static String DATA_WIDGET_ID = "data-widget-id";
 
     private static Splitter attributeSplitter = Splitter.on(ATTRIBUTES_SEPARATOR);
     private static Splitter valueSplitter = Splitter.on(VALUE_SEPARATOR);
@@ -53,9 +54,27 @@ public class CSSUtils {
         return getIntegerValue(WIDTH_ATTRIBUTE, webElement);
     }
 
-    private static int getIntegerValue(String attributeName, WebElement webElement) {
+    public static double getDecimalWidthValue(WebElement webElement) {
+        return getDecimalValue(WIDTH_ATTRIBUTE, webElement);
+    }
+
+    public static int getLeftValue(WebElement webElement) {
+        return getIntegerValue(LEFT_ATTRIBUTE, webElement);
+    }
+
+    public static int getIntegerValue(String attributeName, WebElement webElement) {
+        String value = webElement.getCssValue(attributeName);
+        value = value.replaceAll("[a-z]|\\.(.*)", "");
+        return Integer.valueOf(value);
+    }
+
+    public static String getAttributeValue(String attributeName, WebElement webElement) {
+        return webElement.getAttribute(attributeName);
+    }
+
+    private static double getDecimalValue(String attributeName, WebElement webElement) {
         String value = webElement.getCssValue(attributeName);
         value = value.replaceAll("[^\\d.]", "");
-        return Integer.valueOf(value);
+        return Double.valueOf(value);
     }
 }

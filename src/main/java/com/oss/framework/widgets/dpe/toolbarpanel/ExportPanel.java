@@ -1,5 +1,7 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +18,8 @@ public class ExportPanel {
 
     private static final Logger log = LoggerFactory.getLogger(ExportPanel.class);
 
-    private final static String DOWNLOAD_BUTTON_PATH = "//i[@aria-label='DOWNLOAD']";
+    private final static String DOWNLOAD_BUTTON_ID = "export-button";
+    private final static String EXPORT_BUTTON_ID = "export-menu-button";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -26,21 +29,20 @@ public class ExportPanel {
         JPG, PNG, PDF, XLSX
     }
 
-    static ExportPanel create(WebDriver driver, WebDriverWait webDriverWait){
+    static ExportPanel create(WebDriver driver, WebDriverWait webDriverWait) {
         WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
 
         return new ExportPanel(driver, webDriverWait, webElement);
     }
 
-    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.wait = webDriverWait;
         this.webElement = webElement;
     }
 
-    public void exportKpiToFile(ExportType exportType){
-        DelayUtils.waitForClickability(wait, findElementByXpath(this.webElement, DOWNLOAD_BUTTON_PATH));
-        DelayUtils.sleep();
+    public void exportKpiToFile(ExportType exportType) {
+        DelayUtils.waitForPageToLoad(driver, wait);
         clickDownload();
         log.debug(CLICK_BTN + "Download");
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -50,17 +52,19 @@ public class ExportPanel {
         log.info("Exporting chart as {}", exportType);
     }
 
-    private void clickDownload(){
-        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath(DOWNLOAD_BUTTON_PATH)));
-        findElementByXpath(this.webElement, DOWNLOAD_BUTTON_PATH).click();
+    private void clickDownload() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        Button downloadButton = Button.createById(driver, DOWNLOAD_BUTTON_ID);
+        downloadButton.click();
     }
 
-    private WebElement getExportButtonWithExtension(ExportType exportType){
-        return findElementByXpath(this.webElement, "//button[contains(text(),'" + exportType + "')]");
+    private Button getExportButtonWithExtension(ExportType exportType) {
+        Button exportButtonWithExtension = Button.createById(driver, EXPORT_BUTTON_ID + "-" + exportType);
+        return exportButtonWithExtension;
     }
 
-    private void clickExport(){
-        findElementByXpath(this.webElement, "//button[@class='btn export']").click();
+    private void clickExport() {
+        Button.createById(driver, EXPORT_BUTTON_ID).click();
         log.debug(CLICK_BTN + "Export");
     }
 }

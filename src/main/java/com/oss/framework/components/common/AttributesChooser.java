@@ -94,12 +94,8 @@ public class AttributesChooser {
 
     }
 
-    public void toggleAttribute(String attributeId) {
-
-    }
-
-    public void toggleAttribute(String attributeId, String... path) {
-
+    public void toggleAttributeByPath(String path) {
+        getTreeComponent().toggleNodeByPath(path);
     }
 
     private TreeComponent getTreeComponent() {

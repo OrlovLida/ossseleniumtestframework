@@ -61,7 +61,6 @@ public class DropdownList {
     public void drop(DragAndDrop.DraggableElement draggableElement) {
         WebElement target = dropdownList.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
         DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), driver);
-        
     }
-    
+
 }
