@@ -418,7 +418,7 @@ public class TableComponent {
         }
 
         public String getText() {
-            if (!isCheckBox()) {
+            if (isCheckBox()) {
                 if (isSelected()) {
                     return "true";
                 }
