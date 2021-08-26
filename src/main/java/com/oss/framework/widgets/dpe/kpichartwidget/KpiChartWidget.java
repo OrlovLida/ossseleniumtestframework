@@ -261,34 +261,22 @@ public class KpiChartWidget extends Widget {
         log.debug("Clicking first data series on legend");
     }
 
-    public Boolean dataViewPanelVisibility() {
+    public boolean dataViewPanelVisibility() {
         int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DATA_VIEW_PATH)).size();
         log.debug("Data View panel is visible: {}", visibleDataViewPanel);
-        if (visibleDataViewPanel == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return visibleDataViewPanel == 1;
     }
 
-    public Boolean indicatorsTreeVisibility() {
+    public boolean indicatorsTreeVisibility() {
         int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_INDICATORS_TREE_PATH)).size();
         log.debug("Indicators tree is visible: {}", visibleDataViewPanel);
-        if (visibleDataViewPanel == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return visibleDataViewPanel == 1;
     }
 
-    public Boolean dimensionsTreeVisibility() {
+    public boolean dimensionsTreeVisibility() {
         int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DIMENSIONS_TREE_PATH)).size();
         log.debug("Dimension tree is visible: {}", visibleDataViewPanel);
-        if (visibleDataViewPanel == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return visibleDataViewPanel == 1;
     }
 
     private WebElement findElementByXpath(String xpath) {
