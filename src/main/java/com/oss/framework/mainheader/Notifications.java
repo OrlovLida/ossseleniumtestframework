@@ -17,7 +17,7 @@ public class Notifications implements NotificationsInterface {
     private static final By NOTIFICATION_OPENED = By.xpath("//a[(@class='clicked badge') or (@class = 'clicked notificationType badge')]");
     private static final By NOTIFICATION_CLOSED = By.xpath("//a[(@class= 'badge') or (@class= 'notificationType badge')]");
     private static final By EMPTY_NOTIFICATION = By.xpath("//div[@class='notificationEmpty']");
-    private static final By NOTIFICATION_LIST = By.xpath("//div[@class='notificationContainer']/div");
+    private static final By NOTIFICATION_LIST = By.xpath("//div[@class='notificationContainer']/div[not(@class = 'notificationEmpty')]");
     private static final By NOTIFICATION_DETAILS = By.xpath("(//a[@class='detailsLink'])[1]");
     private static final By DOWNLOAD_FILE = By.xpath("//div[@class='notificationWrapper']//a[contains (text(), 'Download file')]");
 
