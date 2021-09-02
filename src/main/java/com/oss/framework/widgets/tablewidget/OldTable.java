@@ -570,8 +570,7 @@ public class OldTable implements TableInterface {
             return allAttributes.stream().filter(attribute -> attribute.getText().equals(attributeLabel)).findFirst()
                     .orElseThrow(() -> new RuntimeException("Cant find node " + attributeLabel));
         }
-        
-        // TODO correct after fix OSSWEB-14107
+
         private boolean isSelected(String attributeLabel) {
             return !getNode(attributeLabel).findElements(By.xpath(".//input[@checked]")).isEmpty();
         }
