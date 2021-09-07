@@ -25,6 +25,7 @@ import com.oss.framework.widgets.tablewidget.TableRow;
 
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
+    private static final String EMPTY_DATA_ROW_XPATH = ".//div[contains(@class, 'empty_data_row')]";
 
     private static final String TABLE_COMPONENT_CLASS = "table-component";
 
@@ -59,6 +60,10 @@ public class TableComponent {
 
     public void unselectRow(int row) {
         getVisibleRows().get(row).unselectRow();
+    }
+
+    public boolean hasNoData() {
+        return !webElement.findElements(By.xpath(EMPTY_DATA_ROW_XPATH)).isEmpty();
     }
 
     public List<TableRow> getVisibleRows() {
@@ -479,7 +484,7 @@ public class TableComponent {
         public void selectRow() {
             if (!isSelected()) {
                 Cell cell;
-                if(Cell.hasCheckboxCell(this.tableComponent, index)) {
+                if (Cell.hasCheckboxCell(this.tableComponent, index)) {
                     cell = Cell.createCheckboxCell(this.tableComponent, index);
                 } else {
                     cell = Cell.createRandomCell(this.tableComponent, index);
