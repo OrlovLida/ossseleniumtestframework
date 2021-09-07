@@ -14,7 +14,8 @@ public class ApplicationPopup extends PopupV2 {
     private static final String DESCRIPTION_TEXT_AREA_ID = "description";
     private static final String SAVE_BUTTON_FULL_XPATH = "//div[@class='popupBackground']//a[@class='CommonButton btn btn-primary btn-md']";
     private static final String QUERY_PARAMS_LABEL_XPATH = "//div[@class='categoryLabel']";
-    private static final String EDITABLE_LIST_COMPONENT_ID = "key-TEXT_FIELD";
+    private static final String EDITABLE_LIST_KEY_COMPONENT_ID = "key-TEXT_FIELD";
+    private static final String EDITABLE_LIST_VALUE_COMPONENT_ID = "value-TEXT_FIELD";
     private static final String QUERY_PARAM_KEY_COLUMN_ID = "1_key";
     private static final String QUERY_PARAM_VALUE_COLUMN_ID = "1_value";
 
@@ -42,9 +43,11 @@ public class ApplicationPopup extends PopupV2 {
     public void openQueryParamsTable(){ driver.findElement(By.xpath(QUERY_PARAMS_LABEL_XPATH)).click(); }
 
     public void addTestQueryParams() {
-        EditableList editableList = EditableList.createById(driver, wait, EDITABLE_LIST_COMPONENT_ID);
+        EditableList editableList = EditableList.create(driver, wait);
+
         EditableList.Row firstRow = editableList.addRow();
-        firstRow.setEditableAttributeValue("testParameter", QUERY_PARAM_KEY_COLUMN_ID, EDITABLE_LIST_COMPONENT_ID, Input.ComponentType.TEXT_FIELD);
+        firstRow.setEditableAttributeValue("testParameter", QUERY_PARAM_KEY_COLUMN_ID, EDITABLE_LIST_KEY_COMPONENT_ID, Input.ComponentType.TEXT_FIELD);
+        firstRow.setEditableAttributeValue("testValue", QUERY_PARAM_VALUE_COLUMN_ID, EDITABLE_LIST_VALUE_COMPONENT_ID, Input.ComponentType.TEXT_FIELD);
     }
 
     public EditableList getQueryParamsList(){
