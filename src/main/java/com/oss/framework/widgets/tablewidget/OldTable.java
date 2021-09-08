@@ -136,7 +136,9 @@ public class OldTable implements TableInterface {
     
     @Override
     public void disableColumn(String columnId) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+        AttributeChooser attributeChooser = new AttributeChooser(driver, wait, getColumnManager());
+        attributeChooser.disableColumnById(columnId);
+        attributeChooser.acceptButton();
     }
     
     @Override
@@ -156,9 +158,9 @@ public class OldTable implements TableInterface {
     @Override
     public void changeColumnsOrder(String columnLabel, int position) {
         WebElement columnPosition = table.findElements(By.className("OSSTableColumn")).get(position);
-
+        
         DragAndDrop.dragAndDrop(getColumn(columnLabel).getDragElement(), new DragAndDrop.DropElement(columnPosition), driver);
-
+        
     }
     
     @Override
@@ -410,8 +412,8 @@ public class OldTable implements TableInterface {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", header);
             return header;
         }
-
-        private DragAndDrop.DraggableElement getDragElement(){
+        
+        private DragAndDrop.DraggableElement getDragElement() {
             WebElement dragButton = moveToHeader().findElement(By.className("flex"));
             return new DragAndDrop.DraggableElement(dragButton);
         }
@@ -545,7 +547,7 @@ public class OldTable implements TableInterface {
         private WebDriver driver;
         private WebDriverWait wait;
         private WebElement columnManager;
-
+        
         private AttributeChooser(WebDriver driver, WebDriverWait wait, WebElement columnManager) {
             this.driver = driver;
             this.wait = wait;
@@ -553,32 +555,49 @@ public class OldTable implements TableInterface {
         }
         
         private void disableColumnByLabel(String attributeLabel) {
-            if (isSelected(attributeLabel)) {
-                getNode(attributeLabel).findElement(By.xpath(".//label")).click();
+            WebElement node = getNode(attributeLabel, true);
+            if (isSelected(node)) {
+                node.findElement(By.xpath(".//label")).click();
             }
         }
         
         private void enabledColumnByLabel(String attributeLabel) {
             Actions actions = new Actions(driver);
-            if (!isSelected(attributeLabel)) {
-               actions.moveToElement(getNode(attributeLabel).findElement(By.xpath(".//label"))).click().perform();
+            WebElement node = getNode(attributeLabel, true);
+            if (!isSelected(node)) {
+                actions.moveToElement(node.findElement(By.xpath(".//label"))).click().perform();
             }
         }
         
-        private WebElement getNode(String attributeLabel) {
-            List<WebElement> allAttributes = columnManager.findElements(By.xpath(".//div[@class='form-element']"));
-            return allAttributes.stream().filter(attribute -> attribute.getText().equals(attributeLabel)).findFirst()
-                    .orElseThrow(() -> new RuntimeException("Cant find node " + attributeLabel));
+        private void disableColumnById(String columnId) {
+            WebElement node = getNode(columnId, false);
+            if (isSelected(node)) {
+                node.findElement(By.xpath(".//label")).click();
+            }
         }
-
-        private boolean isSelected(String attributeLabel) {
-            return !getNode(attributeLabel).findElements(By.xpath(".//input[@checked]")).isEmpty();
+        
+        private WebElement getNode(String attribute, boolean isLabel) {
+            if (isLabel) {
+                
+                return getNodes().stream().filter(n -> n.getText().equals(attribute)).findFirst()
+                        .orElseThrow(() -> new RuntimeException("Cant find node " + attribute));
+            } else {
+                return columnManager.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + attribute + "']"));
+            }
         }
-
-        private void acceptButton(){
+        
+        private List<WebElement> getNodes() {
+            return columnManager.findElements(By.xpath(".//div[@class='form-element']"));
+        }
+        
+        private boolean isSelected(WebElement node) {
+            return !node.findElements(By.xpath(".//input[@checked]")).isEmpty();
+        }
+        
+        private void acceptButton() {
             columnManager.findElement(By.xpath(".//button[text()='Accept']")).click();
         }
-
+        
     }
-
+    
 }
