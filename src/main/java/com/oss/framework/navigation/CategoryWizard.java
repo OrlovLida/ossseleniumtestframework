@@ -1,12 +1,13 @@
-package com.oss.framework.components.portals;
+package com.oss.framework.navigation;
 
 import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.portals.PopupV2;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CategoryPopup extends PopupV2 {
+public class CategoryWizard extends PopupV2 {
 
     private static final String NAME_FIELD_ID_IN_CATEGORY_POPUP = "category-popup--input1";
     private static final String DESCRIPTION_FIELD_ID_IN_CATEGORY_POPUP = "category-popup--input2";
@@ -18,8 +19,12 @@ public class CategoryPopup extends PopupV2 {
     private static final String ICONS_CLASS = "icons-chooser__icons";
     private static final String ANTENNA_ICON = "OSSIcon ossfont-Antenna";
 
-    public CategoryPopup(WebDriver driver, WebDriverWait wait) {
+    private CategoryWizard(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
+    }
+
+    public static CategoryWizard create(WebDriver driver, WebDriverWait wait) {
+        return new CategoryWizard(driver, wait);
     }
 
     public Input setNameValue(String name) {
@@ -30,11 +35,11 @@ public class CategoryPopup extends PopupV2 {
         return setComponentValue(DESCRIPTION_FIELD_ID_IN_CATEGORY_POPUP, description, Input.ComponentType.TEXT_AREA);
     }
 
-    public void deleteNameValue(){
+    public void deleteNameValue() {
         deleteComponentValue(NAME_FIELD_ID_IN_CATEGORY_POPUP, Input.ComponentType.TEXT_FIELD);
     }
 
-    public void deleteDescriptionValue(){
+    public void deleteDescriptionValue() {
         deleteComponentValue(DESCRIPTION_FIELD_ID_IN_CATEGORY_POPUP, Input.ComponentType.TEXT_AREA);
     }
 
