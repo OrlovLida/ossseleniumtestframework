@@ -1,6 +1,6 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.components.portals.DatePicker;
+import com.oss.framework.components.datetime.DatePicker;
 import com.oss.framework.data.Data;
 
 import org.openqa.selenium.By;
@@ -59,7 +59,8 @@ public class Date extends Input {
     }
 
     public void chooseDate(String date) {
-        DatePicker datePicker = DatePicker.create(webDriverWait, webElement);
+        webElement.findElement(By.xpath(".//i[contains(@class,'fa-calendar')]")).click();
+        DatePicker datePicker = DatePicker.create(driver,webDriverWait);
         datePicker.chooseDate(date);
     }
 }

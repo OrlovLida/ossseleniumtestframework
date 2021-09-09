@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.ParseException;
@@ -76,7 +77,7 @@ public class DateTime extends Input {
 
     //TODO exceptions handling, duplicated code, var's names
     public void chooseDate(String dataK) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
             date = sdf.parse(dataK);
@@ -86,13 +87,13 @@ public class DateTime extends Input {
         Calendar givenDate = Calendar.getInstance();
         givenDate.setTime(date);
         Calendar today = new GregorianCalendar();
-        int dateDifference = givenDate.get(Calendar.MONTH) - today.get(Calendar.MONTH);
-        if(dateDifference > 0) {
+        int monthDifference = givenDate.get(Calendar.MONTH) - today.get(Calendar.MONTH);
+        if(monthDifference > 0) {
             WebElement we = driver.findElement(By.xpath(XPATH_NEXT_MONTH));
-            for(int i =0; i<dateDifference; i++) we.click();
-        } else if(dateDifference < 0) {
+            for(int i =0; i<monthDifference; i++) we.click();
+        } else if(monthDifference < 0) {
             WebElement we = driver.findElement(By.xpath(XPATH_PREVIOUS_MONTH));
-            for(int i =0; i>dateDifference; i--) we.click();
+            for(int i =0; i>monthDifference; i--) we.click();
         }
         selectDate(givenDate);
     }
@@ -111,8 +112,10 @@ public class DateTime extends Input {
     }
 
     public void clickCalendar(){
-        WebElement calendar = this.webElement.findElement(By.xpath(".//i[@class='OSSIcon fa fa-clock-o']"));
-        calendar.click();
+        Actions actions = new Actions(driver);
+       WebElement calendar = webElement.findElement(By.xpath(".//button//i[@class='OSSIcon fa fa-calendar']"));
+       actions.moveToElement(webElement).click(calendar).build().perform();
+//        calendar.click();
         DelayUtils.sleep();
     }
 
