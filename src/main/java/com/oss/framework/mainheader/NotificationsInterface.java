@@ -11,4 +11,6 @@ public interface NotificationsInterface {
     int getAmountOfNotifications();
 
     void openDetailsForSpecificNotification(String text, String notificationStatus);
+
+    void clickDownloadFile();
 }

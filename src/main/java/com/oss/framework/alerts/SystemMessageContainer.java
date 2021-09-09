@@ -62,7 +62,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public List<Message> getMessages() {
-        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
+        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
         List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
@@ -105,6 +105,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
                 case WARNING_MESSAGE_TYPE_CLASS: {
                     return MessageType.WARNING;
                 }
+                default:
             }
         }
         throw new IllegalArgumentException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);

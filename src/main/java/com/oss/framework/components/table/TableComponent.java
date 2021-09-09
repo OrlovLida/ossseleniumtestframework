@@ -15,6 +15,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
+import com.oss.framework.components.scrolls.CustomScrolls;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
@@ -24,6 +25,7 @@ import com.oss.framework.widgets.tablewidget.TableRow;
 
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
+    private static final String EMPTY_DATA_ROW_XPATH = ".//div[contains(@class, 'empty_data_row')]";
 
     private static final String TABLE_COMPONENT_CLASS = "table-component";
 
@@ -58,6 +60,10 @@ public class TableComponent {
 
     public void unselectRow(int row) {
         getVisibleRows().get(row).unselectRow();
+    }
+
+    public boolean hasNoData() {
+        return !webElement.findElements(By.xpath(EMPTY_DATA_ROW_XPATH)).isEmpty();
     }
 
     public List<TableRow> getVisibleRows() {
@@ -200,7 +206,7 @@ public class TableComponent {
     private void scrollRightToHeader(Header header) {
         CustomScrolls scrolls = getCustomScrolls();
         BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getHorizontalScrollWidth());
-        int contentVisibleWidth = scrolls.getHorizontalBar().getSize().width;
+        int contentVisibleWidth = scrolls.getHorizontalBarWidth();
         int diff = scrollWidth.toBigInteger().intValue() - contentVisibleWidth;
 
         BigDecimal contentWidth = getContentWidth();
@@ -214,9 +220,9 @@ public class TableComponent {
 
     private void scrollToFirstColumn() {
         CustomScrolls scrolls = getCustomScrolls();
-        if (scrolls.getHorizontalBar().getSize().width == 0) return;
+        if (scrolls.getHorizontalBarWidth() == 0) return;
 
-        int translateX = scrolls.getTranslateXValue(scrolls.getHorizontalBar());
+        int translateX = scrolls.getTranslateXValue();
         if (translateX == 0) return;
 
         scrolls.scrollHorizontally(-translateX);
@@ -368,6 +374,11 @@ public class TableComponent {
         private final int index;
         private final String columnId;
 
+        private static boolean hasCheckboxCell(WebElement tableComponent, int index) {
+            return tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "' and @data-col='" + CHECKBOX_COLUMN_ID + "']"))
+                    .stream().findAny().isPresent();
+        }
+
         private static Cell createFromWrapper(WebElement wrapper) {
             WebElement cell = wrapper.findElement(By.xpath("./div"));
             int index = CSSUtils.getIntegerValue("data-row", cell);
@@ -375,14 +386,22 @@ public class TableComponent {
             return new Cell(cell, index, columnId);
         }
 
-        private static Cell createCheckBoxCell(WebElement tableComponent, int index) {
+        private static Cell createCheckboxCell(WebElement tableComponent, int index) {
             return createFromParent(tableComponent, index, CHECKBOX_COLUMN_ID);
         }
 
         private static Cell createFromParent(WebElement tableComponent, int index, String columnId) {
             WebElement cell = tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "' and @data-col='" + columnId + "']"))
                     .stream().findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + index + " columnId: " + columnId));
-            return new Cell(cell, index, CHECKBOX_COLUMN_ID);
+            return new Cell(cell, index, columnId);
+        }
+
+        private static Cell createRandomCell(WebElement tableComponent, int index) {
+            WebElement randomCell =
+                    tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "']"))
+                            .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + index));
+            String columnId = CSSUtils.getAttributeValue("data-col", randomCell);
+            return new Cell(randomCell, index, columnId);
         }
 
         private Cell(WebElement cell, int index, String columnId) {
@@ -404,7 +423,7 @@ public class TableComponent {
         }
 
         public String getText() {
-            if (!isCheckBox()) {
+            if (isCheckBox()) {
                 if (isSelected()) {
                     return "true";
                 }
@@ -458,15 +477,19 @@ public class TableComponent {
         }
 
         public String getColumnValue(String columnId) {
-            WebElement cell =
-                    this.tableComponent.findElements(By.xpath(".//div[@data-row='" + this.index + "' and @data-col='" + columnId + "']")).stream()
-                            .findFirst().orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + this.index + " columnId: " + columnId));
+            Cell cell = Cell.createFromParent(this.tableComponent, index, columnId);
             return cell.getText();
         }
 
         public void selectRow() {
             if (!isSelected()) {
-                clickRow();
+                Cell cell;
+                if (Cell.hasCheckboxCell(this.tableComponent, index)) {
+                    cell = Cell.createCheckboxCell(this.tableComponent, index);
+                } else {
+                    cell = Cell.createRandomCell(this.tableComponent, index);
+                }
+                cell.click();
             }
         }
 
@@ -478,8 +501,8 @@ public class TableComponent {
 
         @Override
         public boolean isSelected() {
-            Cell checkBox = Cell.createCheckBoxCell(tableComponent, index);
-            return checkBox.isSelected();
+            Cell cell = Cell.createRandomCell(this.tableComponent, index);
+            return cell.isSelected();
         }
 
         @Override
@@ -488,54 +511,4 @@ public class TableComponent {
         }
     }
 
-    public static class CustomScrolls {
-        private static final String SCROLLS_XPATH = ".//div[contains(@class, 'custom-scrollbars')]";
-
-        private final WebElement scrolls;
-        private final WebDriverWait wait;
-        private final WebDriver driver;
-
-        public static CustomScrolls create(WebDriver driver, WebDriverWait wait, WebElement parent) {
-            DelayUtils.waitForNestedElements(wait, parent, SCROLLS_XPATH);
-            WebElement scrolls = parent.findElement(By.xpath(SCROLLS_XPATH));
-            return new CustomScrolls(driver, wait, scrolls);
-        }
-
-        private CustomScrolls(WebDriver driver, WebDriverWait wait, WebElement scrolls) {
-            this.driver = driver;
-            this.wait = wait;
-            this.scrolls = scrolls;
-        }
-
-        private WebElement getHorizontalScroll() {
-            List<WebElement> divs = scrolls.findElements(By.xpath("./div"));
-            return divs.get(1);
-        }
-
-        private WebElement getHorizontalBar() {
-            WebElement horizontal = getHorizontalScroll();
-            return horizontal.findElement(By.xpath("./div"));
-        }
-
-        public void scrollHorizontally(int offset) {
-            Actions action = new Actions(this.driver);
-            action.moveToElement(getHorizontalBar()).clickAndHold();
-            action.moveByOffset(offset, 0);
-            action.release();
-            action.perform();
-        }
-
-        public int getTranslateXValue(WebElement bar) {
-            String barStyle = bar.getAttribute("style");
-            String translateX = barStyle.split("translateX\\(")[1];
-            return Integer.parseInt(translateX.split("px")[0]);
-        }
-
-        public void scrollVertically(int offset) {
-        }
-
-        public int getHorizontalScrollWidth() {
-            return getHorizontalScroll().getSize().width;
-        }
-    }
 }
