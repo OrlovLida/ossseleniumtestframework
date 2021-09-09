@@ -76,6 +76,14 @@ public class EditableList extends Widget {
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
     }
+
+    public void callActionIcon(String actionLabel, int row) {
+        selectRow(row - 1).callActionIcon(actionLabel);
+    }
+
+    public void callActionIcon(String actionLabel, String columnId, String value) {
+        selectRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
+    }
     
     // TODO update xpath
     public List<String> getValues() {
