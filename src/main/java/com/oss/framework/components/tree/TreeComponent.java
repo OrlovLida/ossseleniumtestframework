@@ -8,6 +8,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -18,14 +20,18 @@ import com.oss.framework.widgets.treewidget.InlineMenu;
 
 public class TreeComponent {
 
+    private static final Logger log = LoggerFactory.getLogger(TreeComponent.class);
     private static final String TREE_CLASS = "tree-component";
     private static final String NODE_CLASS = "tree-node";
     private static final String NODE_LABEL_CLASS = "OSSRichText";
     private static final String EXPANDER_ICON_XPATH = ".//i[@class='OSSIcon fa fa-plus']";
     private static final String EXPANDER_BUTTON_XPATH = ".//div[@class = 'tree-node-expand-icon tree-node-expand-icon--collapsed']";
+    private static final String EXPAND_NEXT_LEVEL_ARROW_XPATH = "tree-node-expand--caret";
+    private static final String EXPAND_NEXT_LEVEL_BUTTON = "nextLevelButton";
     private static final String COLLAPSER_BUTTON_XPATH = ".//div[@class = 'tree-node-expand-icon tree-node-expand-icon--expanded']";
     private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
+    private static final String SPIN_XPATH =".//i[contains(@class,'fa-spin')]";
 
     private static final int LEFT_MARGIN_IN_PX = 24;
 
@@ -171,6 +177,21 @@ public class TreeComponent {
             }
         }
 
+        public void expandNextLevel() {
+            if (isExpandNextLevelEnabled()) {
+                Actions action = new Actions(driver);
+                action.moveToElement(node).perform();
+                WebElement expandNextLevelArrow = node.findElement(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH));
+                action.click(expandNextLevelArrow).perform();
+                WebElement button = node.findElement(By.xpath("//a[contains(@" + CSSUtils.TEST_ID + ",'" + EXPAND_NEXT_LEVEL_BUTTON + "')]"));
+                action.moveToElement(button).click().perform();
+                DelayUtils.waitForElementDisappear(webDriverWait, node.findElement(By.xpath(SPIN_XPATH)));
+            }
+            else
+            log.info("Expand Next Level is not available for Node "+ getLabel());
+
+        }
+
         public void collapseNode() {
             if (isExpanded()) {
                 Actions action = new Actions(driver);
@@ -183,6 +204,10 @@ public class TreeComponent {
 
         public boolean isExpanded() {
             return node.findElements(By.xpath(EXPANDER_ICON_XPATH)).isEmpty();
+        }
+        public boolean isExpandNextLevelEnabled(){
+            return !node.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
+
         }
 
         public String getLabel() {
