@@ -7,4 +7,5 @@ public interface TableRow {
     void clickRow();
     void selectRow();
     void unselectRow();
+    void callAction(String groupId, String actionId);
 }
