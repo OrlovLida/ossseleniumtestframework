@@ -97,13 +97,13 @@ public class TreeWidget extends Widget {
     }
 
     public void scrollToTreeRow(String name) {
-        this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + name + "']"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", this.webElement);
+        WebElement row = this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + name + "']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", row);
     }
 
     public void scrollToTreeRowContains(String name) {
-        this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", this.webElement);
+         WebElement row = this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", row);
     }
 
     public List<TreeRow> getVisibleTreeRow() {
