@@ -8,8 +8,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -20,7 +18,6 @@ import com.oss.framework.widgets.treewidget.InlineMenu;
 
 public class TreeComponent {
     
-    private static final Logger log = LoggerFactory.getLogger(TreeComponent.class);
     private static final String TREE_CLASS = "tree-component";
     private static final String NODE_CLASS = "tree-node";
     private static final String NODE_LABEL_CLASS = "OSSRichText";
@@ -191,7 +188,7 @@ public class TreeComponent {
                 action.moveToElement(button).click().perform();
                 DelayUtils.waitForElementDisappear(webDriverWait, node.findElement(By.xpath(SPIN_XPATH)));
             } else
-                log.info("Expand Next Level is not available for Node " + getLabel());
+                throw new IllegalArgumentException("Expand Next Level is not available for Node " + getLabel());
             
         }
         
