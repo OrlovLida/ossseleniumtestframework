@@ -188,7 +188,7 @@ public class TreeComponent {
                 action.moveToElement(button).click().perform();
                 DelayUtils.waitForElementDisappear(webDriverWait, node.findElement(By.xpath(SPIN_XPATH)));
             } else
-                throw new IllegalArgumentException("Expand Next Level is not available for Node " + getLabel());
+                throw new RuntimeException("Expand Next Level is not available for Node " + getLabel());
             
         }
         
