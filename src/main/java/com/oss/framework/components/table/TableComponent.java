@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.oss.framework.components.inputs.Button;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -26,6 +27,7 @@ import com.oss.framework.widgets.tablewidget.TableRow;
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
     private static final String EMPTY_DATA_ROW_XPATH = ".//div[contains(@class, 'empty_data_row')]";
+    private static final String SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL = "//span[@data-testid='selected-objects-count-label']";
 
     private static final String TABLE_COMPONENT_CLASS = "table-component";
 
@@ -52,6 +54,22 @@ public class TableComponent {
     public void selectRow(int index) {
         Row row = getRow(index);
         row.selectRow();
+    }
+
+    public void toggleSelectionBar(){
+        Button.createById(driver, "selection-bar-toggler-button").click();
+    }
+
+    public void clickUnselectAllButton(){
+        Button.createById(driver, "unselect-all-button").click();
+    }
+
+    public void clickShowOnlySelectedButton(){
+        Button.createById(driver, "show-selected-only-button").click();
+    }
+
+    public String getSelectionObjectCountLabelFromSelectionBar(){
+        return driver.findElement(By.xpath(SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL)).getText();
     }
 
     public void selectAll() {
