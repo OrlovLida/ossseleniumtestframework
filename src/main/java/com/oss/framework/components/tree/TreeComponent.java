@@ -210,7 +210,7 @@ public class TreeComponent {
             return node.findElements(By.xpath(EXPANDER_ICON_XPATH)).isEmpty();
         }
         
-        public boolean isExpandNextLevelEnabled() {
+        private boolean isExpandNextLevelEnabled() {
             return !node.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
             
         }
