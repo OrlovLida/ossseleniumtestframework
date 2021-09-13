@@ -199,7 +199,7 @@ public class TableComponent {
     }
 
     private Row getRow(int index) {
-        return new Row(webElement, index);
+        return new Row(driver, webDriverWait, webElement, index);
     }
 
     private List<Header> getHeaders() {
@@ -498,7 +498,9 @@ public class TableComponent {
         private final WebDriverWait webDriverWait;
         private final int index;
 
-        private Row(WebElement tableComponent, int index) {
+        private Row(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent, int index) {
+            this.driver = driver;
+            this.webDriverWait = webDriverWait;
             this.tableComponent = tableComponent;
             this.index = index;
         }
