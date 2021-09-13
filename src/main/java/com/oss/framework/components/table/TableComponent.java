@@ -23,6 +23,7 @@ import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.DragAndDrop.DraggableElement;
 import com.oss.framework.utils.DragAndDrop.DropElement;
 import com.oss.framework.widgets.tablewidget.TableRow;
+import com.oss.framework.widgets.treewidget.InlineMenu;
 
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
@@ -41,9 +42,13 @@ public class TableComponent {
     private PaginationComponent paginationComponent;
 
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
-        DelayUtils.waitByXPath(webDriverWait, "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class," + TABLE_COMPONENT_CLASS + ")]");
-        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'" + TABLE_COMPONENT_CLASS + "')]"));
+        DelayUtils.waitByXPath(webDriverWait, getTableComponentPath(widgetId));
+        WebElement webElement = driver.findElement(By.xpath(getTableComponentPath(widgetId)));
         return new TableComponent(driver, webDriverWait, webElement, widgetId);
+    }
+
+    private static String getTableComponentPath(String widgetId) {
+        return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'" + TABLE_COMPONENT_CLASS + "')]";
     }
 
     private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String widgetId) {
@@ -57,6 +62,7 @@ public class TableComponent {
         Row row = getRow(index);
         row.selectRow();
     }
+
 
     public void toggleSelectionBar(){
         Button.createById(driver, "selection-bar-toggler-button").click();
@@ -87,11 +93,17 @@ public class TableComponent {
     }
 
     public List<TableRow> getVisibleRows() {
-        List<Integer> rowIds = this.webElement.findElements(By.xpath(".//div[contains(@" + CSSUtils.TEST_ID + ", 'table-content-scrollbar')]//div[contains(@class, 'table-component__cell')]"))
+        List<Integer> rowIds = this.webElement
+                .findElements(By.xpath(getTableCellsPath()))
                 .stream().filter(e -> e.getAttribute("data-row") != null).map(e -> e.getAttribute("data-row"))
                 .distinct().map(Integer::parseInt).sorted().collect(Collectors.toList());
 
-        return rowIds.stream().map(index -> new Row(this.webElement, index)).collect(Collectors.toList());
+        return rowIds.stream().map(index -> new Row(this.driver, this.webDriverWait, this.webElement, index)).collect(Collectors.toList());
+    }
+
+    private String getTableCellsPath() {
+        return ".//div[contains(@" + CSSUtils.TEST_ID
+                + ", 'table-content-scrollbar')]//div[contains(@class, 'table-component__cell')]";
     }
 
     public void scrollHorizontally(int offset) {
@@ -482,6 +494,8 @@ public class TableComponent {
     public static class Row implements TableRow {
 
         private final WebElement tableComponent;
+        private final WebDriver driver;
+        private final WebDriverWait webDriverWait;
         private final int index;
 
         private Row(WebElement tableComponent, int index) {
@@ -528,6 +542,14 @@ public class TableComponent {
         @Override
         public int getIndex() {
             return this.index;
+        }
+
+        public void callAction(String groupId, String actionId) {
+            Actions actions = new Actions(driver);
+            actions.moveToElement(tableComponent).build().perform();
+
+            InlineMenu menu = InlineMenu.create(tableComponent, driver, webDriverWait);
+            menu.callAction(groupId, actionId);
         }
     }
 
