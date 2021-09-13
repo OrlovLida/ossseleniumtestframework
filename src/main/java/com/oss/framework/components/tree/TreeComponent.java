@@ -104,27 +104,31 @@ public class TreeComponent {
     
     public List<Node> getVisibleNodes() {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        return this.treeComponent.findElements(By.xpath(".//div[@class='" + NODE_CLASS + "']")).stream()
+        return this.treeComponent.findElements(By.xpath("." + getNodeClassPath())).stream()
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
     }
     
     @Deprecated
     public List<Node> getNodes(int level) {
-        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
+        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, getNodeClassPath());
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
         return this.treeComponent
-                .findElements(By.xpath("//div[@class='" + NODE_CLASS + "'][.//div[contains(@style, '" + marginToString + "')]]")).stream()
+                .findElements(By.xpath(getNodeClassPath() + "[.//div[contains(@style, '" + marginToString + "')]]")).stream()
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
     }
     
     @Deprecated
     public List<Node> getNodesWithExpander(int level) {
-        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
+        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, getNodeClassPath());
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
         return this.treeComponent
-                .findElements(By.xpath("//div[@class='" + NODE_CLASS + "'][.//i][.//div[contains(@style, '" + marginToString + "')]]"))
+                .findElements(By.xpath(getNodeClassPath() + "[.//i][.//div[contains(@style, '" + marginToString + "')]]"))
                 .stream()
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
+    }
+    
+    private String getNodeClassPath() {
+        return "//div[@class='" + NODE_CLASS + "']";
     }
     
     public static class Node {
