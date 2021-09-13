@@ -38,11 +38,13 @@ public class TableComponent {
     private PaginationComponent paginationComponent;
     
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
-        DelayUtils.waitByXPath(webDriverWait,
-                "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class," + TABLE_COMPONENT_CLASS + ")]");
-        WebElement webElement = driver.findElement(
-                By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'" + TABLE_COMPONENT_CLASS + "')]"));
+        DelayUtils.waitByXPath(webDriverWait, getTableComponentPath(widgetId));
+        WebElement webElement = driver.findElement(By.xpath(getTableComponentPath(widgetId)));
         return new TableComponent(driver, webDriverWait, webElement, widgetId);
+    }
+    
+    private static String getTableComponentPath(String widgetId) {
+        return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'" + TABLE_COMPONENT_CLASS + "')]";
     }
     
     private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String widgetId) {
@@ -71,12 +73,16 @@ public class TableComponent {
     
     public List<TableRow> getVisibleRows() {
         List<Integer> rowIds = this.webElement
-                .findElements(By.xpath(".//div[contains(@" + CSSUtils.TEST_ID
-                        + ", 'table-content-scrollbar')]//div[contains(@class, 'table-component__cell')]"))
+                .findElements(By.xpath(getTableCellsPath()))
                 .stream().filter(e -> e.getAttribute("data-row") != null).map(e -> e.getAttribute("data-row"))
                 .distinct().map(Integer::parseInt).sorted().collect(Collectors.toList());
         
         return rowIds.stream().map(index -> new Row(this.driver, this.webDriverWait, this.webElement, index)).collect(Collectors.toList());
+    }
+    
+    private String getTableCellsPath() {
+        return ".//div[contains(@" + CSSUtils.TEST_ID
+                + ", 'table-content-scrollbar')]//div[contains(@class, 'table-component__cell')]";
     }
     
     public void scrollHorizontally(int offset) {
