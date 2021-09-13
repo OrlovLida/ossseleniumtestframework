@@ -28,6 +28,8 @@ public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
     private static final String EMPTY_DATA_ROW_XPATH = ".//div[contains(@class, 'empty_data_row')]";
     private static final String SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL = "//span[@data-testid='selected-objects-count-label']";
+    private static final String SHOW_ONLY_SELECTED_BUTTON_XPATH = ".//*[@data-testid='show-selected-only-button']";
+    private static final String UNSELECT_ALL_BUTTON_XPATH = ".//*[@data-testid='unselect-all-button']";
 
     private static final String TABLE_COMPONENT_CLASS = "table-component";
 
@@ -61,11 +63,11 @@ public class TableComponent {
     }
 
     public void clickUnselectAllButton(){
-        Button.createById(driver, "unselect-all-button").click();
+        driver.findElement(By.xpath(UNSELECT_ALL_BUTTON_XPATH)).click();
     }
 
-    public void clickShowOnlySelectedButton(){
-        Button.createById(driver, "show-selected-only-button").click();
+    public void clickShowOnlySelectedOrShowAllButton(){
+        driver.findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
     }
 
     public String getSelectionObjectCountLabelFromSelectionBar(){
