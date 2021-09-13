@@ -4,11 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -98,6 +94,16 @@ public class TreeWidget extends Widget {
         WebElement webElement = this.webElement.findElement(By.xpath("//p[text()='" + parentName + "']//..//..//..//li[@id='"
                 + parentTreeItemId + "']//p[text()='" + name + "']"));
         webElement.click();
+    }
+
+    public void scrollToTreeRow(String name) {
+        WebElement row = this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][text()='" + name + "']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", row);
+    }
+
+    public void scrollToTreeRowContains(String name) {
+         WebElement row = this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", row);
     }
 
     public List<TreeRow> getVisibleTreeRow() {
