@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.oss.framework.components.common.PaginationComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
+import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
@@ -30,7 +30,7 @@ public class TableWidget extends Widget implements TableInterface {
     private static final int REFRESH_INTERVAL = 2000;
     public static final String EXPORT_ACTION_ID = "exportButton";
 
-    private static final String kebabMenuBtn = ".//div[@id='frameworkCustomButtonsGroup']";
+    private static final String KEBAB_MENU_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
 
     private AdvancedSearch advancedSearch;
     private TableComponent tableComponent;
@@ -82,7 +82,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public boolean hasNoData() {
-        return driver.findElements(By.xpath("//div[@class='TableBody']//*[@class='noDataWithColumns']")).size() > 0;
+        return getTableComponent().hasNoData();
     }
 
     @Override
@@ -155,7 +155,6 @@ public class TableWidget extends Widget implements TableInterface {
     public void toggleVisibilitySearchAttributes(List<String> attributeIds) {
         openAdvancedSearch();
         getAdvancedSearch().toggleAttributes(attributeIds);
-        getAdvancedSearch().clickApply();
     }
 
     public List<String> getAllVisibleFilters() {
@@ -316,12 +315,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private TableComponent getTableComponent() {
-        if(tableComponent == null) {
+        if (tableComponent == null) {
             tableComponent = TableComponent.create(this.driver, this.webDriverWait, this.id);
         }
         return tableComponent;
     }
-
 
     private AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
@@ -348,6 +346,6 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private WebElement getKebabMenuBtn() {
-        return this.webElement.findElement(By.xpath(kebabMenuBtn));
+        return this.webElement.findElement(By.xpath(KEBAB_MENU_XPATH));
     }
 }

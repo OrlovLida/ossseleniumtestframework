@@ -49,7 +49,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     public static SystemMessageInterface create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, PATH_TO_SYSTEM_MESSAGE_CONTAINER);
+        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         WebElement messageContainer = driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         return new SystemMessageContainer(driver, wait, messageContainer);
     }
@@ -105,6 +105,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
                 case WARNING_MESSAGE_TYPE_CLASS: {
                     return MessageType.WARNING;
                 }
+                default:
             }
         }
         throw new IllegalArgumentException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);
@@ -132,7 +133,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     @Override
     public void clickMessageLink() {
         DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
-        messageContainer.findElement(By.xpath(".//a[contains(@href, '#/')]")).click();
+        messageContainer.findElement(By.xpath(".//a[contains(@href, '#')]")).click();
     }
 
     @Override
