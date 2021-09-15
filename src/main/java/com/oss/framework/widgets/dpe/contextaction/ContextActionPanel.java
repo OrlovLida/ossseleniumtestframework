@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.dpe.kpichartwidget;
+package com.oss.framework.widgets.dpe.contextaction;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -42,9 +42,9 @@ public class ContextActionPanel {
         clickOnGroup(groupId);
     }
 
-    public void callAction(String groupId, String actionId) {
+    public void callAction(String groupId, String actionLabel) {
         clickOnGroup(groupId);
-        clickOnAction(actionId);
+        clickOnAction(actionLabel);
     }
 
     public void callAction(String groupId, String actionClass, String color) {
