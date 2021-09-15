@@ -42,8 +42,8 @@ public class IaaTable implements TableInterface {
         }
     }
 
-    public List<WebElement> getListOfCells(String columnName) {
-        List<WebElement> cells = driver.findElements(By.xpath(".//div[substring(@datatestid, string-length(@datatestid) - string-length('" + columnName + "') + 1) = '" + columnName + "']//span[@title]" ));
+    public List<WebElement> getListOfCells(String columnNameId) {
+        List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='"+ columnNameId +"']//span[@title]"));
         return cells;
     }
 
