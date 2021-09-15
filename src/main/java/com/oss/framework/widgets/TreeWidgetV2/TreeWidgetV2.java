@@ -96,7 +96,7 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public Node getNodeByLabelsPath(String labels) {
-        return getTreeComponent().getNodeByPath(labels);
+        return getTreeComponent().getNodeByLabelsPath(labels);
     }
 
     private TreeComponent getTreeComponent() {

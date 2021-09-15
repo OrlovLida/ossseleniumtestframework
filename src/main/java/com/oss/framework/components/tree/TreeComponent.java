@@ -133,7 +133,7 @@ public class TreeComponent {
     
     public static class Node {
         private static final String DATA_GUID_ATTR = "data-guid";
-        private static final String DATA_PATH_LABEL_ATTR = "data-testid";
+        private static final String DATA_PATH_LABEL_ATTR = "data-label-path";
         
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
