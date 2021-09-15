@@ -63,23 +63,6 @@ public class TableComponent {
         row.selectRow();
     }
 
-
-    public void toggleSelectionBar(){
-        Button.createById(driver, "selection-bar-toggler-button").click();
-    }
-
-    public void clickUnselectAllButton(){
-        driver.findElement(By.xpath(UNSELECT_ALL_BUTTON_XPATH)).click();
-    }
-
-    public void clickShowOnlySelectedOrShowAllButton(){
-        driver.findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
-    }
-
-    public String getSelectionObjectCountLabelFromSelectionBar(){
-        return driver.findElement(By.xpath(SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL)).getText();
-    }
-
     public void selectAll() {
         Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).click();
     }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.oss.framework.components.selection_tab.SelectionBarComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -34,6 +35,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     private AdvancedSearch advancedSearch;
     private TableComponent tableComponent;
+    private SelectionBarComponent selectionBarComponent;
 
     @Deprecated
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
@@ -319,6 +321,13 @@ public class TableWidget extends Widget implements TableInterface {
             tableComponent = TableComponent.create(this.driver, this.webDriverWait, this.id);
         }
         return tableComponent;
+    }
+
+    private SelectionBarComponent getSelectionBarComponent(){
+        if(selectionBarComponent == null){
+            selectionBarComponent = SelectionBarComponent.create(this.driver, this.webDriverWait);
+        }
+        return selectionBarComponent;
     }
 
     private AdvancedSearch getAdvancedSearch() {
