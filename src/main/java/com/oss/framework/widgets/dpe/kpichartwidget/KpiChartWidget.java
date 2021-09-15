@@ -137,11 +137,6 @@ public class KpiChartWidget extends Widget {
         DelayUtils.sleep();
     }
 
-    public void clickOnLinkInChartActionsLinks(String linkText) {
-        WebElement link = driver.findElement(By.xpath("//div[@class='xdr-view-link']/a[contains(text(),'" + linkText + "')]"));
-        link.click();
-    }
-
     @Deprecated
     //TODO: it should be removed after changing DFE-SQM tests
     private void clickChartActionsBar(String actionBarXpath) {
