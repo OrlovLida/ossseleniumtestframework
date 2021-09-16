@@ -44,8 +44,7 @@ public class ObjectSearchField extends Input {
             DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
             chooseFirstResult();
             actions.moveToElement(webElement).click().build().perform();
-        }
-        if (isSingleComponent()) {
+        } else {
             clear();
             DelayUtils.sleep(1000);
             webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
