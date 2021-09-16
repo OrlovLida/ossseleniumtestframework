@@ -45,6 +45,9 @@ public class ContextActionPanel {
     public void callAction(String groupId, String actionLabel) {
         clickOnGroup(groupId);
         clickOnAction(actionLabel);
+        Actions actions = new Actions(driver);
+        WebElement graph = driver.findElement(By.xpath(GRAPH_LOCATOR_PATH));
+        actions.moveToElement(graph).click(graph).build().perform();
     }
 
     public void callAction(String groupId, String actionClass, String color) {
@@ -55,6 +58,9 @@ public class ContextActionPanel {
     }
 
     private void clickOnGroup(String groupId) {
+        if (!isPanelOpen()) {
+            clickOnPanel();
+        }
         List<WebElement> actions = contextActionPanel.findElements(By.xpath(".//div[@class='btn-chart' or @class='xdr-views-container']"));
         WebElement group = actions.stream().filter(a -> a.findElement(By.xpath(".//button"))
                         .getAttribute(CSSUtils.TEST_ID)
@@ -85,5 +91,9 @@ public class ContextActionPanel {
         WebElement colorPalette = contextActionPanel.findElement(By.className("color-picker"));
         WebElement color = colorPalette.findElement(By.xpath("//*[@style='background-color: " + colorRGB + ";']"));
         color.click();
+    }
+
+    private boolean isPanelOpen() {
+        return !contextActionPanel.findElements(By.xpath(".//i[contains(@class,'chevron-left')]")).isEmpty();
     }
 }
