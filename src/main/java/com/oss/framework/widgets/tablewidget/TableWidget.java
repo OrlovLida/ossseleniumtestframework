@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.oss.framework.components.selection_tab.SelectionBarComponent;
+import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -323,9 +323,9 @@ public class TableWidget extends Widget implements TableInterface {
         return tableComponent;
     }
 
-    private SelectionBarComponent getSelectionBarComponent(){
+    private SelectionBarComponent getSelectionBarComponent(String tableWidgetId){
         if(selectionBarComponent == null){
-            selectionBarComponent = SelectionBarComponent.create(this.driver, this.webDriverWait);
+            selectionBarComponent = SelectionBarComponent.create(this.driver, this.webDriverWait, tableWidgetId);
         }
         return selectionBarComponent;
     }

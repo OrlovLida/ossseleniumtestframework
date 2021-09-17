@@ -3,7 +3,6 @@ package com.oss.framework.components.tree;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.oss.framework.components.common.PaginationComponent;
-import com.oss.framework.components.selection_tab.SelectionBarComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.treewidget.InlineMenu;

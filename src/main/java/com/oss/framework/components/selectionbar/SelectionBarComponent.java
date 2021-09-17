@@ -1,4 +1,4 @@
-package com.oss.framework.components.selection_tab;
+package com.oss.framework.components.selectionbar;
 
 import com.oss.framework.components.inputs.Button;
 import org.openqa.selenium.By;
@@ -17,10 +17,11 @@ public class SelectionBarComponent {
     private final WebDriverWait wait;
     private final WebElement webElement;
 
-    public static SelectionBarComponent create(WebDriver driver, WebDriverWait wait){
+    public static SelectionBarComponent create(WebDriver driver, WebDriverWait wait, String widgetId) {
         WebElement selectionBar;
-        boolean isSelectionBarVisible = driver.findElements(By.xpath(DATA_TESTID_SELECTION_BAR_XPATH)).size()>0;
-        if(isSelectionBarVisible){
+        String selectionBarXpath = getSelectionBarInWidgetXpath(widgetId);
+        boolean isSelectionBarVisible = driver.findElements(By.xpath(selectionBarXpath)).size() > 0;
+        if (isSelectionBarVisible) {
             selectionBar = driver.findElement(By.xpath(DATA_TESTID_SELECTION_BAR_XPATH));
             return new SelectionBarComponent(driver, wait, selectionBar);
         }
@@ -35,19 +36,23 @@ public class SelectionBarComponent {
         this.webElement = webElement;
     }
 
-    public void toggleSelectionBar(){
+    private static String getSelectionBarInWidgetXpath(String widgetId) {
+        return "//*[@data-testid='" + widgetId + "']" + DATA_TESTID_SELECTION_BAR_XPATH;
+    }
+
+    public void toggleSelectionBar() {
         Button.createById(driver, "selection-bar-toggler-button").click();
     }
 
-    public void clickUnselectAllButton(){
-        driver.findElement(By.xpath(UNSELECT_ALL_BUTTON_XPATH)).click();
+    public void clickUnselectAllButton() {
+        this.webElement.findElement(By.xpath(UNSELECT_ALL_BUTTON_XPATH)).click();
     }
 
-    public void clickShowOnlySelectedOrShowAllButton(){
-        driver.findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
+    public void clickShowOnlySelectedOrShowAllButton() {
+        this.webElement.findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
     }
 
-    public String getSelectionObjectCountLabelFromSelectionBar(){
-        return driver.findElement(By.xpath(SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL_XPATH)).getText();
+    public String getSelectionObjectCountLabelFromSelectionBar() {
+        return this.webElement.findElement(By.xpath(SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL_XPATH)).getText();
     }
 }

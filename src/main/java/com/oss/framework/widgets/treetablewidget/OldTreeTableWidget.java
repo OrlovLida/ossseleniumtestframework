@@ -6,7 +6,6 @@
  */
 package com.oss.framework.widgets.treetablewidget;
 
-import com.oss.framework.components.selection_tab.SelectionBarComponent;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.tablewidget.OldTable;
@@ -25,7 +24,6 @@ import java.util.List;
 public class OldTreeTableWidget extends Widget {
 
     private final String id;
-    private SelectionBarComponent selectionBarComponent;
 
     private OldTreeTableWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
@@ -34,7 +32,6 @@ public class OldTreeTableWidget extends Widget {
 
     public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
         return new OldTreeTableWidget(driver, wait, dataAttributeName);
-
     }
 
     private OldTable createTable() {
@@ -70,13 +67,6 @@ public class OldTreeTableWidget extends Widget {
         createTable().callAction(id);
     }
 
-    public SelectionBarComponent getSelectionBarComponent(){
-        if(selectionBarComponent == null){
-            selectionBarComponent = SelectionBarComponent.create(driver, webDriverWait);
-        }
-        return selectionBarComponent;
-    }
-
     public static class Node {
         private static final String TREE_NODE_EXPAND_ICON_XPATH = ".//i[contains(@class,'tree-node-expand-icon')]";
         private static final String TREE_NODE_ADD_ICON_XPATH = ".//i[@aria-label='ADD']";
@@ -103,7 +93,6 @@ public class OldTreeTableWidget extends Widget {
                 wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH))));
                 node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH)).click();
                 DelayUtils.waitForPageToLoad(driver, wait);
-
             }
         }
 

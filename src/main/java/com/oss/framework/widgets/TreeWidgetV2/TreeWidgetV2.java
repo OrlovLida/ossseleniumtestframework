@@ -3,7 +3,7 @@ package com.oss.framework.widgets.TreeWidgetV2;
 import java.util.List;
 import java.util.Optional;
 
-import com.oss.framework.components.selection_tab.SelectionBarComponent;
+import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -115,9 +115,9 @@ public class TreeWidgetV2 extends Widget {
         return advancedSearch;
     }
 
-    private SelectionBarComponent getSelectionBarComponent() {
+    private SelectionBarComponent getSelectionBarComponent(String widgetId) {
         if (selectionBarComponent == null){
-            selectionBarComponent = SelectionBarComponent.create(driver, webDriverWait);
+            selectionBarComponent = SelectionBarComponent.create(driver, webDriverWait, widgetId);
         }
         return selectionBarComponent;
     }
