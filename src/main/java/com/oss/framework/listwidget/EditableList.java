@@ -32,7 +32,7 @@ public class EditableList extends Widget {
     private static final String LIST_WIDGET_CLASS = "ExtendedList";
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
-    
+
     public static EditableList create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]"));
         return new EditableList(driver, LIST_WIDGET_CLASS, webDriverWait);
@@ -76,11 +76,11 @@ public class EditableList extends Widget {
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
     }
-    
+
     public void callActionIcon(String actionLabel, int row) {
         selectRow(row - 1).callActionIcon(actionLabel);
     }
-    
+
     public void callActionIcon(String actionLabel, String columnId, String value) {
         selectRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
     }

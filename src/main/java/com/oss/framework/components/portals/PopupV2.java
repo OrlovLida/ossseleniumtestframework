@@ -44,6 +44,12 @@ public class PopupV2 {
         return input;
     }
 
+    public void deleteComponentValue(String componentId, Input.ComponentType componentType) {
+        DelayUtils.waitForNestedElements(wait, webElement, "//*[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
+        Input input = getComponent(componentId, componentType);
+        input.clear();
+    }
+
     public Input getComponent(String componentId, Input.ComponentType componentType) {
         return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
