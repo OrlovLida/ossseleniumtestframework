@@ -45,9 +45,6 @@ public class ContextActionPanel {
     public void callAction(String groupId, String actionLabel) {
         clickOnGroup(groupId);
         clickOnAction(actionLabel);
-        Actions actions = new Actions(driver);
-        WebElement graph = driver.findElement(By.xpath(GRAPH_LOCATOR_PATH));
-        actions.moveToElement(graph).click(graph).build().perform();
     }
 
     public void callAction(String groupId, String actionClass, String color) {
@@ -81,10 +78,14 @@ public class ContextActionPanel {
                             .equals(actionLabel))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Link with text label " + actionLabel + " doesn't exist"));
+            action.click();
         } else {
             action = contextActionPanel.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='" + actionLabel + "']"));
+            action.click();
+            Actions actions = new Actions(driver);
+            WebElement graph = driver.findElement(By.xpath(GRAPH_LOCATOR_PATH));
+            actions.moveToElement(graph).click(graph).build().perform();
         }
-        action.click();
     }
 
     private void chooseColor(String colorRGB) {
