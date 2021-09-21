@@ -13,6 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class DatePicker {
@@ -22,9 +23,10 @@ public class DatePicker {
     
     private final By prev = By.xpath(".//span[contains(@class,'prev')]");
     private final By next = By.xpath(".//span[contains(@class,'next')]");
+    private final static String TODAY_BUTTON_XPATH = ".//button[text()='Today']";
     
-    public static DatePicker create(WebDriver driver, WebDriverWait wait) {
-        WebElement dayPicker = driver.findElement(By.className("DayPicker"));
+    public static DatePicker create(WebDriver driver, WebDriverWait wait, String componentId) {
+        WebElement dayPicker = driver.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
         DelayUtils.waitByXPath(wait, ".//span[contains(@class,'next')]");
         
         return new DatePicker(driver, wait, dayPicker);
@@ -116,6 +118,6 @@ public class DatePicker {
     }
     
     private void setToday() {
-        webElement.findElement(By.xpath(".//button[text()='Today']")).click();
+        webElement.findElement(By.xpath(TODAY_BUTTON_XPATH)).click();
     }
 }

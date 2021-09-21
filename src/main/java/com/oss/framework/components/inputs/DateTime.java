@@ -1,7 +1,8 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.data.Data;
-import com.oss.framework.utils.DelayUtils;
+import java.util.Calendar;
+import java.util.Locale;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -9,147 +10,92 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.*;
+import com.oss.framework.components.datetime.DatePicker;
+import com.oss.framework.components.portals.TimePicker;
+import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
 
 public class DateTime extends Input {
-
-    private static final String XPATH_HOURS_MORE = "(//div[@class='timePicker-navButton timePicker-navButton--more btn'])[1]";
-    private static final String XPATH_HOURS_LESS = "(//div[@class='timePicker-navButton timePicker-navButton--less btn'])[1]";
-    private static final String XPATH_MINUTES_MORE = "(//div[@class='timePicker-navButton timePicker-navButton--more btn'])[2]";
-    private static final String XPATH_MINUTES_LESS = "(//div[@class='timePicker-navButton timePicker-navButton--less btn'])[2]";
-    private static final String XPATH_SECUNDES_MORE = "(//div[@class='timePicker-navButton timePicker-navButton--more btn'])[3]";
-    private static final String XPATH_SECUNDES_LESS = "(//div[@class='timePicker-navButton timePicker-navButton--less btn'])[3]";
-    private static final String XPATH_DATE_TODAY = "//div[contains(@class,'DayPicker-Day btn DayPicker-Day--selected DayPicker-Day--today')]";
-    private static final String XPATH_NEXT_MONTH = "//span[@aria-label='Next Month']";
-    private static final String XPATH_PREVIOUS_MONTH = "//span[@aria-label='Previous Month']";
-
+    
+    private static final String XPATH_CLOCK_ICON = ".//button//i[@class='OSSIcon fa fa-calendar']";
+    
     static DateTime create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new DateTime(driver, wait, componentId);
     }
-
+    
     static DateTime createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new DateTime(parent,driver, wait, componentId);
+        return new DateTime(parent, driver, wait, componentId);
     }
-
+    
     private DateTime(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
-
+    
     private DateTime(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         super(parent, driver, wait, componentId);
     }
-
+    
     @Override
     public void setValue(Data value) {
+        clear();
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.sendKeys(value.getStringValue());
     }
-
+    
     @Override
     public void setValueContains(Data value) {
-
+        
     }
-
+    
     @Override
     public Data getValue() {
         WebElement input = webElement.findElement(By.xpath(".//input"));
         return Data.createSingleData(input.getAttribute("value"));
     }
-
+    
     @Override
     public void clear() {
         WebElement input = webElement.findElement(By.xpath(".//input"));
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
-        //unfocus element
+        // unfocus element
         input.sendKeys(Keys.TAB);
         DelayUtils.sleep();
     }
-
-    static public String createPathDate(Calendar date){
-        return  "//div[@aria-label='" + date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) + ", " +
+    
+    static public String createPathDate(Calendar date) {
+        return "//div[@aria-label='" + date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) + ", " +
                 date.get(Calendar.DAY_OF_MONTH) + " " +
                 date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + date.get(Calendar.YEAR) + "']";
     }
-
-    //TODO exceptions handling, duplicated code, var's names
-    public void chooseDate(String dataK) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
-        try {
-            date = sdf.parse(dataK);
-        } catch (ParseException e) {
-            System.out.println("Problem with date parser");
-        }
-        Calendar givenDate = Calendar.getInstance();
-        givenDate.setTime(date);
-        Calendar today = new GregorianCalendar();
-        int monthDifference = givenDate.get(Calendar.MONTH) - today.get(Calendar.MONTH);
-        if(monthDifference > 0) {
-            WebElement we = driver.findElement(By.xpath(XPATH_NEXT_MONTH));
-            for(int i =0; i<monthDifference; i++) we.click();
-        } else if(monthDifference < 0) {
-            WebElement we = driver.findElement(By.xpath(XPATH_PREVIOUS_MONTH));
-            for(int i =0; i>monthDifference; i--) we.click();
-        }
-        selectDate(givenDate);
+    
+    public void chooseDate(String date) {
+        clickCalendar();
+        DatePicker.create(driver, webDriverWait, "dateTimePicker").chooseDate(date);
     }
-
+    
     private void selectDate(Calendar givenDate) {
         String day = String.valueOf(givenDate.get(Calendar.DAY_OF_MONTH));
-       // WebElement data = driver.findElement(By.xpath(createPathDay(day)));
         WebElement data = driver.findElement(By.xpath(createPathDate(givenDate)));
         data.click();
     }
-
-    private void clickTime(){
-        WebElement clock = this.webElement.findElement(By.xpath(".//i[@class='OSSIcon fa fa-clock-o']"));
+    
+    private void clickTime() {
+        WebElement clock = this.webElement.findElement(By.xpath(XPATH_CLOCK_ICON));
         clock.click();
         DelayUtils.sleep();
     }
-
-    public void clickCalendar(){
+    
+    public void clickCalendar() {
         Actions actions = new Actions(driver);
-       WebElement calendar = webElement.findElement(By.xpath(".//button//i[@class='OSSIcon fa fa-calendar']"));
-       actions.moveToElement(webElement).click(calendar).build().perform();
-//        calendar.click();
+        WebElement calendar = webElement.findElement(By.xpath(XPATH_CLOCK_ICON));
+        actions.moveToElement(webElement).click(calendar).build().perform();
         DelayUtils.sleep();
     }
-
-    public void chooseTimeMore(int hours, int minutes, int seconds) {
-        this.chooseTime(hours, minutes, seconds, true);
-    }
-
-    public void chooseTimeLess(int hours, int minutes, int seconds) {
-        this.chooseTime(hours, minutes, seconds, false);
-    }
-
-    private void chooseTime(int hours, int minutes, int seconds, boolean isMore){
+    
+    public void chooseTime(String time) {
         clickTime();
-        List<WebElement> moreButtons;
-
-        if(isMore) {
-            moreButtons = this.webElement
-                    .findElements(By.xpath(".//div[@class='timePicker-navButton timePicker-navButton--more btn']"));
-        } else {
-            moreButtons = this.webElement
-                    .findElements(By.xpath(".//div[@class='timePicker-navButton timePicker-navButton--less btn']"));
-        }
-
-        for(int i = 0; i < hours; i ++) {
-            moreButtons.get(0).click();
-            DelayUtils.sleep(DelayUtils.HUMAN_REACTION_MS);
-        }
-        for(int i = 0; i < minutes; i ++) {
-            moreButtons.get(1).click();
-            DelayUtils.sleep(DelayUtils.HUMAN_REACTION_MS);
-        }
-        for(int i = 0; i < seconds; i ++) {
-            moreButtons.get(2).click();
-            DelayUtils.sleep(DelayUtils.HUMAN_REACTION_MS);
-        }
+        TimePicker.create(driver, webDriverWait).chooseTime(time);
+        clickTime();
     }
 }
