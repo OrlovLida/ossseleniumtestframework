@@ -1,6 +1,5 @@
 package com.oss.framework.widgets.dpe.kpichartwidget;
 
-import com.oss.framework.components.inputs.Button;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -14,7 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.oss.framework.logging.LoggerMessages.*;
+import static com.oss.framework.logging.LoggerMessages.ELEMENT_PRESENT_AND_VISIBLE;
+import static com.oss.framework.logging.LoggerMessages.MOVE_MOUSE_OVER;
 
 public class KpiChartWidget extends Widget {
 
@@ -31,7 +31,7 @@ public class KpiChartWidget extends Widget {
 
     private static final String CHART_COLUMN_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='menuitem')]";
     private static final String CHART_LINE_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='group')]";
-    private static final String BARCHART_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='list')]";
+    private static final String BARCHART_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='menu')]";
 
     private static final String EXPAND_DATA_VIEW_PATH =
             "//div[contains(@data-testid, '_Data_View')]//a[contains(@class, 'fullScreenButton')]";
@@ -50,6 +50,7 @@ public class KpiChartWidget extends Widget {
     private static final String DATA_COMPLETENESS_DISPLAYED_PATH = "//*[contains(text(), '%')]/ancestor::*[contains(@class, 'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and contains(@style, 'pointer-events: none')]";
     private static final String OTHER_PERIOD_DISPLAYED_PATH = "//*[contains(text(), 'Other')]/ancestor::*[contains(@class, 'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and contains(@style, 'pointer-events: none')]";
 
+    // ponizsze DWA do przeniesienia do kpitreeWidget
     private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DATA_VIEW_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
@@ -94,86 +95,6 @@ public class KpiChartWidget extends Widget {
         Actions action = new Actions(driver);
         action.moveToElement(webElement, offsetX, offsetY).click().build().perform();
         log.debug(MOVE_MOUSE_OVER + "point");
-    }
-
-    @Deprecated
-    //TODO: it should be removed after changing DFE-SQM tests
-    public void maximizeChart() {
-        showChartActions();
-        clickMaximize();
-        hideChartActions();
-        log.info("Chart maximized");
-    }
-
-    @Deprecated
-    //TODO: it should be removed after changing DFE-SQM tests
-    public void minimizeChart() {
-        showChartActions();
-        clickMinimize();
-        hideChartActions();
-        log.info("Chart minimized");
-    }
-
-    @Deprecated
-    //TODO: it should be removed after changing DFE-SQM tests
-    private void showChartActions() {
-        clickChartActionsBar(COLLAPSED_GRAPH_MENU_PATH);
-        log.debug(CLICK_BTN + "Show chart actions");
-    }
-
-    @Deprecated
-    //TODO: it should be removed after changing DFE-SQM tests
-    private void hideChartActions() {
-        clickChartActionsBar(EXPANDED_GRAPH_MENU_PATH);
-        log.debug(CLICK_BTN + "Hide chart actions");
-    }
-
-    public void clickChartActions() {
-        moveOverElement(GRAPH_LOCATOR_PATH);
-
-        log.debug(MOVE_MOUSE_OVER + "first chart");
-        Button.createById(driver, CHART_ACTIONS_BUTTON_ID).click();
-        log.debug("Click chart actions button");
-        DelayUtils.sleep();
-    }
-
-    @Deprecated
-    //TODO: it should be removed after changing DFE-SQM tests
-    private void clickChartActionsBar(String actionBarXpath) {
-        moveOverElement(GRAPH_LOCATOR_PATH);
-
-        log.debug(MOVE_MOUSE_OVER + "first chart");
-        Button.createById(driver, CHART_ACTIONS_BUTTON_ID).click();
-        DelayUtils.sleep();
-    }
-
-    @Deprecated
-    //TODO: it should be removed after changing DFE-SQM tests
-    private void clickMaximize() {
-        DelayUtils.waitForPresence(webDriverWait, By.xpath(MAXIMIZE_CHART_PATH));
-        findElementByXpath(EXPAND_DATA_VIEW_PATH).click();
-        log.debug(CLICK_BTN + "MAXIMIZE");
-    }
-
-    @Deprecated
-    //TODO: it should be removed after changing DFE-SQM tests
-    private void clickMinimize() {
-        moveOverElement(RESIZE_CHART_PATH);
-        DelayUtils.waitForPresence(webDriverWait, By.xpath(MINIMIZE_CHART_PATH));
-        findElementByXpath(RESIZE_CHART_PATH).click();
-        log.debug(CLICK_BTN + "MINIMIZE");
-    }
-
-    public void pickDataSeriesColorButton() {
-        findElementByXpath(DATA_SERIES_COLOR_BUTTON_PATH).click();
-        log.debug(CLICK_BTN + "DATA SERIES COLOR");
-        findElementByXpath(FIRST_COLOR_BUTTON_PATH).click();
-        log.debug("First color from the list is chosen");
-    }
-
-    private void moveOverElement(String resizeChartPath) {
-        Actions action = new Actions(driver);
-        action.moveToElement(findElementByXpath(resizeChartPath)).build().perform();
     }
 
     public int countColumns() {

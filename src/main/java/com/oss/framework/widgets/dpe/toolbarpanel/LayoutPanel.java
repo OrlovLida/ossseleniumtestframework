@@ -17,6 +17,7 @@ public class LayoutPanel {
     private static final Logger log = LoggerFactory.getLogger(LayoutPanel.class);
 
     private final static String LAYOUT_BUTTON_ID = "//*[@data-testid='layout-button']";
+    private final static String CHART_LAYOUT_BUTTON_ID = "//*[@data-testid='chart-layout-";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -32,33 +33,49 @@ public class LayoutPanel {
         LAYOUT_AUTO("auto");
 
         public final String label;
-        private LayoutType(String label){
+
+        private LayoutType(String label) {
             this.label = label;
         }
     }
 
-    static LayoutPanel create(WebDriver driver, WebDriverWait webDriverWait){
+    public static LayoutPanel create(WebDriver driver, WebDriverWait webDriverWait) {
         WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
 
         return new LayoutPanel(driver, webDriverWait, webElement);
     }
 
-    private LayoutPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+    private LayoutPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.wait = webDriverWait;
         this.webElement = webElement;
     }
 
-    public void changeLayout(LayoutType layout){
-        DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath(LAYOUT_BUTTON_ID)));
-        DelayUtils.sleep();
-        findElementByXpath(this.webElement, LAYOUT_BUTTON_ID).click();
+    public void changeLayout(LayoutType layout) {
+        WebElement displayMode = webElement.findElement(By.className("chart-layout-section"));
 
-        log.debug(CLICK_BTN + "Layout");
+        if (!displayMode.isDisplayed()) {
+            DelayUtils.waitForClickability(wait, webElement.findElement(By.xpath(LAYOUT_BUTTON_ID)));
+            DelayUtils.sleep();
+            findElementByXpath(this.webElement, LAYOUT_BUTTON_ID).click();
 
-        findElementByXpath(this.webElement, "//i[@class='OSSIcon ossfont-layout-" + layout.label + "']").click();
+            log.debug(CLICK_BTN + "Layout");
 
-        log.debug(CLICK_BTN + layout.label + " layout");
-        log.info("Changed layout to {}", layout.label);
+            findElementByXpath(this.webElement, CHART_LAYOUT_BUTTON_ID + layout.label + "']").click();
+
+            log.debug(CLICK_BTN + layout.label + " layout");
+            log.info("Changed layout to {}", layout.label);
+        } else {
+            findElementByXpath(this.webElement, CHART_LAYOUT_BUTTON_ID + layout.label + "']").click();
+
+            log.debug(CLICK_BTN + layout.label + " layout");
+            log.info("Changed layout to {}", layout.label);
+        }
+    }
+
+    public String chartLayoutButtonStatus(LayoutType layout) {
+        String status = (findElementByXpath(this.webElement, CHART_LAYOUT_BUTTON_ID + layout.label + "']")).getAttribute("class");
+        log.debug("Layout {} button status: {}", layout.label, status);
+        return status;
     }
 }
