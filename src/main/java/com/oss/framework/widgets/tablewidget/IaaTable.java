@@ -14,8 +14,6 @@ import java.util.Map;
 
 public class IaaTable implements TableInterface {
     private static final String NOT_IMPLEMENTED = "Not implemented method in IaaTable";
-    private static final String HEADER = ".//div[contains(@class, 'table__header')]";
-
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -42,10 +40,45 @@ public class IaaTable implements TableInterface {
         }
     }
 
-    public List<WebElement> getListOfCells(String columnNameId) {
-        List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='"+ columnNameId +"']//span[@title]"));
+    @Deprecated
+    public String getAttributeValueFromCell(int row, String columnNameId, String Attribute) {
+        return getListOfCells(columnNameId).get(row).getAttribute(Attribute).toString();
+    }
+
+    @Deprecated
+    private List<WebElement> getListOfCells(String columnNameId) {
+        List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']//span[@title]"));
         return cells;
     }
+
+    public String getCellValue(int row, String columnId, String attribute) {
+        Cell cell = Cell.createFromParent(driver, row, columnId);
+        return cell.getText(attribute);
+    }
+
+    private static class Cell {
+        private final WebElement cell;
+        private final int index;
+        private final String columnNameId;
+
+        private Cell(WebElement cell, int index, String columnNameId) {
+            this.cell = cell;
+            this.index = index;
+            this.columnNameId = columnNameId;
+        }
+
+        private static Cell createFromParent(WebDriver driver, int index, String columnNameId) {
+            WebElement cell = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']//span[@title]"))
+                    .stream().findFirst()
+                    .orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + index + " columnId: " + columnNameId));
+            return new Cell(cell, index, columnNameId);
+        }
+
+        public String getText(String attribute) {
+            return cell.getAttribute(attribute);
+        }
+    }
+
 
     @Override
     public int getColumnSize(int column) {
@@ -123,7 +156,6 @@ public class IaaTable implements TableInterface {
     public String getCellValue(int index, String attributeLabel) {
         return null;
     }
-
 
     @Override
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
