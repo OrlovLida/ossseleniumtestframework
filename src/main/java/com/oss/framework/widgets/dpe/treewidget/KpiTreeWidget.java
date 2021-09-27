@@ -1,5 +1,7 @@
 package com.oss.framework.widgets.dpe.treewidget;
 
+import com.oss.framework.components.inputs.ComponentFactory;
+import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -7,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,5 +78,47 @@ public class KpiTreeWidget extends Widget {
 
     private void scrollToNode(WebElement node) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", node);
+    }
+
+    public void searchInToolbarPanel(String value, String componentId) {
+        clickSearchIcon();
+        ComponentFactory.create(componentId, Input.ComponentType.TEXT_FIELD, driver, webDriverWait).setSingleStringValue(value);
+        clickSearchIcon();
+        log.debug("Searching for: {}", value);
+    }
+
+    private void clickSearchIcon() {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        WebElement window = webElement.findElement(By.xpath(".//ancestor::*[@class='card-shadow']"));
+        WebElement searchButton = window.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-button']"));
+        Actions action = new Actions(driver);
+        action.moveToElement(searchButton)
+                .click(searchButton)
+                .build()
+                .perform();
+        log.debug("Clicking search button");
+    }
+
+    public void closeSearchToolbar() {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        WebElement window = webElement.findElement(By.xpath(".//ancestor::*[@class='card-shadow']"));
+        WebElement closeButton = window.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-clean-button']"));
+        Actions action = new Actions(driver);
+        action.moveToElement(closeButton)
+                .click(closeButton)
+                .build()
+                .perform();
+        log.debug("Clicking close search button");
+    }
+
+    public void selectFirstSearchResult() {
+        WebElement window = webElement.findElement(By.xpath(".//ancestor::*[@class='card-shadow']"));
+        WebElement firstResult = window.findElement(By.xpath(".//*[starts-with(@class, 'resultsPopup')]/ol/li[1]"));
+        Actions action = new Actions(driver);
+        action.moveToElement(firstResult)
+                .click(firstResult)
+                .build()
+                .perform();
+        log.debug("Clicking on first result in the list");
     }
 }
