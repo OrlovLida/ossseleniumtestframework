@@ -24,6 +24,9 @@ public class KpiTreeWidget extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(KpiTreeWidget.class);
 
+    private final String WINDOW_XPATH = ".//ancestor::*[@class='card-shadow']";
+    private final String CARD_SHADOW_XPATH = "//*[@class='card-shadow']";
+
     public KpiTreeWidget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
     }
@@ -88,8 +91,8 @@ public class KpiTreeWidget extends Widget {
     }
 
     private void clickSearchIcon() {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        WebElement window = webElement.findElement(By.xpath(".//ancestor::*[@class='card-shadow']"));
+        DelayUtils.waitByXPath(webDriverWait, CARD_SHADOW_XPATH);
+        WebElement window = webElement.findElement(By.xpath(WINDOW_XPATH));
         WebElement searchButton = window.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-button']"));
         Actions action = new Actions(driver);
         action.moveToElement(searchButton)
@@ -100,8 +103,8 @@ public class KpiTreeWidget extends Widget {
     }
 
     public void closeSearchToolbar() {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        WebElement window = webElement.findElement(By.xpath(".//ancestor::*[@class='card-shadow']"));
+        DelayUtils.waitByXPath(webDriverWait, CARD_SHADOW_XPATH);
+        WebElement window = webElement.findElement(By.xpath(WINDOW_XPATH));
         WebElement closeButton = window.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-clean-button']"));
         Actions action = new Actions(driver);
         action.moveToElement(closeButton)
@@ -112,7 +115,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     public void selectFirstSearchResult() {
-        WebElement window = webElement.findElement(By.xpath(".//ancestor::*[@class='card-shadow']"));
+        WebElement window = webElement.findElement(By.xpath(WINDOW_XPATH));
         WebElement firstResult = window.findElement(By.xpath(".//*[starts-with(@class, 'resultsPopup')]/ol/li[1]"));
         Actions action = new Actions(driver);
         action.moveToElement(firstResult)
