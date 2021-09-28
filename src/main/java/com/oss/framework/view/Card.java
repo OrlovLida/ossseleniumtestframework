@@ -13,9 +13,9 @@ public class Card {
 
     private static final Logger log = LoggerFactory.getLogger(Card.class);
 
-    private final WebDriver webDriver;
-    private final WebDriverWait webDriverWait;
-    private final WebElement webElement;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement card;
 
     private static final String MAXIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='expand']";
     private static final String MINIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='collapse']";
@@ -26,22 +26,22 @@ public class Card {
         return new Card(driver, wait, card);
     }
 
-    private Card(WebDriver driver, WebDriverWait wait, WebElement webElement) {
-        this.webDriver = driver;
-        this.webDriverWait = wait;
-        this.webElement = webElement;
+    private Card(WebDriver driver, WebDriverWait wait, WebElement card) {
+        this.driver = driver;
+        this.wait = wait;
+        this.card = card;
     }
 
-    public void maximizeCard(WebDriver driver, WebDriverWait wait) {
+    public void maximizeCard() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        WebElement resizeButton = webElement.findElement(By.xpath(MAXIMIZE_CHART_BUTTON_XPATH));
+        WebElement resizeButton = card.findElement(By.xpath(MAXIMIZE_CHART_BUTTON_XPATH));
         resizeButton.click();
         log.debug("Clicking maximize button");
     }
 
-    public void minimizeCard(WebDriver driver, WebDriverWait wait) {
+    public void minimizeCard() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        WebElement resizeButton = webElement.findElement(By.xpath(MINIMIZE_CHART_BUTTON_XPATH));
+        WebElement resizeButton = card.findElement(By.xpath(MINIMIZE_CHART_BUTTON_XPATH));
         resizeButton.click();
         log.debug("Clicking minimize button");
     }
