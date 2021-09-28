@@ -1,7 +1,5 @@
 package com.oss.framework.widgets.dpe.treewidget;
 
-import com.oss.framework.components.inputs.ComponentFactory;
-import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -10,6 +8,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,7 @@ public class KpiTreeWidget extends Widget {
 
     private final String WINDOW_XPATH = ".//ancestor::*[@class='card-shadow']";
     private final String CARD_SHADOW_XPATH = "//*[@class='card-shadow']";
+    private final String TOOLBAR_INPUT_ID = "search-toolbar-input";
 
     public KpiTreeWidget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -83,19 +83,25 @@ public class KpiTreeWidget extends Widget {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", node);
     }
 
-    public void searchInToolbarPanel(String value, String componentId) {
+    private WebElement getToolbar() {
+        DelayUtils.waitByXPath(webDriverWait, CARD_SHADOW_XPATH);
+        WebElement window = webElement.findElement(By.xpath(WINDOW_XPATH));
+        return window.findElement(By.className("windowHeader"));
+    }
+
+    public void searchInToolbarPanel(String value) {
         clickSearchIcon();
-        ComponentFactory.create(componentId, Input.ComponentType.TEXT_FIELD, driver, webDriverWait).setSingleStringValue(value);
+        WebElement input = getToolbar().findElement(By.xpath(".//input[@" + CSSUtils.TEST_ID + "='" + TOOLBAR_INPUT_ID + "']"));
+        input.sendKeys(value);
         clickSearchIcon();
         log.debug("Searching for: {}", value);
     }
 
     private void clickSearchIcon() {
-        DelayUtils.waitByXPath(webDriverWait, CARD_SHADOW_XPATH);
-        WebElement window = webElement.findElement(By.xpath(WINDOW_XPATH));
-        WebElement searchButton = window.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-button']"));
+        WebElement searchButton = getToolbar().findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-button']"));
         Actions action = new Actions(driver);
-        action.moveToElement(searchButton)
+
+        action.moveToElement(webDriverWait.until(ExpectedConditions.elementToBeClickable(searchButton)))
                 .click(searchButton)
                 .build()
                 .perform();
@@ -103,9 +109,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     public void closeSearchToolbar() {
-        DelayUtils.waitByXPath(webDriverWait, CARD_SHADOW_XPATH);
-        WebElement window = webElement.findElement(By.xpath(WINDOW_XPATH));
-        WebElement closeButton = window.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-clean-button']"));
+        WebElement closeButton = getToolbar().findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-clean-button']"));
         Actions action = new Actions(driver);
         action.moveToElement(closeButton)
                 .click(closeButton)
@@ -115,8 +119,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     public void selectFirstSearchResult() {
-        WebElement window = webElement.findElement(By.xpath(WINDOW_XPATH));
-        WebElement firstResult = window.findElement(By.xpath(".//*[starts-with(@class, 'resultsPopup')]/ol/li[1]"));
+        WebElement firstResult = getToolbar().findElement(By.xpath(".//*[starts-with(@class, 'resultsPopup')]/ol/li[1]"));
         Actions action = new Actions(driver);
         action.moveToElement(firstResult)
                 .click(firstResult)
