@@ -30,7 +30,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String SAVE_NEW_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='propertyPanelSave']";
     
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
-    public static final String PROPERTIES_FILTER_PANEL_CLASS = "settings-toggle";
+    public static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
     public static final String SWITCHER_CONTENT_CLASS = "switcher-content";
     
     private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow row')]";
@@ -78,15 +78,17 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         }
         return labels;
     }
+    
     @Deprecated
     public String getNthPropertyLabel(int n) {
         List<String> propertyLabels = getPropertyLabels();
         return propertyLabels.get(n - 1);
     }
-    public List<String> getVisibleAttributes(){
+    
+    public List<String> getVisibleAttributes() {
         List<String> propertyId = new ArrayList<String>();
-        for (WebElement element: getProperties()){
-             propertyId.add(element.getAttribute("id"));
+        for (WebElement element: getProperties()) {
+            propertyId.add(element.getAttribute("id"));
         }
         return propertyId;
     }
@@ -117,14 +119,19 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
     
     private AttributesChooser getAttributesChooser() {
-        WebElement propertyPanelWrapper = this.webElement.findElement(By.xpath(".//ancestor::div"));
-        propertyPanelWrapper.findElement(By.className(PROPERTIES_FILTER_PANEL_CLASS)).click();
+        webElement.findElement(By.className(PROPERTIES_FILTER_PANEL_CLASS)).click();
+        openActionSettings("chooseAttributes");
         return AttributesChooser.create(driver, webDriverWait);
     }
     
     private WebElement getSwitcher() {
         WebElement propertyPanelWrapper = this.webElement.findElement(By.xpath(".//ancestor::div"));
         return propertyPanelWrapper.findElement(By.cssSelector("div.switcher"));
+    }
+    
+    private void openActionSettings(String actionId) {
+        WebElement actionList = driver.findElement(By.className("actionsDropdown"));
+        actionList.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + actionId + "']")).click();
     }
     
     public void hideEmpty() {
