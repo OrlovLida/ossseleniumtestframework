@@ -69,11 +69,6 @@ public class TreeWidgetV2 extends Widget {
         getVisibleNodes().get(0).expandNode();
     }
 
-    @Deprecated
-    public void expandNode(String nodeLabel) {
-        getNode(nodeLabel).expandNode();
-    }
-
     public void expandNodeWithLabel(String label) {
         getNode(label).expandNode();
     }
@@ -96,7 +91,7 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public Node getNodeByLabelsPath(String labels) {
-        return getTreeComponent().getNodeByPath(labels);
+        return getTreeComponent().getNodeByLabelsPath(labels);
     }
 
     private TreeComponent getTreeComponent() {
