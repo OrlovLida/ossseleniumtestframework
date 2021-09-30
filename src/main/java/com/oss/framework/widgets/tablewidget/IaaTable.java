@@ -51,31 +51,41 @@ public class IaaTable implements TableInterface {
         return cells;
     }
 
-    public String getCellValue(int row, String columnId, String attribute) {
-        Cell cell = Cell.createFromParent(driver, row, columnId);
-        return cell.getText(attribute);
+    public String getCellText(int row, String columnId) {
+        Cell cell = Cell.create(driver, row, columnId);
+        return cell.getTextValue();
+    }
+
+    public String getCellAttribute(int row, String columnId, String attribute) {
+        Cell cell = Cell.createFromAttribute(driver, row, columnId, attribute);
+        return cell.getAttribute(attribute);
     }
 
     private static class Cell {
         private final WebElement cell;
-        private final int index;
         private final String columnNameId;
 
-        private Cell(WebElement cell, int index, String columnNameId) {
+        private Cell(WebElement cell, String columnNameId) {
             this.cell = cell;
-            this.index = index;
             this.columnNameId = columnNameId;
         }
 
-        private static Cell createFromParent(WebDriver driver, int index, String columnNameId) {
-            WebElement cell = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']//span[@title]"))
-                    .stream().findFirst()
-                    .orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + index + " columnId: " + columnNameId));
-            return new Cell(cell, index, columnNameId);
+        private static Cell create(WebDriver driver, int index, String columnNameId) {
+            List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']"));;
+            return new Cell(cells.get(index), columnNameId);
         }
 
-        public String getText(String attribute) {
-            return cell.getAttribute(attribute);
+        private static Cell createFromAttribute(WebDriver driver, int index, String columnNameId, String attribute) {
+            List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']//span[@"+ attribute +"]"));
+            return new Cell(cells.get(index), columnNameId);
+        }
+
+        public String getTextValue() {
+            return cell.getText();
+        }
+
+        public String getAttribute(String att) {
+            return cell.getAttribute(att);
         }
     }
 
