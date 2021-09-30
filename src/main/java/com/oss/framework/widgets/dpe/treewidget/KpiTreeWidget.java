@@ -70,13 +70,20 @@ public class KpiTreeWidget extends Widget {
     }
 
     private void selectNode(String objectName) {
-        WebElement objectNode = findElementByXpath(this.webElement, "//div[@title='" + objectName + "']")
-                .findElement(By.xpath("following-sibling::*"))
-                .findElement(By.className("selectNode"));
+        WebElement objectNode = getNode(objectName).findElement(By.className("selectNode"));
 
         scrollToNode(objectNode);
         objectNode.click();
         log.debug(SELECT_NODE + objectName);
+    }
+
+    private WebElement getNode(String objectName) {
+        return findElementByXpath(this.webElement, "//div[@title='" + objectName + "']")
+                .findElement(By.xpath("following-sibling::*"));
+    }
+
+    public boolean isNodeSelected(String objectName) {
+        return getNode(objectName).findElement(By.className("deselectNode")).isDisplayed();
     }
 
     private void scrollToNode(WebElement node) {
