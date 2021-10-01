@@ -92,6 +92,11 @@ public class MultiCombobox extends Input {
     public String getLabel() {
         return webElement.findElement(By.xpath(LABEL_XPATH)).getAttribute("textContent");
     }
+
+    @Override
+    public String cursor(){
+        return webElement.findElement(By.className("oss-input__input")).getCssValue("cursor");
+    }
     
     private boolean isSearchEnabled() {
         return !webElement.findElements(By.xpath(createDropdownSearchInputPath())).isEmpty();

@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TextArea extends Input {
@@ -49,5 +50,12 @@ public class TextArea extends Input {
         WebElement input = webElement.findElement(By.xpath(".//textarea"));
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
+    }
+
+    @Override
+    public String cursor(){
+        Actions actions = new Actions(driver);
+        actions.moveToElement(webElement).build().perform();
+       return webElement.findElement(By.xpath(".//textarea")).getCssValue("cursor");
     }
 }
