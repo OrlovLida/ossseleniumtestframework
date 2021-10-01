@@ -52,9 +52,9 @@ public class DropdownList {
 
     public void selectOptionWithId(String option) {
         Actions action = new Actions(driver);
-        DelayUtils.waitByXPath(wait, XPATH_DROPDOWN_LIST + "//a[contains(@"+ CSSUtils.TEST_ID +", '" + option + "')] | //*[@id='" + option + "'] ");
+        DelayUtils.waitByXPath(wait, XPATH_DROPDOWN_LIST + "//a[@"+ CSSUtils.TEST_ID +"='" + option + "'] | //*[@id='" + option + "'] ");
         WebElement foundedElement =
-                driver.findElement(By.xpath(XPATH_DROPDOWN_LIST + "//a[contains(@"+ CSSUtils.TEST_ID +", '" + option + "')] | //*[@id='" + option + "'] "));
+                driver.findElement(By.xpath(XPATH_DROPDOWN_LIST + "//a[@"+ CSSUtils.TEST_ID +"='" + option + "'] | //*[@id='" + option + "'] "));
         action.moveToElement(foundedElement).click().perform();
     }
 
