@@ -109,7 +109,7 @@ public class DatePicker {
         try {
             date = simpleDateFormat.parse(selectedDate);
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Cannot parse date");
         }
         Calendar givenDate = Calendar.getInstance();
         givenDate.setTime(date);
