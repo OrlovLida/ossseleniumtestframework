@@ -1,5 +1,8 @@
 package com.oss.framework.components.inputs;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -13,11 +16,14 @@ import com.oss.framework.utils.DelayUtils;
 
 public class MultiCombobox extends Input {
     
-    private final static String TITLE_ITEM_CONTAINS_XPATH = ".//div[contains(@title,'%s')]";
+    private final static String TITLE_ITEM_CONTAINS_XPATH = ".//div[contains(@title='%s')]";
     private final static String TITLE_ITEM_EQUAL_XPATH = ".//div[@title='%s']";
-    private final static String ANGLE_UP_XPATH = ".//i[contains(@class,'angle-up')]";
     private final static String CLEAR_XPATH =
             ".//div[@" + CSSUtils.TEST_ID + "='%s-input']//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]";
+    private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
+    private static final String LABEL_XPATH = ".//span[@class='oss-input__input-label']";
+    private static final String TAGS_XPATH = ".//div[@class='tags-input__tag']";
+    private static final String TAGS_LABEL = "tags-input__label";
     
     static MultiCombobox create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new MultiCombobox(driver, wait, componentId);
@@ -41,7 +47,7 @@ public class MultiCombobox extends Input {
         actions.moveToElement(webElement).click().build().perform();
         waitForSpinners();
         if (isSearchEnabled()) {
-            searchItem(value.getStringValue());
+            searchItem(value.getStringValue(), false);
         } else
             chooseItem(String.format(TITLE_ITEM_EQUAL_XPATH, value.getStringValue()));
     }
@@ -52,7 +58,7 @@ public class MultiCombobox extends Input {
         actions.moveToElement(webElement).click().build().perform();
         waitForSpinners();
         if (isSearchEnabled()) {
-            searchItem(value.getStringValue());
+            searchItem(value.getStringValue(), true);
         } else
             chooseItem(String.format(TITLE_ITEM_CONTAINS_XPATH, value.getStringValue()));
     }
@@ -65,12 +71,17 @@ public class MultiCombobox extends Input {
     
     @Override
     public Data getValue() {
-        return Data.createSingleData(webElement.findElement(By.xpath(createDropdownSearchInputPath())).getAttribute("value"));
+        List<WebElement> dataValues = webElement.findElements(By.xpath(TAGS_XPATH));
+        List<String> values = dataValues.stream().map(value -> value.findElement(By.className(TAGS_LABEL)).getText())
+                .collect(Collectors.toList());
+        return Data.createMultiData(values);
     }
     
     @Override
     public void clear() {
         webElement.findElement(By.xpath(String.format(CLEAR_XPATH, componentId))).click();
+        Actions actions = new Actions(driver);
+        actions.sendKeys(Keys.ESCAPE).build().perform();
     }
     
     private String createDropdownSearchInputPath() {
@@ -79,18 +90,21 @@ public class MultiCombobox extends Input {
     
     @Override
     public String getLabel() {
-        return webElement.findElement(By.xpath(".//span")).getText();
+        return webElement.findElement(By.xpath(LABEL_XPATH)).getAttribute("textContent");
     }
     
     private boolean isSearchEnabled() {
         return !webElement.findElements(By.xpath(createDropdownSearchInputPath())).isEmpty();
     }
     
-    private void searchItem(String value) {
+    private void searchItem(String value, boolean isContains) {
         WebElement input = webElement.findElement(By.xpath(createDropdownSearchInputPath()));
         input.sendKeys(value);
-        DelayUtils.sleep(); // TODO: wait for spinners
-        acceptStringValue(input);
+        waitForSpinners();
+        if (isContains) {
+            acceptStringValue(input);
+        } else
+            chooseItem(String.format(TITLE_ITEM_EQUAL_XPATH, value));
     }
     
     private void chooseItem(String xpath) {
@@ -106,9 +120,10 @@ public class MultiCombobox extends Input {
     }
     
     private void waitForSpinners() {
-        WebElement openInput = webElement.findElement(By.xpath(ANGLE_UP_XPATH));
-        DelayUtils.waitForVisibility(webDriverWait, openInput);
-        DelayUtils.sleep();
+        List<WebElement> spinner = webElement.findElements(By.xpath(SPIN_XPATH));
+        if (!spinner.isEmpty()) {
+            DelayUtils.waitForElementDisappear(webDriverWait, spinner.get(0));
+        }
     }
     
 }
