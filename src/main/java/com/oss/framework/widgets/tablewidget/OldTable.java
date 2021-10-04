@@ -293,7 +293,7 @@ public class OldTable implements TableInterface {
     }
 
     @Override
-    public String getCellValueById(int row, String Id) {
+    public String getCellValueById(int row, String columnId) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 

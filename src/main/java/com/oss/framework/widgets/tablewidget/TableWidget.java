@@ -179,7 +179,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public String getCellValueById(int row, String Id) {
+    public String getCellValueById(int row, String columnId) {
         throw new RuntimeException("Not implemented for TableWidget");
     }
 

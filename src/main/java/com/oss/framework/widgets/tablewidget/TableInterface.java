@@ -72,5 +72,5 @@ public interface TableInterface {
 
     List<TableRow> getSelectedRows();
 
-    String getCellValueById(int row, String Id);
+    String getCellValueById(int row, String columnId);
 }
