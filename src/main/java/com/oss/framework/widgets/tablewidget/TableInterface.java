@@ -71,4 +71,6 @@ public interface TableInterface {
     Map<String, String> getPropertyNamesToValues();
 
     List<TableRow> getSelectedRows();
+
+    String getCellValueById(int row, String Id);
 }

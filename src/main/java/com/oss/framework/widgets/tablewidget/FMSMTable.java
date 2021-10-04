@@ -12,26 +12,29 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 import java.util.Map;
 
-public class IaaTable implements TableInterface {
+public class FMSMTable implements TableInterface {
     private static final String NOT_IMPLEMENTED = "Not implemented method in IaaTable";
+    private static final String OSS_ICON_CLASS = "OSSIcon";
+    private static final String OSS_ICON_VALUE = "title";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final String widgetId;
 
-    private IaaTable(WebDriver driver, WebDriverWait wait, String widgetId) {
+    private FMSMTable(WebDriver driver, WebDriverWait wait, String widgetId) {
         this.driver = driver;
         this.wait = wait;
         this.widgetId = widgetId;
     }
 
-    public static IaaTable createById(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
+    public static FMSMTable createById(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
         DelayUtils.waitBy(wait, By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']"));
-        return new IaaTable(driver, wait, tableWidgetId);
+        return new FMSMTable(driver, wait, tableWidgetId);
     }
 
     @Override
     public void selectRow(int row) {
+        DelayUtils.waitForPresence(wait,By.className("table-row"));
         List<WebElement> columns = driver.findElements(By.className("table-row"));
         if (row >= columns.size()) {
             columns.get(columns.size() - 1).click();
@@ -40,55 +43,10 @@ public class IaaTable implements TableInterface {
         }
     }
 
-    @Deprecated
-    public String getAttributeValueFromCell(int row, String columnNameId, String Attribute) {
-        return getListOfCells(columnNameId).get(row).getAttribute(Attribute).toString();
-    }
-
-    @Deprecated
-    private List<WebElement> getListOfCells(String columnNameId) {
-        List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']//span[@title]"));
-        return cells;
-    }
-
-    public String getCellText(int row, String columnId) {
+    public String getCellValueById(int row, String columnId) {
         Cell cell = Cell.create(driver, row, columnId);
         return cell.getTextValue();
     }
-
-    public String getCellAttribute(int row, String columnId, String attribute) {
-        Cell cell = Cell.createFromAttribute(driver, row, columnId, attribute);
-        return cell.getAttribute(attribute);
-    }
-
-    private static class Cell {
-        private final WebElement cell;
-        private final String columnNameId;
-
-        private Cell(WebElement cell, String columnNameId) {
-            this.cell = cell;
-            this.columnNameId = columnNameId;
-        }
-
-        private static Cell create(WebDriver driver, int index, String columnNameId) {
-            List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']"));;
-            return new Cell(cells.get(index), columnNameId);
-        }
-
-        private static Cell createFromAttribute(WebDriver driver, int index, String columnNameId, String attribute) {
-            List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']//span[@"+ attribute +"]"));
-            return new Cell(cells.get(index), columnNameId);
-        }
-
-        public String getTextValue() {
-            return cell.getText();
-        }
-
-        public String getAttribute(String att) {
-            return cell.getAttribute(att);
-        }
-    }
-
 
     @Override
     public int getColumnSize(int column) {
@@ -228,5 +186,37 @@ public class IaaTable implements TableInterface {
     @Override
     public List<TableRow> getSelectedRows() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    private static class Cell {
+        private final WebElement cell;
+        private final String columnNameId;
+
+        private Cell(WebElement cell, String columnNameId) {
+            this.cell = cell;
+            this.columnNameId = columnNameId;
+        }
+
+        private static Cell create(WebDriver driver, int index, String columnNameId) {
+            List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']"));
+            return new Cell(cells.get(index), columnNameId);
+        }
+
+        private boolean isIcon() {
+            return !cell.findElements(By.className(OSS_ICON_CLASS)).isEmpty();
+        }
+
+        private String getAttributeValue(String att) {
+            return cell.findElement(By.xpath(".//span[@" + att + "]")).getAttribute(att);
+
+        }
+
+        public String getTextValue() {
+            if (isIcon()) {
+                return getAttributeValue(OSS_ICON_VALUE);
+            } else {
+                return cell.getText();
+            }
+        }
     }
 }

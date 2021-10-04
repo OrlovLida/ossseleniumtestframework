@@ -291,7 +291,12 @@ public class OldTable implements TableInterface {
     public List<TableRow> getSelectedRows() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
-    
+
+    @Override
+    public String getCellValueById(int row, String Id) {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
     private void clickExpandPropertiesButton() {
         WebElement expandButton = driver.findElement(By.xpath(EXPAND_PROPERTIES_BUTTON_PATH));
         expandButton.click();
@@ -597,6 +602,7 @@ public class OldTable implements TableInterface {
         private void acceptButton() {
             columnManager.findElement(By.xpath(".//button[text()='Accept']")).click();
         }
+
         
     }
     
