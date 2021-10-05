@@ -19,23 +19,24 @@ public class FMSMTable implements TableInterface {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final String widgetId;
+    private final WebElement tableWidget;
 
-    private FMSMTable(WebDriver driver, WebDriverWait wait, String widgetId) {
+    private FMSMTable(WebDriver driver, WebDriverWait wait, WebElement tableWidget) {
         this.driver = driver;
         this.wait = wait;
-        this.widgetId = widgetId;
+        this.tableWidget = tableWidget;
     }
 
     public static FMSMTable createById(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
         DelayUtils.waitBy(wait, By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']"));
-        return new FMSMTable(driver, wait, tableWidgetId);
+        WebElement tableWidget = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']"));
+        return new FMSMTable(driver, wait, tableWidget);
     }
 
     @Override
     public void selectRow(int row) {
         DelayUtils.waitForPresence(wait,By.className("table-row"));
-        List<WebElement> columns = driver.findElements(By.className("table-row"));
+        List<WebElement> columns = tableWidget.findElements(By.className("table-row"));
         if (row >= columns.size()) {
             columns.get(columns.size() - 1).click();
         } else {
@@ -43,8 +44,9 @@ public class FMSMTable implements TableInterface {
         }
     }
 
+    @Override
     public String getCellValueById(int row, String columnId) {
-        Cell cell = Cell.create(driver, row, columnId);
+        Cell cell = Cell.create(tableWidget, row, columnId);
         return cell.getTextValue();
     }
 
@@ -197,8 +199,8 @@ public class FMSMTable implements TableInterface {
             this.columnNameId = columnNameId;
         }
 
-        private static Cell create(WebDriver driver, int index, String columnNameId) {
-            List<WebElement> cells = driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']"));
+        private static Cell create(WebElement tableWidget, int index, String columnNameId) {
+            List<WebElement> cells = tableWidget.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']"));
             return new Cell(cells.get(index), columnNameId);
         }
 
