@@ -13,11 +13,16 @@ public class ToolbarWidget {
     private final WebDriverWait wait;
     private final WebElement toolbarWidget;
 
-    private static final String TOOLBAR_WIDGET_XPATH = "//div[@class='oss-header-toolbar']";
-    private static final String LOGIN_PANEL_XPATH = ".//div[contains(@class,'toolbarWidget login')]";
+    private static final String TOOLBAR_WIDGET_XPATH = "//header[@class='oss-header']";
+    private static final String LOGIN_PANEL_BUTTON_XPATH = ".//div[contains(@class,'toolbarWidget login')]";
+    private static final String LOGIN_PANEL_XPATH = ".//div[@class='login-panel']";
     private static final String NOTIFICATION_XPATH = ".//div[@class='toolbarWidget globalNotification']";
+    private static final String NOTIFICATION_PANEL_XPATH = ".//div[@class='notificationWrapper']";
     private static final String QUERY_CONTEXT_CONTAINER_XPATH = ".//div[@class='toolbarWidget queryContextContainer']";
+    private static final String QUERY_CONTEXT_PANEL_XPATH = ".//div[@class='toolbarWidget queryContextContainer']//div[@class='CustomSelectList-rowsContainer']";
     private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='ExtendedSearchComponent']";
+    private static final String SHARE_PANEL_ICON_XPATH = ".//*[@title = 'Share']";
+    private static final String SHARE_PANEL_XPATH = ".//div[@class='shareTool']";
 
 
     private ToolbarWidget(WebDriver driver, WebDriverWait wait, WebElement toolbarWidget) {
@@ -33,33 +38,49 @@ public class ToolbarWidget {
     }
 
     public void openLoginPanel() {
-        if (!isOpen(getLoginPanel()))
+        if (!isOpen(LOGIN_PANEL_XPATH)) {
             getLoginPanel().click();
+        }
     }
 
     public void openNotificationPanel() {
-        if (!isOpen(getNotificationPanel()))
+        if (!isOpen(NOTIFICATION_PANEL_XPATH)) {
             getNotificationPanel().click();
+        }
     }
 
     public void openQueryContextContainer() {
-        if (!isOpen(getQueryContextContainer()))
+        if (!isOpen(QUERY_CONTEXT_PANEL_XPATH)) {
             getQueryContextContainer().click();
+        }
+    }
+
+    public void openSharePanel() {
+        if (!isOpen(SHARE_PANEL_XPATH)) {
+            getSharePanel().click();
+        }
     }
 
     public void closeLoginPanel() {
-        if (isOpen(getLoginPanel()))
+        if (isOpen(LOGIN_PANEL_XPATH))
             getLoginPanel().click();
     }
 
     public void closeNotificationPanel() {
-        if (isOpen(getNotificationPanel()))
+        if (isOpen(NOTIFICATION_PANEL_XPATH))
             getNotificationPanel().click();
     }
 
     public void closeQueryContextContainer() {
-        if (isOpen(getQueryContextContainer()))
+        if (isOpen(QUERY_CONTEXT_PANEL_XPATH)) {
             getQueryContextContainer().click();
+        }
+    }
+
+    public void closeSharePanel() {
+        if (isOpen(SHARE_PANEL_XPATH)) {
+            getSharePanel().click();
+        }
     }
 
     //pending the solution of OSSWEB-9263
@@ -69,8 +90,8 @@ public class ToolbarWidget {
     }
 
     private WebElement getLoginPanel() {
-        DelayUtils.waitByXPath(wait, LOGIN_PANEL_XPATH);
-        return this.toolbarWidget.findElement(By.xpath(LOGIN_PANEL_XPATH));
+        DelayUtils.waitByXPath(wait, LOGIN_PANEL_BUTTON_XPATH);
+        return this.toolbarWidget.findElement(By.xpath(LOGIN_PANEL_BUTTON_XPATH));
     }
 
     private WebElement getQueryContextContainer() {
@@ -83,12 +104,17 @@ public class ToolbarWidget {
         return this.toolbarWidget.findElement(By.xpath(NOTIFICATION_XPATH));
     }
 
-    private boolean isOpen(WebElement element) {
-        return element.findElements(By.xpath(".//a[contains (@class, 'clicked')]")).size() > 0;
+    private boolean isOpen(String panelXpath) {
+        return driver.findElements(By.xpath(panelXpath)).size() > 0;
     }
 
     private WebElement getGlobalSearch() {
         DelayUtils.waitByXPath(wait, GLOBAL_SEARCH_INPUT_XPATH);
         return this.toolbarWidget.findElement(By.xpath(GLOBAL_SEARCH_INPUT_XPATH));
+    }
+
+    private WebElement getSharePanel() {
+        DelayUtils.waitByXPath(wait, SHARE_PANEL_ICON_XPATH);
+        return this.toolbarWidget.findElement(By.xpath(SHARE_PANEL_ICON_XPATH));
     }
 }
