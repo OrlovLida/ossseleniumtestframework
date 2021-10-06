@@ -17,8 +17,8 @@ public class Card {
     private final WebDriverWait wait;
     private final WebElement card;
 
-    private static final String MAXIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='expand']";
-    private static final String MINIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='collapse']";
+    private static final String MAXIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='expand'] | .//*[@aria-label='Expand']";
+    private static final String MINIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='collapse'] | .//*[@aria-label='Collapse']";
 
     public static Card createCard(WebDriver driver, WebDriverWait wait, String windowId) {
         DelayUtils.waitByXPath(wait, ".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]");

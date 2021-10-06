@@ -179,6 +179,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
+    public String getCellValueById(int row, String columnId) {
+        throw new RuntimeException("Not implemented for TableWidget");
+    }
+
+    @Override
     public List<String> getActiveColumnHeaders() {
         return getTableComponent().getColumnHeaders();
     }
