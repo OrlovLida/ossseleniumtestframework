@@ -26,10 +26,11 @@ import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.widgets.tabswidget.TabsWidget;
 
 public class OldTable implements TableInterface {
-
+    
     private static final Logger log = LoggerFactory.getLogger(OldTable.class);
     private static final String ROWS_COUNTER_SPANS_PATH = ".//div[@class='rowsCounter']//span";
     private static final int REFRESH_INTERVAL = 2000;
@@ -42,16 +43,18 @@ public class OldTable implements TableInterface {
     private static final String FIND_BY_PARTIAL_NAME_AND_INDEX_PATTERN =
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
     private static final String TABLE_COMPONENT = ".//div[contains(@class, 'OSSTableComponent')]";
-    private static final String COLUMNS_WITHOUT_CHECKBOX = ".//div[contains(@class,'OSSTableColumn') and not(contains(@class,'Col_SELECTION'))]";
+    private static final String COLUMNS_WITHOUT_CHECKBOX =
+            ".//div[contains(@class,'OSSTableColumn') and not(contains(@class,'Col_SELECTION'))]";
     private static final String CONTEXT_ACTIONS_CONTAINER = "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']";
     private static final String INPUT = ".//input";
     private static final String HEADER = ".//div[contains(@class, 'Header')]";
     private static final String RICH_TEXT = ".//div[contains(@class, 'OSSRichText')]";
     private static final String TOGGLE_BUTTON = ".//span[contains(@class,'ToggleButton')]";
     private static final String CELL = ".//div[contains(@class, 'Cell')]";
-    private static final String TABLE_IN_ACTIVE_TAB_XPATH = "//div[@data-attributename='TableTabsApp']//div[@class='tabsContainerSingleContent active']//div[@class='AppComponentContainer']/div";
+    private static final String TABLE_IN_ACTIVE_TAB_XPATH =
+            "//div[@data-attributename='TableTabsApp']//div[@class='tabsContainerSingleContent active']//div[@class='AppComponentContainer']/div";
     private static final String NOT_IMPLEMENTED = "Not implemented method in OldTable";
-
+    
     // to be removed after adding data-attributeName OSSWEB-8398
     @Deprecated
     public static OldTable createByOssWindow(WebDriver driver, WebDriverWait wait) {
@@ -60,7 +63,7 @@ public class OldTable implements TableInterface {
         WebElement window = driver.findElement(By.xpath("//div[@class='OssWindow']"));
         return new OldTable(driver, wait, null, table, window);
     }
-
+    
     public static OldTable createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
         DelayUtils.waitByXPath(wait, "//div[contains(@id,'" + componentId + "')] | //div[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
         WebElement table =
@@ -69,7 +72,7 @@ public class OldTable implements TableInterface {
         actions.moveToElement(table).build().perform();
         return new OldTable(driver, wait, componentId, table);
     }
-
+    
     public static OldTable createByComponentDataAttributeName(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
         DelayUtils.waitByXPath(wait, "//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']");
         WebElement table = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']"));
@@ -79,22 +82,22 @@ public class OldTable implements TableInterface {
                 By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + dataAttributeName + "']/ancestor::div[contains(@class,'OssWindow')]"));
         return new OldTable(driver, wait, dataAttributeName, table, window);
     }
-
+    
     public static OldTable createTableForActiveTab(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPageToLoad(driver, wait);
         String tableIdFromActiveTab = driver.findElement(By.xpath(TABLE_IN_ACTIVE_TAB_XPATH)).getAttribute(CSSUtils.TEST_ID);
         return createByComponentDataAttributeName(driver, wait, tableIdFromActiveTab);
     }
-
+    
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final String widgetId;
-
+    
     @Deprecated // TODO:
     private final WebElement table;
     @Deprecated
     private WebElement window;
-
+    
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId, WebElement table, WebElement window) {
         this.driver = driver;
         this.wait = wait;
@@ -102,71 +105,80 @@ public class OldTable implements TableInterface {
         this.table = table;
         this.window = window;
     }
-
+    
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId, WebElement table) {
         this.driver = driver;
         this.wait = wait;
         this.widgetId = widgetId;
         this.table = table;
     }
-
+    
     @Override
     public void selectRow(int row) {
         Map<String, Column> columns = createColumnsFilters();
         Lists.newArrayList(columns.values()).get(0).selectCell(row);
     }
-
+    
     @Override
     public int getColumnSize(int column) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
-
+    
     @Override
     public void resizeColumn(int column, int offset) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
-
+    
     @Override
     public List<String> getActiveColumnHeaders() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
-
+    
     @Override
     public void disableColumn(String columnId) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+        AttributeChooser attributeChooser = new AttributeChooser(driver, wait, getColumnManager());
+        attributeChooser.disableColumnById(columnId);
+        attributeChooser.acceptButton();
     }
-
+    
     @Override
     public void disableColumnByLabel(String columnLabel, String... path) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+        AttributeChooser attributeChooser = new AttributeChooser(driver, wait, getColumnManager());
+        attributeChooser.disableColumnByLabel(columnLabel);
+        attributeChooser.acceptButton();
     }
-
+    
     @Override
     public void enableColumnByLabel(String columnLabel, String... path) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+        AttributeChooser attributeChooser = new AttributeChooser(driver, wait, getColumnManager());
+        attributeChooser.enabledColumnByLabel(columnLabel);
+        attributeChooser.acceptButton();
     }
-
+    
     @Override
     public void changeColumnsOrder(String columnLabel, int position) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+        WebElement columnPosition = table.findElements(By.className("OSSTableColumn")).get(position);
+        
+        DragAndDrop.dragAndDrop(getColumn(columnLabel).getDragElement(), new DragAndDrop.DropElement(columnPosition), driver);
+        
     }
-
+    
     @Override
     public void selectRowByAttributeValue(String attributeId, String value) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
-
+    
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
         DelayUtils.waitForPageToLoad(driver, wait);
         getColumn(attributeLabel).selectCell(value);
     }
-
+    
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
-
+    
     @Override
     public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
         if (componentType != ComponentType.TEXT_FIELD) {
@@ -175,7 +187,7 @@ public class OldTable implements TableInterface {
         clearColumnValue(attributeLabel).setValue(value);
         DelayUtils.waitForPageToLoad(driver, wait);
     }
-
+    
     public Column clearColumnValue(String attributeLabel) {
         Column column = getColumn(attributeLabel);
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -183,39 +195,39 @@ public class OldTable implements TableInterface {
         DelayUtils.waitForPageToLoad(driver, wait);
         return column;
     }
-
+    
     @Override
     public void callAction(String actionId) {
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, wait, window);
         actions.callActionById(actionId);
     }
-
+    
     @Override
     public void callActionByLabel(String actionLabel) {
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, wait, window);
         actions.callActionByLabel(actionLabel);
     }
-
+    
     @Override
     public void callAction(String groupId, String actionId) {
         getActionsInterface().callAction(groupId, actionId);
     }
-
+    
     @Override
     public void selectTabByLabel(String tabLabel, String id) {
         TabsWidget tabs = TabsWidget.createById(driver, wait, id);
         tabs.selectTabByLabel(tabLabel);
     }
-
+    
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
-
+    
     public String getCellValue(int index, String attributeLabel) {
         return getColumn(attributeLabel).getValueCell(index);
     }
-
+    
     private Column getColumn(String columnLabel) {
         Map<String, Column> columns = createColumnsFilters();
         if (columns.containsKey(columnLabel)) {
@@ -226,7 +238,7 @@ public class OldTable implements TableInterface {
             throw new NoSuchElementException("Cannot find a column with label = " + columnLabel);
         }
     }
-
+    
     /**
      * @param anyLabelInTable any column label existing in table
      * @return number of rows in table
@@ -234,7 +246,7 @@ public class OldTable implements TableInterface {
     public int getNumberOfRowsInTable(String anyLabelInTable) {
         return getColumn(anyLabelInTable).getNumberOfRows();
     }
-
+    
     @Override
     public void doRefreshWhileNoData(int waitTime, String refreshId) {
         if (widgetId == null) {
@@ -247,12 +259,12 @@ public class OldTable implements TableInterface {
             callAction(OldActionsContainer.KEBAB_GROUP_ID, refreshId);
         }
     }
-
+    
     @Override
     public Multimap<String, String> getAppliedFilters() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
-
+    
     public Map<String, String> getPropertyNamesToValues() {
         int index = 0;
         clickExpandPropertiesButton();
@@ -274,9 +286,14 @@ public class OldTable implements TableInterface {
         clickExpandPropertiesButton();
         return namesToValues;
     }
-
+    
     @Override
     public List<TableRow> getSelectedRows() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public String getCellValueById(int row, String columnId) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
@@ -285,26 +302,26 @@ public class OldTable implements TableInterface {
         expandButton.click();
         DelayUtils.waitForPageToLoad(driver, wait);
     }
-
+    
     @Override
     public boolean hasNoData() {
         List<WebElement> noData = driver
                 .findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//h3[contains(@class,'noDataWithColumns')]"));
         return !noData.isEmpty();
     }
-
+    
     @Override
     public void selectLinkInSpecificColumn(String columnName) {
         DelayUtils.waitForPageToLoad(driver, wait);
         getColumn(columnName).selectLink();
     }
-
+    
     public void selectRowByPartialNameAndIndex(String partialName, int index) {
         String xpath = String.format(FIND_BY_PARTIAL_NAME_AND_INDEX_PATTERN, partialName, index);
         driver.findElement(By.xpath(xpath)).click();
         DelayUtils.waitForPageToLoad(driver, wait);
     }
-
+    
     public int getTableObjectsCount() {
         List<WebElement> rowsCounterSpans = table
                 .findElements(By.xpath(ROWS_COUNTER_SPANS_PATH));
@@ -315,7 +332,7 @@ public class OldTable implements TableInterface {
             return 0;
         }
     }
-
+    
     public void changeItemsPerPageValue(int pageOption) {
         WebElement pagination = table
                 .findElement(By.className("OSSPagination"));
@@ -323,31 +340,31 @@ public class OldTable implements TableInterface {
         pagination.findElement(By.xpath(".//li[text()='" + pageOption + "']")).click();
         DelayUtils.waitForPageToLoad(driver, wait);
     }
-
+    
     public int getRowNumber(String value, String attributeLabel) {
         DelayUtils.waitForNestedElements(wait, table, "//*[contains(text(),'" + value + "')]");
         return getColumn(attributeLabel).indexOf(value);
     }
-
+    
     public void selectPredefinedFilter(String filterName) {
         PredefinedFilter predefinedFilter = PredefinedFilter.createPredefinedFilter(driver, wait, filterName);
         predefinedFilter.selectPredefinedFilter();
     }
-
+    
     private Map<String, Column> createColumnsFilters() {
         Map<String, Column> columns = Maps.newHashMap();
         DelayUtils.waitForNestedElements(wait, table, TABLE_COMPONENT);
         List<Column> columns2 =
                 table.findElements(By.xpath(COLUMNS_WITHOUT_CHECKBOX))
                         .stream().map(columnElement -> new Column(columnElement, wait, driver)).collect(Collectors.toList());
-        for (Column column : Lists.reverse(columns2)) {
+        for (Column column: Lists.reverse(columns2)) {
             if (column.checkIfLabelExist()) {
                 columns.put(column.getLabel(), column);
             }
         }
         return columns;
     }
-
+    
     private ActionsInterface getActionsInterface() {
         DelayUtils.waitForNestedElements(wait, window, CONTEXT_ACTIONS_CONTAINER);
         boolean isNewActionContainer = isElementPresent(window, By.className("actionsContainer"));
@@ -357,7 +374,7 @@ public class OldTable implements TableInterface {
             return OldActionsContainer.createFromParent(driver, wait, window);
         }
     }
-
+    
     private static boolean isElementPresent(WebElement window, By by) {
         try {
             window.findElement(by);
@@ -366,18 +383,26 @@ public class OldTable implements TableInterface {
             return false;
         }
     }
-
+    
+    private WebElement getColumnManager() {
+        Actions actions = new Actions(driver);
+        WebElement columnsSettingsIcon = table.findElement(By.className("OSSTableColumnsSettingsIcon"));
+        actions.moveToElement(columnsSettingsIcon).click().build().perform();
+        DelayUtils.waitBy(wait, By.xpath("//div[@class='OSSStickyColumnsSettings']"));
+        return driver.findElement(By.className("OSSStickyColumnsSettings"));
+    }
+    
     private static class Column {
         private final WebElement column;
         private final WebDriverWait wait;
         private final WebDriver driver;
-
+        
         private Column(WebElement column, WebDriverWait wait, WebDriver driver) {
             this.column = column;
             this.wait = wait;
             this.driver = driver;
         }
-
+        
         private String getLabel() {
             WebElement header = moveToHeader();
             try {
@@ -386,13 +411,18 @@ public class OldTable implements TableInterface {
                 return header.getText();
             }
         }
-
+        
         private WebElement moveToHeader() {
             WebElement header = column.findElement(By.xpath(HEADER));
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", header);
             return header;
         }
-
+        
+        private DragAndDrop.DraggableElement getDragElement() {
+            WebElement dragButton = moveToHeader().findElement(By.className("flex"));
+            return new DragAndDrop.DraggableElement(dragButton);
+        }
+        
         private boolean checkIfLabelExist() {
             try {
                 return !column.findElement(By.xpath(INPUT)).getAttribute("label").equals("");
@@ -400,11 +430,11 @@ public class OldTable implements TableInterface {
                 return !column.getText().isEmpty();
             }
         }
-
+        
         private void selectCell(String value) {
             moveToHeader();
             List<WebElement> cells = column.findElements(By.xpath(".//div[contains(@class, 'Cell Row')]"));
-            for (WebElement cell : cells) {
+            for (WebElement cell: cells) {
                 DelayUtils.waitForNestedElements(wait, cell, RICH_TEXT);
                 WebElement richText = cell.findElement(By.xpath(RICH_TEXT));
                 if (richText.getText().equals(value)) {
@@ -414,13 +444,13 @@ public class OldTable implements TableInterface {
                 }
             }
         }
-
+        
         public int indexOf(String value) {
             moveToHeader();
             List<WebElement> cells = column.findElements(By.xpath(CELL));
-
-            for (WebElement cell : cells) {
-
+            
+            for (WebElement cell: cells) {
+                
                 DelayUtils.waitForNestedElements(wait, cell, RICH_TEXT);
                 WebElement richText = cell.findElement(By.xpath(RICH_TEXT));
                 if (richText.getText().equals(value)) {
@@ -429,13 +459,13 @@ public class OldTable implements TableInterface {
             }
             throw new NoSuchElementException("Cannot find a row with the provided value");
         }
-
+        
         public void selectCell(int index) {
             WebElement cell = getCellByIndex(index);
             Actions action = new Actions(driver);
             action.moveToElement(cell).click(cell).perform();
         }
-
+        
         private String getValueCell(int index) {
             WebElement cell = getCellByIndex(index);
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cell);
@@ -443,25 +473,25 @@ public class OldTable implements TableInterface {
             action.moveToElement(cell).build().perform();
             return cell.getText();
         }
-
+        
         private WebElement getCellByIndex(int index) {
             moveToHeader();
             List<WebElement> cells = column.findElements(By.xpath(CELL));
             return cells.get(index);
         }
-
+        
         private int getNumberOfRows() {
             List<WebElement> cells = column.findElements(By.xpath(CELL));
             return cells.size();
         }
-
+        
         private void setValue(String value) {
             WebElement input = column.findElement(By.xpath(INPUT));
             Actions action = new Actions(driver);
             action.moveToElement(input).build().perform();
             input.sendKeys(value);
         }
-
+        
         private void clear() {
             WebElement input = column.findElement(By.xpath(INPUT));
             Actions action = new Actions(driver);
@@ -469,7 +499,7 @@ public class OldTable implements TableInterface {
                     .perform();
             DelayUtils.sleep();
         }
-
+        
         private void selectLink() {
             DelayUtils.waitByXPath(wait, "//div[contains(@class, 'Cell')]//div[contains(@class, 'OSSRichText')]");
             DelayUtils.waitForNestedElements(wait, column, ".//a[contains(@href, '#/')]");
@@ -477,18 +507,18 @@ public class OldTable implements TableInterface {
             action.click(column.findElement(By.xpath(".//div[contains(@class, 'Cell')]//a[contains(@href, '#/')]"))).perform();
         }
     }
-
+    
     private static class PredefinedFilter {
         private final WebDriverWait wait;
         private final WebDriver driver;
         private final WebElement predefinedFilter;
-
+        
         private PredefinedFilter(WebDriver driver, WebDriverWait wait, WebElement predefinedFilter) {
             this.driver = driver;
             this.wait = wait;
             this.predefinedFilter = predefinedFilter;
         }
-
+        
         private static PredefinedFilter createPredefinedFilter(WebDriver driver, WebDriverWait wait, String filterName) {
             DelayUtils.waitForPageToLoad(driver, wait);
             DelayUtils.waitByXPath(wait, TOGGLE_BUTTON);
@@ -497,25 +527,83 @@ public class OldTable implements TableInterface {
                     .orElseThrow(() -> new RuntimeException("There is no Predefined Filter"));
             return new PredefinedFilter(driver, wait, predefinedFilter);
         }
-
+        
         private void selectPredefinedFilter() {
             if (!isFilterSelected()) {
                 Actions action = new Actions(driver);
                 action.moveToElement(predefinedFilter).click(predefinedFilter).perform();
             }
         }
-
+        
         private void unselectPredefinedFilter() {
             if (isFilterSelected()) {
                 Actions action = new Actions(driver);
                 action.moveToElement(predefinedFilter).click(predefinedFilter).perform();
             }
         }
-
+        
         private boolean isFilterSelected() {
             return predefinedFilter.getAttribute("class").contains("active");
         }
-
+        
     }
+    
+    private static class AttributeChooser {
+        private WebDriver driver;
+        private WebDriverWait wait;
+        private WebElement columnManager;
+        
+        private AttributeChooser(WebDriver driver, WebDriverWait wait, WebElement columnManager) {
+            this.driver = driver;
+            this.wait = wait;
+            this.columnManager = columnManager;
+        }
+        
+        private void disableColumnByLabel(String attributeLabel) {
+            WebElement node = getNode(attributeLabel, true);
+            if (isSelected(node)) {
+                node.findElement(By.xpath(".//label")).click();
+            }
+        }
+        
+        private void enabledColumnByLabel(String attributeLabel) {
+            Actions actions = new Actions(driver);
+            WebElement node = getNode(attributeLabel, true);
+            if (!isSelected(node)) {
+                actions.moveToElement(node.findElement(By.xpath(".//label"))).click().perform();
+            }
+        }
+        
+        private void disableColumnById(String columnId) {
+            WebElement node = getNode(columnId, false);
+            if (isSelected(node)) {
+                node.findElement(By.xpath(".//label")).click();
+            }
+        }
+        
+        private WebElement getNode(String attribute, boolean isLabel) {
+            if (isLabel) {
+                
+                return getNodes().stream().filter(n -> n.getText().equals(attribute)).findFirst()
+                        .orElseThrow(() -> new RuntimeException("Cant find node " + attribute));
+            } else {
+                return columnManager.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + attribute + "']"));
+            }
+        }
+        
+        private List<WebElement> getNodes() {
+            return columnManager.findElements(By.xpath(".//div[@class='form-element']"));
+        }
+        
+        private boolean isSelected(WebElement node) {
+            return !node.findElements(By.xpath(".//input[@checked]")).isEmpty();
+        }
+        
+        private void acceptButton() {
+            columnManager.findElement(By.xpath(".//button[text()='Accept']")).click();
+        }
 
+        
+    }
+    
 }

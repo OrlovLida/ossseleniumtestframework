@@ -1,5 +1,6 @@
 package com.oss.framework.mainheader;
 
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -7,8 +8,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.oss.framework.utils.DelayUtils;
 
 public class Notifications implements NotificationsInterface {
 
@@ -18,8 +17,9 @@ public class Notifications implements NotificationsInterface {
     private static final By NOTIFICATION_OPENED = By.xpath("//a[(@class='clicked badge') or (@class = 'clicked notificationType badge')]");
     private static final By NOTIFICATION_CLOSED = By.xpath("//a[(@class= 'badge') or (@class= 'notificationType badge')]");
     private static final By EMPTY_NOTIFICATION = By.xpath("//div[@class='notificationEmpty']");
-    private static final By NOTIFICATION_LIST = By.xpath("//div[@class='notificationContainer']/div");
+    private static final By NOTIFICATION_LIST = By.xpath("//div[@class='notificationContainer']/div[not(@class = 'notificationEmpty')]");
     private static final By NOTIFICATION_DETAILS = By.xpath("(//a[@class='detailsLink'])[1]");
+    private static final By DOWNLOAD_FILE = By.xpath("//div[@class='notificationWrapper']//a[contains (text(), 'Download file')]");
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -100,5 +100,9 @@ public class Notifications implements NotificationsInterface {
         DelayUtils.waitByXPath(wait, ".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span[contains(text(), '" + text + "') and contains(text(), '" + notificationStatus + "')]");
         driver.findElement(NOTIFICATION_DETAILS).click();
         closeNotificationContainer();
+    }
+
+    public void clickDownloadFile() {
+        driver.findElement(DOWNLOAD_FILE).click();
     }
 }

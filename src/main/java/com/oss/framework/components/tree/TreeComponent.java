@@ -23,9 +23,12 @@ public class TreeComponent {
     private static final String NODE_LABEL_CLASS = "OSSRichText";
     private static final String EXPANDER_ICON_XPATH = ".//i[@class='OSSIcon fa fa-plus']";
     private static final String EXPANDER_BUTTON_XPATH = ".//div[@class = 'tree-node-expand-icon tree-node-expand-icon--collapsed']";
+    private static final String EXPAND_NEXT_LEVEL_ARROW_XPATH = "tree-node-expand--caret";
+    private static final String EXPAND_NEXT_LEVEL_BUTTON = "nextLevelButton";
     private static final String COLLAPSER_BUTTON_XPATH = ".//div[@class = 'tree-node-expand-icon tree-node-expand-icon--expanded']";
     private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
+    private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
 
     private static final int LEFT_MARGIN_IN_PX = 24;
 
@@ -101,36 +104,43 @@ public class TreeComponent {
 
     public List<Node> getVisibleNodes() {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        return this.treeComponent.findElements(By.xpath(".//div[@class='" + NODE_CLASS + "']")).stream()
+        return this.treeComponent.findElements(By.xpath("." + getNodeClassPath())).stream()
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
     }
 
     @Deprecated
     public List<Node> getNodes(int level) {
-        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
+        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, getNodeClassPath());
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
-        return this.treeComponent.findElements(By.xpath("//div[@class='" + NODE_CLASS + "'][.//div[contains(@style, '" + marginToString + "')]]")).stream()
+        return this.treeComponent
+                .findElements(By.xpath(getNodeClassPath() + "[.//div[contains(@style, '" + marginToString + "')]]")).stream()
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
     }
 
     @Deprecated
     public List<Node> getNodesWithExpander(int level) {
-        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, "//div[@class='" + NODE_CLASS + "']");
+        DelayUtils.waitForNestedElements(webDriverWait, treeComponent, getNodeClassPath());
         String marginToString = level * LEFT_MARGIN_IN_PX + "px";
-        return this.treeComponent.findElements(By.xpath("//div[@class='" + NODE_CLASS + "'][.//i][.//div[contains(@style, '" + marginToString + "')]]")).stream()
+        return this.treeComponent
+                .findElements(By.xpath(getNodeClassPath() + "[.//i][.//div[contains(@style, '" + marginToString + "')]]"))
+                .stream()
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
+    }
+
+    private String getNodeClassPath() {
+        return "//div[@class='" + NODE_CLASS + "']";
     }
 
     public static class Node {
         private static final String DATA_GUID_ATTR = "data-guid";
-        private static final String DATA_PATH_LABEL_ATTR = "data-testid";
+        private static final String DATA_PATH_LABEL_ATTR = "data-label-path";
 
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement node;
 
         private Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement node) {
-            //TODO: add path to equals
+            // TODO: add path to equals
             return new Node(driver, webDriverWait, node);
         }
 
@@ -171,6 +181,21 @@ public class TreeComponent {
             }
         }
 
+        public void expandNextLevel() {
+            if (isExpandNextLevelEnabled()) {
+                Actions action = new Actions(driver);
+                action.moveToElement(node).perform();
+                WebElement expandNextLevelArrow = node.findElement(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH));
+                action.click(expandNextLevelArrow).perform();
+                WebElement button =
+                        node.findElement(By.xpath("//a[contains(@" + CSSUtils.TEST_ID + ",'" + EXPAND_NEXT_LEVEL_BUTTON + "')]"));
+                action.moveToElement(button).click().perform();
+                DelayUtils.waitForElementDisappear(webDriverWait, node.findElement(By.xpath(SPIN_XPATH)));
+            } else
+                throw new RuntimeException("Expand Next Level is not available for Node " + getLabel());
+
+        }
+
         public void collapseNode() {
             if (isExpanded()) {
                 Actions action = new Actions(driver);
@@ -183,6 +208,11 @@ public class TreeComponent {
 
         public boolean isExpanded() {
             return node.findElements(By.xpath(EXPANDER_ICON_XPATH)).isEmpty();
+        }
+
+        private boolean isExpandNextLevelEnabled() {
+            return !node.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
+
         }
 
         public String getLabel() {
@@ -199,5 +229,3 @@ public class TreeComponent {
         }
     }
 }
-
-

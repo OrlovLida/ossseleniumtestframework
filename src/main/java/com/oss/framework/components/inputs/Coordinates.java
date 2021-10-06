@@ -2,6 +2,7 @@ package com.oss.framework.components.inputs;
 
 import com.oss.framework.data.Data;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -47,11 +48,9 @@ public class Coordinates extends Input {
             labelS.click();
         }
 
-        inputDegrees.clear();
+        clear();
         inputDegrees.sendKeys(value.getStringValues().get(1));
-        inputMinutes.clear();
         inputMinutes.sendKeys(value.getStringValues().get(2));
-        inputSeconds.clear();
         inputSeconds.sendKeys(value.getStringValues().get(3));
     }
 
@@ -78,12 +77,12 @@ public class Coordinates extends Input {
 
     @Override
     public void clear() {
-        List<String> clearList = new ArrayList<>();
-        clearList.add("N");
-        for (int i = 0; i < 3; i++) {
-            clearList.add("0");
-        }
-        setValue(Data.createMultiData(clearList));
+        inputDegrees.sendKeys(Keys.CONTROL + "a");
+        inputDegrees.sendKeys(Keys.DELETE);
+        inputMinutes.sendKeys(Keys.CONTROL + "a");
+        inputMinutes.sendKeys(Keys.DELETE);
+        inputSeconds.sendKeys(Keys.CONTROL + "a");
+        inputSeconds.sendKeys(Keys.DELETE);
     }
 
     @Override

@@ -12,29 +12,31 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 import java.util.Map;
 
-public class IaaTable implements TableInterface {
+public class FMSMTable implements TableInterface {
     private static final String NOT_IMPLEMENTED = "Not implemented method in IaaTable";
-    private static final String HEADER = ".//div[contains(@class, 'table__header')]";
-
+    private static final String OSS_ICON_CLASS = "OSSIcon";
+    private static final String OSS_ICON_VALUE = "title";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final String widgetId;
+    private final WebElement tableWidget;
 
-    private IaaTable(WebDriver driver, WebDriverWait wait, String widgetId) {
+    private FMSMTable(WebDriver driver, WebDriverWait wait, WebElement tableWidget) {
         this.driver = driver;
         this.wait = wait;
-        this.widgetId = widgetId;
+        this.tableWidget = tableWidget;
     }
 
-    public static IaaTable createById(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
+    public static FMSMTable createById(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
         DelayUtils.waitBy(wait, By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']"));
-        return new IaaTable(driver, wait, tableWidgetId);
+        WebElement tableWidget = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']"));
+        return new FMSMTable(driver, wait, tableWidget);
     }
 
     @Override
     public void selectRow(int row) {
-        List<WebElement> columns = driver.findElements(By.className("table-row"));
+        DelayUtils.waitForPresence(wait,By.className("table-row"));
+        List<WebElement> columns = tableWidget.findElements(By.className("table-row"));
         if (row >= columns.size()) {
             columns.get(columns.size() - 1).click();
         } else {
@@ -42,9 +44,10 @@ public class IaaTable implements TableInterface {
         }
     }
 
-    public List<WebElement> getListOfCells(String columnName) {
-        List<WebElement> cells = driver.findElements(By.xpath(".//div[substring(@datatestid, string-length(@datatestid) - string-length('" + columnName + "') + 1) = '" + columnName + "']//span[@title]" ));
-        return cells;
+    @Override
+    public String getCellValueById(int row, String columnId) {
+        Cell cell = Cell.create(tableWidget, row, columnId);
+        return cell.getTextValue();
     }
 
     @Override
@@ -124,7 +127,6 @@ public class IaaTable implements TableInterface {
         return null;
     }
 
-
     @Override
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
@@ -186,5 +188,37 @@ public class IaaTable implements TableInterface {
     @Override
     public List<TableRow> getSelectedRows() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    private static class Cell {
+        private final WebElement cell;
+        private final String columnNameId;
+
+        private Cell(WebElement cell, String columnNameId) {
+            this.cell = cell;
+            this.columnNameId = columnNameId;
+        }
+
+        private static Cell create(WebElement tableWidget, int index, String columnNameId) {
+            List<WebElement> cells = tableWidget.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnNameId + "']"));
+            return new Cell(cells.get(index), columnNameId);
+        }
+
+        private boolean isIcon() {
+            return !cell.findElements(By.className(OSS_ICON_CLASS)).isEmpty();
+        }
+
+        private String getAttributeValue(String att) {
+            return cell.findElement(By.xpath(".//span[@" + att + "]")).getAttribute(att);
+
+        }
+
+        public String getTextValue() {
+            if (isIcon()) {
+                return getAttributeValue(OSS_ICON_VALUE);
+            } else {
+                return cell.getText();
+            }
+        }
     }
 }
