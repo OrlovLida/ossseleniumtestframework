@@ -31,7 +31,7 @@ public class KpiChartWidget extends Widget {
 
     private static final String CHART_COLUMN_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='menuitem')]";
     private static final String CHART_LINE_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='group')]";
-    private static final String BARCHART_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='menu')]";
+    private static final String BARCHART_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='list')]";
 
     private static final String EXPAND_DATA_VIEW_PATH =
             "//div[contains(@data-testid, '_Data_View')]//a[contains(@class, 'fullScreenButton')]";
