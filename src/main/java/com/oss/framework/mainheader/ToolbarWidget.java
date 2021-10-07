@@ -13,7 +13,7 @@ public class ToolbarWidget {
     private final WebDriverWait wait;
     private final WebElement toolbarWidget;
 
-    private static final String TOOLBAR_WIDGET_XPATH = "//header[@class='oss-header']";
+    private static final String TOOLBAR_WIDGET_XPATH = "//div[@class='oss-header-cont']";
     private static final String LOGIN_PANEL_BUTTON_XPATH = ".//div[contains(@class,'toolbarWidget login')]";
     private static final String LOGIN_PANEL_XPATH = ".//div[@class='login-panel']";
     private static final String NOTIFICATION_XPATH = ".//div[@class='toolbarWidget globalNotification']";
@@ -33,8 +33,8 @@ public class ToolbarWidget {
 
     public static ToolbarWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, TOOLBAR_WIDGET_XPATH);
-        WebElement buttonPanel = driver.findElement(By.xpath(TOOLBAR_WIDGET_XPATH));
-        return new ToolbarWidget(driver, wait, buttonPanel);
+        WebElement toolbar = driver.findElement(By.xpath(TOOLBAR_WIDGET_XPATH));
+        return new ToolbarWidget(driver, wait, toolbar);
     }
 
     public void openLoginPanel() {
