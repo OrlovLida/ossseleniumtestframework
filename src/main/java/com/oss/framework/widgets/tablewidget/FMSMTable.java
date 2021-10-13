@@ -12,10 +12,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Bartosz Nowak
+ */
 public class FMSMTable implements TableInterface {
     private static final String NOT_IMPLEMENTED = "Not implemented method in IaaTable";
     private static final String OSS_ICON_CLASS = "OSSIcon";
     private static final String OSS_ICON_VALUE = "title";
+    private static final String TABLE_ROW_CLASS = "table-row";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -35,13 +39,24 @@ public class FMSMTable implements TableInterface {
 
     @Override
     public void selectRow(int row) {
-        DelayUtils.waitForPresence(wait,By.className("table-row"));
-        List<WebElement> columns = tableWidget.findElements(By.className("table-row"));
+        DelayUtils.waitForPresence(wait, By.className(TABLE_ROW_CLASS));
+        List<WebElement> columns = tableWidget.findElements(By.className(TABLE_ROW_CLASS));
         if (row >= columns.size()) {
             columns.get(columns.size() - 1).click();
         } else {
             columns.get(row).click();
         }
+    }
+
+    public int getNumberOfRowsInTable() {
+        DelayUtils.waitForPresence(wait, By.className(TABLE_ROW_CLASS));
+        List<WebElement> columns = tableWidget.findElements(By.className(TABLE_ROW_CLASS));
+        return columns.size();
+    }
+
+    public boolean tableVisibility(String tableWidgetId) {
+        int visibleDataViewPanel = this.tableWidget.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']")).size();
+        return visibleDataViewPanel == 1;
     }
 
     @Override
@@ -210,7 +225,6 @@ public class FMSMTable implements TableInterface {
 
         private String getAttributeValue(String att) {
             return cell.findElement(By.xpath(".//span[@" + att + "]")).getAttribute(att);
-
         }
 
         public String getTextValue() {
