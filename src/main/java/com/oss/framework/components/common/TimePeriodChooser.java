@@ -34,7 +34,7 @@ public class TimePeriodChooser extends Widget {
 
     public void chooseOption(TimePeriodChooserOption option) {
 
-        WebElement calendar = webElement.findElement(By.xpath("//i[contains(@class,'OSSIcon fa fa-calendar')]"));
+        WebElement calendar = webElement.findElement(By.xpath(".//i[contains(@class,'OSSIcon fa fa-calendar')]"));
 
         Actions actions = new Actions(driver);
         actions.moveToElement(calendar).click().build().perform();
