@@ -148,15 +148,9 @@ public class EditableList extends Widget {
         }
         
         public Cell selectCell(String columnId) {
-            if (columnId.contains(String.valueOf(index))) {
-                DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']");
-                WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']"));
-                return new Cell(driver, wait, cell);
-            } else {
-                DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']");
-                WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']"));
-                return new Cell(driver, wait, cell);
-            }
+            DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']");
+            WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']"));
+            return new Cell(driver, wait, cell);
         }
         
         public String getAttributeValue(String columnId) {
