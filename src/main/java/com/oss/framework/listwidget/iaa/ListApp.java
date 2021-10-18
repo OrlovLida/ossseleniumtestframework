@@ -20,33 +20,33 @@ public class ListApp {
     private final WebDriverWait wait;
     private final WebElement listApp;
 
-    public static ListApp createFromParent(WebDriver driver, WebDriverWait wait, String windowId){
+    public static ListApp createFromParent(WebDriver driver, WebDriverWait wait, String windowId) {
         DelayUtils.waitBy(wait, By.xpath(".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]//div[contains(@class, 'appList')]"));
         WebElement listApp = driver.findElement(By.xpath(".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]//div[contains(@class, 'appList')]"));
         return new ListApp(driver, wait, listApp);
     }
 
-    public static ListApp createById(WebDriver driver, WebDriverWait wait, String ListAppId){
+    public static ListApp createById(WebDriver driver, WebDriverWait wait, String ListAppId) {
         DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + ListAppId + "')]"));
         WebElement listApp = driver.findElement(By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + ListAppId + "')]"));
         return new ListApp(driver, wait, listApp);
     }
 
-    private ListApp(WebDriver driver, WebDriverWait wait, WebElement listApp){
+    private ListApp(WebDriver driver, WebDriverWait wait, WebElement listApp) {
         this.driver = driver;
         this.wait = wait;
         this.listApp = listApp;
     }
 
-    public List<WebElement> getRows(){
+    public List<WebElement> getRows() {
         return listApp.findElements(By.xpath(".//div[contains(@class, 'first last')]"));
     }
 
-    public List<String> getValue(){
+    public List<String> getValue() {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<String> values = getRows()
-                .stream().map(row->row.findElement(By.xpath(".//div[contains(@class, 'text-default')]")))
-                .map(text->text.getText()).collect(Collectors.toList());
+                .stream().map(row -> row.findElement(By.xpath(".//div[contains(@class, 'text-default')]")))
+                .map(text -> text.getText()).collect(Collectors.toList());
         log.debug("Getting all values from app list");
         return values;
     }
