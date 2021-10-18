@@ -220,7 +220,7 @@ public class Wizard {
         clickActionById(acceptButtonId);
     }
 
-    public void clickButtonByLabel(String groupLabel, String actionId) {
+    public void clickButtonById(String groupLabel, String actionId) {
         ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement,driver,wait);
         buttonContainer.callActionById(groupLabel, actionId);
     }
