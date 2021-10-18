@@ -146,6 +146,11 @@ public class EditableList extends Widget {
         public void click() {
             webElement.click();
         }
+
+        public void clickCheckbox() {
+            WebElement checkbox = webElement.findElement(By.xpath(".//div[contains(@class,'checkbox')]"));
+            checkbox.click();
+        }
         
         public Cell selectCell(String columnId) {
             if (columnId.contains(String.valueOf(index))) {
