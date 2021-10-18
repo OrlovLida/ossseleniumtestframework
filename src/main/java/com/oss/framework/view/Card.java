@@ -45,16 +45,4 @@ public class Card {
         resizeButton.click();
         log.debug("Clicking minimize button");
     }
-
-    public boolean textOnCardIsDisplayed(String expectedText) {
-        String textPath = ".//*[text()='%s']";
-        WebElement text = driver.findElement(By.xpath(String.format(textPath, expectedText)));
-        if (text.isDisplayed()) {
-            log.debug("Text {} is displayed", expectedText);
-            return true;
-        } else {
-            log.debug("Text {} is not displayed", expectedText);
-            return false;
-        }
-    }
 }
