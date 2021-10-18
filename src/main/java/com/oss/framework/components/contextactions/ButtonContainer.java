@@ -78,15 +78,22 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String groupLabel, String actionId) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + groupLabel + "'] | //*[text()='" + groupLabel + "']");
-        WebElement button = buttons.findElement(By.xpath("//a[text()='" + groupLabel + "'] | //*[text()='" + groupLabel + "']"));
+        clickGroup(groupLabel);
+        clickAction(actionId);
+    }
+
+    private void clickGroup(String groupLabel) {
+        DelayUtils.waitForNestedElements(wait, buttons, ".//a[text()='" + groupLabel + "'] | .//*[text()='" + groupLabel + "']");
+        WebElement button = buttons.findElement(By.xpath(".//a[text()='" + groupLabel + "'] | .//*[text()='" + groupLabel + "']"));
         button.click();
+    }
+
+    private void clickAction(String actionId) {
         DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] ");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
                 buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] ")))))
                 .click()
                 .perform();
-
     }
 }
