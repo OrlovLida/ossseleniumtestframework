@@ -53,12 +53,7 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + id + "'] | //*[@id='" + id + "'] ");
-        Actions action = new Actions(driver);
-        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + id + "'] | //*[@id='" + id + "'] ")))))
-                .click()
-                .perform();
+        clickAction(id);
     }
 
     @Override
