@@ -61,28 +61,28 @@ public class EditableList extends Widget {
     }
     
     public void setValueByRowIndex(int rowIndex, String value, String columnId, String componentId, Input.ComponentType componentType) {
-        Row row = selectRow(rowIndex - 1);
+        Row row = getRow(rowIndex - 1);
         row.setEditableAttributeValue(value, columnId, componentId, componentType);
     }
     
     public void callActionByLabel(String actionLabel, int row) {
-        selectRow(row - 1).click();
+        getRow(row - 1).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
     }
     
     public void callActionByLabel(String actionLabel, String columnId, String value) {
-        selectRowByAttributeValue(columnId, value).click();
+        getRowByAttributeValue(columnId, value).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
     }
 
     public void callActionIcon(String actionLabel, int row) {
-        selectRow(row - 1).callActionIcon(actionLabel);
+        getRow(row - 1).callActionIcon(actionLabel);
     }
 
     public void callActionIcon(String actionLabel, String columnId, String value) {
-        selectRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
+        getRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
     }
     
     // TODO update xpath
@@ -96,11 +96,11 @@ public class EditableList extends Widget {
         return values;
     }
     
-    public Row selectRow(int row) {
+    public Row getRow(int row) {
         return getVisibleRows().get(row);
     }
     
-    public Row selectRowByAttributeValue(String columnId, String value) {
+    public Row getRowByAttributeValue(String columnId, String value) {
         List<Row> allRows = getVisibleRows();
         for (Row row: allRows) {
             Row.Cell cell = row.selectCell(columnId);
