@@ -48,17 +48,6 @@ public class FMSMTable implements TableInterface {
         }
     }
 
-    public int getNumberOfRowsInTable() {
-        DelayUtils.waitForPresence(wait, By.className(TABLE_ROW_CLASS));
-        List<WebElement> columns = tableWidget.findElements(By.className(TABLE_ROW_CLASS));
-        return columns.size();
-    }
-
-    public boolean tableVisibility(String tableWidgetId) {
-        int visibleDataViewPanel = this.tableWidget.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']")).size();
-        return visibleDataViewPanel == 1;
-    }
-
     @Override
     public String getCellValueById(int row, String columnId) {
         Cell cell = Cell.create(tableWidget, row, columnId);
