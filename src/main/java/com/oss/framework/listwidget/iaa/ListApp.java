@@ -38,12 +38,12 @@ public class ListApp {
         this.listApp = listApp;
     }
 
-    public List<WebElement> getRows() {
+    private List<WebElement> getRows() {
+        DelayUtils.waitForNestedElements(wait, listApp, ".//div[contains(@class, 'first last')]");
         return listApp.findElements(By.xpath(".//div[contains(@class, 'first last')]"));
     }
 
     public List<String> getValue() {
-        DelayUtils.waitForPageToLoad(driver, wait);
         List<String> values = getRows()
                 .stream().map(row -> row.findElement(By.xpath(".//div[contains(@class, 'text-default')]")))
                 .map(text -> text.getText()).collect(Collectors.toList());
