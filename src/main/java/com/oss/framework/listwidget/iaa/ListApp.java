@@ -50,4 +50,9 @@ public class ListApp {
         log.debug("Getting all values from app list");
         return values;
     }
+
+    public void clickCreateNewNotification(){
+        log.debug("Clicking create new notification button");
+        listApp.findElement(By.xpath(".//*[contains(@href,'notification')]")).click();
+    }
 }

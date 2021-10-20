@@ -46,7 +46,7 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        String selectListPath = "//div[@class='CustomSelectList-data' and @title= '" + value.getStringValue() + "']";
+        String selectListPath = "//div[@class='CustomSelectList-data' and (contains(@title, '" + value.getStringValue() + "'))]";
 
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
