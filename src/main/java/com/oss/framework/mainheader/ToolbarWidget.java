@@ -1,38 +1,37 @@
 package com.oss.framework.mainheader;
 
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.utils.DelayUtils;
-
 public class ToolbarWidget {
-    
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement toolbarWidget;
-    
-    private static final String TOOLBAR_WIDGET_XPATH = "//div[@class='oss-header-cont']";
-    private static final String LOGIN_PANEL_BUTTON_XPATH = ".//div[contains(@class,'toolbarWidget login')]";
+
+    private static final String TOOLBAR_WIDGET_XPATH = "//header[@class='header-main']";
+    private static final String LOGIN_PANEL_BUTTON_XPATH = ".//div[@class='login__button']";
     private static final String LOGIN_PANEL_XPATH = ".//div[@class='login-panel']";
-    private static final String NOTIFICATION_BUTTON_XPATH = ".//div[@class='toolbarWidget globalNotification']";
-    private static final String NOTIFICATION_PANEL_XPATH =
-            ".//div[@class='toolbarWidget globalNotification']//a[contains(@class,'clicked')]";
-    private static final String QUERY_CONTEXT_BUTTON_XPATH = ".//div[@class='toolbarWidget queryContextContainer']";
+    private static final String NOTIFICATION_BUTTON_XPATH = ".//div[@class='notifications-button']";
+    private static final String NOTIFICATION_PANEL_XPATH = ".//div[@class='notifications__panel__wrapper']";
+    private static final String QUERY_CONTEXT_BUTTON_XPATH = ".//div[@class='query-context']";
     private static final String QUERY_CONTEXT_PANEL_XPATH =
-            ".//div[@class='toolbarWidget queryContextContainer']//a[contains(@class,'clicked')]";
-    private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='ExtendedSearchComponent']";
-    private static final String SHARE_PANEL_ICON_XPATH = ".//*[@title = 'Share']";
-    private static final String SHARE_PANEL_XPATH = ".//div[@class='shareTool']";
-    
+            ".//div[@class='icon-dropdown-action-list query-context__dropdown']";
+    private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='oss-input__input-content']";
+    private static final String SHARE_PANEL_ICON_XPATH = ".//*[@data-testid='ButtonShareView']";
+    private static final String SHARE_PANEL_XPATH = ".//div[@data-testid='popup_container']";
+
     private ToolbarWidget(WebDriver driver, WebDriverWait wait, WebElement toolbarWidget) {
         this.driver = driver;
         this.wait = wait;
         this.toolbarWidget = toolbarWidget;
     }
-    
+
     public static ToolbarWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, TOOLBAR_WIDGET_XPATH);
         WebElement toolbar = driver.findElement(By.xpath(TOOLBAR_WIDGET_XPATH));
@@ -81,7 +80,7 @@ public class ToolbarWidget {
     
     public void closeSharePanel() {
         if (isOpen(SHARE_PANEL_XPATH)) {
-            callAction(SHARE_PANEL_ICON_XPATH);
+            Button.createByIcon(driver, "fa fa-close", "closePrompt").click();
         }
     }
     
