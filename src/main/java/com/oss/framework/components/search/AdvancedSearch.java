@@ -153,9 +153,14 @@ public class AdvancedSearch {
         this.searchPanel.markFilterAsFavByLabel(label);
     }
     
-    public void toggleAttributes(List<String> attributeIds) {
+    public void selectAttributes(List<String> attributeIds) {
         this.searchPanel.openFiltersSettings();
-        this.searchPanel.toggleAttributes(attributeIds);
+        this.searchPanel.selectAttributes(attributeIds);
+    }
+    
+    public void unselectAttributes(List<String> attributeIds) {
+        this.searchPanel.openFiltersSettings();
+        this.searchPanel.unselectAttributes(attributeIds);
     }
     
     public void choseSavedFilterByLabel(String label) {
@@ -208,7 +213,8 @@ public class AdvancedSearch {
     }
     
     private boolean isSearchPanelOpen() {
-        return webElement.findElements(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']")).size()>0;
+        return webElement.findElements(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"))
+                .size() > 0;
     }
     
     private static class Tags {
