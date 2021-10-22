@@ -14,8 +14,8 @@ public class ToolbarWidget {
     private final WebDriverWait wait;
     private final WebElement toolbarWidget;
 
-    private static final String TOOLBAR_WIDGET_XPATH = "//header[@class='header-main']";
-    private static final String LOGIN_PANEL_BUTTON_XPATH = ".//div[@class='login__button']";
+    private static final String TOOLBAR_WIDGET_XPATH = "//header[contains(@class, 'header')]";
+    private static final String LOGIN_PANEL_BUTTON_XPATH = ".//div[contains(@class, 'login')]";
     private static final String LOGIN_PANEL_XPATH = ".//div[@class='login-panel']";
     private static final String NOTIFICATION_BUTTON_XPATH = ".//div[@class='notifications-button']";
     private static final String NOTIFICATION_PANEL_XPATH = ".//div[@class='notifications__panel__wrapper']";
