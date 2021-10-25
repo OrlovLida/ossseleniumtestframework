@@ -12,6 +12,8 @@ public class SelectionBarComponent {
     private static final String SHOW_ONLY_SELECTED_BUTTON_XPATH = ".//*[@data-testid='show-selected-only-button']";
     private static final String UNSELECT_ALL_BUTTON_XPATH = ".//*[@data-testid='unselect-all-button']";
     private static final String DATA_TESTID_SELECTION_BAR_XPATH = "//*[@data-testid='selection-bar']";
+    private static final String SELECTION_BAR_ACTIVE_XPATH = ".//*[@class='selection-bar-toggler active']";
+    private static final String SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH = "*//*[@data-testid='show-selected-only-button' and text()='Show Selected']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -41,18 +43,42 @@ public class SelectionBarComponent {
     }
 
     public void toggleSelectionBar() {
-        Button.createById(driver, "selection-bar-toggler-button").click();
+        if(!isSelectionBarIsActive()) {
+            Button.createById(driver, "selection-bar-toggler-button").click();
+        }
+    }
+
+    public void hideSelectionBar() {
+        if(isSelectionBarIsActive()) {
+            Button.createById(driver, "selection-bar-toggler-button").click();
+        }
+    }
+
+    private boolean isSelectionBarIsActive(){
+        return driver.findElements(By.xpath(SELECTION_BAR_ACTIVE_XPATH)).size() > 0;
+    }
+
+    private boolean areAllObjectShown(){
+        return driver.findElements(By.xpath(SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH)).size() > 0;
     }
 
     public void clickUnselectAllButton() {
         this.webElement.findElement(By.xpath(UNSELECT_ALL_BUTTON_XPATH)).click();
     }
 
-    public void clickShowOnlySelectedOrShowAllButton() {
-        this.webElement.findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
+    public void clickShowOnlySelectedButton() {
+        if (isSelectionBarIsActive() && areAllObjectShown()) {
+            this.webElement.findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
+        }
     }
 
-    public String getSelectionObjectCountLabelFromSelectionBar() {
+    public void clickShowAllButton() {
+        if (isSelectionBarIsActive() && !areAllObjectShown()) {
+            this.webElement.findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
+        }
+    }
+
+    public String getSelectedObjectsCount() {
         return this.webElement.findElement(By.xpath(SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL_XPATH)).getText();
     }
 }
