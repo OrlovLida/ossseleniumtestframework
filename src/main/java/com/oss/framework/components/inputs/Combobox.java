@@ -63,8 +63,8 @@ public class Combobox extends Input {
             return;
         }
 
-        DelayUtils.waitByXPath(webDriverWait, "//div[@class='combo-box__list-item']//*[text()='" + wrapper.getReadableValue() + "']");
-        List<WebElement> results = driver.findElements(By.xpath("//div[@class='combo-box__list-item']"));
+        DelayUtils.waitByXPath(webDriverWait, "//div[@class='list-item']//*[text()='" + wrapper.getReadableValue() + "']");
+        List<WebElement> results = driver.findElements(By.xpath("//div[@class='list-item']"));
         for (WebElement element : results) {
             if (wrapper.getReadableValue().equals(element.getText())) {
                 element.click();
