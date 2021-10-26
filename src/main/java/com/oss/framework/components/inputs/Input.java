@@ -81,14 +81,14 @@ public abstract class Input {
 
     public String cursor() {
         Actions action = new Actions(driver);
-        action.moveToElement(webElement.findElement(By.xpath(LABEL))).build().perform();
-        return webElement.findElement(By.xpath(LABEL)).getCssValue("cursor");
+        action.moveToElement(webElement).build().perform();
+        return webElement.findElement(By.xpath(".//input")).getCssValue("cursor");
     }
 
     public final List<String> getHint() {
-        WebElement hint = this.webElement.findElement(By.xpath(".//span[contains(@class,'form-hint-tooltip')]"));
-        hint.click();
-        Tooltip tooltip = new Tooltip(this.driver);
+//        WebElement hint = this.webElement.findElement(By.xpath(".//span[contains(@class,'form-hint-tooltip')]"));
+//        hint.click();
+        Tooltip tooltip = Tooltip.create(driver,webDriverWait, componentId);
         return tooltip.getMessages();
     }
 

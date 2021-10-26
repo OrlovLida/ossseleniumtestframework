@@ -45,19 +45,15 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + label + "'] | //*[text()='" + label + "']/ancestor::button");
-        WebElement button = buttons.findElement(By.xpath("//a[text()='" + label + "'] | //*[text()='" + label + "']/ancestor::button"));
-        button.click();
+        DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + label + "'] | //*[text()='" + label + "']/ancestor::button | //*[@aria-label='" + label + "']");
+        WebElement button = buttons.findElement(By.xpath("//a[text()='" + label + "'] | //*[text()='" + label + "']/ancestor::button | //*[@aria-label='" + label + "']"));
+        Actions action = new Actions(driver);
+        action.moveToElement(button).click(button).perform();
     }
 
     @Override
     public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + id + "'] | //*[@id='" + id + "'] ");
-        Actions action = new Actions(driver);
-        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + id + "'] | //*[@id='" + id + "'] ")))))
-                .click()
-                .perform();
+        clickAction(id);
     }
 
     @Override
@@ -77,6 +73,22 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String groupLabel, String actionId) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
+        clickGroup(groupLabel);
+        clickAction(actionId);
+    }
+
+    private void clickGroup(String groupLabel) {
+        DelayUtils.waitForNestedElements(wait, buttons, ".//a[text()='" + groupLabel + "'] | .//*[text()='" + groupLabel + "']");
+        WebElement button = buttons.findElement(By.xpath(".//a[text()='" + groupLabel + "'] | .//*[text()='" + groupLabel + "']"));
+        button.click();
+    }
+
+    private void clickAction(String actionId) {
+        DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] ");
+        Actions action = new Actions(driver);
+        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
+                buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] ")))))
+                .click()
+                .perform();
     }
 }

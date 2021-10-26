@@ -131,8 +131,8 @@ public class DelayUtils {
 
     private static List<WebElement> listOfButtonLoader(WebDriver driver, String buttonXpath) {
         List<WebElement> button = driver.findElements(By.xpath(buttonXpath));
-        List<WebElement> actionInProgress = driver.findElements(By.xpath("//*[@class='action inProgress']"));
-        List<WebElement> buttonInProgress = driver.findElements(By.xpath("//i[contains(@class, 'fa-spin')]"));
+        List<WebElement> actionInProgress = driver.findElements(By.xpath(buttonXpath + "//*[@class='action inProgress']"));
+        List<WebElement> buttonInProgress = driver.findElements(By.xpath(buttonXpath + "//i[contains(@class, 'fa-spin')]"));
         List<WebElement> newList = new ArrayList<>(button);
         newList.addAll(actionInProgress);
         newList.addAll(buttonInProgress);

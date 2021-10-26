@@ -1,6 +1,7 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
 import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -22,6 +23,7 @@ public class OptionsPanel {
     private static final String TIME_PERIOD_CHOOSER_INPUT_PATH = "//div[@class='md-input']//input[@label='%s']";
     private static final String AGGREGATION_METHOD_CHOOSER_PATH = "//div[@data-testid = 'aggregation-method-button']";
     private static final String AGGREGATION_METHOD_CHOOSER_INPUT_PATH = "//*[contains(@class,'list-group')]//*[@data-testid='%s']";
+    private static final String ACTIVE_AGGREGATION_METHOT_XPATH = "//*[contains(@class,'list-group')]//*[@class='list-group-item active']";
     private static final String Y_AXIS_SETTINGS_PATH = "//*[@data-testid = 'y-axis-options-button']";
     private static final String Y_AXIS_SETTINGS_INPUT_PATH = "//label[contains(@for,'%s')]";
     private static final String MISCELLANEOUS_OPTIONS_PATH = "//*[@data-testid = 'miscellaneous-options-common-form']";
@@ -66,9 +68,7 @@ public class OptionsPanel {
     }
 
     public void chooseTimePeriod() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        Button.createById(driver, OPTIONS_BUTTON_ID).click();
-        log.debug("Click options button");
+        clickOnOptionsButton();
         moveOverElement(TIME_PERIOD_CHOOSER_PATH);
     }
 
@@ -154,16 +154,27 @@ public class OptionsPanel {
     }
 
     public void chooseAggregationMethod() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        Button.createById(driver, OPTIONS_BUTTON_ID).click();
-        log.debug("Click options button");
+        clickOnOptionsButton();
         moveOverElement(AGGREGATION_METHOD_CHOOSER_PATH);
     }
 
-    public void chooseYAxisOption() {
+    private void clickOnOptionsButton() {
         DelayUtils.waitForPageToLoad(driver, wait);
         Button.createById(driver, OPTIONS_BUTTON_ID).click();
         log.debug("Click options button");
+    }
+
+    public String getActiveAggregationMethod() {
+        chooseAggregationMethod();
+        WebElement activeAggregationMethod = driver.findElement(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
+        String activeAggMethod = activeAggregationMethod.getAttribute(CSSUtils.TEST_ID).toUpperCase();
+        clickOnOptionsButton();
+
+        return activeAggMethod;
+    }
+
+    public void chooseYAxisOption() {
+        clickOnOptionsButton();
         moveOverElement(Y_AXIS_SETTINGS_PATH);
     }
 
@@ -191,9 +202,7 @@ public class OptionsPanel {
     }
 
     public void chooseMiscellaneousOption() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        Button.createById(driver, OPTIONS_BUTTON_ID).click();
-        log.debug("Click options button");
+        clickOnOptionsButton();
         moveOverElement(MISCELLANEOUS_OPTIONS_PATH);
     }
 
@@ -213,9 +222,7 @@ public class OptionsPanel {
     }
 
     public void setOtherPeriodOption() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        Button.createById(driver, OPTIONS_BUTTON_ID).click();
-        log.debug("Click options button");
+        clickOnOptionsButton();
         moveOverElement(COMPARE_WITH_OTHER_PERIOD_OPTIONS_PATH);
         input.findElement(By.xpath(createXPathByDataTestId("OtherPeriodEnabled"))).click();
     }

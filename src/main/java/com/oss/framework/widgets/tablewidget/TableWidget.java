@@ -37,6 +37,7 @@ public class TableWidget extends Widget implements TableInterface {
     private TableComponent tableComponent;
     private SelectionBarComponent selectionBarComponent;
 
+
     @Deprecated
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.className(widgetClass)); // TODO: change to id
@@ -154,9 +155,14 @@ public class TableWidget extends Widget implements TableInterface {
         }
     }
 
-    public void toggleVisibilitySearchAttributes(List<String> attributeIds) {
+    public void selectVisibilitySearchAttributes(List<String> attributeIds) {
         openAdvancedSearch();
-        getAdvancedSearch().toggleAttributes(attributeIds);
+        getAdvancedSearch().selectAttributes(attributeIds);
+    }
+
+    public void unselectVisibilitySearchAttributes(List<String> attributeIds) {
+        openAdvancedSearch();
+        getAdvancedSearch().unselectAttributes(attributeIds);
     }
 
     public List<String> getAllVisibleFilters() {
@@ -178,6 +184,11 @@ public class TableWidget extends Widget implements TableInterface {
     public List<TableRow> getSelectedRows() {
         return getTableComponent().getVisibleRows().stream()
                 .filter(TableRow::isSelected).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getCellValueById(int row, String columnId) {
+        return getCellValue(row, columnId);
     }
 
     @Override
