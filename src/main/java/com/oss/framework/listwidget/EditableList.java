@@ -103,7 +103,7 @@ public class EditableList extends Widget {
     public Row getRowByAttributeValue(String columnId, String value) {
         List<Row> allRows = getVisibleRows();
         for (Row row: allRows) {
-            Row.Cell cell = row.selectCell(columnId);
+            Row.Cell cell = row.getCell(columnId);
             String getValue = cell.getText();
             if (getValue.equals(value)) {
                 return row;
@@ -156,22 +156,22 @@ public class EditableList extends Widget {
             return !webElement.findElements(By.xpath(".//div[contains(@class,'checkbox')]")).isEmpty();
         }
         
-        public Cell selectCell(String columnId) {
+        public Cell getCell(String columnId) {
             DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']");
             WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']"));
             return new Cell(driver, wait, cell);
         }
         
-        public String getAttributeValue(String columnId) {
-            return selectCell(columnId).getText();
+        public String getCellValue(String columnId) {
+            return getCell(columnId).getText();
         }
         
         public void setEditableAttributeValue(String value, String columnId, String componentId, Input.ComponentType componentType) {
-            selectCell(columnId).setValue(value, componentId, componentType);
+            getCell(columnId).setValue(value, componentId, componentType);
         }
         
         public void clearValue(String columnId, String componentId, Input.ComponentType componentType) {
-            selectCell(columnId).clearValue(componentId, componentType);
+            getCell(columnId).clearValue(componentId, componentType);
         }
         
         public boolean isEditableAttribute(String columnId) {
