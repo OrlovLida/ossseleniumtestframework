@@ -144,7 +144,16 @@ public class EditableList extends Widget {
         }
         
         public void click() {
-            webElement.click();
+            if(isCheckboxEnabled()) {
+                WebElement checkbox = webElement.findElement(By.xpath(".//div[contains(@class,'checkbox')]"));
+                checkbox.click();
+            } else {
+                webElement.click();
+            }
+        }
+
+        private boolean isCheckboxEnabled() {
+            return !webElement.findElements(By.xpath(".//div[contains(@class,'checkbox')]")).isEmpty();
         }
         
         public Cell selectCell(String columnId) {

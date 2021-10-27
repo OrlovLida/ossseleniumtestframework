@@ -20,6 +20,7 @@ public class FMSMTable implements TableInterface {
     private static final String OSS_ICON_CLASS = "OSSIcon";
     private static final String OSS_ICON_VALUE = "title";
     private static final String TABLE_ROW_CLASS = "table-row";
+    private static final String CELL_CONTENT = "cell__content";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -39,8 +40,8 @@ public class FMSMTable implements TableInterface {
 
     @Override
     public void selectRow(int row) {
-        DelayUtils.waitForPresence(wait, By.className(TABLE_ROW_CLASS));
-        List<WebElement> columns = tableWidget.findElements(By.className(TABLE_ROW_CLASS));
+        DelayUtils.waitForPresence(wait, By.className(CELL_CONTENT));
+        List<WebElement> columns = tableWidget.findElements(By.className(CELL_CONTENT));
         if (row >= columns.size()) {
             columns.get(columns.size() - 1).click();
         } else {
