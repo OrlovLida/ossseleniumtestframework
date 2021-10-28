@@ -19,7 +19,7 @@ public class FMSMTable implements TableInterface {
     private static final String NOT_IMPLEMENTED = "Not implemented method in IaaTable";
     private static final String OSS_ICON_CLASS = "OSSIcon";
     private static final String OSS_ICON_VALUE = "title";
-    private static final String TABLE_ROW_CLASS = "table-row";
+    private static final String TABLE_ROW_XPATH = "//div[@role='row']['table-row']";
     private static final String CELL_CONTENT = "cell__content";
 
     private final WebDriver driver;
@@ -41,10 +41,13 @@ public class FMSMTable implements TableInterface {
     @Override
     public void selectRow(int row) {
         DelayUtils.waitForPresence(wait, By.className(CELL_CONTENT));
-        List<WebElement> columns = tableWidget.findElements(By.className(CELL_CONTENT));
+        List<WebElement> columns = tableWidget.findElements(By.xpath(TABLE_ROW_XPATH));
+        System.out.println(columns);
         if (row >= columns.size()) {
+            System.out.println(columns.get(columns.size() - 1) + "jestem w if");
             columns.get(columns.size() - 1).click();
         } else {
+            System.out.println(columns.get(row) + "jestem w else");
             columns.get(row).click();
         }
     }
@@ -209,8 +212,8 @@ public class FMSMTable implements TableInterface {
             return new Cell(cells.get(index), columnNameId);
         }
 
-        private boolean isIcon() {
-            return !cell.findElements(By.className(OSS_ICON_CLASS)).isEmpty();
+        private boolean isIcon(String att) {
+            return !cell.findElements(By.className(OSS_ICON_CLASS)).isEmpty() && !cell.findElements(By.xpath(".//span[@" + att + "]")).isEmpty();
         }
 
         private String getAttributeValue(String att) {
@@ -218,11 +221,12 @@ public class FMSMTable implements TableInterface {
         }
 
         public String getTextValue() {
-            if (isIcon()) {
+            if (isIcon(OSS_ICON_VALUE)) {
                 return getAttributeValue(OSS_ICON_VALUE);
             } else {
                 return cell.getText();
             }
         }
+
     }
 }
