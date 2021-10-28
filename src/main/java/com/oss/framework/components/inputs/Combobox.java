@@ -97,7 +97,7 @@ public class Combobox extends Input {
     @Override
     public void clear() {
         DelayUtils.waitForPageToLoad(driver,webDriverWait);
-        List<WebElement> closeButtons = this.webElement.findElements(By.xpath(".//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]"));
+        List<WebElement> closeButtons = this.webElement.findElements(By.xpath(".//i[contains(@class,'OSSIcon ossfont-close button-close')]"));
         closeButtons.forEach(WebElement::click);
     }
 }
