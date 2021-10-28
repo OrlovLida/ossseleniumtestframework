@@ -44,10 +44,8 @@ public class FMSMTable implements TableInterface {
         List<WebElement> columns = tableWidget.findElements(By.xpath(TABLE_ROW_XPATH));
         System.out.println(columns);
         if (row >= columns.size()) {
-            System.out.println(columns.get(columns.size() - 1) + "jestem w if");
             columns.get(columns.size() - 1).click();
         } else {
-            System.out.println(columns.get(row) + "jestem w else");
             columns.get(row).click();
         }
     }
