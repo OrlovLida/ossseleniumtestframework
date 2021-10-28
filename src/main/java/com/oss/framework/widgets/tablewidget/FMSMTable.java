@@ -42,7 +42,6 @@ public class FMSMTable implements TableInterface {
     public void selectRow(int row) {
         DelayUtils.waitForPresence(wait, By.className(CELL_CONTENT));
         List<WebElement> columns = tableWidget.findElements(By.xpath(TABLE_ROW_XPATH));
-        System.out.println(columns);
         if (row >= columns.size()) {
             columns.get(columns.size() - 1).click();
         } else {
