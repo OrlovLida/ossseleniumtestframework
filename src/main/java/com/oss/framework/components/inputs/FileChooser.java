@@ -61,4 +61,11 @@ public class FileChooser extends Input{
             attachments.findElement(By.className("delete")).click();
         }
     }
+
+
+    public String getStatus (){
+        DelayUtils.waitByXPath(webDriverWait,"//ul[@class='UploadedFiles']");
+        WebElement importStatus = driver.findElement(By.xpath(".//span[@class='uploadStatus']"));
+        return importStatus.getText();
+    }
 }
