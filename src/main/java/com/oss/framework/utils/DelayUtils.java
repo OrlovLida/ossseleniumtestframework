@@ -110,16 +110,11 @@ public class DelayUtils {
         return newList;
     }
 
-    public static void waitForButtonDisappear(WebDriver driver, WebDriverWait wait, String buttonXpath) {
+    public static void waitForButtonDisappear(WebDriver driver, String buttonXpath) {
         DelayUtils.sleep(1000);
         List<WebElement> newList = listOfButtonLoader(driver, buttonXpath);
         long startTime = System.currentTimeMillis();
         while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
-            try {
-                wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
-            } catch (TimeoutException | ScriptTimeoutException e) {
-                log.warn("Some element(s) could not be loaded in the expected time");
-            }
             DelayUtils.sleep(500);
             newList = listOfButtonLoader(driver, buttonXpath);
         }
