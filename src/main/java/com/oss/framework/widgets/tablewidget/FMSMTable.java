@@ -41,11 +41,11 @@ public class FMSMTable implements TableInterface {
     @Override
     public void selectRow(int row) {
         DelayUtils.waitForPresence(wait, By.className(CELL_CONTENT));
-        List<WebElement> columns = tableWidget.findElements(By.xpath(TABLE_ROW_XPATH));
-        if (row >= columns.size()) {
-            columns.get(columns.size() - 1).click();
+        List<WebElement> rowElement = tableWidget.findElements(By.xpath(TABLE_ROW_XPATH));
+        if (row >= rowElement.size()) {
+            rowElement.get(rowElement.size() - 1).click();
         } else {
-            columns.get(row).click();
+            rowElement.get(row).click();
         }
     }
 
@@ -209,8 +209,8 @@ public class FMSMTable implements TableInterface {
             return new Cell(cells.get(index), columnNameId);
         }
 
-        private boolean isIcon(String att) {
-            return !cell.findElements(By.className(OSS_ICON_CLASS)).isEmpty() && !cell.findElements(By.xpath(".//span[@" + att + "]")).isEmpty();
+        private boolean isIcon(String attribute) {
+            return !cell.findElements(By.xpath(".//span[@" + attribute + "]//i[contains(@class, '" + OSS_ICON_CLASS + "')]")).isEmpty();
         }
 
         private String getAttributeValue(String att) {
@@ -224,6 +224,5 @@ public class FMSMTable implements TableInterface {
                 return cell.getText();
             }
         }
-
     }
 }
