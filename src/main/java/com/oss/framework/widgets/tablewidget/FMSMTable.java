@@ -209,17 +209,17 @@ public class FMSMTable implements TableInterface {
             return new Cell(cells.get(index), columnNameId);
         }
 
-        private boolean isIcon(String attribute) {
-            return !cell.findElements(By.xpath(".//span[@" + attribute + "]//i[contains(@class, '" + OSS_ICON_CLASS + "')]")).isEmpty();
+        private boolean isIcon() {
+            return !cell.findElements(By.xpath(".//span[@" + OSS_ICON_VALUE + "]//i[contains(@class, '" + OSS_ICON_CLASS + "')]")).isEmpty();
         }
 
-        private String getAttributeValue(String att) {
-            return cell.findElement(By.xpath(".//span[@" + att + "]")).getAttribute(att);
+        private String getAttributeValue() {
+            return cell.findElement(By.xpath(".//span[@" + OSS_ICON_VALUE + "]")).getAttribute(OSS_ICON_VALUE);
         }
 
         public String getTextValue() {
-            if (isIcon(OSS_ICON_VALUE)) {
-                return getAttributeValue(OSS_ICON_VALUE);
+            if (isIcon()) {
+                return getAttributeValue();
             } else {
                 return cell.getText();
             }
