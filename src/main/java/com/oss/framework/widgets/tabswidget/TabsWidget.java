@@ -148,8 +148,16 @@ public class TabsWidget implements TabsInterface {
 
     @Override
     public void clickButtonByLabel(String label) {
-        ActionsInterface buttonContainer = ButtonContainer.createFromParent(createTabs(), driver, webDriverWait);
-        buttonContainer.callActionByLabel(label);
+        getInterfaceForButtonContainer().callActionByLabel(label);
+    }
+
+    @Override
+    public void clickButtonById(String id) {
+        getInterfaceForButtonContainer().callActionById(id);
+    }
+
+    private ActionsInterface getInterfaceForButtonContainer() {
+        return ButtonContainer.createFromParent(createTabs(), driver, webDriverWait);
     }
 
     private ActionsInterface getActionsInterface() {

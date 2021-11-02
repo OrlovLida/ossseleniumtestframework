@@ -84,10 +84,10 @@ public class ButtonContainer implements ActionsInterface {
     }
 
     private void clickAction(String actionId) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] ");
+        DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] | //*[@data-widget-id='" + actionId + "']");
         Actions action = new Actions(driver);
         action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] ")))))
+                buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + actionId + "'] | //*[@id='" + actionId + "'] | //*[@data-widget-id='" + actionId + "']")))))
                 .click()
                 .perform();
     }
