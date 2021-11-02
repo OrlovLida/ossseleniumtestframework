@@ -19,7 +19,7 @@ public class FMSMTable implements TableInterface {
     private static final String NOT_IMPLEMENTED = "Not implemented method in IaaTable";
     private static final String OSS_ICON_CLASS = "OSSIcon";
     private static final String OSS_ICON_VALUE = "title";
-    private static final String TABLE_ROW_CLASS = "table-row";
+    private static final String TABLE_ROW_XPATH = "//div[@role='row']['table-row']";
     private static final String CELL_CONTENT = "cell__content";
 
     private final WebDriver driver;
@@ -41,11 +41,11 @@ public class FMSMTable implements TableInterface {
     @Override
     public void selectRow(int row) {
         DelayUtils.waitForPresence(wait, By.className(CELL_CONTENT));
-        List<WebElement> columns = tableWidget.findElements(By.className(CELL_CONTENT));
-        if (row >= columns.size()) {
-            columns.get(columns.size() - 1).click();
+        List<WebElement> rowElement = tableWidget.findElements(By.xpath(TABLE_ROW_XPATH));
+        if (row >= rowElement.size()) {
+            rowElement.get(rowElement.size() - 1).click();
         } else {
-            columns.get(row).click();
+            rowElement.get(row).click();
         }
     }
 
@@ -210,16 +210,16 @@ public class FMSMTable implements TableInterface {
         }
 
         private boolean isIcon() {
-            return !cell.findElements(By.className(OSS_ICON_CLASS)).isEmpty();
+            return !cell.findElements(By.xpath(".//span[@" + OSS_ICON_VALUE + "]//i[contains(@class, '" + OSS_ICON_CLASS + "')]")).isEmpty();
         }
 
-        private String getAttributeValue(String att) {
-            return cell.findElement(By.xpath(".//span[@" + att + "]")).getAttribute(att);
+        private String getAttributeValue() {
+            return cell.findElement(By.xpath(".//span[@" + OSS_ICON_VALUE + "]")).getAttribute(OSS_ICON_VALUE);
         }
 
         public String getTextValue() {
             if (isIcon()) {
-                return getAttributeValue(OSS_ICON_VALUE);
+                return getAttributeValue();
             } else {
                 return cell.getText();
             }

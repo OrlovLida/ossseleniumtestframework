@@ -250,6 +250,6 @@ public class Wizard {
     }
 
     private void waitForButtonDisappear(String buttonXpath) {
-        DelayUtils.waitForButtonDisappear(driver, wait, buttonXpath);
+        DelayUtils.waitForButtonDisappear(driver, buttonXpath);
     }
 }
