@@ -13,7 +13,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class FileChooser extends Input{
-
+    private static final String INPUT_XPATH = "//input[@type='file']";
+    private static final String UPLOAD_SUCCESS_XPATH = "//span[@class='uploadStatus'][text()='Upload success']";
+    private static final String POPUP_XPATH = "//ul[@class='UploadedFiles']";
+    public static final String DELETE_CLASS = "delete";
+    public static final String UPLOAD_STATUS_XPATH = ".//span[@class='uploadStatus']";
+    public static final String FILE_NAME_CLASS = "fileName";
 
     public static FileChooser create(WebDriver driver, WebDriverWait wait, String componentId){
         DelayUtils.waitByXPath(wait,"//div[@"+ CSSUtils.TEST_ID +"='"+componentId+"']");
@@ -27,26 +32,26 @@ public class FileChooser extends Input{
     @Override
     public void setValue(Data value) {
         DelayUtils.waitByElement(webDriverWait,this.webElement);
-        WebElement elem = webElement.findElement(By.xpath("//input[@type='file']"));
+        WebElement elem = webElement.findElement(By.xpath(INPUT_XPATH));
         String js = "arguments[0].style.height='50px'; arguments[0].style.visibility='visible'; arguments[0].style.display='block';";
         ((JavascriptExecutor) driver).executeScript(js, elem);
         ((JavascriptExecutor) driver).executeScript("HTMLInputElement.prototype.click = function(){}");
         elem.sendKeys(value.getStringValue());
         ((JavascriptExecutor) driver).executeScript("delete HTMLInputElement.prototype.click");
-        DelayUtils.waitByXPath(webDriverWait,"//span[@class='uploadStatus'][text()='Upload success']");
+        DelayUtils.waitByXPath(webDriverWait,UPLOAD_SUCCESS_XPATH);
     }
 
     @Override
     public void setValueContains(Data value) {
-        throw new RuntimeException("Method not implemented for the File Chooser");
+        throw new UnsupportedOperationException("Method not implemented for the File Chooser");
     }
 
     @Override
     public Data getValue() {
         List<String> names = new ArrayList<String>();
-        DelayUtils.waitByXPath(webDriverWait,"//ul[@class='UploadedFiles']");
+        DelayUtils.waitByXPath(webDriverWait,POPUP_XPATH);
 
-        List<WebElement> fileNames = webElement.findElements(By.className("fileName"));
+        List<WebElement> fileNames = webElement.findElements(By.className(FILE_NAME_CLASS));
         for (WebElement fileName:fileNames) {
             names.add(fileName.getText());
         }
@@ -55,17 +60,17 @@ public class FileChooser extends Input{
 
     @Override
     public void clear() {
-        DelayUtils.waitByXPath(webDriverWait,"//ul[@class='UploadedFiles']");
-        WebElement attachments = webElement.findElement(By.xpath("//ul[@class='UploadedFiles']"));
-        while (webElement.findElements(By.xpath("//ul[@class='UploadedFiles']")).size() != 0){
-            attachments.findElement(By.className("delete")).click();
+        DelayUtils.waitByXPath(webDriverWait, POPUP_XPATH);
+        WebElement attachments = webElement.findElement(By.xpath(POPUP_XPATH));
+        while (!webElement.findElements(By.xpath(POPUP_XPATH)).isEmpty()){
+            attachments.findElement(By.className(DELETE_CLASS)).click();
         }
     }
 
 
     public String getStatus (){
-        DelayUtils.waitByXPath(webDriverWait,"//ul[@class='UploadedFiles']");
-        WebElement importStatus = driver.findElement(By.xpath(".//span[@class='uploadStatus']"));
+        DelayUtils.waitByXPath(webDriverWait,POPUP_XPATH);
+        WebElement importStatus = driver.findElement(By.xpath(UPLOAD_STATUS_XPATH));
         return importStatus.getText();
     }
 }
