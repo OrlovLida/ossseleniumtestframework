@@ -57,16 +57,6 @@ public class ButtonContainer implements ActionsInterface {
     }
 
     @Override
-    public void callAction(String actionId) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
-    }
-
-    @Override
-    public void callAction(String groupId, String actionId) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
-    }
-
-    @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }

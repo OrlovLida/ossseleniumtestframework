@@ -117,7 +117,7 @@ public class TabsWidget implements TabsInterface {
 
     @Override
     public void callAction(String groupId, String actionId) {
-        getActionsInterface().callAction(groupId, actionId);
+        getActionsInterface().callActionById(groupId, actionId);
 
     }
 
@@ -133,7 +133,7 @@ public class TabsWidget implements TabsInterface {
 
     @Override
     public void callActionById(String groupId, String actionId) {
-        getActionsInterface().callAction(groupId, actionId);
+        getActionsInterface().callActionById(groupId, actionId);
     }
 
     @Override

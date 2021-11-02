@@ -41,27 +41,9 @@ public class ActionsContainer implements ActionsInterface {
         this.webDriverWait = webDriverWait;
     }
 
-    public void callAction(String actionId) {
-        callAction(null, actionId);
-    }
-
     @Override
     public void callActionByLabel(String label) {
         throw new UnsupportedOperationException("Method not implemented for Actions Container");
-    }
-
-    public void callAction(String groupId, String actionId) {
-        if (groupId != null) {
-            if (ActionsContainer.KEBAB_GROUP_ID.equals(groupId)) {
-                callActionFromKebab(actionId);
-                return;
-            }
-            clickOnGroup(groupId);
-            Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
-            dropdown.callAction(actionId);
-        } else {
-            clickOnAction(actionId);
-        }
     }
 
     @Override
@@ -73,6 +55,10 @@ public class ActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionById(String groupId, String actionId) {
+        if (ActionsContainer.KEBAB_GROUP_ID.equals(groupId)) {
+            callActionFromKebab(actionId);
+            return;
+        }
         clickOnGroup(groupId);
         Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
         dropdown.callAction(actionId);
@@ -120,7 +106,7 @@ public class ActionsContainer implements ActionsInterface {
         return !webElement.findElements(by).isEmpty();
     }
 
-    private void clickOnAction(String actionId) {
+    public void clickOnAction(String actionId) {
         // Info: Action for inline
         if (!webDriver.findElements(By.className(ACTIONS_LIST)).isEmpty()) {
             Dropdown.create(webDriver, webDriverWait).callAction(actionId);
@@ -154,6 +140,5 @@ public class ActionsContainer implements ActionsInterface {
             DelayUtils.waitForNestedElements(webDriverWait, this.webElement, "//a[contains(text(),'" + actionLabel + "')]");
             webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.xpath("//a[contains(text(),'" + actionLabel + "')]")))).click();
         }
-
     }
 }
