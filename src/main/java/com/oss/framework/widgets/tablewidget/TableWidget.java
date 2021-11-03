@@ -330,8 +330,8 @@ public class TableWidget extends Widget implements TableInterface {
         }
         return tableComponent;
     }
-
-    private AdvancedSearch getAdvancedSearch() {
+    
+    public AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
             advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
         }

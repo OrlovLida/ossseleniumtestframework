@@ -23,6 +23,7 @@ public class FiltersSettings {
     private static final String SAVED_FILTERS_SELECTOR = ".filters-element-list > div.filters-element";
     private static final String ATTRIBUTE_PATH = ".//div[@class='custom-light-checkbox']";
     private static final String SAVED_FILTERS_TAB_SELECTOR = "div.filters-buttons-container > div:last-child";
+    private static final String SAVED_FILTER_LABEL = ".//div[@class='filter-label']";
     
     private static final String SAVE_LABEl = "Save";
     private static final String APPLY_LABEL = "Apply";
@@ -48,7 +49,6 @@ public class FiltersSettings {
     private List<Attribute> getAllAttributes() {
         List<WebElement> attributes = this.webElement.findElements(By.xpath(ATTRIBUTE_PATH));
         return attributes.stream().map(Attribute::new).collect(Collectors.toList());
-        
     }
     
     private void openSavedFilters() {
@@ -64,45 +64,35 @@ public class FiltersSettings {
                 .findFirst();
     }
     
-    private List<WebElement> getFiltersList() {
+    public List<SavedFilter> getFiltersList() {
         openSavedFilters();
-        
-        DelayUtils.waitByXPath(wait, ".//div[@class='filter-label']");
-        return this.webElement.findElements(By.cssSelector(SAVED_FILTERS_SELECTOR));
+        DelayUtils.waitByXPath(wait, "//div[@class='filters-list']");
+        return this.webElement.findElements(By.cssSelector(SAVED_FILTERS_SELECTOR)).stream().map(SavedFilter::new)
+                .collect(Collectors.toList());
     }
-    
-    private Optional<WebElement> getFilterByLabel(String filterLabel) {
-        return getFiltersList().stream().filter(filter -> {
-            String label = filter.findElement(By.xpath(".//div[@class='filter-label']")).getText();
-            return label.contains(filterLabel);
-        }).findFirst();
+
+    private Optional<SavedFilter> getFilterByLabel(String filterLabel) {
+        return getFiltersList().stream().filter(filter -> filter.getFilterLabel().contains(filterLabel)).findFirst();
     }
     
     public void markFilterAsFavByLabel(String filterLabel) {
-        Optional<WebElement> theFilter = getFilterByLabel(filterLabel);
-        if (theFilter.isPresent()) {
-            WebElement filter = theFilter.get();
-            WebElement icon = filter.findElement(By.xpath(".//div[@class='filters-element-icon']//i"));
-            if (CSSUtils.getAttributeValue("aria-label", icon).equals("STAR")) {
-                icon.click();
-            }
-            log.info("Filter is already mark as favorite");
-        }
-    }
-    
-    public void choseFilterByLabel(String filterLabel) {
-        getFilterByLabel(filterLabel).ifPresent(WebElement::click);
-        getSaveButton(APPLY_LABEL).ifPresent(WebElement::click);
+        Optional<SavedFilter> theFilter = getFilterByLabel(filterLabel);
+        theFilter.ifPresent(SavedFilter::markAsFavorite);
     }
 
+    public void choseFilterByLabel(String filterLabel) {
+        getFilterByLabel(filterLabel).ifPresent(SavedFilter::chooseFilter);
+        getSaveButton(APPLY_LABEL).ifPresent(WebElement::click);
+    }
+    
     private List<Attribute> getAttributes(List<String> attributeIds) {
         return getAllAttributes().stream().filter(filter -> {
             String attributeId = filter.getAttributeId();
             return attributeIds.contains(attributeId);
         }).collect(Collectors.toList());
     }
-
-    public void unselectAttributes(List<String> attributeIds){
+    
+    public void unselectAttributes(List<String> attributeIds) {
         List<Attribute> attribute = getAttributes(attributeIds);
         attribute.forEach(a -> {
             if (a.isSelected()) {
@@ -121,7 +111,6 @@ public class FiltersSettings {
         });
         getSaveButton(SAVE_LABEl).ifPresent(WebElement::click);
     }
-
     
     private static class Attribute {
         private final WebElement attribute;
@@ -141,7 +130,36 @@ public class FiltersSettings {
         private void toggleAttributes() {
             attribute.findElement(By.xpath(".//input")).click();
         }
+    }
+    
+    protected static class SavedFilter {
+        private final WebElement filter;
         
+        private SavedFilter(WebElement filter) {
+            this.filter = filter;
+        }
+        
+        public boolean isFavorite() {
+            return getStar().getAttribute("aria-label").equals("FAVOURITE");
+        }
+        
+        public String getFilterLabel() {
+            return filter.getText();
+        }
+        
+        private void markAsFavorite() {
+            if (!isFavorite()) {
+                getStar().click();
+            }
+        }
+        
+        private WebElement getStar() {
+            return filter.findElement(By.xpath(".//div[@class='filters-element-icon']//i"));
+        }
+        
+        private void chooseFilter() {
+            filter.click();
+        }
     }
     
 }

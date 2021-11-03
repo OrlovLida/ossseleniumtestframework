@@ -37,6 +37,7 @@ public class AdvancedSearch {
     
     private SearchPanel searchPanel;
     private Tags tags;
+    private FiltersSettings filtersSettings;
     
     public static AdvancedSearch createByClass(WebDriver driver, WebDriverWait wait, String className) {
         DelayUtils.waitByXPath(wait, "//*[@class='" + className + "']");
@@ -148,28 +149,46 @@ public class AdvancedSearch {
         }
     }
     
+    private void openFiltersSettings() {
+        if (!isFiltersSettingsOpen()) {
+            openSearchPanel();
+            searchPanel.openFiltersSettings();
+        }
+        DelayUtils.waitBy(this.wait, By.xpath("//div[contains(@class,'filters-settings')]"));
+        this.filtersSettings = FiltersSettings.create(this.driver, this.wait);
+    }
+    
+    private boolean isFiltersSettingsOpen() {
+        return driver.findElements(By.className("filters-settings"))
+                .size() > 0;
+    }
+    
     public void markFilterAsFavByLabel(String label) {
-        this.searchPanel.openFiltersSettings();
-        this.searchPanel.markFilterAsFavByLabel(label);
+        openFiltersSettings();
+        filtersSettings.markFilterAsFavByLabel(label);
     }
     
     public void selectAttributes(List<String> attributeIds) {
-        this.searchPanel.openFiltersSettings();
-        this.searchPanel.selectAttributes(attributeIds);
+        openFiltersSettings();
+        filtersSettings.selectAttributes(attributeIds);
     }
     
     public void unselectAttributes(List<String> attributeIds) {
-        this.searchPanel.openFiltersSettings();
-        this.searchPanel.unselectAttributes(attributeIds);
+        openFiltersSettings();
+        filtersSettings.unselectAttributes(attributeIds);
     }
     
     public void choseSavedFilterByLabel(String label) {
-        this.searchPanel.openFiltersSettings();
-        this.searchPanel.choseSavedFilterByLabel(label);
+        openFiltersSettings();
+        filtersSettings.choseFilterByLabel(label);
     }
     
     public void saveAsNewFilter(String name) {
+        openSearchPanel();
         this.searchPanel.saveAsNewFilter(name);
+    }
+    public void saveFilter(){
+        this.searchPanel.saveFilter();
     }
     
     public Input getComponent(String componentId, ComponentType componentType) {
@@ -196,6 +215,18 @@ public class AdvancedSearch {
     
     public List<String> getAllVisibleFilters() {
         return this.searchPanel.getAllVisibleFilters();
+    }
+    
+    public List<String> getSavedFilters() {
+        openFiltersSettings();
+        return filtersSettings.getFiltersList().stream().map(FiltersSettings.SavedFilter::getFilterLabel).collect(Collectors.toList());
+    }
+    
+    public List<String> getFavoriteFilters() {
+        openFiltersSettings();
+        return filtersSettings.getFiltersList().stream().filter(FiltersSettings.SavedFilter::isFavorite)
+                .map(FiltersSettings.SavedFilter::getFilterLabel).collect(Collectors.toList());
+        
     }
     
     @Deprecated
