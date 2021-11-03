@@ -19,7 +19,6 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String MAIN_WINDOW_TOOLBAR = "//div[@class='OssWindow']//div[@class='windowHeader']//div[@class='windowToolbar']";
     private static final String MORE_GROUP_DATA_GROUP_ID = "frameworkCustomMore";
     private static final String GROUP_BY_DATA_GROUP_ID_XPATH = ".//li[@data-group-id='%s']//button";
-    private static final String ACTION_FROM_LIST_XPATH = "//ul[contains(@class,'widgetList')]//a[@data-attributename='%s']";
     private static final String ACTION_BY_LABEL_XPATH = ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')]";
     private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for the old actions container";
     private static final String KEBAB_BUTTON_XPATH = "//li[@data-group-id='frameworkCustomEllipsis']";
@@ -55,11 +54,6 @@ public class OldActionsContainer implements ActionsInterface {
     }
 
     @Override
-    public void callAction(String actionId) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
-    }
-
-    @Override
     public void callActionByLabel(String label) {
         DelayUtils.waitForNestedElements(wait, this.toolbar,
                 String.format(ACTION_BY_LABEL_XPATH, label, label));
@@ -67,20 +61,6 @@ public class OldActionsContainer implements ActionsInterface {
                 this.toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_XPATH, label, label)));
         wait.until(ExpectedConditions.elementToBeClickable(action));
         action.click();
-    }
-
-    @Override
-    public void callAction(String groupId, String actionId) {
-        if (KEBAB_GROUP_ID.equals(groupId)) {
-            callActionFromKebab(actionId);
-            return;
-        }
-        DelayUtils.waitForNestedElements(wait, toolbar, String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId));
-        wait.until(
-                ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId)))))
-                .click();
-        wait.until(ExpectedConditions
-                .elementToBeClickable(By.xpath(String.format(ACTION_FROM_LIST_XPATH, actionId)))).click();
     }
 
     private void callActionFromKebab(String actionId) {
@@ -110,9 +90,17 @@ public class OldActionsContainer implements ActionsInterface {
     }
 
     @Override
-    public void callActionById(String groupId, String actionDataAttributeName) {
-        clickGroupByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId));
-        clickActionByXpath(String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName));
+    public void callActionById(String groupId, String actionId) {
+        if (KEBAB_GROUP_ID.equals(groupId)) {
+            callActionFromKebab(actionId);
+            return;
+        }
+        DelayUtils.waitForNestedElements(wait, toolbar, String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId));
+        wait.until(
+                ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId)))))
+                .click();
+        wait.until(ExpectedConditions
+                .elementToBeClickable(By.xpath(String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionId, actionId)))).click();
     }
 
     public void callActionById(String groupId, String innerGroupDataAttributeName, String actionDataAttributeName) {
