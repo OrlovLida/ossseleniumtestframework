@@ -27,4 +27,6 @@ public interface TabsInterface {
     boolean isNoData(String id);
 
     void clickButtonByLabel(String label);
+
+    void clickButtonById(String id);
 }
