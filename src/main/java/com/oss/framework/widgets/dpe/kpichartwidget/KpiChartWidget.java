@@ -19,51 +19,38 @@ import static com.oss.framework.logging.LoggerMessages.MOVE_MOUSE_OVER;
 public class KpiChartWidget extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(KpiChartWidget.class);
-    private static final String KPI_CHART_WIDGET_PATH = "//*[starts-with(@class,'amcharts-Rectangle')]";
-
-    private static final String GRAPH_LOCATOR_PATH = "//*[starts-with(@class,'multipleChart ')]";
-    private static final String COLLAPSED_GRAPH_MENU_PATH = "//*[@class='fa fa-chevron-right']/..";
-    private static final String EXPANDED_GRAPH_MENU_PATH = "//*[@class='fa fa-chevron-left']/..";
-
-    private static final String RESIZE_CHART_PATH = "//a[@class='fullScreenButton']";
-    private static final String MAXIMIZE_CHART_PATH = "//i[@aria-label='Expand']";
-    private static final String MINIMIZE_CHART_PATH = "//i[@aria-label='Collapse']";
+    private static final String KPI_CHART_WIDGET_PATH = "//*[@" + CSSUtils.TEST_ID + "='am-chart-wrapper']";
+    private static final String KPI_CHART_WIDGET_ID = "am-chart-wrapper";
 
     private static final String CHART_COLUMN_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='menuitem')]";
     private static final String CHART_LINE_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='group')]";
     private static final String BARCHART_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='list')]";
+    private static final String PIE_CHART_PATH = ".//*[contains(@class, 'amcharts-PieChart-group')]";
 
-    private static final String EXPAND_DATA_VIEW_PATH =
-            "//div[contains(@data-testid, '_Data_View')]//a[contains(@class, 'fullScreenButton')]";
-    private static final String CHART_ACTIONS_BUTTON_ID = "context-action-panel";
     private static final String LEGEND_PATH = "//*[starts-with(@class,'amcharts-Container amcharts-Component amcharts-Legend')]";
-    private static final String DATA_SERIES_COLOR_BUTTON_PATH = "//div[@class='colorPickerWrapper']";
-    private static final String FIRST_COLOR_BUTTON_PATH = "//div[@class='color-picker__color-table-cell']";
     private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
 
     private static final String HIDDEN_Y_AXIS_PATH = "//*[@display = 'none' and contains (@class,'amcharts-v')]";
     private static final String VISIBLE_Y_AXIS_PATH = "//*[not (contains(@display, 'none')) and contains (@class,'amcharts-v')]";
     private static final String Y_AXIS_VALUES_PATH = "//*[contains(@class, 'amcharts-AxisLabel' and @style, 'user-select')]"; // do zbadania wartości na Y axis
 
-    //do przerobienia z datatest id
-    private static final String LAST_SAMPLE_DISPLAYED_PATH = "//*[contains(text(),'Last sample:')]/ancestor::*[contains(@class,'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and not (contains(@display, 'none'))]";
-    private static final String DATA_COMPLETENESS_DISPLAYED_PATH = "//*[contains(text(), '%')]/ancestor::*[contains(@class, 'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and contains(@style, 'pointer-events: none')]";
-    private static final String OTHER_PERIOD_DISPLAYED_PATH = "//*[contains(text(), 'Other')]/ancestor::*[contains(@class, 'amcharts-Sprite-group amcharts-Container-group amcharts-Label-group') and contains(@style, 'pointer-events: none')]";
-
-    // ponizsze DWA do przeniesienia do kpitreeWidget
+    private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[contains(@data-testid, 'last-sample-time-chart')]";
+    private static final String DATA_COMPLETENESS_DISPLAYED_PATH = ".//*[@data-testid='amchart-legend-selected']//*[contains(text(), '%')]";
+    private static final String OTHER_PERIOD_DISPLAYED_PATH = ".//*[@data-testid='amchart-legend-other-period']";
+    
     private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DATA_VIEW_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
 
-    public KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
-        super(driver, webElement, webDriverWait);
+    private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
+        super(driver, webDriverWait, widgetId, widget);
     }
 
     public static KpiChartWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, KPI_CHART_WIDGET_PATH);
-        WebElement webElement = driver.findElement(By.xpath(KPI_CHART_WIDGET_PATH));
+        WebElement widget = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + KPI_CHART_WIDGET_ID + "']"));
 
-        return new KpiChartWidget(driver, wait, webElement);
+        return new KpiChartWidget(driver, wait, KPI_CHART_WIDGET_ID, widget);
     }
 
     public void waitForPresenceAndVisibility() {
@@ -107,6 +94,12 @@ public class KpiChartWidget extends Widget {
         int linesCount = this.webElement.findElements(By.xpath(CHART_LINE_PATH)).size();
         log.debug("Lines count: {}", linesCount);
         return linesCount;
+    }
+
+    public int countPieCharts() {
+        int pieChartsCount = this.webElement.findElements(By.xpath(PIE_CHART_PATH)).size();
+        log.debug("Number of visible Pie Charts is: {}", pieChartsCount);
+        return pieChartsCount;
     }
 
     public int countVisiblePoints() {

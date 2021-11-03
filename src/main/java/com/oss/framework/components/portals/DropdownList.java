@@ -53,9 +53,9 @@ public class DropdownList {
     public void selectOptionWithId(String option) {
         Actions action = new Actions(driver);
         DelayUtils.waitByElement(wait, dropdownList
-                .findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + option + "'] | .//*[@id='" + option + "'] ")));
+                .findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + option + "'] | .//*[@id='" + option + "'] ")));
         WebElement foundedElement = dropdownList
-                .findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + option + "'] | .//*[@id='" + option + "'] "));
+                .findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + option + "'] | .//*[@id='" + option + "'] "));
         action.moveToElement(foundedElement).click().perform();
     }
 
