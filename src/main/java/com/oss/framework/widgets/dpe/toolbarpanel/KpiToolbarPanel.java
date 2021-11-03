@@ -56,9 +56,9 @@ public class KpiToolbarPanel extends Widget {
         log.debug(CLICK_BTN + "Apply");
     }
 
-    public void selectDisplayType(String displayTypeLabel) {
+    public void selectDisplayType(String displayTypeId) {
         webElement.findElement(By.xpath(DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH)).click();
-        DropdownList.create(driver, webDriverWait).selectOptionContains(displayTypeLabel);
+        DropdownList.create(driver, webDriverWait).selectOptionWithId(displayTypeId);
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
     }
 }
