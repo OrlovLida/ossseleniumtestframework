@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -102,7 +107,7 @@ public class TreeWidget extends Widget {
     }
 
     public void scrollToTreeRowContains(String name) {
-         WebElement row = this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]"));
+        WebElement row = this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", row);
     }
 
@@ -283,7 +288,7 @@ public class TreeWidget extends Widget {
 
     public void callActionById(String groupLabel, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
-        actionsContainer.callAction(groupLabel, id);
+        actionsContainer.callActionById(groupLabel, id);
     }
 
     public static class Node {

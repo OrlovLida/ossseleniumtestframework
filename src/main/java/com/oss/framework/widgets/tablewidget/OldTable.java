@@ -210,7 +210,7 @@ public class OldTable implements TableInterface {
 
     @Override
     public void callAction(String groupId, String actionId) {
-        getActionsInterface().callAction(groupId, actionId);
+        getActionsInterface().callActionById(groupId, actionId);
     }
 
     @Override
