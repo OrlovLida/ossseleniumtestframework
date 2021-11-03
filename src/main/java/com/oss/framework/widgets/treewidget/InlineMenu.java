@@ -29,7 +29,7 @@ public class InlineMenu {
 
     public void callAction(String actionId) {
         clickActionGroup();
-        ActionsContainer.createFromParent(webElement, driver, wait).clickOnAction(actionId);
+        ActionsContainer.createFromParent(webElement, driver, wait).callActionForInline(actionId);
     }
 
     public void callAction(String groupId, String actionId) {

@@ -106,8 +106,7 @@ public class ActionsContainer implements ActionsInterface {
         return !webElement.findElements(by).isEmpty();
     }
 
-    public void clickOnAction(String actionId) {
-        // Info: Action for inline
+    public void callActionForInline(String actionId) {
         if (!webDriver.findElements(By.className(ACTIONS_LIST)).isEmpty()) {
             Dropdown.create(webDriver, webDriverWait).callAction(actionId);
             return;
