@@ -110,16 +110,11 @@ public class DelayUtils {
         return newList;
     }
 
-    public static void waitForButtonDisappear(WebDriver driver, WebDriverWait wait, String buttonXpath) {
+    public static void waitForButtonDisappear(WebDriver driver, String buttonXpath) {
         DelayUtils.sleep(1000);
         List<WebElement> newList = listOfButtonLoader(driver, buttonXpath);
         long startTime = System.currentTimeMillis();
         while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
-            try {
-                wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
-            } catch (TimeoutException | ScriptTimeoutException e) {
-                log.warn("Some element(s) could not be loaded in the expected time");
-            }
             DelayUtils.sleep(500);
             newList = listOfButtonLoader(driver, buttonXpath);
         }
@@ -131,12 +126,18 @@ public class DelayUtils {
 
     private static List<WebElement> listOfButtonLoader(WebDriver driver, String buttonXpath) {
         List<WebElement> button = driver.findElements(By.xpath(buttonXpath));
-        List<WebElement> actionInProgress = driver.findElements(By.xpath("//*[@class='action inProgress']"));
-        List<WebElement> buttonInProgress = driver.findElements(By.xpath("//i[contains(@class, 'fa-spin')]"));
+        List<WebElement> actionInProgress = driver.findElements(By.xpath(buttonXpath + "//*[@class='action inProgress']"));
+        List<WebElement> buttonInProgress = driver.findElements(By.xpath(buttonXpath + "//i[contains(@class, 'fa-spin')]"));
         List<WebElement> newList = new ArrayList<>(button);
         newList.addAll(actionInProgress);
         newList.addAll(buttonInProgress);
         return newList;
     }
 
+    public static void waitForSpinners(WebDriverWait webDriverWait, WebElement webElement) {
+        List<WebElement> spinner = webElement.findElements(By.xpath(".//i[contains(@class,'fa-spin')]"));
+        if (!spinner.isEmpty()) {
+            DelayUtils.waitForElementDisappear(webDriverWait, spinner.get(0));
+        }
+    }
 }

@@ -119,7 +119,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void callAction(String groupId, String actionId) {
-        getContextActions().callAction(groupId, actionId);
+        getContextActions().callActionById(groupId, actionId);
     }
 
     @Override
@@ -152,9 +152,14 @@ public class TableWidget extends Widget implements TableInterface {
         }
     }
 
-    public void toggleVisibilitySearchAttributes(List<String> attributeIds) {
+    public void selectVisibilitySearchAttributes(List<String> attributeIds) {
         openAdvancedSearch();
-        getAdvancedSearch().toggleAttributes(attributeIds);
+        getAdvancedSearch().selectAttributes(attributeIds);
+    }
+
+    public void unselectVisibilitySearchAttributes(List<String> attributeIds) {
+        openAdvancedSearch();
+        getAdvancedSearch().unselectAttributes(attributeIds);
     }
 
     public List<String> getAllVisibleFilters() {
@@ -176,6 +181,11 @@ public class TableWidget extends Widget implements TableInterface {
     public List<TableRow> getSelectedRows() {
         return getTableComponent().getVisibleRows().stream()
                 .filter(TableRow::isSelected).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getCellValueById(int row, String columnId) {
+        return getCellValue(row, columnId);
     }
 
     @Override

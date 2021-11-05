@@ -32,7 +32,7 @@ public class EditableList extends Widget {
     private static final String LIST_WIDGET_CLASS = "ExtendedList";
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
-
+    
     public static EditableList create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]"));
         return new EditableList(driver, LIST_WIDGET_CLASS, webDriverWait);
@@ -61,28 +61,28 @@ public class EditableList extends Widget {
     }
     
     public void setValueByRowIndex(int rowIndex, String value, String columnId, String componentId, Input.ComponentType componentType) {
-        Row row = selectRow(rowIndex - 1);
+        Row row = getRow(rowIndex - 1);
         row.setEditableAttributeValue(value, columnId, componentId, componentType);
     }
     
     public void callActionByLabel(String actionLabel, int row) {
-        selectRow(row - 1).click();
+        getRow(row - 1).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
     }
     
     public void callActionByLabel(String actionLabel, String columnId, String value) {
-        selectRowByAttributeValue(columnId, value).click();
+        getRowByAttributeValue(columnId, value).click();
         ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
         action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
     }
-
+    
     public void callActionIcon(String actionLabel, int row) {
-        selectRow(row - 1).callActionIcon(actionLabel);
+        getRow(row - 1).callActionIcon(actionLabel);
     }
-
+    
     public void callActionIcon(String actionLabel, String columnId, String value) {
-        selectRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
+        getRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
     }
     
     // TODO update xpath
@@ -96,14 +96,14 @@ public class EditableList extends Widget {
         return values;
     }
     
-    public Row selectRow(int row) {
+    public Row getRow(int row) {
         return getVisibleRows().get(row);
     }
     
-    public Row selectRowByAttributeValue(String columnId, String value) {
+    public Row getRowByAttributeValue(String columnId, String value) {
         List<Row> allRows = getVisibleRows();
         for (Row row: allRows) {
-            Row.Cell cell = row.selectCell(columnId);
+            Row.Cell cell = row.getCell(columnId);
             String getValue = cell.getText();
             if (getValue.equals(value)) {
                 return row;
@@ -130,6 +130,7 @@ public class EditableList extends Widget {
     }
     
     public static class Row {
+        private static final String ROW_CHECKBOX_XPATH = ".//div[contains(@class,'checkbox')]";
         
         private final WebDriver driver;
         private final WebDriverWait wait;
@@ -144,31 +145,34 @@ public class EditableList extends Widget {
         }
         
         public void click() {
-            webElement.click();
-        }
-        
-        public Cell selectCell(String columnId) {
-            if (columnId.contains(String.valueOf(index))) {
-                DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']");
-                WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']"));
-                return new Cell(driver, wait, cell);
+            if (isCheckboxEnabled()) {
+                WebElement checkbox = webElement.findElement(By.xpath(ROW_CHECKBOX_XPATH));
+                checkbox.click();
             } else {
-                DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']");
-                WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']"));
-                return new Cell(driver, wait, cell);
+                webElement.click();
             }
         }
         
-        public String getAttributeValue(String columnId) {
-            return selectCell(columnId).getText();
+        private boolean isCheckboxEnabled() {
+            return !webElement.findElements(By.xpath(ROW_CHECKBOX_XPATH)).isEmpty();
+        }
+        
+        public Cell getCell(String columnId) {
+            DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']");
+            WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']"));
+            return new Cell(driver, wait, cell);
+        }
+        
+        public String getCellValue(String columnId) {
+            return getCell(columnId).getText();
         }
         
         public void setEditableAttributeValue(String value, String columnId, String componentId, Input.ComponentType componentType) {
-            selectCell(columnId).setValue(value, componentId, componentType);
+            getCell(columnId).setValue(value, componentId, componentType);
         }
         
         public void clearValue(String columnId, String componentId, Input.ComponentType componentType) {
-            selectCell(columnId).clearValue(componentId, componentType);
+            getCell(columnId).clearValue(componentId, componentType);
         }
         
         public boolean isEditableAttribute(String columnId) {

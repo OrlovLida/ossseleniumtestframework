@@ -39,7 +39,7 @@ public class SearchPanel {
                 driver.findElement(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
         return new SearchPanel(driver, wait, webElement);
     }
-
+    
     private SearchPanel(WebDriver driver, WebDriverWait wait, WebElement webElement) {
         this.driver = driver;
         this.wait = wait;
@@ -94,7 +94,11 @@ public class SearchPanel {
         DelayUtils.waitForPageToLoad(driver, wait);
     }
     
-    public void toggleAttributes(List<String> attributeIds) {
-        getFiltersSettings().toggleAttributes(attributeIds);
+    public void selectAttributes(List<String> attributeIds) {
+        getFiltersSettings().selectAttributes(attributeIds);
+    }
+    
+    public void unselectAttributes(List<String> attributeIds) {
+        getFiltersSettings().unselectAttributes(attributeIds);
     }
 }

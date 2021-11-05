@@ -72,17 +72,16 @@ public class TableComponent {
     }
     
     public List<TableRow> getVisibleRows() {
+        String firstColumn = getColumnIds().stream().findFirst().orElse("");
+        String xpath = ".//div[@data-col='"+firstColumn+"']";
+
         List<Integer> rowIds = this.webElement
-                .findElements(By.xpath(getTableCellsPath()))
-                .stream().filter(e -> e.getAttribute("data-row") != null).map(e -> e.getAttribute("data-row"))
-                .distinct().map(Integer::parseInt).sorted().collect(Collectors.toList());
+                .findElements(By.xpath(xpath))
+                .stream().filter(e -> e.getAttribute("data-col").equals(firstColumn)).filter(e -> e.getAttribute("data-row") != null)
+                .map(e -> e.getAttribute("data-row"))
+                .map(Integer::parseInt).sorted().collect(Collectors.toList());
         
         return rowIds.stream().map(index -> new Row(this.driver, this.webDriverWait, this.webElement, index)).collect(Collectors.toList());
-    }
-    
-    private String getTableCellsPath() {
-        return ".//div[contains(@" + CSSUtils.TEST_ID
-                + ", 'table-content-scrollbar')]//div[contains(@class, 'table-component__cell')]";
     }
     
     public void scrollHorizontally(int offset) {

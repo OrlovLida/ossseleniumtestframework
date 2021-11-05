@@ -56,17 +56,11 @@ public class TreeWidgetV2 extends Widget {
 
     public void callActionById(String groupLabel, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
-        actionsContainer.callAction(groupLabel, id);
+        actionsContainer.callActionById(groupLabel, id);
     }
 
     public void selectNodeByLabel(String label) {
         getNode(label).toggleNode();
-    }
-
-    @Deprecated
-    public void expandNode() {
-        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
-        getVisibleNodes().get(0).expandNode();
     }
 
     public void expandNodeWithLabel(String label) {

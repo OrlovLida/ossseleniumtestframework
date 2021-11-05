@@ -2,9 +2,9 @@ package com.oss.framework.components.inputs;
 
 import com.oss.framework.utils.CSSUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 public class Button {
 
@@ -66,11 +66,7 @@ public class Button {
     }
 
     public void click() {
-        scrollToButton();
-        this.webElement.click();
-    }
-
-    private void scrollToButton() {
-        ((JavascriptExecutor) this.webDriver).executeScript("arguments[0].scrollIntoView();", webElement);
+        Actions action = new Actions(webDriver);
+        action.moveToElement(this.webElement).click(this.webElement).build().perform();
     }
 }

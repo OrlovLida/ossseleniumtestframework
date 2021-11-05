@@ -26,7 +26,7 @@ public abstract class Input {
     public enum ComponentType {
         TEXT_FIELD, TEXT_AREA, PASSWORD_FIELD, NUMBER_FIELD,
         DATE_TIME_RANGE, DATE_TIME, TIME, CHECKBOX, DATE,
-        SWITCHER, SEARCH_FIELD, MULTI_SEARCH_FIELD, COMBOBOX, COMBOBOXV2,
+        SWITCHER, SEARCH_FIELD, MULTI_SEARCH_FIELD, COMBOBOX,
         MULTI_COMBOBOX, FILE_CHOOSER, COORDINATES, PHONE_FIELD,
         RADIO_BUTTON, SCRIPT_COMPONENT, BPM_COMBOBOX, OBJECT_SEARCH_FIELD
     }
@@ -86,7 +86,7 @@ public abstract class Input {
     }
 
     public final List<String> getHint() {
-        Tooltip tooltip = Tooltip.create(driver,webDriverWait, componentId);
+        Tooltip tooltip = Tooltip.create(driver, webDriverWait, componentId);
         return tooltip.getMessages();
     }
 

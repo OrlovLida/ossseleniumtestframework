@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.dpe.treewidget;
 
+import com.oss.framework.components.inputs.Button;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -26,6 +27,7 @@ public class KpiTreeWidget extends Widget {
     private final String WINDOW_XPATH = ".//ancestor::*[@class='card-shadow']";
     private final String CARD_SHADOW_XPATH = "//*[@class='card-shadow']";
     private final String TOOLBAR_INPUT_ID = "search-toolbar-input";
+    private final String DIMENSION_OPTIONS_BUTTON_ID = "dimension-options-button";
 
     public KpiTreeWidget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -133,5 +135,11 @@ public class KpiTreeWidget extends Widget {
                 .build()
                 .perform();
         log.debug("Clicking on first result in the list");
+    }
+
+    public void clickNodeOptions(String nodeName) {
+        String nodeXpath = "div[@title ='" + nodeName + "']//*";
+        Button.createByXpath(DIMENSION_OPTIONS_BUTTON_ID, nodeXpath, CSSUtils.TEST_ID, driver).click();
+        log.debug("Clicking dimension options on node: {}", nodeName);
     }
 }

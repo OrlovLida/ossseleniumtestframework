@@ -1,7 +1,7 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
 import com.oss.framework.components.inputs.Button;
-import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
@@ -19,6 +19,7 @@ public class KpiToolbarPanel extends Widget {
 
     final static String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
     private final static String APPLY_BUTTON_ID = "apply-button";
+    private static final String DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH = ".//div[@data-testid='dropdown_list_type_display_data']";
 
     private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -53,5 +54,11 @@ public class KpiToolbarPanel extends Widget {
         applyButton.click();
 
         log.debug(CLICK_BTN + "Apply");
+    }
+
+    public void selectDisplayType(String displayTypeId) {
+        webElement.findElement(By.xpath(DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH)).click();
+        DropdownList.create(driver, webDriverWait).selectOptionWithId(displayTypeId);
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
     }
 }
