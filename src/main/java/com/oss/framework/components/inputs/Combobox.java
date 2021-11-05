@@ -1,24 +1,25 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.data.Data;
-import com.oss.framework.data.Data.DataWrapper;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.data.Data;
+import com.oss.framework.data.Data.DataWrapper;
+import com.oss.framework.utils.DelayUtils;
 
 public class Combobox extends Input {
 
     private static final String INPUT_XPATH = ".//input";
     private static final String LABEL_XPATH = ".//label";
     private static final String COMBOBOX_INPUT_XPATH = ".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]";
-    private static final String COMBOBOX_CLOSE_XPATH = ".//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]";
+    private static final String COMBOBOX_CLOSE_XPATH = ".//i[contains(@class,'OSSIcon ossfont-close button-close')]";
     private static final String LIST_ITEM_XPATH = "//div[@class='list-item'] | //div[@class='combo-box__list-item']";
 
     // TODO: remove after resolving OSSSD-2035 - setting data-testId in status Combobox
@@ -64,7 +65,7 @@ public class Combobox extends Input {
         input.sendKeys(wrapper.getReadableValue());
 
         if (wrapper.isFindFirst()) {
-            DelayUtils.sleep(); //TODO: wait for spinners
+            DelayUtils.waitForPageToLoad(driver, webDriverWait);
             input.sendKeys(Keys.DOWN);
             input.sendKeys(Keys.RETURN);
             return;
@@ -97,13 +98,9 @@ public class Combobox extends Input {
 
     }
 
-    public Data getSelectedValue() {
-        return Data.createSingleData(webElement.findElement(By.xpath(INPUT_XPATH)).getText());
-    }
-
     @Override
     public void clear() {
-        DelayUtils.waitForPageToLoad(driver,webDriverWait);
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         List<WebElement> closeButtons = this.webElement.findElements(By.xpath(COMBOBOX_CLOSE_XPATH));
         closeButtons.forEach(WebElement::click);
     }
