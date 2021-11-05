@@ -1,5 +1,16 @@
 package com.oss.framework.listwidget;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.portals.DropdownList;
@@ -7,13 +18,6 @@ import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.treewidget.InlineMenu;
-
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommonList {
     
@@ -82,10 +86,10 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         expandAllCategories();
         List<Row> rows = createRows();
-       // int rowSize = rows.size();
-        for (Row row : rows) {
+        // int rowSize = rows.size();
+        for (Row row: rows) {
             DelayUtils.waitForPageToLoad(driver, wait);
-            row.callAction( REMOVE_ACTION_ID);
+            row.callAction(REMOVE_ACTION_ID);
             DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
@@ -98,7 +102,7 @@ public class CommonList {
     public void expandAllCategories() {
         DelayUtils.waitForPageToLoad(driver, wait);
         List<Category> categories = createCategories();
-       categories.forEach(Category::expandCategory);
+        categories.forEach(Category::expandCategory);
     }
     
     public void collapseAllCategories() {
@@ -127,7 +131,7 @@ public class CommonList {
     }
     
     public boolean isCategoryVisible(String name) {
-       return createCategories().stream().map(category -> category.getValue().equals(name)).count() !=0;
+        return createCategories().stream().map(category -> category.getValue().equals(name)).count() != 0;
     }
     
     @Deprecated
@@ -237,11 +241,11 @@ public class CommonList {
     public void selectRow(int row) {
         createRows().get(row).selectRow();
     }
-
+    
     public List<Row> getAllRows() {
         return createRows();
     }
-
+    
     public Row getRow(String attributeName, String value) {
         return createRows().stream().filter(row -> row.getValue(attributeName).equals(value))
                 .findFirst()
@@ -269,22 +273,25 @@ public class CommonList {
         List<WebElement> categories = getCommonList().findElements(By.xpath(".//li[@class='categoryListElement']"));
         return categories.stream().map(category -> new Category(driver, wait, category)).collect(Collectors.toList());
     }
-    public void fullTextSearch(String value){
+    
+    public void fullTextSearch(String value) {
         getAdvanceSearch().fullTextSearch(value);
     }
-
+    
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         openAdvancedSearch();
         setFilterContains(attributeId, componentType, value);
         getAdvanceSearch().clickApply();
     }
+    
     private void openAdvancedSearch() {
         getAdvanceSearch().openSearchPanel();
     }
-
-    private AdvancedSearch getAdvanceSearch(){
-        return AdvancedSearch.createByWidgetId(driver,wait,id);
+    
+    private AdvancedSearch getAdvanceSearch() {
+        return AdvancedSearch.createByWidgetId(driver, wait, id);
     }
+    
     private void setFilterContains(String componentId, Input.ComponentType componentType, String value) {
         Input input = getAdvanceSearch().getComponent(componentId, componentType);
         input.setSingleStringValue(value);
@@ -329,25 +336,17 @@ public class CommonList {
             }
         }
         
-        // add checking for other other actions
+        // add checking for other actions
         public boolean isActionVisible(String actionId) {
-            
             return !row.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty();
         }
         
         public void callAction(String groupId, String actionId) {
-            Actions action = new Actions(driver);
-            if (!row.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
-                WebElement button = row.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']"));
-                action.moveToElement(button).click().perform();
-                return;
-            }
             if (!row.findElements(By.className("actionsContainer")).isEmpty()) {
                 InlineMenu.create(row, driver, wait).callAction(groupId, actionId);
-                
             }
         }
-
+        
         public void callActionIcon(String ariaLabel) {
             String placeholdersXPath = ".//div[contains(@class,'placeholders')]";
             DelayUtils.waitForNestedElements(wait, row, placeholdersXPath);
@@ -357,7 +356,7 @@ public class CommonList {
             Actions action = new Actions(driver);
             action.moveToElement(icon).click().build().perform();
         }
-
+        
         public void callAction(String actionId) {
             Actions action = new Actions(driver);
             if (!row.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
@@ -367,10 +366,9 @@ public class CommonList {
             }
             if (!row.findElements(By.className("actionsContainer")).isEmpty()) {
                 InlineMenu.create(row, driver, wait).callAction(actionId);
-
             }
         }
-
+        
         public void clickOnLink(String linkText) {
             String linkXpath = ".//div[contains(@class,'hyperlink placeholder')]";
             DelayUtils.waitForNestedElements(wait, row, linkXpath);
@@ -397,12 +395,6 @@ public class CommonList {
         }
         
         public void callAction(String groupId, String actionId) {
-            Actions action = new Actions(driver);
-            if (!category.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
-                WebElement button = category.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']"));
-                action.moveToElement(button).click().perform();
-                return;
-            }
             if (!category.findElements(By.className("actionsContainer")).isEmpty()) {
                 InlineMenu.create(category, driver, wait).callAction(groupId, actionId);
             }
@@ -425,7 +417,7 @@ public class CommonList {
             if (category.findElements(By.xpath(".//i[contains(@class,'chevron-up')]")).isEmpty()) {
                 actions.moveToElement(category.findElement(By.xpath(".//i[contains(@class,'chevron-down')]"))).click().build().perform();
             }
-            DelayUtils.waitForPageToLoad(driver,wait);
+            DelayUtils.waitForPageToLoad(driver, wait);
         }
         
         public void selectCategory() {
