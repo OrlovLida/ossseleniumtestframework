@@ -68,7 +68,7 @@ public class AdvancedSearch {
         this.wait = wait;
         this.webElement = webElement;
     }
-
+    
     public void fullTextSearch(String text) {
         clearFullText();
         getFullTextSearch().sendKeys(text);
@@ -154,19 +154,19 @@ public class AdvancedSearch {
         getSearchPanel();
         getFiltersSettings();
     }
-
+    
     private void getFiltersSettings() {
         DelayUtils.waitBy(this.wait, By.xpath("//div[contains(@class,'filters-settings')]"));
         this.filtersSettings = FiltersSettings.create(this.driver, this.wait);
     }
-
+    
     private void getSearchPanel() {
         if (this.searchPanel == null) {
             DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
             this.searchPanel = SearchPanel.create(this.driver, this.wait);
         }
     }
-
+    
     private boolean isFiltersSettingsOpen() {
         return driver.findElements(By.className("filters-settings"))
                 .size() > 0;
@@ -196,7 +196,8 @@ public class AdvancedSearch {
         openSearchPanel();
         this.searchPanel.saveAsNewFilter(name);
     }
-    public void saveFilter(){
+    
+    public void saveFilter() {
         this.searchPanel.saveFilter();
     }
     
@@ -233,13 +234,8 @@ public class AdvancedSearch {
         return filtersSettings.getFiltersList().stream().filter(FiltersSettings.SavedFilter::isFavorite)
                 .map(FiltersSettings.SavedFilter::getFilterLabel).collect(Collectors.toList());
     }
-
-    public void closeTagByLabel(String label) {
-        this.webElement.findElement(By.xpath(TAGS_ITEMS + "//*[contains (text(), '" + label + "')]/span[contains (@class, 'close')]"))
-                .click();
-    }
-    @Deprecated
-    public int howManyTagsIsVisible() {
+    
+    public int getTagsNumber() {
         return this.webElement.findElements(By.xpath(TAGS_ITEMS)).size();
     }
     
@@ -260,8 +256,7 @@ public class AdvancedSearch {
         }
         
         private List<String> getTags() {
-            List<String> values = getTagsWebElement().stream().map(WebElement::getText).collect(Collectors.toList());
-            return values;
+            return getTagsWebElement().stream().map(WebElement::getText).collect(Collectors.toList());
         }
         
         private void clear(String filterName) {
