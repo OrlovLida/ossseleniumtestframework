@@ -134,4 +134,10 @@ public class DelayUtils {
         return newList;
     }
 
+    public static void waitForSpinners(WebDriverWait webDriverWait, WebElement webElement) {
+        List<WebElement> spinner = webElement.findElements(By.xpath(".//i[contains(@class,'fa-spin')]"));
+        if (!spinner.isEmpty()) {
+            DelayUtils.waitForElementDisappear(webDriverWait, spinner.get(0));
+        }
+    }
 }
