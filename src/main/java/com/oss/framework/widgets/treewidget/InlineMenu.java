@@ -7,7 +7,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.utils.DelayUtils;
 
 public class InlineMenu {
 
@@ -28,23 +27,19 @@ public class InlineMenu {
     }
 
     public void callAction(String actionId) {
-        clickActionGroup();
+        expandKebabMenu();
         ActionsContainer.createFromParent(webElement, driver, wait).callActionForInline(actionId);
     }
 
     public void callAction(String groupId, String actionId) {
-        clickActionGroup();
+        expandKebabMenu();
         ActionsContainer.createFromParent(webElement, driver, wait).callActionById(groupId, actionId);
     }
 
-    private void clickActionGroup() {
-        WebElement inline = webElement.findElement(By.id(GROUP_BUTTON_ID));
+    private void expandKebabMenu() {
+        WebElement inlineKebab = webElement.findElement(By.id(GROUP_BUTTON_ID));
         Actions actions = new Actions(driver);
-        actions.moveToElement(inline).click(inline).build().perform();
+        actions.moveToElement(inlineKebab).click(inlineKebab).build().perform();
     }
 
-    public Boolean isActionListDisplayed() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        return !webElement.findElements(By.id(GROUP_BUTTON_ID)).isEmpty();
-    }
 }
