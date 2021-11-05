@@ -78,11 +78,9 @@ public class ActionsContainer implements ActionsInterface {
     private void clickOnGroup(String groupId) {
         DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//div[@class='actionsGroup-default']");
         if (isElementPresent(webElement, By.id(groupId))) {
-            WebElement group = this.webElement.findElement(By.id(groupId));
-            clickOnWebElement(webDriver, webDriverWait, group);
+            clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(groupId)));
         } else {
-            WebElement moreGroup = this.webElement.findElement(By.id(MORE_GROUP_ID));
-            clickOnWebElement(webDriver, webDriverWait, moreGroup);
+            clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(MORE_GROUP_ID)));
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(groupId);
         }
