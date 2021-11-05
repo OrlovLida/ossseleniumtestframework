@@ -65,7 +65,7 @@ public class Combobox extends Input {
         input.sendKeys(wrapper.getReadableValue());
 
         if (wrapper.isFindFirst()) {
-            DelayUtils.waitForPageToLoad(driver, webDriverWait);
+            DelayUtils.waitForSpinners(webDriverWait, webElement);
             input.sendKeys(Keys.DOWN);
             input.sendKeys(Keys.RETURN);
             return;
