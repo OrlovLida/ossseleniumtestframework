@@ -16,9 +16,9 @@ import com.oss.framework.utils.DelayUtils;
 
 public class MultiCombobox extends Input {
     
-    private final static String TITLE_ITEM_CONTAINS_XPATH = ".//div[contains(@title,'%s')]";
-    private final static String TITLE_ITEM_EQUAL_XPATH = ".//div[@title='%s']";
-    private final static String CLEAR_XPATH =
+    private static final String TITLE_ITEM_CONTAINS_XPATH = ".//div[contains(@title,'%s')]";
+    private static final String TITLE_ITEM_EQUAL_XPATH = ".//div[@title='%s']";
+    private static final String CLEAR_XPATH =
             ".//div[@" + CSSUtils.TEST_ID + "='%s-input']//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]";
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
     private static final String LABEL_XPATH = ".//span[@class='oss-input__input-label']";
