@@ -205,7 +205,9 @@ public class AdvancedSearch {
         getSearchPanel();
         return this.searchPanel.getComponent(componentId, componentType);
     }
-    
+    public void setFilter(String componentId, ComponentType componentType, String value){
+        getComponent(componentId,componentType).setSingleStringValue(value);
+    }
     public void clickApply() {
         this.searchPanel.applyFilter();
         this.searchPanel = null;

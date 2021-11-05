@@ -343,8 +343,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
-        Input input = getAdvancedSearch().getComponent(componentId, componentType);
-        input.setSingleStringValue(value);
+        getAdvancedSearch().setFilter(componentId,componentType,value);
     }
 
     private void clickOnKebabMenu() {
