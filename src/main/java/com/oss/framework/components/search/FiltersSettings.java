@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ public class FiltersSettings {
     private static final String ATTRIBUTE_PATH = ".//div[@class='custom-light-checkbox']";
     private static final String SAVED_FILTERS_TAB_SELECTOR = "div.filters-buttons-container > div:last-child";
     private static final String SAVED_FILTER_LABEL = ".//div[@class='filter-label']";
+    private static final String NO_FILTERS = ".//div[@class='no-filters-text']";
     
     private static final String SAVE_LABEl = "Save";
     private static final String APPLY_LABEL = "Apply";
@@ -66,11 +68,12 @@ public class FiltersSettings {
     
     public List<SavedFilter> getFiltersList() {
         openSavedFilters();
-        DelayUtils.waitByXPath(wait, "//div[@class='filters-list']");
-        return this.webElement.findElements(By.cssSelector(SAVED_FILTERS_SELECTOR)).stream().map(SavedFilter::new)
+        DelayUtils.waitByXPath(wait, NO_FILTERS + " | " + SAVED_FILTER_LABEL);
+        return this.webElement.findElements(By.cssSelector(SAVED_FILTERS_SELECTOR)).stream()
+                .map(savedFilter -> new SavedFilter(driver, savedFilter))
                 .collect(Collectors.toList());
     }
-
+    
     private Optional<SavedFilter> getFilterByLabel(String filterLabel) {
         return getFiltersList().stream().filter(filter -> filter.getFilterLabel().contains(filterLabel)).findFirst();
     }
@@ -79,7 +82,7 @@ public class FiltersSettings {
         Optional<SavedFilter> theFilter = getFilterByLabel(filterLabel);
         theFilter.ifPresent(SavedFilter::markAsFavorite);
     }
-
+    
     public void choseFilterByLabel(String filterLabel) {
         getFilterByLabel(filterLabel).ifPresent(SavedFilter::chooseFilter);
         getSaveButton(APPLY_LABEL).ifPresent(WebElement::click);
@@ -134,8 +137,10 @@ public class FiltersSettings {
     
     protected static class SavedFilter {
         private final WebElement filter;
+        private final WebDriver driver;
         
-        private SavedFilter(WebElement filter) {
+        private SavedFilter(WebDriver driver, WebElement filter) {
+            this.driver = driver;
             this.filter = filter;
         }
         
@@ -158,7 +163,9 @@ public class FiltersSettings {
         }
         
         private void chooseFilter() {
-            filter.click();
+            Actions action = new Actions(driver);
+            action.moveToElement(filter).click(filter).build().perform();
+            
         }
     }
     

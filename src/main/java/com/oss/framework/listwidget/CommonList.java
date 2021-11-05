@@ -359,7 +359,16 @@ public class CommonList {
         }
 
         public void callAction(String actionId) {
-            callAction(null, actionId);
+            Actions action = new Actions(driver);
+            if (!row.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
+                WebElement button = row.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']"));
+                action.moveToElement(button).click().perform();
+                return;
+            }
+            if (!row.findElements(By.className("actionsContainer")).isEmpty()) {
+                InlineMenu.create(row, driver, wait).callAction(actionId);
+
+            }
         }
 
         public void clickOnLink(String linkText) {

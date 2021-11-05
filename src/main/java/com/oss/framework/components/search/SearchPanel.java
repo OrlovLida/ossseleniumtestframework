@@ -51,12 +51,7 @@ public class SearchPanel {
         WebElement btnToggleFilters = this.webElement.findElement(By.xpath(BTN_TOGGLE_FILTERS_PATH));
         btnToggleFilters.click();
     }
-    
-//    private FiltersSettings getFiltersSettings() {
-//        DelayUtils.waitBy(this.wait, By.xpath(".//*[@class='" + FILTERS_SETTINGS_PANEL_CLASS + "']"));
-//        return FiltersSettings.create(this.driver, this.wait);
-//    }
-    
+
     public void applyFilter() {
         wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(APPLY_BTN_PATH)))).click();
     }

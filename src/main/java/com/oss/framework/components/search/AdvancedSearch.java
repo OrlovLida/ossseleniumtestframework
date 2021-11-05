@@ -68,7 +68,7 @@ public class AdvancedSearch {
         this.wait = wait;
         this.webElement = webElement;
     }
-    
+
     public void fullTextSearch(String text) {
         clearFullText();
         getFullTextSearch().sendKeys(text);
@@ -143,10 +143,7 @@ public class AdvancedSearch {
         if (!isSearchPanelOpen()) {
             this.webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)).click();
         }
-        if (this.searchPanel == null) {
-            DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-            this.searchPanel = SearchPanel.create(this.driver, this.wait);
-        }
+        getSearchPanel();
     }
     
     private void openFiltersSettings() {
@@ -154,10 +151,22 @@ public class AdvancedSearch {
             openSearchPanel();
             searchPanel.openFiltersSettings();
         }
+        getSearchPanel();
+        getFiltersSettings();
+    }
+
+    private void getFiltersSettings() {
         DelayUtils.waitBy(this.wait, By.xpath("//div[contains(@class,'filters-settings')]"));
         this.filtersSettings = FiltersSettings.create(this.driver, this.wait);
     }
-    
+
+    private void getSearchPanel() {
+        if (this.searchPanel == null) {
+            DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
+            this.searchPanel = SearchPanel.create(this.driver, this.wait);
+        }
+    }
+
     private boolean isFiltersSettingsOpen() {
         return driver.findElements(By.className("filters-settings"))
                 .size() > 0;
@@ -192,10 +201,7 @@ public class AdvancedSearch {
     }
     
     public Input getComponent(String componentId, ComponentType componentType) {
-        if (this.searchPanel == null) {
-            DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-            this.searchPanel = SearchPanel.create(this.driver, this.wait);
-        }
+        getSearchPanel();
         return this.searchPanel.getComponent(componentId, componentType);
     }
     
@@ -226,19 +232,13 @@ public class AdvancedSearch {
         openFiltersSettings();
         return filtersSettings.getFiltersList().stream().filter(FiltersSettings.SavedFilter::isFavorite)
                 .map(FiltersSettings.SavedFilter::getFilterLabel).collect(Collectors.toList());
-        
     }
-    
-    @Deprecated
-    public void clickOnTagByLabel(String label) {
-        this.webElement.findElement(By.xpath("//div[@class='" + TAGS_CLASS + "']//*[contains (text(), '" + label + "')]")).click();
-    }
-    
+
     public void closeTagByLabel(String label) {
         this.webElement.findElement(By.xpath(TAGS_ITEMS + "//*[contains (text(), '" + label + "')]/span[contains (@class, 'close')]"))
                 .click();
     }
-    
+    @Deprecated
     public int howManyTagsIsVisible() {
         return this.webElement.findElements(By.xpath(TAGS_ITEMS)).size();
     }

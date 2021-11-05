@@ -288,10 +288,6 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getVisibleRows().size();
     }
 
-    public int howManyRowsOnFirstPage() {
-        return getTableComponent().getVisibleRows().size();
-    }
-
     public PaginationComponent getPagination() {
         return getTableComponent().getPaginationComponent();
     }
