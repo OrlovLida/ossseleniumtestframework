@@ -100,11 +100,8 @@ public class Combobox extends Input {
 
     @Override
     public void clear() {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         List<WebElement> closeButtons = this.webElement.findElements(By.xpath(COMBOBOX_CLOSE_XPATH));
         closeButtons.forEach(WebElement::click);
     }
 }
-
-
-
