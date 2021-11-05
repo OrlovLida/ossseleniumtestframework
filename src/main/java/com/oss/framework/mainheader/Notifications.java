@@ -48,7 +48,7 @@ public class Notifications implements NotificationsInterface {
                 wait.until(ExpectedConditions
                         .visibilityOf(driver.findElement(By.xpath(".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span"))))
                         .getText();
-        clickOnWebElement(driver, wait, driver.findElement(CLEAR_NOTIFICATION));
+        clickOnWebElement(driver.findElement(CLEAR_NOTIFICATION));
         closeNotificationContainer();
         LOGGER.info("Notification finished with message: {}", notificationText);
         return notificationText;
@@ -58,14 +58,14 @@ public class Notifications implements NotificationsInterface {
     public void waitForSpecificNotification(String text, String notificationStatus) {
         openNotificationContainer();
         DelayUtils.waitByXPath(wait, ".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span[contains(text(), '" + text + "') and contains(text(), '" + notificationStatus + "')]");
-        clickOnWebElement(driver, wait, driver.findElement(CLEAR_NOTIFICATION));
+        clickOnWebElement(driver.findElement(CLEAR_NOTIFICATION));
     }
 
     @Override
     public void clearAllNotification() {
         if (!isElementPresent(driver, EMPTY_NOTIFICATION)) {
             openNotificationContainer();
-            clickOnWebElement(driver, wait, driver.findElement(CLEAR_NOTIFICATION));
+            clickOnWebElement(driver.findElement(CLEAR_NOTIFICATION));
         }
     }
 
@@ -79,24 +79,24 @@ public class Notifications implements NotificationsInterface {
     public void openDetailsForSpecificNotification(String text, String notificationStatus) {
         openNotificationContainer();
         DelayUtils.waitByXPath(wait, ".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span[contains(text(), '" + text + "') and contains(text(), '" + notificationStatus + "')]");
-        clickOnWebElement(driver, wait, driver.findElement(NOTIFICATION_DETAILS));
+        clickOnWebElement(driver.findElement(NOTIFICATION_DETAILS));
         closeNotificationContainer();
     }
 
     public void clickDownloadFile() {
-        clickOnWebElement(driver, wait, driver.findElement(DOWNLOAD_FILE));
+        clickOnWebElement(driver.findElement(DOWNLOAD_FILE));
     }
 
     private void openNotificationContainer() {
         if (!isElementPresent(driver, NOTIFICATION_OPENED)) {
-            clickOnWebElement(driver, wait, driver.findElement(NOTIFICATION_BUTTON));
+            clickOnWebElement(driver.findElement(NOTIFICATION_BUTTON));
             DelayUtils.waitBy(wait, NOTIFICATION_OPENED);
         }
     }
 
     private void closeNotificationContainer() {
         if (isElementPresent(driver, NOTIFICATION_OPENED)) {
-            clickOnWebElement(driver, wait, driver.findElement(NOTIFICATION_BUTTON));
+            clickOnWebElement(driver.findElement(NOTIFICATION_BUTTON));
         }
     }
 
@@ -109,10 +109,10 @@ public class Notifications implements NotificationsInterface {
         }
     }
 
-    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
-        Actions actions = new Actions(webDriver);
+    private void clickOnWebElement(WebElement webElement) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+        wait.until(ExpectedConditions.elementToBeClickable(webElement));
+        Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click(webElement).build().perform();
     }
 }
