@@ -359,7 +359,6 @@ public class TreeWidget extends Widget {
         }
 
         public void expandNode() {
-
             if (!isExpanded()) {
                 webElement.findElement(By.className(ICON_EXPAND)).click();
             }
@@ -371,10 +370,6 @@ public class TreeWidget extends Widget {
 
         public void callAction(String groupId, String actionId) {
             InlineMenu.create(webElement, driver, wait).callAction(groupId, actionId);
-        }
-
-        public boolean isInlineActionPresent() {
-            return InlineMenu.create(webElement, driver, wait).isActionListDisplayed();
         }
     }
 
@@ -407,6 +402,5 @@ public class TreeWidget extends Widget {
             return this.webElement.getAttribute(CLASS).contains(
                     "selected");
         }
-
     }
 }

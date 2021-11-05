@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -65,7 +66,7 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void callActionFromKebab(String actionId) {
-        getKebabMenuBtn().click();
+        clickOnWebElement(webDriver, webDriverWait, getKebabMenuBtn());
         Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
         dropdown.callAction(actionId);
     }
@@ -76,17 +77,12 @@ public class ActionsContainer implements ActionsInterface {
 
     private void clickOnGroup(String groupId) {
         DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//div[@class='actionsGroup-default']");
-        // Info: Action for inline
-        if (!webDriver.findElements(By.className(ACTIONS_LIST)).isEmpty()) {
-            Dropdown.create(webDriver, webDriverWait).callAction(groupId);
-            return;
-        }
         if (isElementPresent(webElement, By.id(groupId))) {
-            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement.findElement(By.id(groupId)));
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(groupId)))).click();
+            WebElement group = this.webElement.findElement(By.id(groupId));
+            clickOnWebElement(webDriver, webDriverWait, group);
         } else {
-            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement.findElement(By.id(MORE_GROUP_ID)));
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(MORE_GROUP_ID)))).click();
+            WebElement moreGroup = this.webElement.findElement(By.id(MORE_GROUP_ID));
+            clickOnWebElement(webDriver, webDriverWait, moreGroup);
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(groupId);
         }
@@ -94,9 +90,9 @@ public class ActionsContainer implements ActionsInterface {
 
     public void callActionById(String id) {
         if (isElementPresent(webElement, By.id(id))) {
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(id)))).click();
+            clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(id)));
         } else {
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(MORE_GROUP_ID)))).click();
+            clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(MORE_GROUP_ID)));
             Dropdown dropdown = Dropdown.create(this.webDriver, this.webDriverWait);
             dropdown.callAction(id);
         }
@@ -112,12 +108,13 @@ public class ActionsContainer implements ActionsInterface {
             return;
         }
         DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//*[@id='" + actionId + "']");
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(actionId)))).click();
+        clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(actionId)));
     }
 
     private static class Dropdown {
         private final WebElement webElement;
         private final WebDriverWait webDriverWait;
+        private final WebDriver driver;
 
         private static Dropdown create(WebDriver webDriver, WebDriverWait webDriverWait) {
             DelayUtils.waitBy(webDriverWait, By.className(ACTIONS_LIST));
@@ -125,6 +122,7 @@ public class ActionsContainer implements ActionsInterface {
         }
 
         private Dropdown(WebDriver driver, WebDriverWait webDriverWait) {
+            this.driver = driver;
             this.webDriverWait = webDriverWait;
             List<WebElement> actionsLists = driver.findElements(By.className(ACTIONS_LIST));
             this.webElement = actionsLists.get(actionsLists.size() - 1);
@@ -132,12 +130,19 @@ public class ActionsContainer implements ActionsInterface {
 
         private void callAction(String actionId) {
             DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//*[@id='" + actionId + "']");
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.id(actionId)))).click();
+            clickOnWebElement(driver, webDriverWait, this.webElement.findElement(By.id(actionId)));
         }
 
         private void callActionByLabel(String actionLabel) {
             DelayUtils.waitForNestedElements(webDriverWait, this.webElement, "//a[contains(text(),'" + actionLabel + "')]");
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(this.webElement.findElement(By.xpath("//a[contains(text(),'" + actionLabel + "')]")))).click();
+            clickOnWebElement(driver, webDriverWait, this.webElement.findElement(By.xpath("//a[contains(text(),'" + actionLabel + "')]")));
         }
+    }
+
+    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
+        Actions actions = new Actions(webDriver);
+        actions.moveToElement(webElement).click(webElement).build().perform();
     }
 }
