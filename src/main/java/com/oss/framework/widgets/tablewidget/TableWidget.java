@@ -13,7 +13,6 @@ import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.DropdownList;
@@ -254,7 +253,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     public void choseSavedFiltersByLabel(String label) {
         openAdvancedSearch();
-        getAdvancedSearch().choseSavedFilterByLabel(label);
+        getAdvancedSearch().chooseSavedFilterByLabel(label);
         getAdvancedSearch().clickApply();
     }
 
