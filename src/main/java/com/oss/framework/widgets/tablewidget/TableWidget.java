@@ -251,7 +251,7 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clickCancel();
     }
 
-    public void choseSavedFiltersByLabel(String label) {
+    public void chooseSavedFiltersByLabel(String label) {
         openAdvancedSearch();
         getAdvancedSearch().chooseSavedFilterByLabel(label);
         getAdvancedSearch().clickApply();
