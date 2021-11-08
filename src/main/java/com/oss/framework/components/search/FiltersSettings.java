@@ -74,17 +74,18 @@ public class FiltersSettings {
                 .collect(Collectors.toList());
     }
     
-    private Optional<SavedFilter> getFilterByLabel(String filterLabel) {
-        return getFiltersList().stream().filter(filter -> filter.getFilterLabel().contains(filterLabel)).findFirst();
+    private SavedFilter getFilterByLabel(String filterLabel) {
+        return getFiltersList().stream().filter(filter -> filter.getFilterLabel().contains(filterLabel)).findFirst()
+                .orElseThrow(() -> new RuntimeException("Filter with provided name doesn't exist."));
     }
     
     public void markFilterAsFavByLabel(String filterLabel) {
-        Optional<SavedFilter> theFilter = getFilterByLabel(filterLabel);
-        theFilter.ifPresent(SavedFilter::markAsFavorite);
+        SavedFilter theFilter = getFilterByLabel(filterLabel);
+        theFilter.markAsFavorite();
     }
     
-    public void choseFilterByLabel(String filterLabel) {
-        getFilterByLabel(filterLabel).ifPresent(SavedFilter::chooseFilter);
+    public void chooseFilterByLabel(String filterLabel) {
+        getFilterByLabel(filterLabel).chooseFilter();
         getSaveButton(APPLY_LABEL).ifPresent(WebElement::click);
     }
     
@@ -96,20 +97,20 @@ public class FiltersSettings {
     }
     
     public void unselectAttributes(List<String> attributeIds) {
-        List<Attribute> attribute = getAttributes(attributeIds);
-        attribute.forEach(a -> {
-            if (a.isSelected()) {
-                a.toggleAttributes();
+        List<Attribute> attributes = getAttributes(attributeIds);
+        attributes.forEach(attribute -> {
+            if (attribute.isSelected()) {
+                attribute.toggleAttributes();
             }
         });
         getSaveButton(SAVE_LABEl).ifPresent(WebElement::click);
     }
     
     public void selectAttributes(List<String> attributeIds) {
-        List<Attribute> attribute = getAttributes(attributeIds);
-        attribute.forEach(a -> {
-            if (!a.isSelected()) {
-                a.toggleAttributes();
+        List<Attribute> attributes = getAttributes(attributeIds);
+        attributes.forEach(attribute -> {
+            if (!attribute.isSelected()) {
+                attribute.toggleAttributes();
             }
         });
         getSaveButton(SAVE_LABEl).ifPresent(WebElement::click);
@@ -168,5 +169,4 @@ public class FiltersSettings {
             
         }
     }
-    
 }

@@ -35,10 +35,6 @@ public class AdvancedSearch {
     private final WebDriverWait wait;
     private final WebElement webElement;
     
-    private SearchPanel searchPanel;
-    private Tags tags;
-    private FiltersSettings filtersSettings;
-    
     public static AdvancedSearch createByClass(WebDriver driver, WebDriverWait wait, String className) {
         DelayUtils.waitByXPath(wait, "//*[@class='" + className + "']");
         WebElement webElement = driver.findElement(By.className(className));
@@ -139,32 +135,28 @@ public class AdvancedSearch {
         return values;
     }
     
-    public void openSearchPanel() {
+    public SearchPanel openSearchPanel() {
         if (!isSearchPanelOpen()) {
             this.webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)).click();
         }
-        getSearchPanel();
+        return getSearchPanel();
     }
     
-    private void openFiltersSettings() {
+    private FiltersSettings openFiltersSettings() {
         if (!isFiltersSettingsOpen()) {
-            openSearchPanel();
-            searchPanel.openFiltersSettings();
+            openSearchPanel().openFiltersSettings();
         }
-        getSearchPanel();
-        getFiltersSettings();
+        return getFiltersSettings();
     }
     
-    private void getFiltersSettings() {
+    private FiltersSettings getFiltersSettings() {
         DelayUtils.waitBy(this.wait, By.xpath("//div[contains(@class,'filters-settings')]"));
-        this.filtersSettings = FiltersSettings.create(this.driver, this.wait);
+        return FiltersSettings.create(this.driver, this.wait);
     }
     
-    private void getSearchPanel() {
-        if (this.searchPanel == null) {
-            DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-            this.searchPanel = SearchPanel.create(this.driver, this.wait);
-        }
+    private SearchPanel getSearchPanel() {
+        DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
+        return SearchPanel.create(this.driver, this.wait);
     }
     
     private boolean isFiltersSettingsOpen() {
@@ -173,44 +165,39 @@ public class AdvancedSearch {
     }
     
     public void markFilterAsFavByLabel(String label) {
-        openFiltersSettings();
-        filtersSettings.markFilterAsFavByLabel(label);
+        openFiltersSettings().markFilterAsFavByLabel(label);
     }
     
     public void selectAttributes(List<String> attributeIds) {
-        openFiltersSettings();
-        filtersSettings.selectAttributes(attributeIds);
+        openFiltersSettings().selectAttributes(attributeIds);
     }
     
     public void unselectAttributes(List<String> attributeIds) {
-        openFiltersSettings();
-        filtersSettings.unselectAttributes(attributeIds);
+        openFiltersSettings().unselectAttributes(attributeIds);
     }
     
-    public void choseSavedFilterByLabel(String label) {
-        openFiltersSettings();
-        filtersSettings.choseFilterByLabel(label);
+    public void chooseSavedFilterByLabel(String label) {
+        openFiltersSettings().chooseFilterByLabel(label);
     }
     
     public void saveAsNewFilter(String name) {
-        openSearchPanel();
-        this.searchPanel.saveAsNewFilter(name);
+        openSearchPanel().saveAsNewFilter(name);
     }
     
     public void saveFilter() {
-        this.searchPanel.saveFilter();
+        openSearchPanel().saveFilter();
     }
     
     public Input getComponent(String componentId, ComponentType componentType) {
-        getSearchPanel();
-        return this.searchPanel.getComponent(componentId, componentType);
+        return openSearchPanel().getComponent(componentId, componentType);
     }
-    public void setFilter(String componentId, ComponentType componentType, String value){
-        getComponent(componentId,componentType).setSingleStringValue(value);
+    
+    public void setFilter(String componentId, ComponentType componentType, String value) {
+        getComponent(componentId, componentType).setSingleStringValue(value);
     }
+    
     public void clickApply() {
-        this.searchPanel.applyFilter();
-        this.searchPanel = null;
+        getSearchPanel().applyFilter();
     }
     
     public void clickAdd() {
@@ -218,22 +205,20 @@ public class AdvancedSearch {
     }
     
     public void clickCancel() {
-        this.searchPanel.cancel();
-        this.searchPanel = null;
+        getSearchPanel().cancel();
     }
     
     public List<String> getAllVisibleFilters() {
-        return this.searchPanel.getAllVisibleFilters();
+        return getSearchPanel().getAllVisibleFilters();
     }
     
     public List<String> getSavedFilters() {
-        openFiltersSettings();
-        return filtersSettings.getFiltersList().stream().map(FiltersSettings.SavedFilter::getFilterLabel).collect(Collectors.toList());
+        return openFiltersSettings().getFiltersList().stream().map(FiltersSettings.SavedFilter::getFilterLabel)
+                .collect(Collectors.toList());
     }
     
     public List<String> getFavoriteFilters() {
-        openFiltersSettings();
-        return filtersSettings.getFiltersList().stream().filter(FiltersSettings.SavedFilter::isFavorite)
+        return openFiltersSettings().getFiltersList().stream().filter(FiltersSettings.SavedFilter::isFavorite)
                 .map(FiltersSettings.SavedFilter::getFilterLabel).collect(Collectors.toList());
     }
     
