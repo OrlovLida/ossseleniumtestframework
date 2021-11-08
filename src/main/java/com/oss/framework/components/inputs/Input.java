@@ -44,7 +44,7 @@ public abstract class Input {
         return "//*[@" + CSSUtils.TEST_ID + "='" + componentId + "']";
     }
     
-    protected MouseCursor getMouseCursor(String cursor) {
+    MouseCursor getMouseCursor(String cursor) {
         switch (cursor) {
         case DEFAULT: {
             return MouseCursor.DEFAULT;
