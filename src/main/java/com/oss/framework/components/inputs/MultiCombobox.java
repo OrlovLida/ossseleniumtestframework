@@ -19,7 +19,7 @@ public class MultiCombobox extends Input {
     private static final String TITLE_ITEM_CONTAINS_XPATH = ".//div[contains(@title,'%s')]";
     private static final String TITLE_ITEM_EQUAL_XPATH = ".//div[@title='%s']";
     private static final String CLEAR_XPATH =
-            ".//div[@" + CSSUtils.TEST_ID + "='%s-input']//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]";
+            ".//div[@" + CSSUtils.TEST_ID + "='%s-input']//i[contains(@class,'OSSIcon ossfont-close button-close')]";
     private static final String LABEL_XPATH = ".//span[@class='oss-input__input-label']";
     private static final String TAGS_XPATH = ".//div[@class='tags-input__tag']";
     private static final String TAGS_LABEL = "tags-input__label";
@@ -93,8 +93,24 @@ public class MultiCombobox extends Input {
     }
 
     @Override
-    public String cursor(){
-        return webElement.findElement(By.className("oss-input__input")).getCssValue("cursor");
+    public MouseCursor cursor(){
+        String cursor = webElement.findElement(By.className("oss-input__input")).getCssValue("cursor");
+        switch (cursor){
+            case DEFAULT: {
+                return MouseCursor.DEFAULT;
+            }
+            case TEXT:{
+                return MouseCursor.TEXT;
+            }
+            case POINTER:{
+                return MouseCursor.POINTER;
+            }
+            case NOT_ALLOWED:{
+                return MouseCursor.NOT_ALLOWED;
+            }
+            default:
+        }
+        throw new IllegalArgumentException(CANNOT_FIND_MOUSE_COURSE_EXCEPTION);
     }
 
     private boolean isSearchEnabled() {

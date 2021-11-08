@@ -22,6 +22,11 @@ public abstract class Input {
     protected final WebDriverWait webDriverWait;
     protected final WebElement webElement;
     protected final String componentId;
+    static final String DEFAULT = "default";
+    static final String TEXT = "text";
+    static final String POINTER = "pointer";
+    static final String NOT_ALLOWED = "not-allowed";
+    static final String CANNOT_FIND_MOUSE_COURSE_EXCEPTION ="Cannot find mouse course for your input";
 
     public enum ComponentType {
         TEXT_FIELD, TEXT_AREA, PASSWORD_FIELD, NUMBER_FIELD,
@@ -29,6 +34,10 @@ public abstract class Input {
         SWITCHER, SEARCH_FIELD, MULTI_SEARCH_FIELD, COMBOBOX,
         MULTI_COMBOBOX, FILE_CHOOSER, COORDINATES, PHONE_FIELD,
         RADIO_BUTTON, SCRIPT_COMPONENT, BPM_COMBOBOX, OBJECT_SEARCH_FIELD
+    }
+
+    public enum MouseCursor {
+        NOT_ALLOWED, DEFAULT, TEXT, POINTER
     }
 
     static String createComponentPath(String componentId) {
@@ -79,10 +88,26 @@ public abstract class Input {
         DelayUtils.sleep();
     }
 
-    public String cursor() {
+    public MouseCursor cursor() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).build().perform();
-        return webElement.findElement(By.xpath(".//input")).getCssValue("cursor");
+        String cursor = webElement.findElement(By.xpath(".//input")).getCssValue("cursor");
+        switch (cursor){
+            case DEFAULT: {
+                return MouseCursor.DEFAULT;
+            }
+            case TEXT:{
+                return MouseCursor.TEXT;
+            }
+            case POINTER:{
+                return MouseCursor.POINTER;
+            }
+            case NOT_ALLOWED:{
+                return MouseCursor.NOT_ALLOWED;
+            }
+            default:
+        }
+        throw new IllegalArgumentException(CANNOT_FIND_MOUSE_COURSE_EXCEPTION);
     }
 
     public final List<String> getHint() {

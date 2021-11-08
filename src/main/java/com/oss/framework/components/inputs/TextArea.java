@@ -53,9 +53,25 @@ public class TextArea extends Input {
     }
 
     @Override
-    public String cursor(){
+    public MouseCursor cursor(){
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).build().perform();
-       return webElement.findElement(By.xpath(".//textarea")).getCssValue("cursor");
+        String cursor = webElement.findElement(By.xpath(".//textarea")).getCssValue("cursor");
+        switch (cursor){
+            case DEFAULT: {
+                return MouseCursor.DEFAULT;
+            }
+            case TEXT:{
+                return MouseCursor.TEXT;
+            }
+            case POINTER:{
+                return MouseCursor.POINTER;
+            }
+            case NOT_ALLOWED:{
+                return MouseCursor.NOT_ALLOWED;
+            }
+            default:
+        }
+        throw new IllegalArgumentException(CANNOT_FIND_MOUSE_COURSE_EXCEPTION);
     }
 }
