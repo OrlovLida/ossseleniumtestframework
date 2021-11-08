@@ -38,11 +38,14 @@ public class CommonList {
     private static final String ANCESTOR_LIST_ELEMENT_XPATH = "/ancestor::li[@class='listElement']";
     private static final String TEXT_EQUALS_XPATH = "[text()='%s']";
     private static final String TEXT_CONTAINS_XPATH = "[contains(text(),'%s')]";
-    private static final String COLLAPSE_ICON_XPATH = "//i[contains (@class, 'chevron-up')]";
-    private static final String EXPAND_ICON_XPATH = "//i[contains (@class, 'chevron-down')]";
+    private static final String COLLAPSE_ICON_XPATH = ".//i[contains(@class,'chevron-up')]";
+    private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
     private static final String SHARE_ACTION_ID = "share_action";
     private static final String REMOVE_ACTION_ID = "remove_action";
     private static final String FAVORITE_ICON_XPATH = ".//i[contains(@class, 'star-o')]";
+    private static final String ACTION_CONTAINER_CLASS = "actionsContainer";
+    private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
+    private static final String SELECTED_ROW_CLASS = "rowSelected";
     
     public static CommonList create(WebDriver driver, WebDriverWait wait, String commonListAppId) {
         DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + commonListAppId + "')]"));
@@ -320,7 +323,7 @@ public class CommonList {
         }
         
         public void selectRow() {
-            if (!row.getAttribute("class").contains("rowSelected")) {
+            if (!row.getAttribute("class").contains(SELECTED_ROW_CLASS)) {
                 row.click();
             }
         }
@@ -342,7 +345,7 @@ public class CommonList {
         }
         
         public void callAction(String groupId, String actionId) {
-            if (!row.findElements(By.className("actionsContainer")).isEmpty()) {
+            if (!row.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
                 InlineMenu.create(row, driver, wait).callAction(groupId, actionId);
             }
         }
@@ -391,11 +394,11 @@ public class CommonList {
         }
         
         public String getValue() {
-            return category.findElement(By.className("categoryLabel-text")).getText();
+            return category.findElement(By.className(CATEGORY_NAME_XPATH)).getText();
         }
         
         public void callAction(String groupId, String actionId) {
-            if (!category.findElements(By.className("actionsContainer")).isEmpty()) {
+            if (!category.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
                 InlineMenu.create(category, driver, wait).callAction(groupId, actionId);
             }
         }
@@ -407,15 +410,15 @@ public class CommonList {
                 action.moveToElement(button).click().perform();
                 return;
             }
-            if (!category.findElements(By.className("actionsContainer")).isEmpty()) {
+            if (!category.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
                 InlineMenu.create(category, driver, wait).callAction(actionId);
             }
         }
         
         public void expandCategory() {
             Actions actions = new Actions(driver);
-            if (category.findElements(By.xpath(".//i[contains(@class,'chevron-up')]")).isEmpty()) {
-                actions.moveToElement(category.findElement(By.xpath(".//i[contains(@class,'chevron-down')]"))).click().build().perform();
+            if (category.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty()) {
+                actions.moveToElement(category.findElement(By.xpath(EXPAND_ICON_XPATH))).click().build().perform();
             }
             DelayUtils.waitForPageToLoad(driver, wait);
         }

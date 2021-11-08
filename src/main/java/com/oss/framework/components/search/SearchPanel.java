@@ -21,9 +21,11 @@ public class SearchPanel {
     private static final String FILTERS_PATH = ".//div[@class='filter_wrapper']";
     private static final String INPUT_LABEL_PATH = ".//span[@class='md-input-label-text']";
     private static final String NEW_COMBOBOX_LABEL_PATH = ".//*[@class='oss-input__input-label']";
+    private static final String INPUT_PATH = ".//input";
     
     private static final String APPLY_BTN_PATH = ".//a[text()='Apply']";
     private static final String CANCEL_BTN_PATH = ".//a[text()='Cancel']";
+    private static final String SAVE_BTN_PATH = ".//a[text()='Save']";
     private static final String BTN_TOGGLE_FILTERS_PATH = ".//button[@class='btn-toggle-filters']";
     
     private static final String SAVE_BUTTONS_DROPDOWN_PATH = ".//div[@" + CSSUtils.TEST_ID + "='save-buttons-dropdown']";
@@ -51,7 +53,7 @@ public class SearchPanel {
         WebElement btnToggleFilters = this.webElement.findElement(By.xpath(BTN_TOGGLE_FILTERS_PATH));
         btnToggleFilters.click();
     }
-
+    
     public void applyFilter() {
         wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(APPLY_BTN_PATH)))).click();
     }
@@ -73,10 +75,10 @@ public class SearchPanel {
     
     public void saveAsNewFilter(String name) {
         callSaveFilterAction(SAVE_AS_NEW_FILTER_BTN_ID);
-
+        
         WebElement form = driver.findElement(By.xpath(SAVE_AS_NEW_FILTER_FORM_PATH));
-        form.findElement(By.xpath(".//input")).sendKeys(name);
-        form.findElement(By.xpath(".//a[text()='Save']")).click();
+        form.findElement(By.xpath(INPUT_PATH)).sendKeys(name);
+        form.findElement(By.xpath(SAVE_BTN_PATH)).click();
         
         DelayUtils.waitForPageToLoad(driver, wait);
     }

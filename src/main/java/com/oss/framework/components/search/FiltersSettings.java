@@ -26,9 +26,12 @@ public class FiltersSettings {
     private static final String SAVED_FILTERS_TAB_SELECTOR = "div.filters-buttons-container > div:last-child";
     private static final String SAVED_FILTER_LABEL = ".//div[@class='filter-label']";
     private static final String NO_FILTERS = ".//div[@class='no-filters-text']";
-    
+    private static final String FAVORITE = "FAVOURITE";
     private static final String SAVE_LABEl = "Save";
     private static final String APPLY_LABEL = "Apply";
+    private static final String STAR_ICON_PATH = ".//div[@class='filters-element-icon']//i";
+    private static final String SELECTED_ATTRIBUTE_PATH = ".//input[@checked]";
+    private static final String INPUT_PATH = ".//input";
     
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -124,7 +127,7 @@ public class FiltersSettings {
         }
         
         private boolean isSelected() {
-            return !attribute.findElements(By.xpath(".//input[@checked]")).isEmpty();
+            return !attribute.findElements(By.xpath(SELECTED_ATTRIBUTE_PATH)).isEmpty();
         }
         
         private String getAttributeId() {
@@ -132,7 +135,7 @@ public class FiltersSettings {
         }
         
         private void toggleAttributes() {
-            attribute.findElement(By.xpath(".//input")).click();
+            attribute.findElement(By.xpath(INPUT_PATH)).click();
         }
     }
     
@@ -146,7 +149,7 @@ public class FiltersSettings {
         }
         
         public boolean isFavorite() {
-            return getStar().getAttribute("aria-label").equals("FAVOURITE");
+            return getStar().getAttribute("aria-label").equals(FAVORITE);
         }
         
         public String getFilterLabel() {
@@ -160,7 +163,7 @@ public class FiltersSettings {
         }
         
         private WebElement getStar() {
-            return filter.findElement(By.xpath(".//div[@class='filters-element-icon']//i"));
+            return filter.findElement(By.xpath(STAR_ICON_PATH));
         }
         
         private void chooseFilter() {

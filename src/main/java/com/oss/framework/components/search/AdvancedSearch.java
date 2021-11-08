@@ -25,9 +25,12 @@ public class AdvancedSearch {
     private static final String TAGS_CLASS = "tagsWidgetDisplay";
     private static final String TAGS_ITEMS = ".//span[@class='md-input-value']";
     private static final String ADVANCED_SEARCH_PANEL_CLASS = "advanced-search_panel";
-    
+    private static final String FILTERS_SETTINGS_XPATH = "//div[contains(@class,'filters-settings')]";
+    private static final String FILTERS_SETTINGS_CLASS = "filters-settings";
     private static final String SEARCH_PANEL_OPEN_BUTTON = ".//button[@class='button-filters-panel']";
     private static final String ADD_BTN_PATH = ".//a[text()='Add']";
+    private static final String FILTER_BOX_PATH = "//*[@class='filters-box']";
+    private static final String TAG_CLOSE_BUTTON_PATH = ".//span[@class='md-input-close']";
     
     private static final String TAGS_SEPARATOR = ": ";
     
@@ -150,17 +153,17 @@ public class AdvancedSearch {
     }
     
     private FiltersSettings getFiltersSettings() {
-        DelayUtils.waitBy(this.wait, By.xpath("//div[contains(@class,'filters-settings')]"));
+        DelayUtils.waitBy(this.wait, By.xpath(FILTERS_SETTINGS_XPATH));
         return FiltersSettings.create(this.driver, this.wait);
     }
     
     private SearchPanel getSearchPanel() {
-        DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
+        DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] |" + FILTER_BOX_PATH));
         return SearchPanel.create(this.driver, this.wait);
     }
     
     private boolean isFiltersSettingsOpen() {
-        return driver.findElements(By.className("filters-settings"))
+        return driver.findElements(By.className(FILTERS_SETTINGS_CLASS))
                 .size() > 0;
     }
     
@@ -249,7 +252,7 @@ public class AdvancedSearch {
         private void clear(String filterName) {
             Optional<WebElement> tag = getTagsWebElement().stream().filter(e -> e.getText().startsWith(filterName)).findFirst();
             if (tag.isPresent()) {
-                WebElement closeButton = tag.get().findElement(By.xpath(".//span[@class='md-input-close']"));
+                WebElement closeButton = tag.get().findElement(By.xpath(TAG_CLOSE_BUTTON_PATH));
                 closeButton.click();
             }
         }
