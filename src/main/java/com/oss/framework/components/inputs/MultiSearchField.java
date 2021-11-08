@@ -82,21 +82,6 @@ public class MultiSearchField extends Input {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).build().perform();
         String cursor = webElement.findElement(By.className("md-input")).getCssValue("cursor");
-        switch (cursor){
-            case DEFAULT: {
-                return MouseCursor.DEFAULT;
-            }
-            case TEXT:{
-                return MouseCursor.TEXT;
-            }
-            case POINTER:{
-                return MouseCursor.POINTER;
-            }
-            case NOT_ALLOWED:{
-                return MouseCursor.NOT_ALLOWED;
-            }
-            default:
-        }
-        throw new IllegalArgumentException(CANNOT_FIND_MOUSE_COURSE_EXCEPTION);
+       return getMouseCursor(cursor);
     }
 }
