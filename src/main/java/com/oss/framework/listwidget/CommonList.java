@@ -28,7 +28,7 @@ public class CommonList {
     private static final String CHECK_CHECKBOX_XPATH = ".//i[contains(@class,'check')]";
     private static final String CATEGORY_LIST_XPATH = ".//li[@class='categoryListElement']";
     private static final String HEADERS_XPATH = ".//div[@class='header left']";
-    public static final String LIST_ELEMENT_XPATH = ".//li[@class='listElement'] | .//li[@class='listElement rowSelected']";
+    private static final String LIST_ELEMENT_XPATH = ".//li[@class='listElement'] | .//li[@class='listElement rowSelected']";
     private static final String KEBAB_ID = "frameworkObjectButtonsGroup";
     private static final String STAR_BUTTON_XPATH = ".//button[contains(@class, 'favourite')]";
     private static final String EDIT_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Edit')]";
