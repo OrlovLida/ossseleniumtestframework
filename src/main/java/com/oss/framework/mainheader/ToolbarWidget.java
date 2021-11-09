@@ -1,18 +1,19 @@
 package com.oss.framework.mainheader;
 
-import com.oss.framework.components.inputs.Button;
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.DelayUtils;
+
 public class ToolbarWidget {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement toolbarWidget;
+    private final WebElement toolbar;
 
     private static final String TOOLBAR_WIDGET_XPATH = "//header[contains(@class, 'header')]";
     private static final String LOGIN_PANEL_BUTTON_XPATH = ".//div[contains(@class, 'login')]";
@@ -26,10 +27,10 @@ public class ToolbarWidget {
     private static final String SHARE_PANEL_ICON_XPATH = ".//*[@data-testid='ButtonShareView']";
     private static final String SHARE_PANEL_XPATH = ".//div[@data-testid='popup_container']";
 
-    private ToolbarWidget(WebDriver driver, WebDriverWait wait, WebElement toolbarWidget) {
+    private ToolbarWidget(WebDriver driver, WebDriverWait wait, WebElement toolbar) {
         this.driver = driver;
         this.wait = wait;
-        this.toolbarWidget = toolbarWidget;
+        this.toolbar = toolbar;
     }
 
     public static ToolbarWidget create(WebDriver driver, WebDriverWait wait) {
@@ -37,70 +38,73 @@ public class ToolbarWidget {
         WebElement toolbar = driver.findElement(By.xpath(TOOLBAR_WIDGET_XPATH));
         return new ToolbarWidget(driver, wait, toolbar);
     }
-    
+
     public void openLoginPanel() {
         if (!isOpen(LOGIN_PANEL_XPATH)) {
             callAction(LOGIN_PANEL_BUTTON_XPATH);
         }
     }
-    
+
     public void openNotificationPanel() {
         if (!isOpen(NOTIFICATION_PANEL_XPATH)) {
             callAction(NOTIFICATION_BUTTON_XPATH);
         }
     }
-    
+
     public void openQueryContextContainer() {
         if (!isOpen(QUERY_CONTEXT_PANEL_XPATH)) {
             callAction(QUERY_CONTEXT_BUTTON_XPATH);
         }
     }
-    
+
     public void openSharePanel() {
         if (!isOpen(SHARE_PANEL_XPATH)) {
-           callAction(SHARE_PANEL_ICON_XPATH);
+            callAction(SHARE_PANEL_ICON_XPATH);
         }
     }
-    
+
     public void closeLoginPanel() {
         if (isOpen(LOGIN_PANEL_XPATH))
             callAction(LOGIN_PANEL_BUTTON_XPATH);
     }
-    
+
     public void closeNotificationPanel() {
         if (isOpen(NOTIFICATION_PANEL_XPATH))
             callAction(NOTIFICATION_BUTTON_XPATH);
     }
-    
+
     public void closeQueryContextContainer() {
         if (isOpen(QUERY_CONTEXT_PANEL_XPATH)) {
             callAction(QUERY_CONTEXT_BUTTON_XPATH);
         }
     }
-    
+
     public void closeSharePanel() {
         if (isOpen(SHARE_PANEL_XPATH)) {
             Button.createByIcon(driver, "fa fa-close", "closePrompt").click();
         }
     }
-    
+
     // pending the solution of OSSWEB-9263
     public void typeAndEnterInGlobalSearch(String value) {
-        getGlobalSearch().findElement(By.xpath(".//input")).sendKeys(value);
-        getGlobalSearch().findElement(By.xpath(".//input")).sendKeys(Keys.ENTER);
+        WebElement input = getGlobalSearch().findElement(By.xpath(".//input"));
+        input.sendKeys(value);
+        DelayUtils.waitForSpinners(wait, input);
+        input.sendKeys(Keys.ARROW_DOWN);
+        input.sendKeys(Keys.ENTER);
     }
 
     private boolean isOpen(String panelXpath) {
-        return driver.findElements(By.xpath(panelXpath)).size() > 0;
-    }
-    
-    private WebElement getGlobalSearch() {
-        DelayUtils.waitByXPath(wait, GLOBAL_SEARCH_INPUT_XPATH);
-        return this.toolbarWidget.findElement(By.xpath(GLOBAL_SEARCH_INPUT_XPATH));
+        return !driver.findElements(By.xpath(panelXpath)).isEmpty();
     }
 
-    private void callAction(String buttonXpath){
+    private WebElement getGlobalSearch() {
+        DelayUtils.waitByXPath(wait, GLOBAL_SEARCH_INPUT_XPATH);
+        return this.toolbar.findElement(By.xpath(GLOBAL_SEARCH_INPUT_XPATH));
+    }
+
+    private void callAction(String buttonXpath) {
         DelayUtils.waitByXPath(wait, buttonXpath);
-        this.toolbarWidget.findElement(By.xpath(buttonXpath)).click();
+        this.toolbar.findElement(By.xpath(buttonXpath)).click();
     }
 }
