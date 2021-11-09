@@ -20,7 +20,6 @@ public class AttributesChooser {
     private static final String DEFAULT_BUTTON_XPATH = ".//div[@class='management-default-button']/a[contains(@class,'btn-flat')]";
 
     public static AttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
         WebElement attributesChooser = driver.findElement(By.xpath(X_PATH_ID));
         return new AttributesChooser(driver, webDriverWait, attributesChooser);
