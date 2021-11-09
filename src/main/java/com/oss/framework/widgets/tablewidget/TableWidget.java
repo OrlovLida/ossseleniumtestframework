@@ -13,7 +13,6 @@ import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.DropdownList;
@@ -252,9 +251,9 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clickCancel();
     }
 
-    public void choseSavedFiltersByLabel(String label) {
+    public void chooseSavedFiltersByLabel(String label) {
         openAdvancedSearch();
-        getAdvancedSearch().choseSavedFilterByLabel(label);
+        getAdvancedSearch().chooseSavedFilterByLabel(label);
         getAdvancedSearch().clickApply();
     }
 
@@ -285,10 +284,6 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public int getRowsNumber() {
-        return getTableComponent().getVisibleRows().size();
-    }
-
-    public int howManyRowsOnFirstPage() {
         return getTableComponent().getVisibleRows().size();
     }
 
@@ -330,8 +325,8 @@ public class TableWidget extends Widget implements TableInterface {
         }
         return tableComponent;
     }
-
-    private AdvancedSearch getAdvancedSearch() {
+    
+    public AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
             advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
         }
@@ -347,8 +342,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
-        Input input = getAdvancedSearch().getComponent(componentId, componentType);
-        input.setSingleStringValue(value);
+        getAdvancedSearch().setFilter(componentId,componentType,value);
     }
 
     private void clickOnKebabMenu() {

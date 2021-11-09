@@ -21,14 +21,17 @@ public class SearchPanel {
     private static final String FILTERS_PATH = ".//div[@class='filter_wrapper']";
     private static final String INPUT_LABEL_PATH = ".//span[@class='md-input-label-text']";
     private static final String NEW_COMBOBOX_LABEL_PATH = ".//*[@class='oss-input__input-label']";
+    private static final String INPUT_PATH = ".//input";
     
     private static final String APPLY_BTN_PATH = ".//a[text()='Apply']";
     private static final String CANCEL_BTN_PATH = ".//a[text()='Cancel']";
+    private static final String SAVE_BTN_PATH = ".//a[text()='Save']";
     private static final String BTN_TOGGLE_FILTERS_PATH = ".//button[@class='btn-toggle-filters']";
     
     private static final String SAVE_BUTTONS_DROPDOWN_PATH = ".//div[@" + CSSUtils.TEST_ID + "='save-buttons-dropdown']";
-    private static final String SAVE_AS_NEW_FILTER_BTN_PATH = ".//a[@" + CSSUtils.TEST_ID + "='save_as_new_filter']";
+    private static final String SAVE_AS_NEW_FILTER_BTN_ID = "save_as_new_filter";
     private static final String SAVE_AS_NEW_FILTER_FORM_PATH = ".//div[@" + CSSUtils.TEST_ID + "='save_as_new_filter_form']";
+    private static final String SAVE_FILTER_BTN_ID = "save_filter";
     
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -51,11 +54,6 @@ public class SearchPanel {
         btnToggleFilters.click();
     }
     
-    private FiltersSettings getFiltersSettings() {
-        DelayUtils.waitBy(this.wait, By.xpath(".//*[@class='" + FILTERS_SETTINGS_PANEL_CLASS + "']"));
-        return FiltersSettings.create(this.driver, this.wait);
-    }
-    
     public void applyFilter() {
         wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(APPLY_BTN_PATH)))).click();
     }
@@ -75,30 +73,23 @@ public class SearchPanel {
         return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
     
-    public void markFilterAsFavByLabel(String label) {
-        getFiltersSettings().markFilterAsFavByLabel(label);
-    }
-    
-    public void choseSavedFilterByLabel(String label) {
-        getFiltersSettings().choseFilterByLabel(label);
-    }
-    
     public void saveAsNewFilter(String name) {
-        this.webElement.findElement(By.xpath(SAVE_BUTTONS_DROPDOWN_PATH)).click();
-        driver.findElement(By.xpath(SAVE_AS_NEW_FILTER_BTN_PATH)).click();
+        callSaveFilterAction(SAVE_AS_NEW_FILTER_BTN_ID);
         
         WebElement form = driver.findElement(By.xpath(SAVE_AS_NEW_FILTER_FORM_PATH));
-        form.findElement(By.xpath(".//input")).sendKeys(name);
-        form.findElement(By.xpath(".//a[text()='Save']")).click();
+        form.findElement(By.xpath(INPUT_PATH)).sendKeys(name);
+        form.findElement(By.xpath(SAVE_BTN_PATH)).click();
         
         DelayUtils.waitForPageToLoad(driver, wait);
     }
     
-    public void selectAttributes(List<String> attributeIds) {
-        getFiltersSettings().selectAttributes(attributeIds);
+    public void saveFilter() {
+        callSaveFilterAction(SAVE_FILTER_BTN_ID);
     }
     
-    public void unselectAttributes(List<String> attributeIds) {
-        getFiltersSettings().unselectAttributes(attributeIds);
+    private void callSaveFilterAction(String actionId) {
+        this.webElement.findElement(By.xpath(SAVE_BUTTONS_DROPDOWN_PATH)).click();
+        driver.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + actionId + "']")).click();
     }
+    
 }

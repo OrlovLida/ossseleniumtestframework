@@ -25,18 +25,18 @@ public class AdvancedSearch {
     private static final String TAGS_CLASS = "tagsWidgetDisplay";
     private static final String TAGS_ITEMS = ".//span[@class='md-input-value']";
     private static final String ADVANCED_SEARCH_PANEL_CLASS = "advanced-search_panel";
-    
+    private static final String FILTERS_SETTINGS_XPATH = "//div[contains(@class,'filters-settings')]";
+    private static final String FILTERS_SETTINGS_CLASS = "filters-settings";
     private static final String SEARCH_PANEL_OPEN_BUTTON = ".//button[@class='button-filters-panel']";
     private static final String ADD_BTN_PATH = ".//a[text()='Add']";
+    private static final String FILTER_BOX_PATH = "//*[@class='filters-box']";
+    private static final String TAG_CLOSE_BUTTON_PATH = ".//span[@class='md-input-close']";
     
     private static final String TAGS_SEPARATOR = ": ";
     
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
-    
-    private SearchPanel searchPanel;
-    private Tags tags;
     
     public static AdvancedSearch createByClass(WebDriver driver, WebDriverWait wait, String className) {
         DelayUtils.waitByXPath(wait, "//*[@class='" + className + "']");
@@ -138,51 +138,69 @@ public class AdvancedSearch {
         return values;
     }
     
-    public void openSearchPanel() {
+    public SearchPanel openSearchPanel() {
         if (!isSearchPanelOpen()) {
             this.webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)).click();
         }
-        if (this.searchPanel == null) {
-            DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-            this.searchPanel = SearchPanel.create(this.driver, this.wait);
+        return getSearchPanel();
+    }
+    
+    private FiltersSettings openFiltersSettings() {
+        if (!isFiltersSettingsOpen()) {
+            openSearchPanel().openFiltersSettings();
         }
+        return getFiltersSettings();
+    }
+    
+    private FiltersSettings getFiltersSettings() {
+        DelayUtils.waitBy(this.wait, By.xpath(FILTERS_SETTINGS_XPATH));
+        return FiltersSettings.create(this.driver, this.wait);
+    }
+    
+    private SearchPanel getSearchPanel() {
+        DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] |" + FILTER_BOX_PATH));
+        return SearchPanel.create(this.driver, this.wait);
+    }
+    
+    private boolean isFiltersSettingsOpen() {
+        return driver.findElements(By.className(FILTERS_SETTINGS_CLASS))
+                .size() > 0;
     }
     
     public void markFilterAsFavByLabel(String label) {
-        this.searchPanel.openFiltersSettings();
-        this.searchPanel.markFilterAsFavByLabel(label);
+        openFiltersSettings().markFilterAsFavByLabel(label);
     }
     
     public void selectAttributes(List<String> attributeIds) {
-        this.searchPanel.openFiltersSettings();
-        this.searchPanel.selectAttributes(attributeIds);
+        openFiltersSettings().selectAttributes(attributeIds);
     }
     
     public void unselectAttributes(List<String> attributeIds) {
-        this.searchPanel.openFiltersSettings();
-        this.searchPanel.unselectAttributes(attributeIds);
+        openFiltersSettings().unselectAttributes(attributeIds);
     }
     
-    public void choseSavedFilterByLabel(String label) {
-        this.searchPanel.openFiltersSettings();
-        this.searchPanel.choseSavedFilterByLabel(label);
+    public void chooseSavedFilterByLabel(String label) {
+        openFiltersSettings().chooseFilterByLabel(label);
     }
     
     public void saveAsNewFilter(String name) {
-        this.searchPanel.saveAsNewFilter(name);
+        openSearchPanel().saveAsNewFilter(name);
+    }
+    
+    public void saveFilter() {
+        openSearchPanel().saveFilter();
     }
     
     public Input getComponent(String componentId, ComponentType componentType) {
-        if (this.searchPanel == null) {
-            DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-            this.searchPanel = SearchPanel.create(this.driver, this.wait);
-        }
-        return this.searchPanel.getComponent(componentId, componentType);
+        return openSearchPanel().getComponent(componentId, componentType);
+    }
+    
+    public void setFilter(String componentId, ComponentType componentType, String value) {
+        getComponent(componentId, componentType).setSingleStringValue(value);
     }
     
     public void clickApply() {
-        this.searchPanel.applyFilter();
-        this.searchPanel = null;
+        getSearchPanel().applyFilter();
     }
     
     public void clickAdd() {
@@ -190,25 +208,24 @@ public class AdvancedSearch {
     }
     
     public void clickCancel() {
-        this.searchPanel.cancel();
-        this.searchPanel = null;
+        getSearchPanel().cancel();
     }
     
     public List<String> getAllVisibleFilters() {
-        return this.searchPanel.getAllVisibleFilters();
+        return getSearchPanel().getAllVisibleFilters();
     }
     
-    @Deprecated
-    public void clickOnTagByLabel(String label) {
-        this.webElement.findElement(By.xpath("//div[@class='" + TAGS_CLASS + "']//*[contains (text(), '" + label + "')]")).click();
+    public List<String> getSavedFilters() {
+        return openFiltersSettings().getFiltersList().stream().map(FiltersSettings.SavedFilter::getFilterLabel)
+                .collect(Collectors.toList());
     }
     
-    public void closeTagByLabel(String label) {
-        this.webElement.findElement(By.xpath(TAGS_ITEMS + "//*[contains (text(), '" + label + "')]/span[contains (@class, 'close')]"))
-                .click();
+    public List<String> getFavoriteFilters() {
+        return openFiltersSettings().getFiltersList().stream().filter(FiltersSettings.SavedFilter::isFavorite)
+                .map(FiltersSettings.SavedFilter::getFilterLabel).collect(Collectors.toList());
     }
     
-    public int howManyTagsIsVisible() {
+    public int getTagsNumber() {
         return this.webElement.findElements(By.xpath(TAGS_ITEMS)).size();
     }
     
@@ -229,14 +246,13 @@ public class AdvancedSearch {
         }
         
         private List<String> getTags() {
-            List<String> values = getTagsWebElement().stream().map(WebElement::getText).collect(Collectors.toList());
-            return values;
+            return getTagsWebElement().stream().map(WebElement::getText).collect(Collectors.toList());
         }
         
         private void clear(String filterName) {
             Optional<WebElement> tag = getTagsWebElement().stream().filter(e -> e.getText().startsWith(filterName)).findFirst();
             if (tag.isPresent()) {
-                WebElement closeButton = tag.get().findElement(By.xpath(".//span[@class='md-input-close']"));
+                WebElement closeButton = tag.get().findElement(By.xpath(TAG_CLOSE_BUTTON_PATH));
                 closeButton.click();
             }
         }
