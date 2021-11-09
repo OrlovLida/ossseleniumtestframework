@@ -135,6 +135,7 @@ public class DelayUtils {
     }
 
     public static void waitForSpinners(WebDriverWait webDriverWait, WebElement webElement) {
+        DelayUtils.sleep(1000);
         List<WebElement> spinner = webElement.findElements(By.xpath(".//i[contains(@class,'fa-spin')]"));
         if (!spinner.isEmpty()) {
             DelayUtils.waitForElementDisappear(webDriverWait, spinner.get(0));
