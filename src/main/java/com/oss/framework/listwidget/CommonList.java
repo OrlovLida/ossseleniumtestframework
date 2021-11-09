@@ -21,16 +21,16 @@ import com.oss.framework.widgets.treewidget.InlineMenu;
 
 public class CommonList {
     
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-    private final String id;
-    
-    private static final String CATEGORY_LIST_XPATH =
-            "//div[contains(@class, 'ExtendedList')]//li[contains(@class, 'categoryListElement')]";
-    private static final String ALL_LIST_ELEMENT_KEBABS_XPATH = "//div[@class='contextActions']//div[@id='frameworkObjectButtonsGroup']";
-    private static final String ALL_CATEGORY_KEBABS_XPATH = "//div[@class='DropdownList']//div[@id='frameworkObjectButtonsGroup']";
+    private static final String LINK_XPATH = ".//div[contains(@class,'hyperlink placeholder')]";
+    private static final String PLACE_HOLDERS_XPATH = ".//div[contains(@class,'placeholders')]";
+    private static final String FAVOURITE_BUTTON_XPATH = ".//button[@class='favouriteButton favourite']";
+    private static final String COLUMN_DATA_CLASS = "columnData";
+    private static final String CHECK_CHECKBOX_XPATH = ".//i[contains(@class,'check')]";
+    private static final String CATEGORY_LIST_XPATH = ".//li[@class='categoryListElement']";
+    private static final String HEADERS_XPATH = ".//div[@class='header left']";
+    public static final String LIST_ELEMENT_XPATH = ".//li[@class='listElement'] | .//li[@class='listElement rowSelected']";
     private static final String KEBAB_ID = "frameworkObjectButtonsGroup";
-    private static final String FAVORITE_BUTTON_XPATH = ".//button[contains(@class, 'favourite')]";
+    private static final String STAR_BUTTON_XPATH = ".//button[contains(@class, 'favourite')]";
     private static final String EDIT_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Edit')]";
     private static final String DELETE_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Delete')]";
     private static final String CATEGORY_XPATH = "//div[@class='categoryLabel-text']";
@@ -46,7 +46,13 @@ public class CommonList {
     private static final String ACTION_CONTAINER_CLASS = "actionsContainer";
     private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
     private static final String SELECTED_ROW_CLASS = "rowSelected";
-    
+
+    private static final String NO_DATA_TEXT_XPATH = "//h3[contains(@class,'emptyResultsText')]";
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final String id;
+
+
     public static CommonList create(WebDriver driver, WebDriverWait wait, String commonListAppId) {
         DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + commonListAppId + "')]"));
         return new CommonList(driver, wait, commonListAppId);
@@ -89,7 +95,6 @@ public class CommonList {
         DelayUtils.waitForPageToLoad(driver, wait);
         expandAllCategories();
         List<Row> rows = createRows();
-        // int rowSize = rows.size();
         for (Row row: rows) {
             DelayUtils.waitForPageToLoad(driver, wait);
             row.callAction(REMOVE_ACTION_ID);
@@ -109,12 +114,8 @@ public class CommonList {
     }
     
     public void collapseAllCategories() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        List<WebElement> categoryLists = getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + COLLAPSE_ICON_XPATH));
-        for (int i = categoryLists.size(); i > 0; i--) {
-            getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH + COLLAPSE_ICON_XPATH)).get(i - 1).click();
-            DelayUtils.waitForPageToLoad(driver, wait);
-        }
+        List<Category> categories = createCategories();
+        categories.forEach(Category::collapseCategory);
     }
     
     public void clickOnCategoryByName(String name) {
@@ -197,7 +198,7 @@ public class CommonList {
     
     public boolean isNoData() {
         List<WebElement> noData = this.driver
-                .findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']//h3[contains(@class,'emptyResultsText')]"));
+                .findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']" + NO_DATA_TEXT_XPATH));
         return !noData.isEmpty();
     }
     
@@ -233,7 +234,7 @@ public class CommonList {
     
     @Deprecated
     private WebElement getFavoriteButtonByListElementName(String name) {
-        return getListElementByName(name).findElement(By.xpath(FAVORITE_BUTTON_XPATH));
+        return getListElementByName(name).findElement(By.xpath(STAR_BUTTON_XPATH));
     }
     
     public Category getCategory(String value) {
@@ -257,7 +258,7 @@ public class CommonList {
     
     private List<Row> createRows() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        List<WebElement> header = getCommonList().findElements(By.xpath(".//div[@class='header left']"));
+        List<WebElement> header = getCommonList().findElements(By.xpath(HEADERS_XPATH));
         int size = header.size();
         if (size != 0) {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", header.get(size - 1));
@@ -266,14 +267,14 @@ public class CommonList {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
         
-        return getCommonList().findElements(By.xpath(".//li[@class='listElement'] | .//li[@class='listElement rowSelected']"))
+        return getCommonList().findElements(By.xpath(LIST_ELEMENT_XPATH))
                 .stream().map(row -> new Row(driver, wait, row, headers)).collect(Collectors.toList());
         
     }
     
     public List<Category> createCategories() {
-        DelayUtils.waitForNestedElements(wait, getCommonList(), ".//li[@class='categoryListElement']");
-        List<WebElement> categories = getCommonList().findElements(By.xpath(".//li[@class='categoryListElement']"));
+        DelayUtils.waitForNestedElements(wait, getCommonList(), CATEGORY_LIST_XPATH);
+        List<WebElement> categories = getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH));
         return categories.stream().map(category -> new Category(driver, wait, category)).collect(Collectors.toList());
     }
     
@@ -314,9 +315,9 @@ public class CommonList {
         }
         
         public String getValue(String attributeName) {
-            List<WebElement> columnData = row.findElements(By.className("columnData"));
+            List<WebElement> columnData = row.findElements(By.className(COLUMN_DATA_CLASS));
             WebElement webElement = columnData.get(headers.indexOf(attributeName));
-            if (!webElement.findElements(By.xpath(".//i[contains(@class,'check')]")).isEmpty()) {
+            if (!webElement.findElements(By.xpath(CHECK_CHECKBOX_XPATH)).isEmpty()) {
                 return "true";
             }
             return webElement.getText();
@@ -329,13 +330,13 @@ public class CommonList {
         }
         
         public boolean isFavorite() {
-            return !row.findElements(By.xpath(".//button[@class='favouriteButton favourite']")).isEmpty();
+            return !row.findElements(By.xpath(FAVOURITE_BUTTON_XPATH)).isEmpty();
         }
         
         public void setFavorite() {
             Actions action = new Actions(driver);
             if (!isFavorite()) {
-                action.moveToElement(row.findElement(By.xpath(FAVORITE_BUTTON_XPATH))).click().build().perform();
+                action.moveToElement(row.findElement(By.xpath(STAR_BUTTON_XPATH))).click().build().perform();
             }
         }
         
@@ -351,9 +352,8 @@ public class CommonList {
         }
         
         public void callActionIcon(String ariaLabel) {
-            String placeholdersXPath = ".//div[contains(@class,'placeholders')]";
-            DelayUtils.waitForNestedElements(wait, row, placeholdersXPath);
-            WebElement placeholdersAndActions = row.findElement(By.xpath(placeholdersXPath));
+            DelayUtils.waitForNestedElements(wait, row, PLACE_HOLDERS_XPATH);
+            WebElement placeholdersAndActions = row.findElement(By.xpath(PLACE_HOLDERS_XPATH));
             WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
             DelayUtils.waitForClickability(wait, icon);
             Actions action = new Actions(driver);
@@ -367,15 +367,14 @@ public class CommonList {
                 action.moveToElement(button).click().perform();
                 return;
             }
-            if (!row.findElements(By.className("actionsContainer")).isEmpty()) {
+            if (!row.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
                 InlineMenu.create(row, driver, wait).callAction(actionId);
             }
         }
         
         public void clickOnLink(String linkText) {
-            String linkXpath = ".//div[contains(@class,'hyperlink placeholder')]";
-            DelayUtils.waitForNestedElements(wait, row, linkXpath);
-            WebElement rowWithLink = row.findElement(By.xpath(linkXpath));
+            DelayUtils.waitForNestedElements(wait, row, LINK_XPATH);
+            WebElement rowWithLink = row.findElement(By.xpath(LINK_XPATH));
             WebElement link = rowWithLink.findElement(By.xpath(String.format(".//*[contains(text(),'%s')]", linkText)));
             Actions action = new Actions(driver);
             action.moveToElement(link).click().build().perform();
@@ -417,10 +416,22 @@ public class CommonList {
         
         public void expandCategory() {
             Actions actions = new Actions(driver);
-            if (category.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty()) {
+            if (!isExpanded()) {
                 actions.moveToElement(category.findElement(By.xpath(EXPAND_ICON_XPATH))).click().build().perform();
             }
             DelayUtils.waitForPageToLoad(driver, wait);
+        }
+        
+        public void collapseCategory() {
+            Actions actions = new Actions(driver);
+            if (isExpanded()) {
+                actions.moveToElement(category.findElement(By.xpath(COLLAPSE_ICON_XPATH))).click().build().perform();
+            }
+            DelayUtils.waitForPageToLoad(driver, wait);
+        }
+        
+        private boolean isExpanded() {
+            return !category.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
         }
         
         public void selectCategory() {
