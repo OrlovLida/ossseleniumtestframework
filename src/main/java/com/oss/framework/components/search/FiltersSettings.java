@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,8 @@ public class FiltersSettings {
     private static final String STAR_ICON_PATH = ".//div[@class='filters-element-icon']//i";
     private static final String SELECTED_ATTRIBUTE_PATH = ".//input[@checked]";
     private static final String INPUT_PATH = ".//input";
-    
+    private static final String FILTER_WITH_PROVIDED_NAME_DOESNT_EXIST_EXCEPTION = "Filter with provided name doesn't exist.";
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
@@ -73,13 +75,13 @@ public class FiltersSettings {
         openSavedFilters();
         DelayUtils.waitByXPath(wait, NO_FILTERS + " | " + SAVED_FILTER_LABEL);
         return this.webElement.findElements(By.cssSelector(SAVED_FILTERS_SELECTOR)).stream()
-                .map(savedFilter -> new SavedFilter(driver, savedFilter))
+                .map(savedFilter -> new SavedFilter(driver, wait, savedFilter))
                 .collect(Collectors.toList());
     }
     
     private SavedFilter getFilterByLabel(String filterLabel) {
         return getFiltersList().stream().filter(filter -> filter.getFilterLabel().contains(filterLabel)).findFirst()
-                .orElseThrow(() -> new RuntimeException("Filter with provided name doesn't exist."));
+                .orElseThrow(() -> new RuntimeException(FILTER_WITH_PROVIDED_NAME_DOESNT_EXIST_EXCEPTION));
     }
     
     public void markFilterAsFavByLabel(String filterLabel) {
@@ -142,10 +144,12 @@ public class FiltersSettings {
     protected static class SavedFilter {
         private final WebElement filter;
         private final WebDriver driver;
+        private final WebDriverWait wait;
         
-        private SavedFilter(WebDriver driver, WebElement filter) {
+        private SavedFilter(WebDriver driver, WebDriverWait wait, WebElement filter) {
             this.driver = driver;
             this.filter = filter;
+            this.wait = wait;
         }
         
         public boolean isFavorite() {
@@ -159,6 +163,7 @@ public class FiltersSettings {
         private void markAsFavorite() {
             if (!isFavorite()) {
                 getStar().click();
+                wait.until(ExpectedConditions.attributeToBe(getStar(), "aria-label", FAVORITE));
             }
         }
         
