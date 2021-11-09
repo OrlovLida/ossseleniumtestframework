@@ -47,6 +47,7 @@ public class CommonList {
     private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
     private static final String SELECTED_ROW_CLASS = "rowSelected";
     private static final String NO_DATA_TEXT_XPATH = "//h3[contains(@class,'emptyResultsText')]";
+    private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -253,7 +254,13 @@ public class CommonList {
     public Row getRow(String attributeName, String value) {
         return createRows().stream().filter(row -> row.getValue(attributeName).equals(value))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Provided value doesn't exist"));
+                .orElseThrow(() -> new RuntimeException(PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION));
+    }
+
+    public Row getRowContains(String attributeName, String valueContains){
+        return createRows().stream().filter(row -> row.getValue(attributeName).contains(valueContains))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION));
     }
     
     private List<Row> createRows() {
