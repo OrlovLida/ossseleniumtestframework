@@ -19,6 +19,7 @@ import static com.oss.framework.logging.LoggerMessages.MOVE_MOUSE_OVER;
 public class KpiChartWidget extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(KpiChartWidget.class);
+
     private static final String KPI_CHART_WIDGET_PATH = "//*[@" + CSSUtils.TEST_ID + "='am-chart-wrapper']";
     private static final String KPI_CHART_WIDGET_ID = "am-chart-wrapper";
 
@@ -42,15 +43,15 @@ public class KpiChartWidget extends Widget {
     private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DATA_VIEW_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
 
-    private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
-        super(driver, webDriverWait, widgetId, widget);
-    }
-
     public static KpiChartWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, KPI_CHART_WIDGET_PATH);
-        WebElement widget = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + KPI_CHART_WIDGET_ID + "']"));
+        WebElement widget = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + KPI_CHART_WIDGET_ID + "']"));
 
         return new KpiChartWidget(driver, wait, KPI_CHART_WIDGET_ID, widget);
+    }
+
+    private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
+        super(driver, webDriverWait, widgetId, widget);
     }
 
     public void waitForPresenceAndVisibility() {
@@ -191,6 +192,14 @@ public class KpiChartWidget extends Widget {
         int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DIMENSIONS_TREE_PATH)).size();
         log.debug("Dimension tree is visible: {}", visibleDataViewPanel);
         return visibleDataViewPanel == 1;
+    }
+
+    public boolean topNBarChartIsDisplayed(String barChartId) {
+        return this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).size() > 0;
+    }
+
+    public int countCharts() {
+        return driver.findElements(By.xpath(".//*[@data-testid='am-chart']")).size();
     }
 
     private WebElement findElementByXpath(String xpath) {
