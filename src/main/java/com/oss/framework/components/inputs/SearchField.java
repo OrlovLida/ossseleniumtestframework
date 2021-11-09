@@ -82,6 +82,6 @@ public class SearchField extends Input {
 
     @Override
     public String getLabel() {
-        return webElement.getText();
+        return webElement.findElement(By.tagName("span")).getText();
     }
 }
