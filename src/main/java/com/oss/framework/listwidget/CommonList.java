@@ -46,8 +46,8 @@ public class CommonList {
     private static final String ACTION_CONTAINER_CLASS = "actionsContainer";
     private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
     private static final String SELECTED_ROW_CLASS = "rowSelected";
-
     private static final String NO_DATA_TEXT_XPATH = "//h3[contains(@class,'emptyResultsText')]";
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final String id;
