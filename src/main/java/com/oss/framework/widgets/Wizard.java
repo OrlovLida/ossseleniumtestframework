@@ -1,24 +1,17 @@
 package com.oss.framework.widgets;
 
-import java.util.List;
-
-import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.widgets.treewidget.InlineMenu;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 public class Wizard {
 
@@ -86,11 +79,18 @@ public class Wizard {
         return input;
     }
 
+    public Input clearComponent(String componentId, Input.ComponentType componentType) {
+        DelayUtils.waitForNestedElements(wait, webElement, String.format(DATA_TEST_ID_XPATH, componentId));
+        Input input = getComponent(componentId, componentType);
+        input.clear();
+        return input;
+    }
+
     public void clickNext() {
         DelayUtils.waitForNestedElements(wait, webElement, NEXT_BUTTON);
         Actions action = new Actions(driver);
         action.moveToElement(
-                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(NEXT_BUTTON))))).click()
+                        wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(NEXT_BUTTON))))).click()
                 .perform();
     }
 

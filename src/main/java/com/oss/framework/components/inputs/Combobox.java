@@ -1,25 +1,24 @@
 package com.oss.framework.components.inputs;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.data.Data;
+import com.oss.framework.data.Data.DataWrapper;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.data.Data;
-import com.oss.framework.data.Data.DataWrapper;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Combobox extends Input {
 
     private static final String INPUT_XPATH = ".//input";
     private static final String LABEL_XPATH = ".//label";
     private static final String COMBOBOX_INPUT_XPATH = ".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]";
-    private static final String COMBOBOX_CLOSE_XPATH = ".//i[contains(@class,'OSSIcon ossfont-close button-close')]";
+    private static final String COMBOBOX_CLOSE_XPATH = ".//i[@aria-label ='CLOSE']";
     private static final String LIST_ITEM_XPATH = "//div[@class='list-item'] | //div[@class='combo-box__list-item']";
 
     // TODO: remove after resolving OSSSD-2035 - setting data-testId in status Combobox
