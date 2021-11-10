@@ -33,7 +33,7 @@ public class InlineMenu {
 
     public void callAction(String groupId, String actionId) {
         expandKebabMenu();
-        ActionsContainer.createFromParent(webElement, driver, wait).callActionById(groupId, actionId);
+        ActionsContainer.createFromParent(webElement, driver, wait).callActionForInline(groupId, actionId);
     }
 
     private void expandKebabMenu() {

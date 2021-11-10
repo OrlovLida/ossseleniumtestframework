@@ -77,12 +77,12 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     public void callActionForInline(String actionId) {
-        if (!webDriver.findElements(By.className(ACTIONS_LIST)).isEmpty()) {
             Dropdown.create(webDriver, webDriverWait).callAction(actionId);
-            return;
-        }
-        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//*[@id='" + actionId + "']");
-        clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(actionId)));
+    }
+
+    public void callActionForInline(String groupId, String actionId){
+        Dropdown.create(webDriver,webDriverWait).callAction(groupId);
+        Dropdown.create(webDriver,webDriverWait).callAction(actionId);
     }
 
     private void clickOnGroup(String groupId) {
