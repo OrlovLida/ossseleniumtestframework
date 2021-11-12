@@ -236,6 +236,9 @@ public class TableWidget extends Widget implements TableInterface {
     public void turnOffSortingForColumn(String columnId) {
         getTableComponent().turnOffSorting(columnId);
     }
+    public void setColumnWidth(String columnId, String columnWidth){
+        getTableComponent().setColumnWidth(columnId, columnWidth);
+    }
 
     public void clearAllFilters() {
         getAdvancedSearch().clearAllFilters();
