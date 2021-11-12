@@ -130,7 +130,7 @@ public class TableComponent {
         getHeaderByIndex(columnId).openSettings().turnOffSorting();
     }
 
-    public void setDefaultColumnWidth (String columnId, String columnWidth){
+    public void setColumnWidth(String columnId, String columnWidth){
         getHeaderByIndex(columnId).openSettings().setDefaultColumnWidth(columnWidth);
     }
     
@@ -405,7 +405,7 @@ public class TableComponent {
                     .orElseThrow(() -> new RuntimeException(ADMINISTRATION_TAB_IS_NOT_AVAILABLE_EXCEPTION));
             administrationTab.click();
         }
-        
+
         private void setDefaultColumnWidth(String columnWidth) {
             openAdministrationTab();
             Input input = ComponentFactory.create(SIZE_DEFAULT_INPUT_ID, Input.ComponentType.TEXT_FIELD, driver, webDriverWait);
