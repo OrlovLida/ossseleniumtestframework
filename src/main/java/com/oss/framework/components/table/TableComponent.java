@@ -269,7 +269,6 @@ public class TableComponent {
         
         private static Header createFromWrapper(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent,
                 WebElement wrapper) {
-            //WebElement header = wrapper.findElement(By.className("table-component__header"));
             String columnId = CSSUtils.getAttributeValue("data-col", wrapper);
             String label = wrapper.getText();
             return new Header(driver, webDriverWait, tableComponent, columnId, label);
