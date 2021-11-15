@@ -21,7 +21,7 @@ public class PaginationComponent {
     private static final String PAGE_OPTION_NUMBER_CLASS = "pageOption";
     private static final String CANNOT_FIND_PAGINATION_OPTION_EXCEPTION = "Cannot find pagination option";
     private static final String PAGINATION_DROPDOWN_XPATH = ".//ul[@class= 'dropdown-menu show']";
-
+    
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement paginationComponent;
