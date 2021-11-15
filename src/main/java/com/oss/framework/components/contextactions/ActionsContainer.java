@@ -1,7 +1,6 @@
 package com.oss.framework.components.contextactions;
 
-import java.util.List;
-
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +9,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
 
 public class ActionsContainer implements ActionsInterface {
     public static final String KEBAB_GROUP_ID = "KEBAB";
@@ -112,9 +111,10 @@ public class ActionsContainer implements ActionsInterface {
 
     private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
         Actions actions = new Actions(webDriver);
-        actions.moveToElement(webElement).click(webElement).build().perform();
+        actions.moveToElement(webElement).build().perform();
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
+        actions.click(webElement).build().perform();
     }
 
     private static class Dropdown {
