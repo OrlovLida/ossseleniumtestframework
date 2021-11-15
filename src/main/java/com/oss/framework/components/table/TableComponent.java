@@ -398,7 +398,7 @@ public class TableComponent {
             sortButtons().get(0).click();
         }
         
-        private void openAdministrationTab() {
+        private void selectAdministrationTab() {
             WebElement administrationTab = this.webElement.findElements(By.className(TABS_BUTTON_CLASS)).stream()
                     .filter(tab -> tab.getText().equals(ADMINISTRATION)).findFirst()
                     .orElseThrow(() -> new RuntimeException(ADMINISTRATION_TAB_IS_NOT_AVAILABLE_EXCEPTION));
@@ -406,7 +406,7 @@ public class TableComponent {
         }
 
         private void setDefaultColumnWidth(String columnWidth) {
-            openAdministrationTab();
+            selectAdministrationTab();
             Input input = ComponentFactory.create(SIZE_DEFAULT_INPUT_ID, Input.ComponentType.TEXT_FIELD, driver, webDriverWait);
             input.setSingleStringValue(columnWidth);
             apply();
