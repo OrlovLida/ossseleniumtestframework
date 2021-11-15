@@ -1,7 +1,5 @@
 package com.oss.framework.components.common;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -22,7 +20,8 @@ public class PaginationComponent {
     private static final String DROPDOWN_PAGINATION_OPTION_CLASS = "dropdown-toggle";
     private static final String PAGE_OPTION_NUMBER_CLASS = "pageOption";
     private static final String CANNOT_FIND_PAGINATION_OPTION_EXCEPTION = "Cannot find pagination option";
-
+    private static final String PAGINATION_DROPDOWN_XPATH = ".//ul[@class= 'dropdown-menu show']";
+    
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement paginationComponent;
@@ -116,13 +115,20 @@ public class PaginationComponent {
         openSizeOption();
         getPageOption(pageSizeOption).click();
     }
-
-    private void openSizeOption(){
-        paginationComponent.findElement(By.className(DROPDOWN_PAGINATION_OPTION_CLASS)).click();
+    
+    private void openSizeOption() {
+        if (!isSizeOptionOpen()) {
+            paginationComponent.findElement(By.className(DROPDOWN_PAGINATION_OPTION_CLASS)).click();
+        }
     }
-
-    private WebElement getPageOption(String pageSizeOption){
-       return paginationComponent.findElements(By.className(PAGE_OPTION_NUMBER_CLASS)).stream()
+    
+    private boolean isSizeOptionOpen() {
+        return !paginationComponent.findElements(By.xpath(PAGINATION_DROPDOWN_XPATH)).isEmpty();
+        
+    }
+    
+    private WebElement getPageOption(String pageSizeOption) {
+        return paginationComponent.findElements(By.className(PAGE_OPTION_NUMBER_CLASS)).stream()
                 .filter(pageOption -> pageOption.getText().equals(pageSizeOption)).findFirst()
                 .orElseThrow(() -> new RuntimeException(CANNOT_FIND_PAGINATION_OPTION_EXCEPTION));
     }
