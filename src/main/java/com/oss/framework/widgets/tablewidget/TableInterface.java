@@ -28,8 +28,6 @@ public interface TableInterface {
 
     List<String> getActiveColumnHeaders();
 
-    void disableColumn(String columnId);
-
     void disableColumnByLabel(String columnLabel, String... path);
 
     void enableColumnByLabel(String columnLabel, String... path);
