@@ -108,6 +108,11 @@ public class TabWindowWidget implements TabsInterface {
         throw new UnsupportedOperationException("Method not implemented");
     }
 
+    @Override
+    public void clickButtonById(String id) {
+        throw new UnsupportedOperationException("Method not implemented");
+    }
+
     private boolean isMoreVisible() {
         DelayUtils.waitForNestedElements(wait, this.tabs, ALL_TABS);
         WebElement allTabs = this.tabs.findElement(By.xpath(ALL_TABS));

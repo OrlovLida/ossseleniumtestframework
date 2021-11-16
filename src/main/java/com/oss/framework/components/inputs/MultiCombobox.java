@@ -16,11 +16,10 @@ import com.oss.framework.utils.DelayUtils;
 
 public class MultiCombobox extends Input {
     
-    private final static String TITLE_ITEM_CONTAINS_XPATH = ".//div[contains(@title='%s')]";
-    private final static String TITLE_ITEM_EQUAL_XPATH = ".//div[@title='%s']";
-    private final static String CLEAR_XPATH =
-            ".//div[@" + CSSUtils.TEST_ID + "='%s-input']//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]";
-    private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
+    private static final String TITLE_ITEM_CONTAINS_XPATH = ".//div[contains(@title,'%s')]";
+    private static final String TITLE_ITEM_EQUAL_XPATH = ".//div[@title='%s']";
+    private static final String CLEAR_XPATH =
+            ".//div[@" + CSSUtils.TEST_ID + "='%s-input']//i[contains(@class,'OSSIcon ossfont-close button-close')]";
     private static final String LABEL_XPATH = ".//span[@class='oss-input__input-label']";
     private static final String TAGS_XPATH = ".//div[@class='tags-input__tag']";
     private static final String TAGS_LABEL = "tags-input__label";
@@ -45,7 +44,7 @@ public class MultiCombobox extends Input {
     public void setValue(Data value) {
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
-        waitForSpinners();
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         if (isSearchEnabled()) {
             searchItem(value.getStringValue(), false);
         } else
@@ -56,7 +55,7 @@ public class MultiCombobox extends Input {
     public void setValueContains(Data value) {
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
-        waitForSpinners();
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         if (isSearchEnabled()) {
             searchItem(value.getStringValue(), true);
         } else
@@ -93,6 +92,12 @@ public class MultiCombobox extends Input {
         return webElement.findElement(By.xpath(LABEL_XPATH)).getAttribute("textContent");
     }
     
+    @Override
+    public MouseCursor cursor() {
+        String cursor = webElement.findElement(By.className("oss-input__input")).getCssValue("cursor");
+        return getMouseCursor(cursor);
+    }
+    
     private boolean isSearchEnabled() {
         return !webElement.findElements(By.xpath(createDropdownSearchInputPath())).isEmpty();
     }
@@ -100,7 +105,7 @@ public class MultiCombobox extends Input {
     private void searchItem(String value, boolean isContains) {
         WebElement input = webElement.findElement(By.xpath(createDropdownSearchInputPath()));
         input.sendKeys(value);
-        waitForSpinners();
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         if (isContains) {
             acceptStringValue(input);
         } else
@@ -117,13 +122,6 @@ public class MultiCombobox extends Input {
     
     private String createDropdownList() {
         return "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "-dropdown']";
-    }
-    
-    private void waitForSpinners() {
-        List<WebElement> spinner = webElement.findElements(By.xpath(SPIN_XPATH));
-        if (!spinner.isEmpty()) {
-            DelayUtils.waitForElementDisappear(webDriverWait, spinner.get(0));
-        }
     }
     
 }

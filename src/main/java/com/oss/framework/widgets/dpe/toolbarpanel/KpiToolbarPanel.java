@@ -1,7 +1,7 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
 import com.oss.framework.components.inputs.Button;
-import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
@@ -19,6 +19,9 @@ public class KpiToolbarPanel extends Widget {
 
     final static String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
     private final static String APPLY_BUTTON_ID = "apply-button";
+    private static final String DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH = ".//div[@data-testid='dropdown_list_type_display_data']";
+    private final static String TOP_N_BUTTON_ID = "top-n-button";
+    private final static String OPENED_TOP_N_PANEL_XPATH = "//div[@class='window']/div[@data-testid='drill-down-menu']";
 
     private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -43,8 +46,12 @@ public class KpiToolbarPanel extends Widget {
         return LayoutPanel.create(driver, webDriverWait);
     }
 
-    public TopNPanel getTopNPanel() {
-        return TopNPanel.create(driver, webDriverWait, webElement);
+    public TopNPanel openTopNPanel() {
+        if (!isTopNPanelOpen()) {
+            Button.createById(driver, TOP_N_BUTTON_ID).click();
+            log.debug(CLICK_BTN + "TopN");
+        }
+        return TopNPanel.create(driver, webDriverWait);
     }
 
     public void clickApply() {
@@ -53,5 +60,15 @@ public class KpiToolbarPanel extends Widget {
         applyButton.click();
 
         log.debug(CLICK_BTN + "Apply");
+    }
+
+    public void selectDisplayType(String displayTypeId) {
+        webElement.findElement(By.xpath(DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH)).click();
+        DropdownList.create(driver, webDriverWait).selectOptionWithId(displayTypeId);
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+    }
+
+    private boolean isTopNPanelOpen() {
+        return driver.findElements(By.xpath(OPENED_TOP_N_PANEL_XPATH)).size() > 0;
     }
 }

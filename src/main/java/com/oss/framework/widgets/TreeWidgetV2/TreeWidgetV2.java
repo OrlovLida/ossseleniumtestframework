@@ -8,6 +8,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.search.AdvancedSearch;
@@ -58,17 +59,11 @@ public class TreeWidgetV2 extends Widget {
 
     public void callActionById(String groupLabel, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
-        actionsContainer.callAction(groupLabel, id);
+        actionsContainer.callActionById(groupLabel, id);
     }
 
     public void selectNodeByLabel(String label) {
         getNode(label).toggleNode();
-    }
-
-    @Deprecated
-    public void expandNode() {
-        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
-        getVisibleNodes().get(0).expandNode();
     }
 
     public void expandNodeWithLabel(String label) {
@@ -94,6 +89,10 @@ public class TreeWidgetV2 extends Widget {
 
     public Node getNodeByLabelsPath(String labels) {
         return getTreeComponent().getNodeByLabelsPath(labels);
+    }
+
+    public PaginationComponent getPagination(){
+       return PaginationComponent.createFromParent(driver,webDriverWait,webElement);
     }
 
     private TreeComponent getTreeComponent() {

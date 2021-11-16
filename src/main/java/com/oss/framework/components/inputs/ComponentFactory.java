@@ -1,5 +1,6 @@
 package com.oss.framework.components.inputs;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,9 +19,6 @@ public class ComponentFactory {
             }
             case COMBOBOX: {
                 return Combobox.create(webDriver, wait, componentId);
-            }
-            case COMBOBOXV2: {
-                return ComboboxV2.create(webDriver, wait, componentId);
             }
             case COORDINATES: {
                 return Coordinates.create(webDriver, wait, componentId);
@@ -79,9 +77,9 @@ public class ComponentFactory {
             case BPM_COMBOBOX: {
                 return BpmCombobox.create(webDriver, wait, componentId);
             }
+            default:
+                throw new NoSuchElementException("Not supported component type: " + componentType);
         }
-
-        throw new RuntimeException("Not supported component type: " + componentType);
     }
 
     public static Input createFromParent(String componentId, ComponentType componentType, WebDriver webDriver, WebDriverWait wait,
@@ -94,9 +92,6 @@ public class ComponentFactory {
             }
             case COMBOBOX: {
                 return Combobox.createFromParent(parent, webDriver, wait, componentId);
-            }
-            case COMBOBOXV2: {
-                return ComboboxV2.create(webDriver, wait, componentId);
             }
             case COORDINATES: {
                 return Coordinates.create(parent, webDriver, wait, componentId);
@@ -146,8 +141,8 @@ public class ComponentFactory {
             case BPM_COMBOBOX: {
                 return BpmCombobox.create(webDriver, wait, componentId);
             }
+            default:
+                throw new NoSuchElementException("Not supported component type: " + componentType);
         }
-
-        throw new RuntimeException("Not supported component type: " + componentType);
     }
 }
