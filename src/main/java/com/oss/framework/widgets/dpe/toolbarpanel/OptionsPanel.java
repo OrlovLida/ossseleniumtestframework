@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OptionsPanel {
 
@@ -163,16 +164,11 @@ public class OptionsPanel {
         return String.format(AGGREGATION_METHOD_CHOOSER_INPUT_PATH, option);
     }
 
-    public List<AggregationMethodOption> getActiveAggregationMethodsList() {
+    public List<AggregationMethodOption> getActiveAggregationMethods() {
         chooseAggregationMethod();
         List<WebElement> webElementsAgg = optionsPanel.findElements(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
-        List<String> activeAggMethodsIds = new ArrayList<>();
-        List<AggregationMethodOption> activeAggMethods = new ArrayList<AggregationMethodOption>();
-        for (WebElement aggMethod : webElementsAgg) {
-            String aggMethodId = aggMethod.getAttribute("data-testid");
-            activeAggMethodsIds.add(aggMethodId);
-        }
-        for (String aggMethodId : activeAggMethodsIds) {
+        List<AggregationMethodOption> activeAggMethods = new ArrayList<>();
+        for (String aggMethodId : activeAggMethodsIds(webElementsAgg)) {
             switch (aggMethodId) {
                 case "Min": {
                     activeAggMethods.add(AggregationMethodOption.MIN);
@@ -207,12 +203,9 @@ public class OptionsPanel {
         return activeAggMethods;
     }
 
-    public String getActiveAggregationMethod() {
-        chooseAggregationMethod();
-        WebElement activeAggregationMethod = driver.findElement(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
-        String activeAggMethod = activeAggregationMethod.getAttribute(CSSUtils.TEST_ID).toUpperCase();
-
-        return activeAggMethod;
+    private List<String> activeAggMethodsIds(List<WebElement> webElementsAgg) {
+        return webElementsAgg.stream().map(aggMethod -> CSSUtils.getAttributeValue("data-testid", aggMethod))
+                .collect(Collectors.toList());
     }
 
     private void chooseAggregationMethod() {
