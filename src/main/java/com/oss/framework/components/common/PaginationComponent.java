@@ -111,7 +111,7 @@ public class PaginationComponent {
         return Integer.parseInt(pageSize);
     }
     
-    public void changeRowsCount(String pageSizeOption) {
+    public void changeRowsCount(int pageSizeOption) {
         openSizeOption();
         getPageOption(pageSizeOption).click();
     }
@@ -127,9 +127,9 @@ public class PaginationComponent {
         
     }
     
-    private WebElement getPageOption(String pageSizeOption) {
+    private WebElement getPageOption(int pageSizeOption) {
         return paginationComponent.findElements(By.className(PAGE_OPTION_NUMBER_CLASS)).stream()
-                .filter(pageOption -> pageOption.getText().equals(pageSizeOption)).findFirst()
+                .filter(pageOption -> pageOption.getText().equals(String.valueOf(pageSizeOption))).findFirst()
                 .orElseThrow(() -> new RuntimeException(CANNOT_FIND_PAGINATION_OPTION_EXCEPTION));
     }
 }

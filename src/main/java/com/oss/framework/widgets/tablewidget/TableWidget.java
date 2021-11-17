@@ -200,12 +200,6 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void disableColumn(String columnLabel) {
-        getAttributesChooser().disableAttributeByLabel(columnLabel, "")
-                .clickApply();
-    }
-
-    @Override
     public void disableColumnByLabel(String columnLabel, String... path) {
         getAttributesChooser().disableAttributeByLabel(columnLabel, path)
                 .clickApply();
