@@ -166,9 +166,8 @@ public class OptionsPanel {
 
     public List<AggregationMethodOption> getActiveAggregationMethods() {
         chooseAggregationMethod();
-        List<WebElement> webElementsAgg = optionsPanel.findElements(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
         List<AggregationMethodOption> activeAggMethods = new ArrayList<>();
-        for (String aggMethodId : activeAggMethodsIds(webElementsAgg)) {
+        for (String aggMethodId : activeAggMethodsIds(webElementsAgg())) {
             switch (aggMethodId) {
                 case "Min": {
                     activeAggMethods.add(AggregationMethodOption.MIN);
@@ -206,6 +205,10 @@ public class OptionsPanel {
     private List<String> activeAggMethodsIds(List<WebElement> webElementsAgg) {
         return webElementsAgg.stream().map(aggMethod -> CSSUtils.getAttributeValue("data-testid", aggMethod))
                 .collect(Collectors.toList());
+    }
+
+    private List<WebElement> webElementsAgg() {
+        return optionsPanel.findElements(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
     }
 
     private void chooseAggregationMethod() {
