@@ -34,8 +34,6 @@ public class TableWidget extends Widget implements TableInterface {
 
     private AdvancedSearch advancedSearch;
     private TableComponent tableComponent;
-    private SelectionBarComponent selectionBarComponent;
-
 
     @Deprecated
     public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
@@ -319,6 +317,14 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().scrollVertically(offset);
     }
 
+    public void openSelectionBar(String widgetId){
+        SelectionBarComponent.openSelectionBar(driver, widgetId);
+    }
+
+    public void hideSelectionBar(String widgetId){
+        SelectionBarComponent.hideSelectionBar(driver, widgetId);
+    }
+
     private TableComponent getTableComponent() {
         if (tableComponent == null) {
             tableComponent = TableComponent.create(this.driver, this.webDriverWait, this.id);
@@ -327,10 +333,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private SelectionBarComponent getSelectionBarComponent(String tableWidgetId){
-        if(selectionBarComponent == null){
-            selectionBarComponent = SelectionBarComponent.create(this.driver, this.webDriverWait, tableWidgetId);
-        }
-        return selectionBarComponent;
+        return SelectionBarComponent.create(this.driver, this.webDriverWait, tableWidgetId);
     }
 
     private AdvancedSearch getAdvancedSearch() {

@@ -21,7 +21,6 @@ public class TreeWidgetV2 extends Widget {
 
     private TreeComponent treeComponent;
     private AdvancedSearch advancedSearch;
-    private SelectionBarComponent selectionBarComponent;
 
     public static TreeWidgetV2 create(WebDriver driver, WebDriverWait wait, String widgetId) {
         Widget.waitForWidgetById(wait, widgetId);
@@ -95,6 +94,14 @@ public class TreeWidgetV2 extends Widget {
        return PaginationComponent.createFromParent(driver,webDriverWait,webElement);
     }
 
+    public void openSelectionBar(String widgetId){
+        SelectionBarComponent.openSelectionBar(driver, widgetId);
+    }
+
+    public void hideSelectionBar(String widgetId){
+        SelectionBarComponent.hideSelectionBar(driver, widgetId);
+    }
+
     private TreeComponent getTreeComponent() {
         if (treeComponent == null) {
             treeComponent = TreeComponent.create(driver, webDriverWait, webElement);
@@ -110,9 +117,6 @@ public class TreeWidgetV2 extends Widget {
     }
 
     private SelectionBarComponent getSelectionBarComponent(String widgetId) {
-        if (selectionBarComponent == null){
-            selectionBarComponent = SelectionBarComponent.create(driver, webDriverWait, widgetId);
-        }
-        return selectionBarComponent;
+        return SelectionBarComponent.create(driver, webDriverWait, widgetId);
     }
 }
