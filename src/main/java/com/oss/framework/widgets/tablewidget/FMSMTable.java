@@ -74,12 +74,6 @@ public class FMSMTable implements TableInterface {
     }
 
     @Override
-    public void disableColumn(String columnId) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-
-    }
-
-    @Override
     public void disableColumnByLabel(String columnLabel, String... path) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 

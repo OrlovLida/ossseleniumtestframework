@@ -135,13 +135,6 @@ public class OldTable implements TableInterface {
     }
 
     @Override
-    public void disableColumn(String columnId) {
-        AttributeChooser attributeChooser = new AttributeChooser(driver, getColumnManager());
-        attributeChooser.disableColumnById(columnId);
-        attributeChooser.acceptButton();
-    }
-
-    @Override
     public void disableColumnByLabel(String columnLabel, String... path) {
         AttributeChooser attributeChooser = new AttributeChooser(driver, getColumnManager());
         attributeChooser.disableColumnByLabel(columnLabel);
