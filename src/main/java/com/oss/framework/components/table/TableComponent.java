@@ -156,6 +156,15 @@ public class TableComponent {
         Header targetHeader = headers.get(position);
         DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader.getDropElement(), driver);
     }
+
+    public void changeColumnsOrderById(String columnId, int position) {
+        List<Header> headers = getHeaders();
+        Header sourceHeader = headers.stream().filter(h -> h.getColumnId().equals(columnId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Cant find column: " + columnId));
+        Header targetHeader = headers.get(position);
+        DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader.getDropElement(), driver);
+    }
+
     
     private CustomScrolls getCustomScrolls() {
         return CustomScrolls.create(driver, webDriverWait, webElement);
