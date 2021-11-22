@@ -26,6 +26,10 @@ public class KpiToolbarPanel extends Widget {
     private final static String OPENED_TOP_N_PANEL_XPATH = "//div[@class='window']/div[@data-testid='drill-down-menu']";
     private final static String OPENED_OPTIONS_PANEL_XPATH = "//div[@class='window']/div[@data-testid='options-menu']";
     private final static String OPENED_LAYOUT_PANEL_XPATH = "//div[@class='window']/div[@data-testid='layout-template-menu']";
+    private final static String EXPORT_BUTTON_ID = "export-button";
+    private final static String OPENED_EXPORT_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='export-menu']";
+    private final static String OPENED_FILTERS_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='filter-menu']";
+    private final static String FILTER_BUTTON_ID = "filter-button";
 
     private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -36,14 +40,6 @@ public class KpiToolbarPanel extends Widget {
         WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
 
         return new KpiToolbarPanel(driver, webElement, wait);
-    }
-
-    public FiltersPanel getFiltersPanel() {
-        return FiltersPanel.create(driver, webDriverWait);
-    }
-
-    public ExportPanel getExportPanel() {
-        return ExportPanel.create(driver, webDriverWait);
     }
 
     public LayoutPanel openLayoutPanel() {
@@ -71,6 +67,20 @@ public class KpiToolbarPanel extends Widget {
             clickTopNButton();
         }
         return TopNPanel.create(driver, webDriverWait);
+    }
+
+    public ExportPanel openExportPanel() {
+        if (!isExportPanelOpen()) {
+            clickExportButton();
+        }
+        return ExportPanel.create(driver, webDriverWait);
+    }
+
+    public FiltersPanel openFilterPanel() {
+        if (!isFilterPanelOpen()) {
+            clickFilterButton();
+        }
+        return FiltersPanel.create(driver, webDriverWait);
     }
 
     public void clickApply() {
@@ -112,5 +122,23 @@ public class KpiToolbarPanel extends Widget {
     private void clickLayoutButton() {
         Button.createById(driver, LAYOUT_BUTTON_ID).click();
         log.debug(CLICK_BTN + "Layout");
+    }
+
+    private boolean isExportPanelOpen() {
+        return driver.findElements(By.xpath(OPENED_EXPORT_PANEL_XPATH)).size() > 0;
+    }
+
+    private void clickExportButton() {
+        Button.createById(driver, EXPORT_BUTTON_ID).click();
+        log.debug(CLICK_BTN + "Export");
+    }
+
+    private boolean isFilterPanelOpen() {
+        return driver.findElements(By.xpath(OPENED_FILTERS_PANEL_XPATH)).size() > 0;
+    }
+
+    private void clickFilterButton() {
+        Button.createById(driver, FILTER_BUTTON_ID).click();
+        log.debug(CLICK_BTN + "Filters");
     }
 }
