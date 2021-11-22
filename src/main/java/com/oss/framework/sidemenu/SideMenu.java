@@ -44,12 +44,13 @@ public class SideMenu {
     public void callActionByLabel(String actionLabel, String... path) {
         String actionXpath;
         WebElement latestPath = getSideMenu();
+        Actions action = new Actions(driver);
+        action.moveToElement(latestPath).sendKeys(Keys.HOME).perform();
         for (String s : path) {
             DelayUtils.waitForPageToLoad(driver, wait);
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
             latestPath = searchElement(latestPath, actionXpath);
             DelayUtils.sleep(1000);
-            Actions action = new Actions(driver);
             action.moveToElement(latestPath).click().perform();
         }
         callAction(actionLabel, latestPath);
