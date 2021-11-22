@@ -80,6 +80,7 @@ public class DelayUtils {
 
     public static void waitForPageToLoad(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(1000);
+        waitByXPath(wait, "//div[@id='ossApp']");
         List<WebElement> newList = listOfLoaders(driver);
         long startTime = System.currentTimeMillis();
         while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
