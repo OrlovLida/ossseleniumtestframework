@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ButtonPanel {
 
-    private static final String BUTTON_PANEL_XPATH = "//div[@class='buttonPanel']";
+    private static final String BUTTON_PANEL_XPATH = "//div[@class='view-actions-container']";
     private static final String ICON_XPATH_PATTERN = ".//i[contains(@class,'%s')]";
     private static final String LAYOUT_ICON_ID = "layout";
     private static final String LAYOUT_EXPANDER_ICON_ID = "fa fa-chevron-down";
