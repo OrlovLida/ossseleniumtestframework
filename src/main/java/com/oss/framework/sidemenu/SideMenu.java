@@ -45,26 +45,26 @@ public class SideMenu {
         String actionXpath;
         WebElement latestPath = getSideMenu();
         Actions action = new Actions(driver);
-        action.moveToElement(latestPath).sendKeys(Keys.HOME).perform();
+        action.moveToElement(latestPath).sendKeys(Keys.HOME).build().perform();
         for (String s : path) {
             DelayUtils.waitForPageToLoad(driver, wait);
             actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
-            latestPath = searchElement(latestPath, actionXpath);
+            latestPath = searchElement(actionXpath);
             DelayUtils.sleep(1000);
             action.moveToElement(latestPath).click().perform();
         }
-        callAction(actionLabel, latestPath);
+        callAction(actionLabel);
     }
 
-    private void callAction(String actionLabel, WebElement parent) {
+    private void callAction(String actionLabel) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
-        WebElement foundedElement = searchElement(parent, actionXpath);
+        WebElement foundedElement = searchElement(actionXpath);
         DelayUtils.waitForPageToLoad(driver, wait);
         Actions actions = new Actions(driver);
         actions.moveToElement(foundedElement).click().perform();
     }
 
-    private WebElement searchElement(WebElement webElement, String xpath) {
+    private WebElement searchElement(String xpath) {
         for (int scrollDownCount = 0; scrollDownCount < 3; scrollDownCount++) {
             DelayUtils.waitForPageToLoad(driver, wait);
             if (!(driver.findElements(By.xpath(xpath)).isEmpty())) {
@@ -74,7 +74,8 @@ public class SideMenu {
                 return foundElement;
             }
             Actions action = new Actions(driver);
-            action.moveToElement(webElement).sendKeys(Keys.PAGE_DOWN).perform();
+            action.moveToElement(getSideMenu()).click().build().perform();
+            action.moveToElement(getSideMenu()).sendKeys(Keys.PAGE_DOWN).build().perform();
             DelayUtils.waitForPageToLoad(driver, wait);
         }
         return driver.findElement(By.xpath(xpath));
