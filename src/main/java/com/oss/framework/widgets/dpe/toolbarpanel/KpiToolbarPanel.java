@@ -22,8 +22,10 @@ public class KpiToolbarPanel extends Widget {
     private static final String DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH = ".//div[@data-testid='dropdown_list_type_display_data']";
     private final static String TOP_N_BUTTON_ID = "top-n-button";
     private final static String OPTIONS_BUTTON_ID = "options-menu-button";
+    private final static String LAYOUT_BUTTON_ID = "layout-button";
     private final static String OPENED_TOP_N_PANEL_XPATH = "//div[@class='window']/div[@data-testid='drill-down-menu']";
     private final static String OPENED_OPTIONS_PANEL_XPATH = "//div[@class='window']/div[@data-testid='options-menu']";
+    private final static String OPENED_LAYOUT_PANEL_XPATH = "//div[@class='window']/div[@data-testid='layout-template-menu']";
 
     private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -44,29 +46,29 @@ public class KpiToolbarPanel extends Widget {
         return ExportPanel.create(driver, webDriverWait);
     }
 
-    public LayoutPanel getLayoutPanel() {
+    public LayoutPanel openLayoutPanel() {
+        if (!isLayoutPanelOpen()) {
+            clickLayoutButton();
+        }
         return LayoutPanel.create(driver, webDriverWait);
     }
 
     public OptionsPanel openOptionsPanel() {
         if (!isOptionsPanelOpen()) {
-            Button.createById(driver, OPTIONS_BUTTON_ID).click();
-            log.debug(CLICK_BTN + "Options");
+            clickOptionsButton();
         }
         return OptionsPanel.create(driver, webDriverWait);
     }
 
     public void closeOptionsPanel() {
         if (isOptionsPanelOpen()) {
-            Button.createById(driver, OPTIONS_BUTTON_ID).click();
-            log.debug(CLICK_BTN + "Options");
+            clickOptionsButton();
         }
     }
 
     public TopNPanel openTopNPanel() {
         if (!isTopNPanelOpen()) {
-            Button.createById(driver, TOP_N_BUTTON_ID).click();
-            log.debug(CLICK_BTN + "TopN");
+            clickTopNButton();
         }
         return TopNPanel.create(driver, webDriverWait);
     }
@@ -89,7 +91,26 @@ public class KpiToolbarPanel extends Widget {
         return driver.findElements(By.xpath(OPENED_TOP_N_PANEL_XPATH)).size() > 0;
     }
 
+    private void clickTopNButton() {
+        Button.createById(driver, TOP_N_BUTTON_ID).click();
+        log.debug(CLICK_BTN + "TopN");
+    }
+
     private boolean isOptionsPanelOpen() {
         return driver.findElements(By.xpath(OPENED_OPTIONS_PANEL_XPATH)).size() > 0;
+    }
+
+    private void clickOptionsButton() {
+        Button.createById(driver, OPTIONS_BUTTON_ID).click();
+        log.debug(CLICK_BTN + "Options");
+    }
+
+    private boolean isLayoutPanelOpen() {
+        return driver.findElements(By.xpath(OPENED_LAYOUT_PANEL_XPATH)).size() > 0;
+    }
+
+    private void clickLayoutButton() {
+        Button.createById(driver, LAYOUT_BUTTON_ID).click();
+        log.debug(CLICK_BTN + "Layout");
     }
 }
