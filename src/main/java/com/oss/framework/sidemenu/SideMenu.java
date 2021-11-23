@@ -72,7 +72,7 @@ public class SideMenu {
     private void clickOnElement(WebElement foundedElement) {
         DelayUtils.waitForLoadBars(wait, getSideMenu());
         Actions actions = new Actions(driver);
-        actions.moveToElement(foundedElement).click().perform();
+        actions.moveToElement(foundedElement).click().build().perform();
     }
 
     private WebElement moveToElement(String xpath) {
