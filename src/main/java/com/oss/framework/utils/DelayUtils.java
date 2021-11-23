@@ -142,4 +142,12 @@ public class DelayUtils {
             DelayUtils.waitForElementDisappear(webDriverWait, spinner.get(0));
         }
     }
+
+    public static void waitForLoadBars(WebDriverWait webDriverWait, WebElement webElement) {
+        DelayUtils.sleep(1000);
+        List<WebElement> spinner = webElement.findElements(By.xpath(".//div[@class='load-bar']"));
+        if (!spinner.isEmpty()) {
+            DelayUtils.waitForElementDisappear(webDriverWait, spinner.get(0));
+        }
+    }
 }

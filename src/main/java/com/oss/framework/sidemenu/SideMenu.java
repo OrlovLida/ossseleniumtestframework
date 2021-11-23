@@ -9,7 +9,6 @@ package com.oss.framework.sidemenu;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -40,11 +39,11 @@ public class SideMenu {
         return new SideMenu(driver, wait);
     }
 
-    public void callActionByLabel(String actionLabel, String... path) {
+    public void callActionByLabel(String actionLabel, String... paths) {
         moveToTopOfSideMenu();
-        for (String s : path) {
-            LOGGER.info("Click on action {}", s);
-            callAction(s);
+        for (String path : paths) {
+            LOGGER.info("Click on action {}", path);
+            callAction(path);
         }
         callAction(actionLabel);
     }
@@ -61,23 +60,23 @@ public class SideMenu {
 
     private WebElement searchElement(String xpath) {
         for (int scrollDownCount = 0; scrollDownCount < 3; scrollDownCount++) {
-            DelayUtils.waitForPageToLoad(driver, wait);
+            DelayUtils.waitForLoadBars(wait, getSideMenu());
             if (isElementPresent(By.xpath(xpath))) {
-                return findAndMoveToElement(xpath);
+                return moveToElement(xpath);
             }
             moveDownOnTheSideMenu();
         }
-        return findAndMoveToElement(xpath);
+        return moveToElement(xpath);
     }
 
     private void clickOnElement(WebElement foundedElement) {
-        DelayUtils.waitForPageToLoad(driver, wait);
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
         Actions actions = new Actions(driver);
         actions.moveToElement(foundedElement).click().perform();
     }
 
-    private WebElement findAndMoveToElement(String xpath) {
-        DelayUtils.waitForPageToLoad(driver, wait);
+    private WebElement moveToElement(String xpath) {
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
         WebElement foundElement = driver.findElement(By.xpath(xpath));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundElement);
         return foundElement;
@@ -102,7 +101,7 @@ public class SideMenu {
         Actions action = new Actions(driver);
         action.moveToElement(getSideMenu()).build().perform();
         action.moveToElement(getSideMenu()).sendKeys(key).build().perform();
-        DelayUtils.waitForPageToLoad(driver, wait);
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
     }
 
     private boolean isHomePresent() {
@@ -110,11 +109,6 @@ public class SideMenu {
     }
 
     private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return !driver.findElements(by).isEmpty();
     }
 }
