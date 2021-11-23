@@ -482,8 +482,11 @@ public class OldTable implements TableInterface {
         private void clear() {
             WebElement input = column.findElement(By.xpath(INPUT));
             Actions action = new Actions(driver);
-            action.moveToElement(input).click(input).keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).sendKeys(Keys.DELETE).build()
+            action.moveToElement(input).click(input).build()
                     .perform();
+            input = column.findElement(By.xpath(INPUT));
+            input.sendKeys(Keys.CONTROL + "a");
+            input.sendKeys(Keys.DELETE);
             DelayUtils.sleep();
         }
 
