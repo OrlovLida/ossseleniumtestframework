@@ -17,6 +17,7 @@ public class ExportPanel {
 
     private final static String EXPORT_BUTTON_ID = "export-menu-button";
     private final static String EXPORT_PANEL_XPATH = ".//div[@data-testid='export-menu']";
+    private final static String EXPORT_BUTTON_XPATH = "//*[data-testid='export-menu-button']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -54,5 +55,6 @@ public class ExportPanel {
     private void clickExport() {
         Button.createById(driver, EXPORT_BUTTON_ID).click();
         log.debug(CLICK_BTN + "Export");
+        DelayUtils.waitForButtonDisappear(driver, EXPORT_BUTTON_XPATH);
     }
 }
