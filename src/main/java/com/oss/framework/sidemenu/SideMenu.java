@@ -43,7 +43,7 @@ public class SideMenu {
         DelayUtils.waitForLoadBars(wait, getSideMenu());
         moveToTopOfSideMenu();
         for (String path : paths) {
-            LOGGER.info("Click on action {}", path);
+            LOGGER.info("Click on path {}", path);
             callAction(path);
         }
         callAction(actionLabel);
@@ -55,6 +55,7 @@ public class SideMenu {
     }
 
     private void callAction(String actionLabel) {
+        LOGGER.info("Click on action {}", actionLabel);
         DelayUtils.waitForLoadBars(wait, getSideMenu());
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
         clickOnElement(searchElement(actionXpath));
