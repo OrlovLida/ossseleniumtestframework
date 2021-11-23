@@ -40,6 +40,7 @@ public class SideMenu {
     }
 
     public void callActionByLabel(String actionLabel, String... paths) {
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
         moveToTopOfSideMenu();
         for (String path : paths) {
             LOGGER.info("Click on action {}", path);
@@ -54,6 +55,7 @@ public class SideMenu {
     }
 
     private void callAction(String actionLabel) {
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
         clickOnElement(searchElement(actionXpath));
     }
@@ -98,6 +100,7 @@ public class SideMenu {
     }
 
     private void moveOnTheSideMenu(Keys key) {
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
         Actions action = new Actions(driver);
         action.moveToElement(getSideMenu()).build().perform();
         action.moveToElement(getSideMenu()).sendKeys(key).build().perform();
