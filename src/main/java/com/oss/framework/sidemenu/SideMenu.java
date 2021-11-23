@@ -92,7 +92,7 @@ public class SideMenu {
     private void moveToTopOfSideMenu() {
         Actions action = new Actions(driver);
         if (!isHomePresent()) {
-            LOGGER.info("Moving down on the side menu.");
+            LOGGER.info("Moving up on the side menu.");
             moveOnTheSideMenu(Keys.HOME);
         }
         LOGGER.info("Moving to the top of side menu.");
