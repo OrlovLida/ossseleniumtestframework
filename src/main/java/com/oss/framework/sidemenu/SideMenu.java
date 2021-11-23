@@ -13,6 +13,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oss.framework.utils.DelayUtils;
 
@@ -21,8 +23,10 @@ import com.oss.framework.utils.DelayUtils;
  */
 public class SideMenu {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SideMenu.class);
     private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menu__item-label' and text()='%s']";
     private static final String SIDE_MENU_CLASS = ".//div[@class='sideMenu'] | .//div[@class='sideMenu alpha-mode']";
+    private static final String SIDE_MENU_HOME = ".//div[@class='sideMenu alpha-mode']//div[@data-testid='Home']";
     private final WebDriver driver;
     private final WebDriverWait wait;
 
@@ -35,49 +39,76 @@ public class SideMenu {
         return new SideMenu(driver, wait);
     }
 
-    private WebElement getSideMenu() {
-        DelayUtils.waitByXPath(wait, SIDE_MENU_CLASS);
-        return driver.findElement(By.xpath(SIDE_MENU_CLASS));
-
-    }
-
-    public void callActionByLabel(String actionLabel, String... path) {
-        String actionXpath;
-        WebElement latestPath = getSideMenu();
-        Actions action = new Actions(driver);
-        action.moveToElement(latestPath).sendKeys(Keys.HOME).build().perform();
-        for (String s : path) {
-            DelayUtils.waitForPageToLoad(driver, wait);
-            actionXpath = String.format(ACTION_NAME_PATH_PATTERN, s);
-            latestPath = searchElement(actionXpath);
-            DelayUtils.sleep(1000);
-            action.moveToElement(latestPath).click().perform();
+    public void callActionByLabel(String actionLabel, String... paths) {
+        moveToTopOfSideMenu();
+        for (String path : paths) {
+            LOGGER.info("Click on action {}", path);
+            callAction(path);
         }
         callAction(actionLabel);
     }
 
+    private WebElement getSideMenu() {
+        DelayUtils.waitByXPath(wait, SIDE_MENU_CLASS);
+        return driver.findElement(By.xpath(SIDE_MENU_CLASS));
+    }
+
     private void callAction(String actionLabel) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
-        WebElement foundedElement = searchElement(actionXpath);
-        DelayUtils.waitForPageToLoad(driver, wait);
-        Actions actions = new Actions(driver);
-        actions.moveToElement(foundedElement).click().perform();
+        clickOnElement(searchElement(actionXpath));
     }
 
     private WebElement searchElement(String xpath) {
         for (int scrollDownCount = 0; scrollDownCount < 3; scrollDownCount++) {
-            DelayUtils.waitForPageToLoad(driver, wait);
-            if (!(driver.findElements(By.xpath(xpath)).isEmpty())) {
-                DelayUtils.waitForPageToLoad(driver, wait);
-                WebElement foundElement = driver.findElement(By.xpath(xpath));
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundElement);
-                return foundElement;
+            DelayUtils.waitForLoadBars(wait, getSideMenu());
+            if (isElementPresent(By.xpath(xpath))) {
+                return moveToElement(xpath);
             }
-            Actions action = new Actions(driver);
-            action.moveToElement(getSideMenu()).click().build().perform();
-            action.moveToElement(getSideMenu()).sendKeys(Keys.PAGE_DOWN).build().perform();
-            DelayUtils.waitForPageToLoad(driver, wait);
+            moveDownOnTheSideMenu();
         }
-        return driver.findElement(By.xpath(xpath));
+        return moveToElement(xpath);
+    }
+
+    private void clickOnElement(WebElement foundedElement) {
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
+        Actions actions = new Actions(driver);
+        actions.moveToElement(foundedElement).click().perform();
+    }
+
+    private WebElement moveToElement(String xpath) {
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
+        WebElement foundElement = driver.findElement(By.xpath(xpath));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundElement);
+        return foundElement;
+    }
+
+    private void moveDownOnTheSideMenu() {
+        LOGGER.info("Moving down on the side menu.");
+        moveOnTheSideMenu(Keys.PAGE_DOWN);
+    }
+
+    private void moveToTopOfSideMenu() {
+        Actions action = new Actions(driver);
+        if (!isHomePresent()) {
+            LOGGER.info("Moving down on the side menu.");
+            moveOnTheSideMenu(Keys.HOME);
+        }
+        LOGGER.info("Moving to the top of side menu.");
+        action.moveToElement(driver.findElement(By.xpath(SIDE_MENU_HOME))).build().perform();
+    }
+
+    private void moveOnTheSideMenu(Keys key) {
+        Actions action = new Actions(driver);
+        action.moveToElement(getSideMenu()).build().perform();
+        action.moveToElement(getSideMenu()).sendKeys(key).build().perform();
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
+    }
+
+    private boolean isHomePresent() {
+        return isElementPresent(By.xpath(SIDE_MENU_HOME));
+    }
+
+    private boolean isElementPresent(By by) {
+        return !driver.findElements(by).isEmpty();
     }
 }
