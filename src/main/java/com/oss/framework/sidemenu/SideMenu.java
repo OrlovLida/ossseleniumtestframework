@@ -12,6 +12,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ import com.oss.framework.utils.DelayUtils;
 public class SideMenu {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SideMenu.class);
-    private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menu__item-label' and text()='%s']";
+    private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menuLevel']//div[@data-testid='%s']";
     private static final String SIDE_MENU_CLASS = ".//div[@class='sideMenu'] | .//div[@class='sideMenu alpha-mode']";
     private static final String SIDE_MENU_HOME = ".//div[@class='sideMenu alpha-mode']//div[@data-testid='Home']";
     private final WebDriver driver;
@@ -43,10 +44,11 @@ public class SideMenu {
         DelayUtils.waitForLoadBars(wait, getSideMenu());
         moveToTopOfSideMenu();
         for (String path : paths) {
-            LOGGER.info("Click on action {}", path);
             callAction(path);
+            waitForClickedPath(path);
         }
         callAction(actionLabel);
+        waitForClickedAction(actionLabel);
     }
 
     private WebElement getSideMenu() {
@@ -54,9 +56,10 @@ public class SideMenu {
         return driver.findElement(By.xpath(SIDE_MENU_CLASS));
     }
 
-    private void callAction(String actionLabel) {
+    private void callAction(String testid) {
+        LOGGER.info("Click on {}", testid);
         DelayUtils.waitForLoadBars(wait, getSideMenu());
-        String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, actionLabel);
+        String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
         clickOnElement(searchElement(actionXpath));
     }
 
@@ -113,5 +116,19 @@ public class SideMenu {
 
     private boolean isElementPresent(By by) {
         return !driver.findElements(by).isEmpty();
+    }
+
+    private void waitForClickedAction(String testid) {
+        String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
+        LOGGER.debug("Waiting for {} to be clicked.", testid);
+        wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), "class", "isActive"));
+        LOGGER.info("{} clicked.", testid);
+    }
+
+    private void waitForClickedPath(String path) {
+        String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, path);
+        LOGGER.debug("Waiting for {} to be expanded", path);
+        wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), "class", "isExpanded"));
+        LOGGER.info("{} expanded.", path);
     }
 }
