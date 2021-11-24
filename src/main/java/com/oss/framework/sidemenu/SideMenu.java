@@ -9,6 +9,7 @@ package com.oss.framework.sidemenu;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -133,14 +134,26 @@ public class SideMenu {
     private void waitForClickedAction(String testid) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
         LOGGER.debug("Waiting for {} to be clicked.", testid);
-        wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), "class", "isActive"));
+        try {
+            wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), "class", "isActive"));
+        } catch (TimeoutException e) {
+            LOGGER.warn("Action not active after first click. Retrying.");
+            clickOnElement(driver.findElement(By.xpath(actionXpath)));
+            wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), "class", "isActive"));
+        }
         LOGGER.info("{} clicked.", testid);
     }
 
     private void waitForClickedPath(String path) {
-        String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, path);
+        String pathXpath = String.format(ACTION_NAME_PATH_PATTERN, path);
         LOGGER.debug("Waiting for {} to be expanded", path);
-        wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), "class", "isExpanded"));
+        try {
+            wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), "class", "isExpanded"));
+        } catch (TimeoutException e) {
+            LOGGER.warn("Path not expanded after first click. Retrying.");
+            clickOnElement(driver.findElement(By.xpath(pathXpath)));
+            wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), "class", "isExpanded"));
+        }
         LOGGER.info("{} expanded.", path);
     }
 }
