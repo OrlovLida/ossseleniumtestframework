@@ -57,21 +57,32 @@ public class SideMenu {
     }
 
     private void callAction(String testid) {
-        LOGGER.info("Click on {}", testid);
+        LOGGER.info("Search {}", testid);
         DelayUtils.waitForLoadBars(wait, getSideMenu());
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
-        clickOnElement(searchElement(actionXpath));
+        searchWithRetry(actionXpath);
+        LOGGER.info("Click on {}", testid);
+        clickOnElement(moveToElement(actionXpath));
     }
 
-    private WebElement searchElement(String xpath) {
+    private boolean searchElement(String xpath) {
         for (int scrollDownCount = 0; scrollDownCount < 3; scrollDownCount++) {
             DelayUtils.waitForLoadBars(wait, getSideMenu());
             if (isElementPresent(By.xpath(xpath))) {
-                return moveToElement(xpath);
+                return true;
             }
             moveDownOnTheSideMenu();
         }
-        return moveToElement(xpath);
+        return isElementPresent(By.xpath(xpath));
+    }
+
+    private void searchWithRetry(String xpath) {
+        if (searchElement(xpath)) {
+            return;
+        }
+        LOGGER.warn("Object not found in the side menu. Retrying.");
+        moveToTopOfSideMenu();
+        searchElement(xpath);
     }
 
     private void clickOnElement(WebElement foundedElement) {
@@ -100,6 +111,7 @@ public class SideMenu {
         }
         LOGGER.info("Moving to the top of side menu.");
         action.moveToElement(driver.findElement(By.xpath(SIDE_MENU_HOME))).build().perform();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(SIDE_MENU_HOME)));
     }
 
     private void moveOnTheSideMenu(Keys key) {
