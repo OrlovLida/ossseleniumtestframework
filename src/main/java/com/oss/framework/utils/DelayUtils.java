@@ -113,26 +113,10 @@ public class DelayUtils {
 
     public static void waitForButtonDisappear(WebDriver driver, String buttonXpath) {
         DelayUtils.sleep(1000);
-        List<WebElement> newList = listOfButtonLoader(driver, buttonXpath);
-        long startTime = System.currentTimeMillis();
-        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
-            DelayUtils.sleep(500);
-            newList = listOfButtonLoader(driver, buttonXpath);
+        List<WebElement> buttons = driver.findElements(By.xpath(buttonXpath));
+        if (!buttons.isEmpty()) {
+            DelayUtils.waitForElementDisappear(new WebDriverWait(driver, 90), buttons.get(0));
         }
-        if ((System.currentTimeMillis() - startTime) > 120000) {
-            log.warn("Page did not load for a two minutes!");
-        }
-
-    }
-
-    private static List<WebElement> listOfButtonLoader(WebDriver driver, String buttonXpath) {
-        List<WebElement> button = driver.findElements(By.xpath(buttonXpath));
-        List<WebElement> actionInProgress = driver.findElements(By.xpath(buttonXpath + "/*[@class='action inProgress']"));
-        List<WebElement> buttonInProgress = driver.findElements(By.xpath(buttonXpath + "/i[contains(@class, 'fa-spin')]"));
-        List<WebElement> newList = new ArrayList<>(button);
-        newList.addAll(actionInProgress);
-        newList.addAll(buttonInProgress);
-        return newList;
     }
 
     public static void waitForSpinners(WebDriverWait webDriverWait, WebElement webElement) {
