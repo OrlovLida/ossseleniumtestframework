@@ -40,15 +40,15 @@ public class SideMenu {
         return new SideMenu(driver, wait);
     }
 
-    public void callActionByLabel(String actionLabel, String... paths) {
+    public void callActionByLabel(String testid, String... paths) {
         DelayUtils.waitForLoadBars(wait, getSideMenu());
         moveToTopOfSideMenu();
         for (String path : paths) {
             callAction(path);
             waitForClickedPath(path);
         }
-        callAction(actionLabel);
-        waitForClickedAction(actionLabel);
+        callAction(testid);
+        waitForClickedAction(testid);
     }
 
     private WebElement getSideMenu() {
