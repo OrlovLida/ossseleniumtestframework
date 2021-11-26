@@ -60,7 +60,7 @@ public class OptionsPanel {
     }
 
     public enum MiscellaneousOption {
-        DATA_COMPLETENESS, LAST_SAMPLE_TIME
+        DATA_COMPLETENESS, LAST_SAMPLE_TIME, SHOW_TIME_ZONE
     }
 
     private void moveOverElement(String elementPath) {
@@ -244,6 +244,10 @@ public class OptionsPanel {
             }
             case DATA_COMPLETENESS: {
                 optionsPanel.findElement(By.xpath(createXPathByDataTestId("CompletenessChanged"))).click();
+                break;
+            }
+            case SHOW_TIME_ZONE: {
+                optionsPanel.findElement(By.xpath(createXPathByDataTestId("ShowTimeZone"))).click();
                 break;
             }
         }
