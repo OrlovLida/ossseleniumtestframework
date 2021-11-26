@@ -1,5 +1,8 @@
 package com.oss.framework.components.inputs;
 
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -7,14 +10,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.data.Data;
-import com.oss.framework.utils.DelayUtils;
-
 public class SearchField extends Input {
 
     private String searchFirstResultXpath(String value) {
-        return "(//div[@class='ExtendedSearchComponent']//div[contains(@class,'CustomSelectList-data')][./*[contains(text(), '" + value + "')]])[1]";
+        return "(//div[@class='ExtendedSearchComponent']//div[contains(@class,'CustomSelectList-data')][./*[contains(text(), '" + value + "')]])[1] | //div[@class='list-item'][1]";
     }
 
     static SearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
