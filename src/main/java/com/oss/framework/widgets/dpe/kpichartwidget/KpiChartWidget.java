@@ -37,6 +37,7 @@ public class KpiChartWidget extends Widget {
 
     private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[contains(@data-testid, 'last-sample-time-chart')]";
     private static final String DATA_COMPLETENESS_DISPLAYED_PATH = ".//*[@data-testid='amchart-legend-selected']//*[contains(text(), '%')]";
+    private static final String TIME_ZONE_DISPLAYED_PATH = ".//*[starts-with(@data-testid, 'timezone-chart')]";
     private static final String OTHER_PERIOD_DISPLAYED_PATH = ".//*[@data-testid='amchart-legend-other-period']";
     
     private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
@@ -131,6 +132,10 @@ public class KpiChartWidget extends Widget {
         int visibleDataCompleteness = this.webElement.findElements(By.xpath(DATA_COMPLETENESS_DISPLAYED_PATH)).size();
         log.debug("Visible data completeness in legend count: {}", visibleDataCompleteness);
         return visibleDataCompleteness;
+    }
+
+    public boolean isTimeZoneDisplayed() {
+        return !this.webElement.findElements(By.xpath(TIME_ZONE_DISPLAYED_PATH)).isEmpty();
     }
 
     public int countVisibleOtherPeriod() {
