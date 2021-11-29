@@ -135,7 +135,7 @@ public class KpiChartWidget extends Widget {
     }
 
     public boolean isTimeZoneDisplayed() {
-        return this.webElement.findElements(By.xpath(TIME_ZONE_DISPLAYED_PATH)).size() > 0;
+        return !this.webElement.findElements(By.xpath(TIME_ZONE_DISPLAYED_PATH)).isEmpty();
     }
 
     public int countVisibleOtherPeriod() {
