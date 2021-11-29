@@ -28,6 +28,9 @@ public class KpiChartWidget extends Widget {
     private static final String BARCHART_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='list')]";
     private static final String PIE_CHART_PATH = ".//*[contains(@class, 'amcharts-PieChart-group')]";
 
+    private static final String FIRST_TOP_N_COLUMN_PATH = ".//*[@class='amcharts-Sprite-group amcharts-Container-group' and @role='menuitem'][1]";
+    private static final String TOP_N_NAVIGATION_BAR_PATH = ".//*[@class='amcharts-Container amcharts-Component amcharts-NavigationBar']";
+
     private static final String LEGEND_PATH = "//*[starts-with(@class,'amcharts-Container amcharts-Component amcharts-Legend')]";
     private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
 
@@ -201,6 +204,18 @@ public class KpiChartWidget extends Widget {
 
     public boolean topNBarChartIsDisplayed(String barChartId) {
         return this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).size() > 0;
+    }
+
+    public void doubleClickOnTopNBar(String barChartId) {
+        WebElement barInTopNBarChart = this.webElement.findElement(By.xpath(".//*[@data-testid='" + barChartId + "']//*[@role='menuitem'][1]"));
+        Actions action = new Actions(driver);
+        action.moveToElement(barInTopNBarChart).click(barInTopNBarChart).build().perform();
+        action.doubleClick(barInTopNBarChart).build().perform();
+        log.debug("Double clicking on bar in TopN BarChart");
+    }
+
+    public boolean isTopNNavigationBarVisible() {
+        return !this.webElement.findElements(By.xpath(TOP_N_NAVIGATION_BAR_PATH)).isEmpty();
     }
 
     public int countCharts() {
