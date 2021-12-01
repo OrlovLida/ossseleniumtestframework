@@ -152,9 +152,11 @@ public class OptionsPanel {
             }
             case NONE: {
                 optionsPanel.findElement(By.xpath(createChooseAggregationMethodXPath("None"))).click();
+                break;
             }
             case AGG_STANDARD: {
                 optionsPanel.findElement(By.xpath(createChooseAggregationMethodXPath("AGGStandard"))).click();
+                break;
             }
         }
         log.debug("Selecting aggregation method: {}", aggregationMethod);
