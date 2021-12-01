@@ -19,7 +19,6 @@ public class ListAttributesChooser {
     private static final String CANCEL_BUTTON_XPATH = ".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]";
     private static final String DEFAULT_BUTTON_XPATH = ".//div[@class='management-default-button']/a[contains(@class,'btn-flat')]";
     private static final String INACTIVE_LIST_LAYOUT_BUTTON_XPATH = ".//button[@title='List']";
-    private static final String ACTIVE_LIST_LAYOUT_BUTTON_XPATH = ".//button[@class='is-list-layout']";
     private static final String INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@title='Two columns']";
     private static final String ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@class='is-columns-layout']";
 
@@ -41,18 +40,18 @@ public class ListAttributesChooser {
 
     public void enableAttributeById(String attributeId) {
         if (!isAttributeSelected(attributeId)) {
-            attribute(attributeId).click();
+            getAttribute(attributeId).click();
         }
     }
 
     public void disableAttributeById(String attributeId) {
         if (isAttributeSelected(attributeId)) {
-            attribute(attributeId).click();
+            getAttribute(attributeId).click();
         }
     }
 
     public boolean isAttributeSelected(String attributeId) {
-        return attribute(attributeId).isSelected();
+        return getAttribute(attributeId).isSelected();
     }
 
     public void dragColumnToTarget(String sourceId, String targetId) {
@@ -93,7 +92,7 @@ public class ListAttributesChooser {
     }
 
     public void selectListLayout() {
-        if (!isListLayoutActive()) {
+        if (isTwoColumnsLayoutActive()) {
             this.listAttributesChooser.findElement(By.xpath(INACTIVE_LIST_LAYOUT_BUTTON_XPATH)).click();
             log.debug("Switching to List Layout");
         } else {
@@ -101,16 +100,12 @@ public class ListAttributesChooser {
         }
     }
 
-    private WebElement attribute(String attributeId) {
+    private WebElement getAttribute(String attributeId) {
         return this.listAttributesChooser.findElement(By.xpath(".//input[@id='checkbox-" + attributeId + "']"));
     }
 
     private WebElement dragOrDropElement(String columnId) {
         return this.listAttributesChooser.findElement(By.xpath(".//div[@data-rbd-drag-handle-draggable-id='" + columnId + "']"));
-    }
-
-    private boolean isListLayoutActive() {
-        return !this.listAttributesChooser.findElements(By.xpath(ACTIVE_LIST_LAYOUT_BUTTON_XPATH)).isEmpty();
     }
 
     private boolean isTwoColumnsLayoutActive() {
