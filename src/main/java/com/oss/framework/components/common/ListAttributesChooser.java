@@ -18,6 +18,10 @@ public class ListAttributesChooser {
     private static final String APPLY_BUTTON_XPATH = ".//a[contains(@class,'btn-primary')]";
     private static final String CANCEL_BUTTON_XPATH = ".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]";
     private static final String DEFAULT_BUTTON_XPATH = ".//div[@class='management-default-button']/a[contains(@class,'btn-flat')]";
+    private static final String INACTIVE_LIST_LAYOUT_BUTTON_XPATH = ".//button[@title='List']";
+    private static final String ACTIVE_LIST_LAYOUT_BUTTON_XPATH = ".//button[@class='is-list-layout']";
+    private static final String INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@title='Two columns']";
+    private static final String ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@class='is-columns-layout']";
 
     public static ListAttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
@@ -35,18 +39,16 @@ public class ListAttributesChooser {
         this.listAttributesChooser = listAttributesChooser;
     }
 
-    public ListAttributesChooser enableAttributeById(String attributeId) {
+    public void enableAttributeById(String attributeId) {
         if (!isAttributeSelected(attributeId)) {
             attribute(attributeId).click();
         }
-        return this;
     }
 
-    public ListAttributesChooser disableAttributeById(String attributeId) {
+    public void disableAttributeById(String attributeId) {
         if (isAttributeSelected(attributeId)) {
             attribute(attributeId).click();
         }
-        return this;
     }
 
     public boolean isAttributeSelected(String attributeId) {
@@ -77,25 +79,25 @@ public class ListAttributesChooser {
         this.listAttributesChooser.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
     }
 
-    public void clickSaveSelectedColumnsButton() {
+    public void clickSave() {
         Button.createByIcon(driver, "OSSIcon fa fa-save", "save").click();
     }
 
-    public void selectToTwoColumnsLayout() {
-        if (this.listAttributesChooser.findElements(By.xpath(".//button[@class='is-columns-layout']")).isEmpty()) {
-            this.listAttributesChooser.findElement(By.xpath(".//button[@title='Two columns']")).click();
+    public void selectTwoColumnsLayout() {
+        if (!isTwoColumnsLayoutActive()) {
+            this.listAttributesChooser.findElement(By.xpath(INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).click();
             log.debug("Switching to Two Columns Layout");
         } else {
             log.debug("Selected layout is: Two Columns");
         }
     }
 
-    public void selectListColumnsLayout() {
-        if (this.listAttributesChooser.findElements(By.xpath(".//button[@class='is-list-layout']")).isEmpty()) {
-            this.listAttributesChooser.findElement(By.xpath(".//button[@title='List']")).click();
+    public void selectListLayout() {
+        if (!isListLayoutActive()) {
+            this.listAttributesChooser.findElement(By.xpath(INACTIVE_LIST_LAYOUT_BUTTON_XPATH)).click();
             log.debug("Switching to List Layout");
         } else {
-            log.debug("Selected layout is: list");
+            log.debug("Selected layout is: List");
         }
     }
 
@@ -105,5 +107,13 @@ public class ListAttributesChooser {
 
     private WebElement dragOrDropElement(String columnId) {
         return this.listAttributesChooser.findElement(By.xpath(".//div[@data-rbd-drag-handle-draggable-id='" + columnId + "']"));
+    }
+
+    private boolean isListLayoutActive() {
+        return !this.listAttributesChooser.findElements(By.xpath(ACTIVE_LIST_LAYOUT_BUTTON_XPATH)).isEmpty();
+    }
+
+    private boolean isTwoColumnsLayoutActive() {
+        return !this.listAttributesChooser.findElements(By.xpath(ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).isEmpty();
     }
 }
