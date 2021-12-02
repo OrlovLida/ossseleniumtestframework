@@ -67,8 +67,9 @@ public class TableComponent {
         Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).click();
     }
     
-    public void unselectRow(int row) {
-        getVisibleRows().get(row).unselectRow();
+    public void unselectRow(int index) {
+        Row row = getRow(index);
+        row.unselectRow();
     }
     
     public boolean hasNoData() {
