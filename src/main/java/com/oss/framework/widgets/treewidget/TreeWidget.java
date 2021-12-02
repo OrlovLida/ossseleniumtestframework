@@ -385,7 +385,7 @@ public class TreeWidget extends Widget {
     private static class TreeRow {
         private static final String TREE_ROW_LABEL = ".//p[contains(@class,'TreeViewLabel')]";
         private static final String EXPAND_TREE_ROW = ".//div[@class='tree-view-icon tree-view-close']";
-        private static final String EXPAND_AND_EXPANDED_TREE_ROW = ".//div[contains(@class,'tree-view-icon')]";
+        private static final String EXPAND_ICON = ".//div[contains(@class,'tree-view-icon')]";
 
         private final WebElement webElement;
         private final WebDriverWait webDriverWait;
@@ -396,7 +396,7 @@ public class TreeWidget extends Widget {
         }
 
         private boolean isExpanded(){
-            WebElement expandElement = this.webElement.findElement(By.xpath(EXPAND_AND_EXPANDED_TREE_ROW));
+            WebElement expandElement = this.webElement.findElement(By.xpath(EXPAND_ICON));
             return expandElement.getAttribute(CLASS).contains("open");
         }
 

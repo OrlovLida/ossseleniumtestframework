@@ -91,7 +91,7 @@ public class OldActionsContainer implements ActionsInterface {
         clickOnWebElement(driver, wait, driver.findElement(By.xpath(actionXpath)));
     }
 
-    public void callActionById(String groupId, String innerGroupDataAttributeName, String actionDataAttributeName) {
+    public void callActionById(String groupId, String innerGroupLabel, String actionDataAttributeName) {
         DelayUtils.waitForVisibility(wait, toolbar);
         String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId);
         String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName);
@@ -99,7 +99,7 @@ public class OldActionsContainer implements ActionsInterface {
             clickActionByXpath(groupXpath);
         } else {
             clickActionByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, MORE_GROUP_DATA_GROUP_ID));
-            moveToInnerActionByXpath(String.format(DROPDOWN_XPATH, innerGroupDataAttributeName));
+            moveToInnerActionByXpath(String.format(DROPDOWN_XPATH, innerGroupLabel));
         }
         clickActionByXpath(actionXpath);
     }
