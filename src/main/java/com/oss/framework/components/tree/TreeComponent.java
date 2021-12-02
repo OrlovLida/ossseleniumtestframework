@@ -50,13 +50,6 @@ public class TreeComponent {
         this.treeComponent = treeComponent;
     }
 
-    public PaginationComponent getPaginationComponent() {
-        if (paginationComponent == null) {
-            PaginationComponent.createFromParent(driver, webDriverWait, treeComponent);
-        }
-        return paginationComponent;
-    }
-
     public void expandNodeByPath(String path) {
         Node node = getNodeByPath(path);
         node.expandNode();
@@ -210,7 +203,7 @@ public class TreeComponent {
             return node.findElements(By.xpath(EXPANDER_ICON_XPATH)).isEmpty();
         }
 
-        private boolean isExpandNextLevelEnabled() {
+        public boolean isExpandNextLevelEnabled() {
             return !node.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
 
         }
@@ -226,6 +219,13 @@ public class TreeComponent {
 
             InlineMenu menu = InlineMenu.create(node, driver, webDriverWait);
             menu.callAction(groupId, actionId);
+        }
+        public void callAction(String actionId) {
+            Actions actions = new Actions(driver);
+            actions.moveToElement(node).build().perform();
+
+            InlineMenu menu = InlineMenu.create(node, driver, webDriverWait);
+            menu.callAction(actionId);
         }
     }
 }

@@ -197,12 +197,6 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void disableColumn(String columnLabel) {
-        getAttributesChooser().disableAttributeByLabel(columnLabel, "")
-                .clickApply();
-    }
-
-    @Override
     public void disableColumnByLabel(String columnLabel, String... path) {
         getAttributesChooser().disableAttributeByLabel(columnLabel, path)
                 .clickApply();
@@ -220,6 +214,10 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().changeColumnsOrder(columnLabel, position);
     }
 
+    public void changeColumnsOrderById(String columnId, int position) {
+        getTableComponent().changeColumnsOrderById(columnId, position);
+    }
+
     @Override
     public void resizeColumn(int column, int offset) {
         getTableComponent().resizeColumnByPosition(column, offset);
@@ -235,6 +233,9 @@ public class TableWidget extends Widget implements TableInterface {
 
     public void turnOffSortingForColumn(String columnId) {
         getTableComponent().turnOffSorting(columnId);
+    }
+    public void setColumnWidth(String columnId, String columnWidth){
+        getTableComponent().setColumnWidth(columnId, columnWidth);
     }
 
     public void clearAllFilters() {
