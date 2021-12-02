@@ -60,7 +60,7 @@ public class OptionsPanel {
     }
 
     public enum MiscellaneousOption {
-        DATA_COMPLETENESS, LAST_SAMPLE_TIME
+        DATA_COMPLETENESS, LAST_SAMPLE_TIME, SHOW_TIME_ZONE
     }
 
     private void moveOverElement(String elementPath) {
@@ -152,9 +152,11 @@ public class OptionsPanel {
             }
             case NONE: {
                 optionsPanel.findElement(By.xpath(createChooseAggregationMethodXPath("None"))).click();
+                break;
             }
             case AGG_STANDARD: {
                 optionsPanel.findElement(By.xpath(createChooseAggregationMethodXPath("AGGStandard"))).click();
+                break;
             }
         }
         log.debug("Selecting aggregation method: {}", aggregationMethod);
@@ -244,6 +246,10 @@ public class OptionsPanel {
             }
             case DATA_COMPLETENESS: {
                 optionsPanel.findElement(By.xpath(createXPathByDataTestId("CompletenessChanged"))).click();
+                break;
+            }
+            case SHOW_TIME_ZONE: {
+                optionsPanel.findElement(By.xpath(createXPathByDataTestId("ShowTimeZone"))).click();
                 break;
             }
         }

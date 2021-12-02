@@ -28,6 +28,9 @@ public class KpiChartWidget extends Widget {
     private static final String BARCHART_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='list')]";
     private static final String PIE_CHART_PATH = ".//*[contains(@class, 'amcharts-PieChart-group')]";
 
+    private static final String FIRST_TOP_N_COLUMN_PATH = ".//*[@class='amcharts-Sprite-group amcharts-Container-group' and @role='menuitem'][1]";
+    private static final String TOP_N_NAVIGATION_BAR_PATH = ".//*[@class='amcharts-Container amcharts-Component amcharts-NavigationBar']";
+
     private static final String LEGEND_PATH = "//*[starts-with(@class,'amcharts-Container amcharts-Component amcharts-Legend')]";
     private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
 
@@ -37,11 +40,15 @@ public class KpiChartWidget extends Widget {
 
     private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[contains(@data-testid, 'last-sample-time-chart')]";
     private static final String DATA_COMPLETENESS_DISPLAYED_PATH = ".//*[@data-testid='amchart-legend-selected']//*[contains(text(), '%')]";
+    private static final String TIME_ZONE_DISPLAYED_PATH = ".//*[starts-with(@data-testid, 'timezone-chart')]";
     private static final String OTHER_PERIOD_DISPLAYED_PATH = ".//*[@data-testid='amchart-legend-other-period']";
-    
+
     private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DATA_VIEW_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
+
+    private static final String ZOOM_OUT_BUTTON_PATH = ".//*[@data-testid='amchart-zoomout-button']";
+    private static final String ZOOM_OUT_HIDDEN_BUTTON_PATH = ".//*[@data-testid='amchart-zoomout-button' and @visibility='hidden']";
 
     public static KpiChartWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, KPI_CHART_WIDGET_PATH);
@@ -133,6 +140,10 @@ public class KpiChartWidget extends Widget {
         return visibleDataCompleteness;
     }
 
+    public boolean isTimeZoneDisplayed() {
+        return !this.webElement.findElements(By.xpath(TIME_ZONE_DISPLAYED_PATH)).isEmpty();
+    }
+
     public int countVisibleOtherPeriod() {
         int visibleOtherPeriod = this.webElement.findElements(By.xpath(OTHER_PERIOD_DISPLAYED_PATH)).size();
         log.debug("Visible other period in legend count: {}", visibleOtherPeriod);
@@ -196,6 +207,33 @@ public class KpiChartWidget extends Widget {
 
     public boolean topNBarChartIsDisplayed(String barChartId) {
         return this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).size() > 0;
+    }
+
+    public void doubleClickOnTopNBar(String barChartId) {
+        WebElement barInTopNBarChart = this.webElement.findElement(By.xpath(".//*[@data-testid='" + barChartId + "']//*[@role='menuitem'][1]"));
+        Actions action = new Actions(driver);
+        action.moveToElement(barInTopNBarChart).click(barInTopNBarChart).build().perform();
+        action.doubleClick(barInTopNBarChart).build().perform();
+        log.debug("Double clicking on bar in TopN BarChart");
+    }
+
+    public boolean isTopNNavigationBarVisible() {
+        return !this.webElement.findElements(By.xpath(TOP_N_NAVIGATION_BAR_PATH)).isEmpty();
+    }
+
+    public void zoomDataView() {
+        Actions actions = new Actions(driver);
+        actions.dragAndDropBy(this.webElement, 100, 100).build().perform();
+        log.debug("Zooming Data View with offset x = 100, y = 100");
+    }
+
+    public boolean isZoomOutButtonVisible() {
+        return this.webElement.findElements(By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH)).isEmpty();
+    }
+
+    public void clickZoomOutButton() {
+        this.webElement.findElement(By.xpath(ZOOM_OUT_BUTTON_PATH)).click();
+        log.debug("Clicking Zoom Out button");
     }
 
     public int countCharts() {
