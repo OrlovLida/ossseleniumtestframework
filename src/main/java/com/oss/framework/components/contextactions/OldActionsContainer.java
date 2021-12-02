@@ -25,6 +25,7 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String KEBAB_BUTTON_XPATH = "//li[@data-group-id='frameworkCustomEllipsis']";
     public static final String KEBAB_GROUP_ID = "frameworkCustomEllipsis";
     private static final String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
+    private static final String DROPDOWN_XPATH = "//a[@class='dropdown']//div[text()='%s']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -98,8 +99,7 @@ public class OldActionsContainer implements ActionsInterface {
             clickActionByXpath(groupXpath);
         } else {
             clickActionByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, MORE_GROUP_DATA_GROUP_ID));
-            moveToInnerActionByXpath(
-                    String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, innerGroupDataAttributeName, innerGroupDataAttributeName));
+            moveToInnerActionByXpath(String.format(DROPDOWN_XPATH, innerGroupDataAttributeName));
         }
         clickActionByXpath(actionXpath);
     }
