@@ -28,6 +28,7 @@ public class Wizard {
     private static final String PROCEED_BUTTON = ".//a[text()='Proceed']";
     private static final String BY_TEXT_XPATH = "//*[text()='%s']";
     private static final String DATA_TEST_ID_XPATH = "//*[@" + CSSUtils.TEST_ID + "='%s']";
+    private static final String WIZARD_STEPS_XPATH = ".//div[@class='simple-progress-bar-step-label']";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
@@ -227,8 +228,8 @@ public class Wizard {
 
     public int numberOfSteps() {
         if (isStepsPresent()) {
-            DelayUtils.waitForNestedElements(wait, webElement, ".//div[@class='simple-progress-bar-item-label']");
-            List<WebElement> steps = webElement.findElements(By.xpath(".//div[contains(@class,'simple-progress-bar-item-label')]"));
+            DelayUtils.waitForNestedElements(wait, webElement, WIZARD_STEPS_XPATH);
+            List<WebElement> steps = webElement.findElements(By.xpath(WIZARD_STEPS_XPATH));
             return steps.size();
         }
         return 1;
