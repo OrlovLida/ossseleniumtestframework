@@ -51,6 +51,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
     public static SystemMessageInterface create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         WebElement messageContainer = driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
+        Actions builder = new Actions(driver);
+        builder.moveToElement(messageContainer).build().perform();
         return new SystemMessageContainer(driver, wait, messageContainer);
     }
 
@@ -62,8 +64,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public List<Message> getMessages() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
+        log.info("Starting getting messages");
+        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
+        log.info("Found {} system messages", messageItems.size());
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
 
@@ -75,10 +79,14 @@ public class SystemMessageContainer implements SystemMessageInterface {
     @Override
     public void close() {
         try {
+            log.debug("Closing system message");
             Actions builder = new Actions(driver);
+            builder.moveToElement(messageContainer).moveByOffset(100, 20).build().perform();
+            DelayUtils.sleep(100);
             builder.moveToElement(messageContainer).build().perform();
-            DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_CLOSEBUTTON);
+            DelayUtils.waitForNestedElements(new WebDriverWait(driver, 5), messageContainer, PATH_TO_CLOSEBUTTON);
             builder.click(messageContainer.findElement(By.xpath(PATH_TO_CLOSEBUTTON))).build().perform();
+            log.debug("System message closed");
         } catch (NoSuchElementException | TimeoutException e) {
             log.warn("Cannot click close button in system message");
         }
