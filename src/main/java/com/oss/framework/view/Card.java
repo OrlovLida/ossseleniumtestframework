@@ -45,4 +45,8 @@ public class Card {
         resizeButton.click();
         log.debug("Clicking minimize button");
     }
+
+    public boolean isCardMaximized() {
+        return !card.findElements(By.xpath(MINIMIZE_CHART_BUTTON_XPATH)).isEmpty();
+    }
 }
