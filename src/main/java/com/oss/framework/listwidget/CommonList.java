@@ -308,6 +308,11 @@ public class CommonList {
         Input input = getAdvanceSearch().getComponent(componentId, componentType);
         input.setSingleStringValue(value);
     }
+
+    public List<String> getHeaders() {
+        return getCommonList().findElements(By.xpath(HEADERS_XPATH)).stream()
+                .map(WebElement::getText).collect(Collectors.toList());
+    }
     
     public static class Row {
         private final WebDriver driver;
