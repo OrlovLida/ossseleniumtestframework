@@ -107,4 +107,10 @@ public class ToolbarWidget {
         DelayUtils.waitByXPath(wait, buttonXpath);
         this.toolbar.findElement(By.xpath(buttonXpath)).click();
     }
+
+    public String getUserName() {
+        WebElement loginButton = toolbar.findElement(By.xpath(LOGIN_PANEL_BUTTON_XPATH));
+        return loginButton.getText();
+    }
+
 }
