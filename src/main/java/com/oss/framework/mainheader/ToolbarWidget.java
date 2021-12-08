@@ -20,7 +20,7 @@ public class ToolbarWidget {
     private static final String LOGIN_PANEL_XPATH = ".//div[@class='login-panel']";
     private static final String NOTIFICATION_BUTTON_XPATH = ".//div[@class='notifications-button']";
     private static final String NOTIFICATION_PANEL_XPATH = ".//div[@class='notifications__panel__wrapper']";
-    private static final String QUERY_CONTEXT_BUTTON_XPATH = ".//div[@class='query-context']";
+    private static final String QUERY_CONTEXT_BUTTON_XPATH = ".//div[@class='query-context']//div[@role='button']";
     private static final String QUERY_CONTEXT_PANEL_XPATH =
             ".//div[@class='icon-dropdown-action-list query-context__dropdown']";
     private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='oss-input__input-content']";
@@ -107,4 +107,10 @@ public class ToolbarWidget {
         DelayUtils.waitByXPath(wait, buttonXpath);
         this.toolbar.findElement(By.xpath(buttonXpath)).click();
     }
+
+    public String getUserName() {
+        WebElement loginButton = toolbar.findElement(By.xpath(LOGIN_PANEL_BUTTON_XPATH));
+        return loginButton.getText();
+    }
+
 }

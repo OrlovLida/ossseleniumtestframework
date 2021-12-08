@@ -1,7 +1,6 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
 import com.oss.framework.components.inputs.Button;
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,42 +13,30 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
-import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
-import static com.oss.framework.widgets.dpe.toolbarpanel.KpiToolbarPanel.KPI_TOOLBAR_PATH;
 
 public class FiltersPanel {
 
     private static final Logger log = LoggerFactory.getLogger(FiltersPanel.class);
 
-    private final static String FILTERS_BUTTON_PATH = "//i[@aria-label='SETTINGS']";
     private final static String FILTERS_CLEAR_BUTTON_TEXT = "Clear All";
     private final static String FILTERS_CONFIRM_BUTTON_TEXT = "Confirm";
     private final static String FILTER_WRAPPER = "onOffWrapper";
+    private final static String FILTER_PANEL_XPATH = ".//div[@data-testid='filter-menu']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement webElement;
+    private final WebElement filterPanel;
 
     static FiltersPanel create(WebDriver driver, WebDriverWait webDriverWait){
-        WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
+        WebElement filterPanel = driver.findElement(By.xpath(FILTER_PANEL_XPATH));
 
-        return new FiltersPanel(driver, webDriverWait, webElement);
+        return new FiltersPanel(driver, webDriverWait, filterPanel);
     }
 
-    private FiltersPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+    private FiltersPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement filterPanel) {
         this.driver = driver;
         this.wait = webDriverWait;
-        this.webElement = webElement;
-    }
-
-    public void openFilters() {
-        DelayUtils.waitForPresence(wait, By.className(FILTER_WRAPPER));
-        WebElement filters = findElementByXpath(this.webElement, FILTERS_BUTTON_PATH);
-        DelayUtils.waitForPresenceAndVisibility(wait, By.xpath(FILTERS_BUTTON_PATH));
-        DelayUtils.waitForClickability(wait, filters);
-        DelayUtils.sleep();
-        filters.click();
-        log.debug(CLICK_BTN + "Filters");
+        this.filterPanel = filterPanel;
     }
 
     public void clearFilters() {
@@ -58,7 +45,7 @@ public class FiltersPanel {
     }
 
     public void turnOnFilters(List<String> filtersToEnable) {
-        List<WebElement> filterElements = this.webElement.findElements(By.className(FILTER_WRAPPER))
+        List<WebElement> filterElements = this.filterPanel.findElements(By.className(FILTER_WRAPPER))
                 .stream()
                 .filter(filter -> filtersToEnable.contains(filter.getText()))
                 .collect(Collectors.toList());

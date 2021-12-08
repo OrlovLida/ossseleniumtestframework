@@ -48,6 +48,7 @@ public class CommonList {
     private static final String SELECTED_ROW_CLASS = "rowSelected";
     private static final String NO_DATA_TEXT_XPATH = "//h3[contains(@class,'emptyResultsText')]";
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
+    private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -268,7 +269,7 @@ public class CommonList {
         List<WebElement> header = getCommonList().findElements(By.xpath(HEADERS_XPATH));
         int size = header.size();
         if (size != 0) {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", header.get(size - 1));
+            ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, header.get(size - 1));
         }
         List<String> headers = header.stream()
                 .map(WebElement::getText)
@@ -306,6 +307,11 @@ public class CommonList {
     private void setFilterContains(String componentId, Input.ComponentType componentType, String value) {
         Input input = getAdvanceSearch().getComponent(componentId, componentType);
         input.setSingleStringValue(value);
+    }
+
+    public List<String> getHeaders() {
+        return getCommonList().findElements(By.xpath(HEADERS_XPATH)).stream()
+                .map(WebElement::getText).collect(Collectors.toList());
     }
     
     public static class Row {
@@ -369,6 +375,7 @@ public class CommonList {
         
         public void callAction(String actionId) {
             Actions action = new Actions(driver);
+            ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, row);
             if (!row.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
                 WebElement button = row.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']"));
                 action.moveToElement(button).click().perform();

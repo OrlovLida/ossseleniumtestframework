@@ -215,6 +215,10 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().changeColumnsOrder(columnLabel, position);
     }
 
+    public void changeColumnsOrderById(String columnId, int position) {
+        getTableComponent().changeColumnsOrderById(columnId, position);
+    }
+
     @Override
     public void resizeColumn(int column, int offset) {
         getTableComponent().resizeColumnByPosition(column, offset);

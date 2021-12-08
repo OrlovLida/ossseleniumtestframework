@@ -1,20 +1,9 @@
 package com.oss.framework.components.table;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.oss.framework.components.common.AttributesChooser;
+import com.oss.framework.components.common.ListAttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
@@ -26,6 +15,17 @@ import com.oss.framework.utils.DragAndDrop.DraggableElement;
 import com.oss.framework.utils.DragAndDrop.DropElement;
 import com.oss.framework.widgets.tablewidget.TableRow;
 import com.oss.framework.widgets.treewidget.InlineMenu;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
@@ -67,8 +67,9 @@ public class TableComponent {
         Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).click();
     }
     
-    public void unselectRow(int row) {
-        getVisibleRows().get(row).unselectRow();
+    public void unselectRow(int index) {
+        Row row = getRow(index);
+        row.unselectRow();
     }
     
     public boolean hasNoData() {
@@ -137,18 +138,24 @@ public class TableComponent {
         Header header = Header.createHeader(this.driver, this.webDriverWait, this.webElement, columnId);
         header.resize(size);
     }
-    
+
     public String getCellValue(int row, String columnId) {
         Cell cell = Cell.createFromParent(webElement, row, columnId);
         return cell.getText();
     }
-    
+
     public AttributesChooser getAttributesChooser() {
         Actions action = new Actions(this.driver);
         action.click(getColumnsManagement()).perform();
         return AttributesChooser.create(this.driver, this.webDriverWait);
     }
-    
+
+    public ListAttributesChooser getListAttributesChooser() {
+        Actions action = new Actions(this.driver);
+        action.click(getColumnsManagement()).perform();
+        return ListAttributesChooser.create(this.driver, this.webDriverWait);
+    }
+
     public void changeColumnsOrder(String columnLabel, int position) {
         List<Header> headers = getHeaders();
         Header sourceHeader = headers.stream().filter(h -> h.getText().equals(columnLabel))
@@ -156,6 +163,15 @@ public class TableComponent {
         Header targetHeader = headers.get(position);
         DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader.getDropElement(), driver);
     }
+
+    public void changeColumnsOrderById(String columnId, int position) {
+        List<Header> headers = getHeaders();
+        Header sourceHeader = headers.stream().filter(h -> h.getColumnId().equals(columnId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Cant find column: " + columnId));
+        Header targetHeader = headers.get(position);
+        DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader.getDropElement(), driver);
+    }
+
     
     private CustomScrolls getCustomScrolls() {
         return CustomScrolls.create(driver, webDriverWait, webElement);

@@ -1,17 +1,22 @@
 package com.oss.framework.widgets;
 
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
 
 public class Wizard {
 
@@ -28,6 +33,7 @@ public class Wizard {
     private static final String PROCEED_BUTTON = ".//a[text()='Proceed']";
     private static final String BY_TEXT_XPATH = "//*[text()='%s']";
     private static final String DATA_TEST_ID_XPATH = "//*[@" + CSSUtils.TEST_ID + "='%s']";
+    private static final String WIZARD_STEPS_XPATH = ".//div[@class='simple-progress-bar-step-label']";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
@@ -90,7 +96,7 @@ public class Wizard {
         DelayUtils.waitForNestedElements(wait, webElement, NEXT_BUTTON);
         Actions action = new Actions(driver);
         action.moveToElement(
-                        wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(NEXT_BUTTON))))).click()
+                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(NEXT_BUTTON))))).click()
                 .perform();
     }
 
@@ -106,7 +112,6 @@ public class Wizard {
         DelayUtils.waitForNestedElements(wait, webElement, ACCEPT_BUTTON);
         WebElement accept = wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(ACCEPT_BUTTON))));
         accept.click();
-        waitForButtonDisappear(ACCEPT_BUTTON);
     }
 
     public void clickAcceptOldWizard() {
@@ -158,7 +163,6 @@ public class Wizard {
         WebElement foundedElement =
                 wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(UPDATE_BUTTON))));
         action.moveToElement(foundedElement).click().perform();
-        waitForButtonDisappear(UPDATE_BUTTON);
     }
 
     public void clickOK() {
@@ -221,19 +225,18 @@ public class Wizard {
     }
 
     public void clickButtonById(String groupLabel, String actionId) {
-        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement,driver,wait);
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement, driver, wait);
         buttonContainer.callActionById(groupLabel, actionId);
     }
 
     public int numberOfSteps() {
         if (isStepsPresent()) {
-            DelayUtils.waitForNestedElements(wait, webElement, ".//div[@class='simple-progress-bar-item-label']");
-            List<WebElement> steps = webElement.findElements(By.xpath(".//div[contains(@class,'simple-progress-bar-item-label')]"));
+            DelayUtils.waitForNestedElements(wait, webElement, WIZARD_STEPS_XPATH);
+            List<WebElement> steps = webElement.findElements(By.xpath(WIZARD_STEPS_XPATH));
             return steps.size();
         }
         return 1;
     }
-
 
     private boolean isStepsPresent() {
         List<WebElement> steps = this.webElement.findElements(By.xpath("//div[@class='simple-progress-bar']"));
