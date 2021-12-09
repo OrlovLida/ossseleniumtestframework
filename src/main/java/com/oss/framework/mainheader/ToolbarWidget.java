@@ -89,7 +89,7 @@ public class ToolbarWidget {
     public void typeAndEnterInGlobalSearch(String value) {
         WebElement input = getGlobalSearch().findElement(By.xpath(".//input"));
         input.sendKeys(value);
-        DelayUtils.waitForSpinners(wait, input);
+        DelayUtils.waitForSpinners(wait, getGlobalSearch());
         input.sendKeys(Keys.ARROW_DOWN);
         input.sendKeys(Keys.ENTER);
     }
