@@ -477,6 +477,7 @@ public class OldTable implements TableInterface {
             Actions action = new Actions(driver);
             action.moveToElement(input).build().perform();
             input.sendKeys(value);
+            input.sendKeys(Keys.ENTER);
         }
 
         private void clear() {
