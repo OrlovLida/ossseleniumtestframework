@@ -313,7 +313,7 @@ public class OldTable implements TableInterface {
         List<WebElement> rowsCounterSpans = table
                 .findElements(By.xpath(ROWS_COUNTER_SPANS_PATH));
         try {
-            return Integer.parseInt(rowsCounterSpans.get(rowsCounterSpans.size() - 1).getText());
+            return Integer.parseInt(rowsCounterSpans.get(rowsCounterSpans.size() - 2).getText());
         } catch (NumberFormatException e) {
             log.debug("Problem with getting table object count. Value is not a number.");
             return 0;
@@ -477,6 +477,7 @@ public class OldTable implements TableInterface {
             Actions action = new Actions(driver);
             action.moveToElement(input).build().perform();
             input.sendKeys(value);
+            input.sendKeys(Keys.ENTER);
         }
 
         private void clear() {
