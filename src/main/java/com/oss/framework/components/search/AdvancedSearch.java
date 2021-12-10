@@ -39,7 +39,7 @@ public class AdvancedSearch {
     private final WebElement webElement;
     
     public static AdvancedSearch createByClass(WebDriver driver, WebDriverWait wait, String className) {
-        DelayUtils.waitByXPath(wait, "//*[@class='" + className + "']");
+        DelayUtils.waitByXPath(wait, "//*[contains(@class,'" + className + "')]");
         WebElement webElement = driver.findElement(By.className(className));
         return new AdvancedSearch(driver, wait, webElement);
     }

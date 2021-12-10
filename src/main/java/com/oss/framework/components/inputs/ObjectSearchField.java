@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.advancedsearch.AdvancedSearchWidget;
 
 public class ObjectSearchField extends Input {
     private static final String OSF_LABEL = ".//span[@class='md-input-label-text']";
@@ -20,7 +21,8 @@ public class ObjectSearchField extends Input {
     private static final String OSF_VALUE_LIST = ".//div[@class='md-input-multi']";
     private static final String OSF_VALUE_CLEAR_BTN = ".//div[@class='md-input-multi']";
     private static final String OSF_SINGLE = "object-input-component__single__dropdown";
-    
+    private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
+
     static ObjectSearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new ObjectSearchField(driver, wait, componentId);
     }
@@ -85,6 +87,12 @@ public class ObjectSearchField extends Input {
     @Override
     public String getLabel() {
         return webElement.findElement(By.xpath(OSF_LABEL)).getText();
+    }
+    
+    public AdvancedSearchWidget openAdvancedSearchWidget() {
+        WebElement searchPlus = webElement.findElement(By.xpath(SEARCH_PLUS_ICON_XPATH));
+        searchPlus.click();
+        return AdvancedSearchWidget.create(driver, webDriverWait);
     }
     
     private boolean isSingleComponent() {
