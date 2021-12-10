@@ -23,6 +23,7 @@ public class Wizard {
     private static final String POPUP_ID = "Popup";
     private static final String OSS_WINDOW = "//div[contains(@class,'OssWindow')]";
     private static final String NEXT_BUTTON = ".//button[text()='Next']";
+    private static final String NEXT_STEP = ".//button[text()='Next Step']";
     private static final String ACCEPT_BUTTON = ".//button[text()='Accept']";
     private static final String SUBMIT_BUTTON = ".//button[text()='Submit']";
     private static final String CANCEL_BUTTON = ".//button[text()='Cancel']";
@@ -92,26 +93,62 @@ public class Wizard {
         return input;
     }
 
+    private void clickOnButton(String xpath) {
+        DelayUtils.waitForNestedElements(wait, webElement, xpath);
+        WebElement button = webElement.findElement(By.xpath(xpath));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(button).build().perform();
+        wait.until(ExpectedConditions.elementToBeClickable(button));
+        actions.click(button).build().perform();
+    }
+
     public void clickNext() {
-        DelayUtils.waitForNestedElements(wait, webElement, NEXT_BUTTON);
-        Actions action = new Actions(driver);
-        action.moveToElement(
-                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(NEXT_BUTTON))))).click()
-                .perform();
+        clickOnButton(NEXT_BUTTON);
     }
 
     public void clickNextStep() {
-        Actions action = new Actions(driver);
-        WebElement foundedElement =
-                webElement.findElement(By.xpath("//button[text()='Next Step']"));
-        wait.until(ExpectedConditions.elementToBeClickable(foundedElement));
-        action.moveToElement(foundedElement).click().perform();
+        clickOnButton(NEXT_STEP);
     }
 
     public void clickAccept() {
-        DelayUtils.waitForNestedElements(wait, webElement, ACCEPT_BUTTON);
-        WebElement accept = wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(ACCEPT_BUTTON))));
-        accept.click();
+        clickOnButton(ACCEPT_BUTTON);
+    }
+
+    public void submit() {
+        clickOnButton(SUBMIT_BUTTON);
+    }
+
+    public void cancel() {
+        clickOnButton(CANCEL_BUTTON);
+    }
+
+    public void proceed() {
+        clickOnButton(PROCEED_BUTTON);
+    }
+
+    public void clickSave() {
+        clickOnButton(SAVE_BUTTON);
+    }
+
+    public void clickUpdate() {
+        clickOnButton(UPDATE_BUTTON);
+    }
+
+    public void clickOK() {
+        clickOnButton(OK_BUTTON);
+    }
+
+    public void clickDelete() {
+        clickOnButton(DELETE_BUTTON);
+    }
+
+    public void clickActionById(String actionId) {
+        clickOnButton(String.format(DATA_TEST_ID_XPATH, actionId));
+    }
+
+    public void clickButtonByLabel(String label) {
+        clickOnButton(String.format(BY_TEXT_XPATH, label));
     }
 
     public void clickAcceptOldWizard() {
@@ -124,78 +161,6 @@ public class Wizard {
 
     public void waitToClose() {
         wait.until(ExpectedConditions.invisibilityOf(this.webElement));
-    }
-
-    public void submit() {
-        DelayUtils.waitForNestedElements(wait, webElement, SUBMIT_BUTTON);
-        Actions action = new Actions(driver);
-        action.moveToElement(webElement.findElement(By.xpath(SUBMIT_BUTTON))).click().perform();
-        waitForButtonDisappear(SUBMIT_BUTTON);
-    }
-
-    public void cancel() {
-        DelayUtils.waitForNestedElements(wait, webElement, CANCEL_BUTTON);
-        Actions action = new Actions(driver);
-        action.moveToElement(webElement.findElement(By.xpath(CANCEL_BUTTON))).click().perform();
-        waitForButtonDisappear(CANCEL_BUTTON);
-    }
-
-    public void proceed() {
-        DelayUtils.waitForNestedElements(wait, webElement, PROCEED_BUTTON);
-        Actions action = new Actions(driver);
-        action.moveToElement(
-                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(PROCEED_BUTTON))))).click()
-                .perform();
-        waitForButtonDisappear(PROCEED_BUTTON);
-    }
-
-    public void clickSave() {
-        DelayUtils.waitForNestedElements(wait, webElement, SAVE_BUTTON);
-        Actions action = new Actions(driver);
-        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(SAVE_BUTTON)))))
-                .click().perform();
-        waitForButtonDisappear(SAVE_BUTTON);
-    }
-
-    public void clickUpdate() {
-        DelayUtils.waitForNestedElements(wait, webElement, UPDATE_BUTTON);
-        Actions action = new Actions(driver);
-        WebElement foundedElement =
-                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(UPDATE_BUTTON))));
-        action.moveToElement(foundedElement).click().perform();
-    }
-
-    public void clickOK() {
-        DelayUtils.waitForNestedElements(wait, webElement, OK_BUTTON);
-        Actions action = new Actions(driver);
-        WebElement foundedElement =
-                wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(OK_BUTTON))));
-        action.moveToElement(foundedElement).click().perform();
-        waitForButtonDisappear(OK_BUTTON);
-    }
-
-    public void clickDelete() {
-        DelayUtils.waitForNestedElements(wait, webElement, DELETE_BUTTON);
-        Actions action = new Actions(driver);
-        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(DELETE_BUTTON)))))
-                .click().perform();
-        waitForButtonDisappear(DELETE_BUTTON);
-    }
-
-    public void clickActionById(String actionId) {
-        DelayUtils.waitForNestedElements(wait, webElement, String.format(DATA_TEST_ID_XPATH, actionId));
-        Actions action = new Actions(driver);
-        WebElement foundedElement = wait.until(
-                ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(String.format(DATA_TEST_ID_XPATH, actionId)))));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundedElement);
-        action.moveToElement(foundedElement).click().perform();
-        waitForButtonDisappear(String.format(DATA_TEST_ID_XPATH, actionId));
-    }
-
-    public void clickButtonByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_TEXT_XPATH, label));
-        wait.until(ExpectedConditions.elementToBeClickable(webElement.findElement(By.xpath(String.format(BY_TEXT_XPATH, label)))));
-        driver.findElement(By.xpath(String.format(BY_TEXT_XPATH, label))).click();
     }
 
     public void callButtonByLabel(String label) {
@@ -217,8 +182,9 @@ public class Wizard {
     public void skipAndAccept(String acceptButtonId) {
         int stepsNumber = numberOfSteps();
         if (stepsNumber > 1) {
-            for (int i = 0; i < stepsNumber - 1; i++) {
+            for (int i = 1; i < stepsNumber; i++) {
                 clickNext();
+                DelayUtils.waitForAppPreloaders(wait, webElement);
             }
         }
         clickActionById(acceptButtonId);
