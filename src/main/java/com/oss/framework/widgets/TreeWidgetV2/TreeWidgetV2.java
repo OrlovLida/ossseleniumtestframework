@@ -119,11 +119,27 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public void openSelectionBar() {
-        getSelectionBarComponent().openSelectionBar(driver);
+        getSelectionBarComponent().openSelectionBar();
     }
 
     public void hideSelectionBar() {
-        getSelectionBarComponent().hideSelectionBar(driver);
+        getSelectionBarComponent().hideSelectionBar();
+    }
+
+    public void clickUnselectAllInSelectionBar(){
+        getSelectionBarComponent().clickUnselectAllButton();
+    }
+
+    public void clickShowOnlySelectedInSelectionBar(){
+        getSelectionBarComponent().clickShowOnlySelectedButton();
+    }
+
+    public void clickShowAllInSelectionBar(){
+        getSelectionBarComponent().clickShowAllButton();
+    }
+
+    public String getSelectedObjectCount(){
+        return getSelectionBarComponent().getSelectedObjectsCount();
     }
 
     private TreeComponent getTreeComponent() {

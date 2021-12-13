@@ -2,15 +2,13 @@ package com.oss.framework.components.selectionbar;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SelectionBarComponent {
 
     private static final String SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL_XPATH = "//span[@data-testid='selected-objects-count-label']";
-    private static final String SHOW_ONLY_SELECTED_BUTTON_XPATH = ".//*[@data-testid='show-selected-only-button']";
-    private static final String UNSELECT_ALL_BUTTON_XPATH = ".//*[@data-testid='unselect-all-button']";
-    private static final String DATA_TESTID_SELECTION_BAR_XPATH = "//*[@data-testid='selection-bar']";
+    private static final String SHOW_ONLY_SELECTED_BUTTON_XPATH = "//*[@data-testid='show-selected-only-button']";
+    private static final String UNSELECT_ALL_BUTTON_XPATH = "//*[@data-testid='unselect-all-button']";
     private static final String VISIBLE_SELECTION_BAR_XPATH = "//*[@class='selection-bar']";
     private static final String TOGGLER_BUTTON_XPATH = "//button[@data-testid='selection-bar-toggler-button']";
     private static final String SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH = "//*[@data-testid='show-selected-only-button' and text()='Show Selected']";
@@ -23,30 +21,21 @@ public class SelectionBarComponent {
         return new SelectionBarComponent(driver, wait, widgetId);
     }
 
-    private WebElement getSelectionBarComponent(WebDriver driver) {
-        String selectionBarXpath = getSelectionBarInWidgetXpath(widgetId);
-        return driver.findElement(By.xpath(selectionBarXpath));
-    }
-
     private SelectionBarComponent(WebDriver driver, WebDriverWait wait, String widgetId) {
         this.driver = driver;
         this.wait = wait;
         this.widgetId = widgetId;
     }
 
-    private String getSelectionBarInWidgetXpath(String widgetId) {
-        return "//*[@data-testid='" + widgetId + "']" + DATA_TESTID_SELECTION_BAR_XPATH;
-    }
-
-    public void openSelectionBar(WebDriver driver) {
+    public void openSelectionBar() {
         if (!isActive()) {
             driver.findElement(By.xpath("//div[@data-testid='" + widgetId + "']" + TOGGLER_BUTTON_XPATH)).click();
         }
     }
 
-    public void hideSelectionBar(WebDriver driver) {
+    public void hideSelectionBar() {
         if (isActive()) {
-            getSelectionBarComponent(driver).findElement(By.xpath("//div[@data-testid='" + widgetId + "']" + TOGGLER_BUTTON_XPATH)).click();
+            driver.findElement(By.xpath("//div[@data-testid='" + widgetId + "']" + TOGGLER_BUTTON_XPATH)).click();
         }
     }
 
@@ -55,32 +44,32 @@ public class SelectionBarComponent {
     }
 
     private boolean areAllObjectShown() {
-        return getSelectionBarComponent(driver).findElements(By.xpath(SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH)).size() > 0;
+        return driver.findElements(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH)).size() > 0;
     }
 
     public void clickUnselectAllButton() {
         if (!isActive()) {
-            openSelectionBar(driver);
+            openSelectionBar();
         }
-        getSelectionBarComponent(driver).findElement(By.xpath(UNSELECT_ALL_BUTTON_XPATH)).click();
+        driver.findElement(By.xpath("//*[@data-testid='" + widgetId + "']" + UNSELECT_ALL_BUTTON_XPATH)).click();
     }
 
     public void clickShowOnlySelectedButton() {
         if (isActive() && areAllObjectShown()) {
-            getSelectionBarComponent(driver).findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
+            driver.findElement(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
         }
     }
 
     public void clickShowAllButton() {
         if (isActive() && !areAllObjectShown()) {
-            getSelectionBarComponent(driver).findElement(By.xpath(SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
+            driver.findElement(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
         }
     }
 
     public String getSelectedObjectsCount() {
         if (!isActive()) {
-            openSelectionBar(driver);
+            openSelectionBar();
         }
-        return getSelectionBarComponent(driver).findElement(By.xpath(SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL_XPATH)).getText();
+        return driver.findElement(By.xpath("//*[@data-testid='" + widgetId + "']" + SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL_XPATH)).getText();
     }
 }
