@@ -5,49 +5,59 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.Multimap;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
-import com.oss.framework.components.search.SearchPanel;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.DelayUtils;
 
 public class AdvancedSearchWidget {
-
+    
     private static final String ADD_BTN_PATH = ".//a[text()='Add']";
+    private static final String ADVANCED_SEARCH_WIDGET_CLASS = "common-advancedsearchwidget";
 
-    public static AdvancedSearchWidget create(WebDriver driver, WebDriverWait webDriverWait) {
-        return new AdvancedSearchWidget(driver, webDriverWait, null);
+    public static AdvancedSearchWidget create(WebDriver driver, WebDriverWait wait) {
+        DelayUtils.waitByXPath(wait, "//*[contains(@class,'" + ADVANCED_SEARCH_WIDGET_CLASS + "')]");
+        WebElement webElement = driver.findElement(By.className(ADVANCED_SEARCH_WIDGET_CLASS));
+        return new AdvancedSearchWidget(driver, wait, webElement);
     }
-
+    
     public static AdvancedSearchWidget createById(WebDriver driver, WebDriverWait wait, String id) {
         DelayUtils.waitByXPath(wait, "//*[@id='" + id + "']");
         WebElement webElement = driver.findElement(By.xpath("//*[@id='" + id + "']"));
         return new AdvancedSearchWidget(driver, wait, webElement);
     }
-
+    
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
 
+    
     private AdvancedSearchWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.wait = webDriverWait;
         this.webElement = webElement;
     }
-
-    private SearchPanel getSearchPanel() {
-        return SearchPanel.create(driver, wait);
+    
+    private AdvancedSearch getAdvancedSearch() {
+        return AdvancedSearch.createByClass(driver, wait, ADVANCED_SEARCH_WIDGET_CLASS);
     }
-
+    
     public Input getComponent(String componentId, ComponentType componentType) {
-        return getSearchPanel().getComponent(componentId, componentType);
+        return getAdvancedSearch().getComponent(componentId, componentType);
     }
-
-    public TableComponent getTableComponent(String id) {
-        return TableComponent.create(this.driver, this.wait, id);
+    
+    public TableComponent getTableComponent(String widgetId) {
+        return TableComponent.create(this.driver, this.wait, widgetId);
     }
-
+    
     public void clickAdd() {
         this.webElement.findElement(By.xpath(ADD_BTN_PATH)).click();
+    }
+    
+    public Multimap<String, String> getAppliedFilters() {
+        return getAdvancedSearch().getAppliedFilters();
+        
     }
 }
