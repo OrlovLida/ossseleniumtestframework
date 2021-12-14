@@ -1,14 +1,5 @@
 package com.oss.framework.widgets.tablewidget;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
@@ -18,10 +9,19 @@ import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.components.search.AdvancedSearch;
+import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
@@ -234,7 +234,8 @@ public class TableWidget extends Widget implements TableInterface {
     public void turnOffSortingForColumn(String columnId) {
         getTableComponent().turnOffSorting(columnId);
     }
-    public void setColumnWidth(String columnId, String columnWidth){
+
+    public void setColumnWidth(String columnId, String columnWidth) {
         getTableComponent().setColumnWidth(columnId, columnWidth);
     }
 
@@ -320,13 +321,41 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().scrollVertically(offset);
     }
 
+    public void openSelectionBar() {
+        getSelectionBarComponent().openSelectionBar();
+    }
+
+    public void hideSelectionBar() {
+        getSelectionBarComponent().hideSelectionBar();
+    }
+
+    public void clickUnselectAllInSelectionBar(){
+        getSelectionBarComponent().clickUnselectAllButton();
+    }
+
+    public void clickShowOnlySelectedInSelectionBar(){
+        getSelectionBarComponent().clickShowOnlySelectedButton();
+    }
+
+    public void clickShowAllInSelectionBar(){
+        getSelectionBarComponent().clickShowAllButton();
+    }
+
+    public String getSelectedObjectCount(){
+        return getSelectionBarComponent().getSelectedObjectsCount();
+    }
+
     private TableComponent getTableComponent() {
         if (tableComponent == null) {
             tableComponent = TableComponent.create(this.driver, this.webDriverWait, this.id);
         }
         return tableComponent;
     }
-    
+
+    private SelectionBarComponent getSelectionBarComponent() {
+        return SelectionBarComponent.create(this.driver, this.webDriverWait, id);
+    }
+
     public AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
             advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
@@ -343,7 +372,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
-        getAdvancedSearch().setFilter(componentId,componentType,value);
+        getAdvancedSearch().setFilter(componentId, componentType, value);
     }
 
     private void clickOnKebabMenu() {

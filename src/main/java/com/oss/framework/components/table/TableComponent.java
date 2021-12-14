@@ -31,7 +31,7 @@ public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
     private static final String EMPTY_DATA_ROW_XPATH = ".//div[contains(@class, 'empty_data_row')]";
     private static final String HEADER_CLASS = "table-component__header";
-    
+
     private static final String TABLE_COMPONENT_CLASS = "table-component";
     
     private final WebDriver driver;
@@ -79,7 +79,7 @@ public class TableComponent {
     public List<TableRow> getVisibleRows() {
         String firstColumn = getColumnIds().stream().findFirst().orElse("");
         String xpath = ".//div[@data-col='" + firstColumn + "']";
-        
+
         List<Integer> rowIds = this.webElement
                 .findElements(By.xpath(xpath))
                 .stream().filter(e -> e.getAttribute("data-col").equals(firstColumn)).filter(e -> e.getAttribute("data-row") != null)
@@ -88,7 +88,7 @@ public class TableComponent {
         
         return rowIds.stream().map(index -> new Row(this.driver, this.webDriverWait, this.webElement, index)).collect(Collectors.toList());
     }
-    
+
     public void scrollHorizontally(int offset) {
         CustomScrolls customScrolls = getCustomScrolls();
         customScrolls.scrollHorizontally(offset);
@@ -133,7 +133,7 @@ public class TableComponent {
     public void setColumnWidth(String columnId, String columnWidth) {
         getHeaderByIndex(columnId).openSettings().setDefaultColumnWidth(columnWidth);
     }
-    
+
     public void resizeColumn(String columnId, int size) {
         Header header = Header.createHeader(this.driver, this.webDriverWait, this.webElement, columnId);
         header.resize(size);
@@ -411,21 +411,21 @@ public class TableComponent {
         private void turnOffSorting() {
             sortButtons().get(0).click();
         }
-        
+
         private void selectAdministrationTab() {
             WebElement administrationTab = this.webElement.findElements(By.className(TABS_BUTTON_CLASS)).stream()
                     .filter(tab -> tab.getText().equals(ADMINISTRATION)).findFirst()
                     .orElseThrow(() -> new RuntimeException(ADMINISTRATION_TAB_IS_NOT_AVAILABLE_EXCEPTION));
             administrationTab.click();
         }
-        
+
         private void setDefaultColumnWidth(String columnWidth) {
             selectAdministrationTab();
             Input input = ComponentFactory.create(SIZE_DEFAULT_INPUT_ID, Input.ComponentType.TEXT_FIELD, driver, webDriverWait);
             input.setSingleStringValue(columnWidth);
             apply();
         }
-        
+
         private void apply() {
             WebElement applyButton = this.webElement.findElements(By.className(BUTTON_CLASS)).stream()
                     .filter(button -> button.getText().equals(APPLY_BUTTON_LABEL)).findFirst()

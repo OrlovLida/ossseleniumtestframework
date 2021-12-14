@@ -27,7 +27,7 @@ import com.oss.framework.widgets.tablewidget.OldTable;
 public class OldTreeTableWidget extends Widget {
     public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
         return new OldTreeTableWidget(driver, wait, dataAttributeName);
-        
+
     }
     private final String id;
 
@@ -35,13 +35,13 @@ public class OldTreeTableWidget extends Widget {
       super(driver,wait,id);
        this.id =id;
 
-        
+
     }
-    
+
     private OldTable createTable() {
         return OldTable.createByComponentDataAttributeName(driver, webDriverWait,id );
     }
-    
+
     public List<String> getAllVisibleNodes(String attributeNameLabel) {
         List<String> visibleNodes = new ArrayList<>();
         int tableObjectsCount = createTable().getNumberOfRowsInTable(attributeNameLabel);
@@ -51,7 +51,7 @@ public class OldTreeTableWidget extends Widget {
         }
         return visibleNodes;
     }
-    
+
     public void expandNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
         new Node(driver, webDriverWait, rowNumber).expandNode();
@@ -68,7 +68,7 @@ public class OldTreeTableWidget extends Widget {
     public void callActionById(String id){
         createTable().callAction(id);
     }
-    
+
     public static class Node {
         private static final String TREE_NODE_EXPAND_ICON_XPATH = ".//i[contains(@class,'tree-node-expand-icon')]";
         private static final String TREE_NODE_ADD_ICON_XPATH = ".//i[@aria-label='ADD']";
@@ -76,18 +76,18 @@ public class OldTreeTableWidget extends Widget {
         final private int row;
         final private WebDriver driver;
         final private WebDriverWait wait;
-        
+
         Node(WebDriver driver, WebDriverWait wait, int row) {
             this.driver = driver;
             this.wait = wait;
             this.row = row;
         }
-        
+
         private List<WebElement> getNodeExpandIcons() {
             DelayUtils.waitBy(wait, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
             return driver.findElements(By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
         }
-        
+
         private void expandNode() {
 
             WebElement node = getNodeExpandIcons().get(row);
@@ -98,7 +98,7 @@ public class OldTreeTableWidget extends Widget {
 
             }
         }
-        
+
         private void collapseNode() {
             WebElement node = getNodeExpandIcons().get(row);
             if (isExpanded(node)) {
@@ -107,11 +107,11 @@ public class OldTreeTableWidget extends Widget {
                 DelayUtils.waitForPageToLoad(driver,wait);
             }
         }
-        
+
         private boolean isExpanded(WebElement node) {
             List<WebElement> notExpandedNode = node.findElements(By.xpath(TREE_NODE_ADD_ICON_XPATH));
             return notExpandedNode.isEmpty();
         }
     }
-    
+
 }

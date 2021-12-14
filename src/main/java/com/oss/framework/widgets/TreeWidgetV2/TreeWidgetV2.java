@@ -1,21 +1,21 @@
 package com.oss.framework.widgets.TreeWidgetV2;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.search.AdvancedSearch;
+import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.components.tree.TreeComponent.Node;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.Optional;
 
 public class TreeWidgetV2 extends Widget {
 
@@ -42,19 +42,23 @@ public class TreeWidgetV2 extends Widget {
         }
         throw new NoSuchElementException("Can't find node: " + label);
     }
+
     @Deprecated
     public void selectFirstNode() {
         List<Node> nodes = getTreeComponent().getVisibleNodes();
         nodes.get(0).toggleNode();
     }
-    public void selectNode(int nodeNumber){
+
+    public void selectNode(int nodeNumber) {
         List<Node> nodes = getTreeComponent().getVisibleNodes();
         nodes.get(nodeNumber).toggleNode();
     }
+
     @Deprecated
     public Node getFirstNode() {
         return getVisibleNodes().get(0);
     }
+
     public Node getNode(int nodeNumber) {
         return getVisibleNodes().get(nodeNumber);
     }
@@ -72,9 +76,9 @@ public class TreeWidgetV2 extends Widget {
         getNode(label).toggleNode();
     }
 
-    public void unselectNodeByLabel(String label){
+    public void unselectNodeByLabel(String label) {
         Node node = getNode(label);
-        if(node.isToggled()){
+        if (node.isToggled()) {
             node.toggleNode();
         }
     }
@@ -110,8 +114,32 @@ public class TreeWidgetV2 extends Widget {
         return getTreeComponent().getNodeByLabelsPath(labels);
     }
 
-    public PaginationComponent getPagination(){
-       return PaginationComponent.createFromParent(driver,webDriverWait,webElement);
+    public PaginationComponent getPagination() {
+        return PaginationComponent.createFromParent(driver, webDriverWait, webElement);
+    }
+
+    public void openSelectionBar() {
+        getSelectionBarComponent().openSelectionBar();
+    }
+
+    public void hideSelectionBar() {
+        getSelectionBarComponent().hideSelectionBar();
+    }
+
+    public void clickUnselectAllInSelectionBar(){
+        getSelectionBarComponent().clickUnselectAllButton();
+    }
+
+    public void clickShowOnlySelectedInSelectionBar(){
+        getSelectionBarComponent().clickShowOnlySelectedButton();
+    }
+
+    public void clickShowAllInSelectionBar(){
+        getSelectionBarComponent().clickShowAllButton();
+    }
+
+    public String getSelectedObjectCount(){
+        return getSelectionBarComponent().getSelectedObjectsCount();
     }
 
     private TreeComponent getTreeComponent() {
@@ -126,5 +154,9 @@ public class TreeWidgetV2 extends Widget {
             advancedSearch = AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
         }
         return advancedSearch;
+    }
+
+    private SelectionBarComponent getSelectionBarComponent() {
+        return SelectionBarComponent.create(driver, webDriverWait, id);
     }
 }
