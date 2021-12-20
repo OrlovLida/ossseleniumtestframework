@@ -16,4 +16,6 @@ public interface SystemMessageInterface {
     void clickMessageLink();
 
     void waitForMessageDisappear();
+
+    boolean errorsExists();
 }
