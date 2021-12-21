@@ -85,7 +85,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     public List<Message> getErrors() {
-        log.info("Starting getting errors");
+        log.info("Checking errors");
         DelayUtils.waitForPageToLoad(driver, wait);
         expandSystemMessagesContainer();
         List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
@@ -107,8 +107,11 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void close() {
-        tryToClose(CLOSE_MESSAGE_CONTAINER_BUTTON);
-        tryToClose(CLOSE_SINGLE_MESSAGE_BUTTON);
+        if (!messageContainer.findElements(By.xpath(CLOSE_MESSAGE_CONTAINER_BUTTON)).isEmpty()) {
+            tryToClose(CLOSE_MESSAGE_CONTAINER_BUTTON);
+        } else {
+            tryToClose(CLOSE_SINGLE_MESSAGE_BUTTON);
+        }
     }
 
     private void tryToClose(String closeButtonXpath) {
@@ -127,13 +130,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     public void expandSystemMessagesContainer() {
-        try {
+        if (!messageContainer.findElements(By.xpath(PATH_TO_SHOW_HIDE_MESSAGES)).isEmpty()) {
             log.debug("Clicking show/hide button in system message");
             Actions builder = new Actions(driver);
-            DelayUtils.waitForNestedElements(new WebDriverWait(driver, 5), messageContainer, PATH_TO_SHOW_HIDE_MESSAGES);
             builder.click(messageContainer.findElement(By.xpath(PATH_TO_SHOW_HIDE_MESSAGES))).build().perform();
-        } catch (NoSuchElementException | TimeoutException e) {
-            log.warn("Cannot click show/hide button in system message");
         }
     }
 
