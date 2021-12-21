@@ -17,5 +17,5 @@ public interface SystemMessageInterface {
 
     void waitForMessageDisappear();
 
-    boolean isErrorDisplayed();
+    boolean isErrorDisplayed(boolean printErrors);
 }
