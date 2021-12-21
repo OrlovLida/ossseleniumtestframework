@@ -74,12 +74,14 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     @Override
-    public boolean isErrorDisplayed() {
+    public boolean isErrorDisplayed(boolean printErrors) {
         List<Message> errors = getErrors();
         if (errors.isEmpty()) {
             return false;
         }
-        printErrors(errors);
+        if (printErrors) {
+            printErrors(errors);
+        }
         return true;
     }
 
