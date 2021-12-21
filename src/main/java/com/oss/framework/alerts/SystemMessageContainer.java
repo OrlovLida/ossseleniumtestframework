@@ -74,7 +74,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     @Override
-    public boolean errorsExists() {
+    public boolean isErrorExists() {
         List<Message> errors = getErrors();
         if (errors.isEmpty()) {
             return false;
@@ -107,11 +107,11 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void close() {
-        tryToClickClose(CLOSE_MESSAGE_CONTAINER_BUTTON);
-        tryToClickClose(CLOSE_SINGLE_MESSAGE_BUTTON);
+        tryToClose(CLOSE_MESSAGE_CONTAINER_BUTTON);
+        tryToClose(CLOSE_SINGLE_MESSAGE_BUTTON);
     }
 
-    private void tryToClickClose(String closeButtonXpath) {
+    private void tryToClose(String closeButtonXpath) {
         try {
             log.debug("Closing system message");
             Actions builder = new Actions(driver);
