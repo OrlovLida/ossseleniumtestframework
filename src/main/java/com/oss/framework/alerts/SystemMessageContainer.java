@@ -37,7 +37,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     private static final String CLOSE_SINGLE_MESSAGE_BUTTON = ".//div[contains(@class,'closeButton')]";
     private static final String CLOSE_MESSAGE_CONTAINER_BUTTON = ".//i[@aria-label='Close']";
-    private static final String PATH_TO_SHOW_HIDE_MESSAGES = ".//i[@aria-label='Show/Hide messages']";
+    private static final String PATH_TO_SHOW_MESSAGES = ".//i[@aria-label='Show/Hide messages' and contains(@class, 'down')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_CONTAINER = "//div[contains(@class, 'systemMessagesContainer')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_ITEM = "//div[contains(@class,'systemMessageItem')]";
     private static final String DANGER_MESSAGE_TYPE_CLASS = "danger";
@@ -74,13 +74,12 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     @Override
-    public boolean isErrorExists() {
+    public boolean isErrorDisplayed() {
         List<Message> errors = getErrors();
         if (errors.isEmpty()) {
             return false;
         }
         printErrors(errors);
-        close();
         return true;
     }
 
@@ -130,10 +129,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     public void expandSystemMessagesContainer() {
-        if (!messageContainer.findElements(By.xpath(PATH_TO_SHOW_HIDE_MESSAGES)).isEmpty()) {
-            log.debug("Clicking show/hide button in system message");
+        if (!messageContainer.findElements(By.xpath(PATH_TO_SHOW_MESSAGES)).isEmpty()) {
+            log.debug("Clicking show button in system message");
             Actions builder = new Actions(driver);
-            builder.click(messageContainer.findElement(By.xpath(PATH_TO_SHOW_HIDE_MESSAGES))).build().perform();
+            builder.click(messageContainer.findElement(By.xpath(PATH_TO_SHOW_MESSAGES))).build().perform();
         }
     }
 
