@@ -62,7 +62,7 @@ public class SearchPanel {
         this.webElement.findElement(By.xpath(CANCEL_BTN_PATH)).click();
     }
     
-    public List<String> getAllVisibleFilters() {
+    List<String> getAllVisibleFilters() {
         return this.webElement
                 .findElements(By.xpath(FILTERS_PATH)).stream()
                 .map(filter -> filter.findElement(By.xpath(INPUT_LABEL_PATH + " | " + NEW_COMBOBOX_LABEL_PATH)).getText())
@@ -73,7 +73,7 @@ public class SearchPanel {
         return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
     
-    public void saveAsNewFilter(String name) {
+    void saveAsNewFilter(String name) {
         callSaveFilterAction(SAVE_AS_NEW_FILTER_BTN_ID);
         
         WebElement form = driver.findElement(By.xpath(SAVE_AS_NEW_FILTER_FORM_PATH));
@@ -83,13 +83,17 @@ public class SearchPanel {
         DelayUtils.waitForPageToLoad(driver, wait);
     }
     
-    public void saveFilter() {
+    void saveFilter() {
         callSaveFilterAction(SAVE_FILTER_BTN_ID);
     }
     
     private void callSaveFilterAction(String actionId) {
         this.webElement.findElement(By.xpath(SAVE_BUTTONS_DROPDOWN_PATH)).click();
         driver.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + actionId + "']")).click();
+    }
+    
+    void clickClearAll() {
+        webElement.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "= 'clearAllButton']")).click();
     }
     
 }

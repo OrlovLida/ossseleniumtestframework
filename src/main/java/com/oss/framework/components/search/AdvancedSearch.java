@@ -163,8 +163,7 @@ public class AdvancedSearch {
     }
     
     private boolean isFiltersSettingsOpen() {
-        return driver.findElements(By.className(FILTERS_SETTINGS_CLASS))
-                .size() > 0;
+        return !driver.findElements(By.className(FILTERS_SETTINGS_CLASS)).isEmpty();
     }
     
     public void markFilterAsFavByLabel(String label) {
@@ -190,6 +189,7 @@ public class AdvancedSearch {
     public void saveFilter() {
         openSearchPanel().saveFilter();
     }
+    public void clickClearAll() {openSearchPanel().clickClearAll();}
     
     public Input getComponent(String componentId, ComponentType componentType) {
         return openSearchPanel().getComponent(componentId, componentType);
@@ -230,8 +230,8 @@ public class AdvancedSearch {
     }
     
     private boolean isSearchPanelOpen() {
-        return webElement.findElements(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"))
-                .size() > 0;
+        return !webElement.findElements(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"))
+                .isEmpty();
     }
     
     private static class Tags {
