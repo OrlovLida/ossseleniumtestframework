@@ -73,6 +73,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
 
+    @Override
     public boolean errorsExists() {
         List<Message> errors = getErrors();
         if (errors.isEmpty()) {
