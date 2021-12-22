@@ -90,14 +90,14 @@ public class SystemMessageContainer implements SystemMessageInterface {
         DelayUtils.waitForPageToLoad(driver, wait);
         expandSystemMessagesContainer();
         List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
-        log.info("Found {} error messages", messageItems.size());
-        return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
+        List<Message> messages = messageItems.stream().map(this::toMessage).collect(Collectors.toList()).stream()
+                .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER)).collect(Collectors.toList());
+        log.info("Found {} error messages", messages.size());
+        return messages;
     }
 
     private void printErrors(List<Message> messages) {
         messages
-                .stream()
-                .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER))
                 .forEach(message -> log.error(message.getText()));
     }
 
