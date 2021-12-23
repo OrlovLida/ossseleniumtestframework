@@ -55,6 +55,7 @@ public class SearchField extends Input {
         DelayUtils.sleep();//wait for cursor
         clear();
         webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         chooseFirstResult(value);
     }
 
