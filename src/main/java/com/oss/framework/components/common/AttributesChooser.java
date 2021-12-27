@@ -1,7 +1,5 @@
 package com.oss.framework.components.common;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -26,71 +24,50 @@ public class AttributesChooser {
     
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
-    private final WebElement attributesChooser;
+    private final WebElement attributesChooserElement;
     
     private AttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement attributesChooser) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
-        this.attributesChooser = attributesChooser;
+        this.attributesChooserElement = attributesChooser;
     }
     
-    public AttributesChooser enableAttributeByLabel(String attributeLabel, String... path) {
+    public void enableAttributeByLabel(String attributeLabel, String... path) {
+        String nodePath = getAttributePath(attributeLabel, path);
+        Node attributeByLabelsPath = getAttributeByLabelsPath(nodePath);
+        enableAttributesByLabel(attributeByLabelsPath);
+        
+    }
+    
+    public void disableAttributeByLabel(String attributeLabel, String... path) {
+        String nodePath = getAttributePath(attributeLabel, path);
+        Node attributeByLabelsPath = getAttributeByLabelsPath(nodePath);
+        disableAttributesByLabel(attributeByLabelsPath);
+    }
+    
+    private String getAttributePath(String attributeLabel, String... path) {
         StringBuilder level = new StringBuilder();
         for (String attributeCategory: path) {
-            expandAttributeCategoryByLabel(attributeCategory);
-            level = level.append(attributeCategory).append(".");
+            level.append(attributeCategory).append(".");
         }
-        String labelPath = level.append(attributeLabel).toString();
-        enableAttributesByLabel(labelPath);
-        return this;
-    }
-    
-    public AttributesChooser disableAttributeByLabel(String attributeLabel, String... path) {
-        
-        for (String attributeCategory: path) {
-            expandAttributeCategoryByLabel(attributeCategory);
-        }
-        disableAttributesByLabel(attributeLabel);
-        
-        return this;
-    }
-    
-    public List<Attribute> getAttributes() {
-        return null;
-    }
-    
-    public List<Attribute> getAttributes(String... path) {
-        return null;
-    }
-    
-    public List<Attribute> getAttributesByLabel(String... pathLabel) {
-        return null;
-    }
-    
-    public void toggleAttributeByLabel(String attributeLabel) {
-        Node node = findAttributeByLabel(attributeLabel);
-        node.toggleNode();
-    }
-    
-    public void expandAttributeCategoryByLabel(String attributeCategoryLabel) {
-        Node node = findAttributeCategoryByLabel(attributeCategoryLabel);
-        node.expandNode();
+        return level.append(attributeLabel).toString();
     }
     
     public void clickApply() {
-        this.attributesChooser.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
+        this.attributesChooserElement.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
     }
     
     public void clickCancel() {
-        this.attributesChooser.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
+        this.attributesChooserElement.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
     }
     
     public void clickDefaultSettings() {
-        this.attributesChooser.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
+        this.attributesChooserElement.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
     }
     
     public void toggleAttributeByLabel(String attributeLabel, String... pathLabel) {
-        
+        String attributePath = getAttributePath(attributeLabel, pathLabel);
+        toggleAttributeByPath(attributePath);
     }
     
     public void toggleAttributeByPath(String path) {
@@ -98,72 +75,23 @@ public class AttributesChooser {
     }
     
     private TreeComponent getTreeComponent() {
-        return TreeComponent.create(this.driver, this.webDriverWait, attributesChooser);
+        return TreeComponent.create(this.driver, this.webDriverWait, attributesChooserElement);
     }
     
-    private AttributesChooser disableAttributesByLabel(String... attributeLabels) {
-        for (String attributeLabel: attributeLabels) {
-            if (isAttributeSelectedByLabel(attributeLabel)) {
-                toggleAttributeByLabel(attributeLabel);
-            }
+    private void disableAttributesByLabel(Node attribute) {
+        if (attribute.isToggled()) {
+            attribute.toggleNode();
         }
-        return this;
     }
     
-    private AttributesChooser enableAttributesByLabel(String... columnLabels) {
-        for (String columnLabel: columnLabels) {
-            if (!isAttributeSelectedByLabel(columnLabel)) {
-                toggleAttributeByLabel(columnLabel);
-            }
+    private void enableAttributesByLabel(Node attribute) {
+        if (!attribute.isToggled()) {
+            attribute.toggleNode();
         }
-        return this;
     }
     
-    private boolean isAttributeSelectedByLabel(String attributeLabel) {
-        Node node = findAttributeByLabel(attributeLabel);
-        return node.isToggled();
-    }
-    
-    private Node findAttributeByLabel(String attributeLabel) {
+    private Node getAttributeByLabelsPath(String attributeLabel) {
         return getTreeComponent().getNodeByLabelsPath(attributeLabel);
-//        List<Node> nodes = getTreeComponent().getVisibleNodes();
-//        return getNodeByLabel(nodes, attributeLabel);
-    }
-    
-    private Node findAttributeCategoryByLabel(String attributeCategoryLabel) {
-        // List<Node> nodes = getTreeComponent().getVisibleNodes();
-        return getTreeComponent().getNodeByLabelsPath(attributeCategoryLabel);
-        // return getNodeByLabel(nodes, attributeCategoryLabel);
-    }
-    
-    private Node getNodeByLabel(List<Node> nodes, String label) {
-        Node node = nodes.stream().filter(n -> n.getLabel().equals(label))
-                .findFirst().orElseThrow(() -> new RuntimeException("Cant find node " + label));
-        return node;
-    }
-    
-    public static class Attribute {
-        private final String attributeId;
-        private final String attributeLabel;
-        private final boolean isSelected;
         
-        public Attribute(String attributeId, String attributeLabel, boolean isSelected) {
-            this.attributeId = attributeId;
-            this.attributeLabel = attributeLabel;
-            this.isSelected = isSelected;
-        }
-        
-        public String getAttributeId() {
-            return attributeId;
-        }
-        
-        public String getAttributeLabel() {
-            return attributeLabel;
-        }
-        
-        public boolean isSelected() {
-            return isSelected;
-        }
     }
-    
 }

@@ -43,20 +43,9 @@ public class TreeWidgetV2 extends Widget {
         throw new NoSuchElementException("Can't find node: " + label);
     }
 
-    @Deprecated
-    public void selectFirstNode() {
-        List<Node> nodes = getTreeComponent().getVisibleNodes();
-        nodes.get(0).toggleNode();
-    }
-
     public void selectNode(int nodeNumber) {
         List<Node> nodes = getTreeComponent().getVisibleNodes();
         nodes.get(nodeNumber).toggleNode();
-    }
-
-    @Deprecated
-    public Node getFirstNode() {
-        return getVisibleNodes().get(0);
     }
 
     public Node getNode(int nodeNumber) {
