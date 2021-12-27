@@ -80,6 +80,7 @@ public class DelayUtils {
 
     public static void waitForPageToLoad(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(1000);
+        waitByXPath(wait, "//div[@id='ossApp']");
         List<WebElement> newList = listOfLoaders(driver);
         long startTime = System.currentTimeMillis();
         while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
@@ -110,33 +111,34 @@ public class DelayUtils {
         return newList;
     }
 
-    public static void waitForButtonDisappear(WebDriver driver, WebDriverWait wait, String buttonXpath) {
+    public static void waitForButtonDisappear(WebDriver driver, String buttonXpath) {
         DelayUtils.sleep(1000);
-        List<WebElement> newList = listOfButtonLoader(driver, buttonXpath);
-        long startTime = System.currentTimeMillis();
-        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
-            try {
-                wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
-            } catch (TimeoutException | ScriptTimeoutException e) {
-                log.warn("Some element(s) could not be loaded in the expected time");
-            }
-            DelayUtils.sleep(500);
-            newList = listOfButtonLoader(driver, buttonXpath);
-        }
-        if ((System.currentTimeMillis() - startTime) > 120000) {
-            log.warn("Page did not load for a two minutes!");
-        }
+        List<WebElement> buttons = driver.findElements(By.xpath(buttonXpath));
+        waitForElementsDisappear(new WebDriverWait(driver, 90), buttons);
+    }
+
+    public static void waitForSpinners(WebDriverWait webDriverWait, WebElement webElement) {
+        DelayUtils.sleep(1000);
+        List<WebElement> spinners = webElement.findElements(By.xpath(".//i[contains(@class,'fa-spin')]"));
+        waitForElementsDisappear(webDriverWait, spinners);
 
     }
 
-    private static List<WebElement> listOfButtonLoader(WebDriver driver, String buttonXpath) {
-        List<WebElement> button = driver.findElements(By.xpath(buttonXpath));
-        List<WebElement> actionInProgress = driver.findElements(By.xpath("//*[@class='action inProgress']"));
-        List<WebElement> buttonInProgress = driver.findElements(By.xpath("//i[contains(@class, 'fa-spin')]"));
-        List<WebElement> newList = new ArrayList<>(button);
-        newList.addAll(actionInProgress);
-        newList.addAll(buttonInProgress);
-        return newList;
+    public static void waitForLoadBars(WebDriverWait webDriverWait, WebElement webElement) {
+        DelayUtils.sleep(1000);
+        List<WebElement> loadBars = webElement.findElements(By.xpath(".//div[@class='load-bar']"));
+        waitForElementsDisappear(webDriverWait, loadBars);
     }
 
+    public static void waitForAppPreloaders(WebDriverWait webDriverWait, WebElement webElement) {
+        DelayUtils.sleep(1000);
+        List<WebElement> appPreloaders = webElement.findElements(By.xpath(".//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
+        waitForElementsDisappear(webDriverWait, appPreloaders);
+    }
+
+    private static void waitForElementsDisappear(WebDriverWait webDriverWait, List<WebElement> webElements) {
+        if (!webElements.isEmpty()) {
+            DelayUtils.waitForElementDisappear(webDriverWait, webElements.get(0));
+        }
+    }
 }

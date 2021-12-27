@@ -1,5 +1,7 @@
 package com.oss.framework.components.inputs;
 
+import java.util.stream.Collectors;
+
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
@@ -46,7 +48,7 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        String selectListPath = "//div[@class='CustomSelectList-data' and @title= '" + value.getStringValue() + "']";
+        String selectListPath = "//div[@class='CustomSelectList-data' and (contains(@title, '" + value.getStringValue() + "'))]";
 
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
@@ -61,7 +63,8 @@ public class MultiSearchField extends Input {
 
     @Override
     public Data getValue() {
-        return Data.createSingleData(webElement.findElement(By.xpath(MULTI_SEARCH_PATH)).getAttribute("value"));
+        return Data.createMultiData(webElement.findElements(By.xpath(".//span//span")).stream().map(value->value.getAttribute("textContent")).collect(Collectors.toList()));
+    
     }
 
     @Override
@@ -72,5 +75,13 @@ public class MultiSearchField extends Input {
     @Override
     public String getLabel() {
         return webElement.findElement(By.xpath(".//span")).getText();
+    }
+
+    @Override
+    public MouseCursor cursor(){
+        Actions action = new Actions(driver);
+        action.moveToElement(webElement).build().perform();
+        String cursor = webElement.findElement(By.className("md-input")).getCssValue("cursor");
+       return getMouseCursor(cursor);
     }
 }

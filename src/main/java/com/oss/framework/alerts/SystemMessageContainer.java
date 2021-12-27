@@ -35,7 +35,9 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private WebDriverWait wait;
     private WebElement messageContainer;
 
-    private static final String PATH_TO_CLOSEBUTTON = ".//div[contains(@class,'closeButton')]";
+    private static final String CLOSE_SINGLE_MESSAGE_BUTTON = ".//div[contains(@class,'closeButton')]";
+    private static final String CLOSE_MESSAGE_CONTAINER_BUTTON = ".//i[@aria-label='Close']";
+    private static final String PATH_TO_SHOW_MESSAGES = ".//i[@aria-label='Show/Hide messages' and contains(@class, 'down')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_CONTAINER = "//div[contains(@class, 'systemMessagesContainer')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_ITEM = "//div[contains(@class,'systemMessageItem')]";
     private static final String DANGER_MESSAGE_TYPE_CLASS = "danger";
@@ -51,6 +53,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
     public static SystemMessageInterface create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         WebElement messageContainer = driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
+        Actions builder = new Actions(driver);
+        builder.moveToElement(messageContainer).build().perform();
         return new SystemMessageContainer(driver, wait, messageContainer);
     }
 
@@ -62,9 +66,39 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public List<Message> getMessages() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
+        log.info("Starting getting messages");
+        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
+        log.info("Found {} system messages", messageItems.size());
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isErrorDisplayed(boolean printErrors) {
+        List<Message> errors = getErrors();
+        if (errors.isEmpty()) {
+            return false;
+        }
+        if (printErrors) {
+            printErrors(errors);
+        }
+        return true;
+    }
+
+    public List<Message> getErrors() {
+        log.info("Checking errors");
+        DelayUtils.waitForPageToLoad(driver, wait);
+        expandSystemMessagesContainer();
+        List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
+        List<Message> messages = messageItems.stream().map(this::toMessage).collect(Collectors.toList()).stream()
+                .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER)).collect(Collectors.toList());
+        log.info("Found {} error messages", messages.size());
+        return messages;
+    }
+
+    private void printErrors(List<Message> messages) {
+        messages
+                .forEach(message -> log.error(message.getText()));
     }
 
     @Override
@@ -74,13 +108,33 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void close() {
+        if (!messageContainer.findElements(By.xpath(CLOSE_MESSAGE_CONTAINER_BUTTON)).isEmpty()) {
+            tryToClose(CLOSE_MESSAGE_CONTAINER_BUTTON);
+        } else {
+            tryToClose(CLOSE_SINGLE_MESSAGE_BUTTON);
+        }
+    }
+
+    private void tryToClose(String closeButtonXpath) {
         try {
+            log.debug("Closing system message");
             Actions builder = new Actions(driver);
+            builder.moveToElement(messageContainer).moveByOffset(100, 20).build().perform();
+            DelayUtils.sleep(100);
             builder.moveToElement(messageContainer).build().perform();
-            DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_CLOSEBUTTON);
-            builder.click(messageContainer.findElement(By.xpath(PATH_TO_CLOSEBUTTON))).build().perform();
+            DelayUtils.waitForNestedElements(new WebDriverWait(driver, 5), messageContainer, closeButtonXpath);
+            builder.click(messageContainer.findElement(By.xpath(closeButtonXpath))).build().perform();
+            log.debug("System message closed");
         } catch (NoSuchElementException | TimeoutException e) {
             log.warn("Cannot click close button in system message");
+        }
+    }
+
+    public void expandSystemMessagesContainer() {
+        if (!messageContainer.findElements(By.xpath(PATH_TO_SHOW_MESSAGES)).isEmpty()) {
+            log.debug("Clicking show button in system message");
+            Actions builder = new Actions(driver);
+            builder.click(messageContainer.findElement(By.xpath(PATH_TO_SHOW_MESSAGES))).build().perform();
         }
     }
 

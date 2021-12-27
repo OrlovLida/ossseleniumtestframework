@@ -11,8 +11,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Combobox extends Input {
+
+    private static final String INPUT_XPATH = ".//input";
+    private static final String LABEL_XPATH = ".//label";
+    private static final String COMBOBOX_INPUT_XPATH = ".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]";
+    private static final String COMBOBOX_CLOSE_XPATH = ".//i[@aria-label ='CLOSE']";
+    private static final String LIST_ITEM_XPATH = "//div[@class='list-item'] | //div[@class='combo-box__list-item']";
 
     // TODO: remove after resolving OSSSD-2035 - setting data-testId in status Combobox
     public static Combobox createServiceDeskStatusComboBox(WebDriver driver, WebDriverWait webDriverWait) {
@@ -43,7 +50,7 @@ public class Combobox extends Input {
 
     @Override
     public String getLabel() {
-        WebElement label = webElement.findElement(By.xpath(".//label"));
+        WebElement label = webElement.findElement(By.xpath(LABEL_XPATH));
         return label.getText();
     }
 
@@ -52,32 +59,32 @@ public class Combobox extends Input {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
         DataWrapper wrapper = value.getWrapper();
 
-        WebElement input = webElement.findElement(By.xpath(".//input"));
+        WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
         clear();
         input.sendKeys(wrapper.getReadableValue());
 
         if (wrapper.isFindFirst()) {
-            DelayUtils.sleep(); //TODO: wait for spinners
+            DelayUtils.waitForSpinners(webDriverWait, webElement);
             input.sendKeys(Keys.DOWN);
             input.sendKeys(Keys.RETURN);
             return;
         }
 
-        DelayUtils.waitByXPath(webDriverWait, "//div[@class='combo-box__list-item']//*[text()='" + wrapper.getReadableValue() + "']");
-        List<WebElement> results = driver.findElements(By.xpath("//div[@class='combo-box__list-item']"));
+        DelayUtils.waitByXPath(webDriverWait, "//div[contains(@class,'list-item')]//*[text()='" + wrapper.getReadableValue() + "']");
+        List<WebElement> results = driver.findElements(By.xpath(LIST_ITEM_XPATH));
         for (WebElement element : results) {
             if (wrapper.getReadableValue().equals(element.getText())) {
                 element.click();
                 return;
             }
         }
-        throw new RuntimeException("Cant find element: " + wrapper.getReadableValue());
+        throw new NoSuchElementException("Cant find element: " + wrapper.getReadableValue());
     }
 
     @Override
     public void setValueContains(Data value) {
         webElement.click();
-        webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
+        webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
     }
@@ -85,22 +92,15 @@ public class Combobox extends Input {
     @Override
     public Data getValue() {
         WebElement input =
-                webElement.findElement(By.xpath(".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]"));
+                webElement.findElement(By.xpath(COMBOBOX_INPUT_XPATH));
         return Data.createSingleData(input.getAttribute("value"));
 
     }
 
-    public Data getSelectedValue() {
-        return Data.createSingleData(webElement.findElement(By.xpath(".//input")).getText());
-    }
-
     @Override
     public void clear() {
-        DelayUtils.waitForPageToLoad(driver,webDriverWait);
-        List<WebElement> closeButtons = this.webElement.findElements(By.xpath(".//i[contains(@class,'OSSIcon ossfont-close combo-box__close')]"));
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
+        List<WebElement> closeButtons = this.webElement.findElements(By.xpath(COMBOBOX_CLOSE_XPATH));
         closeButtons.forEach(WebElement::click);
     }
 }
-
-
-

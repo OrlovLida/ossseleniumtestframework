@@ -7,6 +7,7 @@
 package com.oss.framework.components.contextactions;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -22,6 +23,13 @@ import com.oss.framework.utils.DelayUtils;
 public class ButtonContainer implements ActionsInterface {
 
     private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for Button Container";
+    private static final String GROUP_XPATH = ".//a[text()='%s'] | .//*[text()='%s']";
+    private static final String BUTTON_BY_LABEL_XPATH = "//a[text()='%s'] | //*[text()='%s']/ancestor::button | //*[@aria-label='%s']";
+    private static final String BUTTON_BY_ID_XPATH = "//*[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s'] | //*[@data-widget-id='%s']";
+
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement buttons;
 
     public static ButtonContainer create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'commonButtons')] | //div[@class='windowIcons']");
@@ -33,10 +41,6 @@ public class ButtonContainer implements ActionsInterface {
         return new ButtonContainer(driver, wait, parentElement);
     }
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-    private final WebElement buttons;
-
     private ButtonContainer(WebDriver driver, WebDriverWait wait, WebElement buttons) {
         this.driver = driver;
         this.wait = wait;
@@ -45,29 +49,10 @@ public class ButtonContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//a[text()='" + label + "'] | //*[text()='" + label + "']/ancestor::button");
-        WebElement button = buttons.findElement(By.xpath("//a[text()='" + label + "'] | //*[text()='" + label + "']/ancestor::button"));
-        button.click();
-    }
-
-    @Override
-    public void callActionById(String id) {
-        DelayUtils.waitForNestedElements(wait, buttons, "//*[@" + CSSUtils.TEST_ID + "='" + id + "'] | //*[@id='" + id + "'] ");
-        Actions action = new Actions(driver);
-        action.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(
-                buttons.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + id + "'] | //*[@id='" + id + "'] ")))))
-                .click()
-                .perform();
-    }
-
-    @Override
-    public void callAction(String actionId) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
-    }
-
-    @Override
-    public void callAction(String groupId, String actionId) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
+        String buttonXpath = String.format(BUTTON_BY_LABEL_XPATH, label, label, label);
+        DelayUtils.waitForNestedElements(wait, buttons, buttonXpath);
+        WebElement button = buttons.findElement(By.xpath(buttonXpath));
+        clickOnWebElement(driver, wait, button);
     }
 
     @Override
@@ -76,7 +61,29 @@ public class ButtonContainer implements ActionsInterface {
     }
 
     @Override
+    public void callActionById(String id) {
+        String buttonXpath = String.format(BUTTON_BY_ID_XPATH, id, id, id);
+        DelayUtils.waitForNestedElements(wait, buttons, buttonXpath);
+        clickOnWebElement(driver, wait, buttons.findElement(By.xpath(buttonXpath)));
+    }
+
+    @Override
     public void callActionById(String groupLabel, String actionId) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
+        clickGroup(groupLabel);
+        callActionById(actionId);
+    }
+
+    private void clickGroup(String groupLabel) {
+        String groupXpath = String.format(GROUP_XPATH, groupLabel, groupLabel);
+        DelayUtils.waitForNestedElements(wait, buttons, groupXpath);
+        WebElement button = buttons.findElement(By.xpath(groupXpath));
+        clickOnWebElement(driver, wait, button);
+    }
+
+    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
+        Actions actions = new Actions(webDriver);
+        actions.moveToElement(webElement).click(webElement).build().perform();
     }
 }

@@ -28,8 +28,6 @@ public interface TableInterface {
 
     List<String> getActiveColumnHeaders();
 
-    void disableColumn(String columnId);
-
     void disableColumnByLabel(String columnLabel, String... path);
 
     void enableColumnByLabel(String columnLabel, String... path);
@@ -71,4 +69,6 @@ public interface TableInterface {
     Map<String, String> getPropertyNamesToValues();
 
     List<TableRow> getSelectedRows();
+
+    String getCellValueById(int row, String columnId);
 }

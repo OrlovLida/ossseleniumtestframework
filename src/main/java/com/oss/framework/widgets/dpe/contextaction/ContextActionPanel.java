@@ -55,6 +55,9 @@ public class ContextActionPanel {
     }
 
     private void clickOnGroup(String groupId) {
+        if (!isPanelOpen()) {
+            clickOnPanel();
+        }
         List<WebElement> actions = contextActionPanel.findElements(By.xpath(".//div[@class='btn-chart' or @class='xdr-views-container']"));
         WebElement group = actions.stream().filter(a -> a.findElement(By.xpath(".//button"))
                         .getAttribute(CSSUtils.TEST_ID)
@@ -75,15 +78,23 @@ public class ContextActionPanel {
                             .equals(actionLabel))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Link with text label " + actionLabel + " doesn't exist"));
+            action.click();
         } else {
             action = contextActionPanel.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='" + actionLabel + "']"));
+            action.click();
+            Actions actions = new Actions(driver);
+            WebElement graph = driver.findElement(By.xpath(GRAPH_LOCATOR_PATH));
+            actions.moveToElement(graph).click(graph).build().perform();
         }
-        action.click();
     }
 
     private void chooseColor(String colorRGB) {
         WebElement colorPalette = contextActionPanel.findElement(By.className("color-picker"));
         WebElement color = colorPalette.findElement(By.xpath("//*[@style='background-color: " + colorRGB + ";']"));
         color.click();
+    }
+
+    private boolean isPanelOpen() {
+        return !contextActionPanel.findElements(By.xpath(".//i[contains(@class,'chevron-left')]")).isEmpty();
     }
 }

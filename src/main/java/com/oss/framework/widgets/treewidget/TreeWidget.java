@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -102,7 +107,7 @@ public class TreeWidget extends Widget {
     }
 
     public void scrollToTreeRowContains(String name) {
-         WebElement row = this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]"));
+        WebElement row = this.webElement.findElement(By.xpath("//p[@class='TreeViewLabel'][contains(text(), '" + name + "')]"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", row);
     }
 
@@ -219,10 +224,7 @@ public class TreeWidget extends Widget {
     }
 
     public void expandTreeRow(String treeRowName) {
-        DelayUtils.waitByXPath(webDriverWait, String.format(PATH_TO_TREE_ROW, treeRowName));
-        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW, treeRowName))));
-        WebElement treeRowElement = this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW, treeRowName)));
-        TreeRow treeRow = new TreeRow(treeRowElement, webDriverWait);
+        TreeRow treeRow = createTreeRow(treeRowName);
         treeRow.expandTreeRow();
     }
 
@@ -232,6 +234,18 @@ public class TreeWidget extends Widget {
         WebElement treeRowElement = this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW_CONTAINS, treeRowName)));
         TreeRow treeRow = new TreeRow(treeRowElement, webDriverWait);
         treeRow.expandTreeRow();
+    }
+
+    public boolean isTreeRowExpanded(String treeRowName) {
+        TreeRow treeRow = createTreeRow(treeRowName);
+        return treeRow.isExpanded();
+    }
+
+    private TreeRow createTreeRow(String treeRowName) {
+        DelayUtils.waitByXPath(webDriverWait, String.format(PATH_TO_TREE_ROW, treeRowName));
+        DelayUtils.waitForVisibility(webDriverWait, this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW, treeRowName))));
+        WebElement treeRowElement = this.webElement.findElement(By.xpath(String.format(PATH_TO_TREE_ROW, treeRowName)));
+        return new TreeRow(treeRowElement, webDriverWait);
     }
 
     public TreeWidget selectRootCheckbox() {
@@ -283,7 +297,7 @@ public class TreeWidget extends Widget {
 
     public void callActionById(String groupLabel, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
-        actionsContainer.callAction(groupLabel, id);
+        actionsContainer.callActionById(groupLabel, id);
     }
 
     public static class Node {
@@ -354,7 +368,6 @@ public class TreeWidget extends Widget {
         }
 
         public void expandNode() {
-
             if (!isExpanded()) {
                 webElement.findElement(By.className(ICON_EXPAND)).click();
             }
@@ -367,15 +380,12 @@ public class TreeWidget extends Widget {
         public void callAction(String groupId, String actionId) {
             InlineMenu.create(webElement, driver, wait).callAction(groupId, actionId);
         }
-
-        public boolean isInlineActionPresent() {
-            return InlineMenu.create(webElement, driver, wait).isActionListDisplayed();
-        }
     }
 
     private static class TreeRow {
         private static final String TREE_ROW_LABEL = ".//p[contains(@class,'TreeViewLabel')]";
         private static final String EXPAND_TREE_ROW = ".//div[@class='tree-view-icon tree-view-close']";
+        private static final String EXPAND_ICON = ".//div[contains(@class,'tree-view-icon')]";
 
         private final WebElement webElement;
         private final WebDriverWait webDriverWait;
@@ -383,6 +393,11 @@ public class TreeWidget extends Widget {
         private TreeRow(WebElement webElement, WebDriverWait webDriverWait) {
             this.webElement = webElement;
             this.webDriverWait = webDriverWait;
+        }
+
+        private boolean isExpanded(){
+            WebElement expandElement = this.webElement.findElement(By.xpath(EXPAND_ICON));
+            return expandElement.getAttribute(CLASS).contains("open");
         }
 
         private String getLabel() {
@@ -402,6 +417,5 @@ public class TreeWidget extends Widget {
             return this.webElement.getAttribute(CLASS).contains(
                     "selected");
         }
-
     }
 }

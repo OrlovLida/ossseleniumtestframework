@@ -1,28 +1,27 @@
 package com.oss.framework.widgets.tablewidget;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.components.search.AdvancedSearch;
+import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
@@ -119,7 +118,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void callAction(String groupId, String actionId) {
-        getContextActions().callAction(groupId, actionId);
+        getContextActions().callActionById(groupId, actionId);
     }
 
     @Override
@@ -152,9 +151,14 @@ public class TableWidget extends Widget implements TableInterface {
         }
     }
 
-    public void toggleVisibilitySearchAttributes(List<String> attributeIds) {
+    public void selectVisibilitySearchAttributes(List<String> attributeIds) {
         openAdvancedSearch();
-        getAdvancedSearch().toggleAttributes(attributeIds);
+        getAdvancedSearch().selectAttributes(attributeIds);
+    }
+
+    public void unselectVisibilitySearchAttributes(List<String> attributeIds) {
+        openAdvancedSearch();
+        getAdvancedSearch().unselectAttributes(attributeIds);
     }
 
     public List<String> getAllVisibleFilters() {
@@ -179,18 +183,17 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
+    public String getCellValueById(int row, String columnId) {
+        return getCellValue(row, columnId);
+    }
+
+    @Override
     public List<String> getActiveColumnHeaders() {
         return getTableComponent().getColumnHeaders();
     }
 
     public List<String> getActiveColumnIds() {
         return getTableComponent().getColumnIds();
-    }
-
-    @Override
-    public void disableColumn(String columnLabel) {
-        getAttributesChooser().disableAttributeByLabel(columnLabel, "")
-                .clickApply();
     }
 
     @Override
@@ -211,6 +214,10 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().changeColumnsOrder(columnLabel, position);
     }
 
+    public void changeColumnsOrderById(String columnId, int position) {
+        getTableComponent().changeColumnsOrderById(columnId, position);
+    }
+
     @Override
     public void resizeColumn(int column, int offset) {
         getTableComponent().resizeColumnByPosition(column, offset);
@@ -228,6 +235,10 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().turnOffSorting(columnId);
     }
 
+    public void setColumnWidth(String columnId, String columnWidth) {
+        getTableComponent().setColumnWidth(columnId, columnWidth);
+    }
+
     public void clearAllFilters() {
         getAdvancedSearch().clearAllFilters();
     }
@@ -242,9 +253,9 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clickCancel();
     }
 
-    public void choseSavedFiltersByLabel(String label) {
+    public void chooseSavedFiltersByLabel(String label) {
         openAdvancedSearch();
-        getAdvancedSearch().choseSavedFilterByLabel(label);
+        getAdvancedSearch().chooseSavedFilterByLabel(label);
         getAdvancedSearch().clickApply();
     }
 
@@ -275,10 +286,6 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public int getRowsNumber() {
-        return getTableComponent().getVisibleRows().size();
-    }
-
-    public int howManyRowsOnFirstPage() {
         return getTableComponent().getVisibleRows().size();
     }
 
@@ -314,6 +321,30 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().scrollVertically(offset);
     }
 
+    public void openSelectionBar() {
+        getSelectionBarComponent().openSelectionBar();
+    }
+
+    public void hideSelectionBar() {
+        getSelectionBarComponent().hideSelectionBar();
+    }
+
+    public void clickUnselectAllInSelectionBar(){
+        getSelectionBarComponent().clickUnselectAllButton();
+    }
+
+    public void clickShowOnlySelectedInSelectionBar(){
+        getSelectionBarComponent().clickShowOnlySelectedButton();
+    }
+
+    public void clickShowAllInSelectionBar(){
+        getSelectionBarComponent().clickShowAllButton();
+    }
+
+    public String getSelectedObjectCount(){
+        return getSelectionBarComponent().getSelectedObjectsCount();
+    }
+
     private TableComponent getTableComponent() {
         if (tableComponent == null) {
             tableComponent = TableComponent.create(this.driver, this.webDriverWait, this.id);
@@ -321,7 +352,11 @@ public class TableWidget extends Widget implements TableInterface {
         return tableComponent;
     }
 
-    private AdvancedSearch getAdvancedSearch() {
+    private SelectionBarComponent getSelectionBarComponent() {
+        return SelectionBarComponent.create(this.driver, this.webDriverWait, id);
+    }
+
+    public AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
             advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
         }
@@ -337,8 +372,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
-        Input input = getAdvancedSearch().getComponent(componentId, componentType);
-        input.setSingleStringValue(value);
+        getAdvancedSearch().setFilter(componentId, componentType, value);
     }
 
     private void clickOnKebabMenu() {
