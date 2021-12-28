@@ -1,5 +1,13 @@
 package com.oss.framework.widgets.dfe.aggregatesmanager;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.MultiCombobox;
@@ -7,13 +15,6 @@ import com.oss.framework.components.inputs.TextField;
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AggregatesManagerWidget extends Widget {
 
@@ -24,7 +25,7 @@ public class AggregatesManagerWidget extends Widget {
         super(driver, webElement, webDriverWait);
     }
 
-    public static AggregatesManagerWidget create(WebDriver driver, WebDriverWait wait){
+    public static AggregatesManagerWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, AGGREGATES_MANAGER_PATH);
         WebElement webElement = driver.findElement(By.xpath(AGGREGATES_MANAGER_PATH));
 
@@ -57,59 +58,59 @@ public class AggregatesManagerWidget extends Widget {
         private final WebDriverWait wait;
         private final WebElement webElement;
 
-        private AggregateSingleConfiguration(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+        private AggregateSingleConfiguration(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
             this.driver = driver;
             this.wait = webDriverWait;
             this.webElement = webElement;
         }
 
-        public static AggregateSingleConfiguration create(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement){
+        public static AggregateSingleConfiguration create(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
             return new AggregateSingleConfiguration(driver, webDriverWait, webElement);
         }
 
-        public Boolean isExpanded(){
+        public boolean isExpanded() {
             return !webElement.findElements(By.xpath(AGGREGATE_FORM_PATH)).isEmpty();
         }
 
-        public void expand(){
-            if(!isExpanded()){
+        public void expand() {
+            if (!isExpanded()) {
                 webElement.findElement(By.xpath(AGGREGATE_HEADER_PATH)).click();
             }
         }
 
-        public TextField getNameInput(){
+        public TextField getNameInput() {
             return (TextField) getComponent(INPUT_NAME_ID, Input.ComponentType.TEXT_FIELD);
         }
 
-        public TextField getBaseTableNameInput(){
+        public TextField getBaseTableNameInput() {
             return (TextField) getComponent(INPUT_TABLE_BASE_NAME_ID, Input.ComponentType.TEXT_FIELD);
         }
 
-        public MultiCombobox getDimensionsInput(){
+        public MultiCombobox getDimensionsInput() {
             return (MultiCombobox) getComponent(INPUT_DIMENSIONS_PATH, Input.ComponentType.MULTI_COMBOBOX);
         }
 
-        public void setName(String value){
+        public void setName(String value) {
             getNameInput().setSingleStringValue(value);
         }
 
-        public String getName(){
+        public String getName() {
             return getNameInput().getStringValue();
         }
 
-        public void setBaseTableName(String value){
+        public void setBaseTableName(String value) {
             getBaseTableNameInput().setSingleStringValue(value);
         }
 
-        public String getBaseTableName(){
+        public String getBaseTableName() {
             return getBaseTableNameInput().getStringValue();
         }
 
-        public void setDimensions(String value){
+        public void setDimensions(String value) {
             getDimensionsInput().setSingleStringValue(value);
         }
 
-        public Data getDimensions(){
+        public Data getDimensions() {
             return getDimensionsInput().getValue();
         }
 

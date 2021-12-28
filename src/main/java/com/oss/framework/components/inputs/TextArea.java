@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.data.Data;
 
 public class TextArea extends Input {
+
+    private static final String TEXTAREA = ".//textarea";
     
     static TextArea create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new TextArea(driver, wait, componentId);
@@ -29,25 +31,25 @@ public class TextArea extends Input {
     
     @Override
     public void setValue(Data value) {
-        WebElement input = webElement.findElement(By.xpath(".//textarea"));
+        WebElement input = webElement.findElement(By.xpath(TEXTAREA));
         clear();
         input.sendKeys(value.getStringValue());
     }
     
     @Override
     public void setValueContains(Data value) {
-        
+        throw new UnsupportedOperationException("Set value contains is not supported in TextArea");
     }
     
     @Override
     public Data getValue() {
-        WebElement input = webElement.findElement(By.xpath(".//textarea"));
+        WebElement input = webElement.findElement(By.xpath(TEXTAREA));
         return Data.createSingleData(input.getAttribute("value"));
     }
     
     @Override
     public void clear() {
-        WebElement input = webElement.findElement(By.xpath(".//textarea"));
+        WebElement input = webElement.findElement(By.xpath(TEXTAREA));
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }
@@ -56,7 +58,7 @@ public class TextArea extends Input {
     public MouseCursor cursor() {
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).build().perform();
-        String cursor = webElement.findElement(By.xpath(".//textarea")).getCssValue("cursor");
+        String cursor = webElement.findElement(By.xpath(TEXTAREA)).getCssValue("cursor");
         return getMouseCursor(cursor);
     }
 }

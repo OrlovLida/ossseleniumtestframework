@@ -1,12 +1,13 @@
 package com.oss.framework.mainheader;
 
-import com.oss.framework.components.portals.ChooseConfigurationWizard;
-import com.oss.framework.components.portals.SaveConfigurationWizard;
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.components.portals.ChooseConfigurationWizard;
+import com.oss.framework.components.portals.SaveConfigurationWizard;
+import com.oss.framework.utils.DelayUtils;
 
 public class ButtonPanel {
 
@@ -46,7 +47,7 @@ public class ButtonPanel {
 
     private boolean isButtonDisplayed(String iconId) {
         DelayUtils.waitByXPath(wait, String.format(ICON_XPATH_PATTERN, iconId));
-        return getButtonPanel().findElements(By.xpath(String.format(ICON_XPATH_PATTERN, iconId))).size() > 0;
+        return !getButtonPanel().findElements(By.xpath(String.format(ICON_XPATH_PATTERN, iconId))).isEmpty();
     }
 
     public void expandLayoutMenu() {

@@ -24,13 +24,10 @@ public class TreeWidget extends Widget {
 
     private static final String CHECKBOXES = ".//div[@class='tree-node-selection']";
     private static final String CLASS = "class";
-    private static final String INLINE_ACTIONS_MENU_BTN = ".//div[@class='actionsGroup-inline']";
     private static final String PATH_TO_TREE_ROW =
             "//p[contains(@class,'TreeViewLabel')][text()='%s']//..//..//div[contains(@class,'TreeRow')]";
     private static final String PATH_TO_TREE_ROW_CONTAINS =
             "//p[contains(@class,'TreeViewLabel')][contains(text(), '%s')]//..//..//div[@class='TreeRow']";
-
-    private InlineMenu inlineMenu;
 
     public static TreeWidget createByClass(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         return new TreeWidget(driver,
@@ -263,11 +260,6 @@ public class TreeWidget extends Widget {
 
     public Boolean areNodesSelected() {
         return (getRootNodeWithDescendants().size()) == getSelectedNodes().size();
-    }
-
-    public TreeWidget performSearch(String inputText) {
-        fullSearchText(inputText);
-        return this;
     }
 
     public TreeWidget performSearchWithEnter(String inputText) {

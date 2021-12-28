@@ -1,20 +1,18 @@
 package com.oss.framework.components.inputs;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Date;
-import java.util.Locale;
-
 import com.oss.framework.data.Data;
-
-import static java.lang.Thread.sleep;
 
 public class DateTimeRange extends Input {
 
@@ -57,7 +55,7 @@ public class DateTimeRange extends Input {
 
     @Override
     public void clear() {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -68,7 +66,7 @@ public class DateTimeRange extends Input {
 
     @Override
     public void setValueContains(Data value) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -76,28 +74,28 @@ public class DateTimeRange extends Input {
         return webElement.getText();
     }
 
-    static public String createPath(String label){
-        return  "//input[@label='" + label + "']";
+    public static String createPath(String label) {
+        return "//input[@label='" + label + "']";
     }
 
-    static public String createPathComponent(String label){
-        return  "//input[@label='" + label + "']";
+    public static String createPathComponent(String label) {
+        return "//input[@label='" + label + "']";
     }
 
-    static public String createPathDay(String day){
-        return  "//div[@class='DayPicker-Day btn '][contains(.,'"+ day + "')]";
+    public static String createPathDay(String day) {
+        return "//div[@class='DayPicker-Day btn '][contains(.,'" + day + "')]";
     }
 
-    static public String createPathDate(Calendar date){
-        return  "//div[@aria-label='" + date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) + ", " + date.get(Calendar.DAY_OF_MONTH) + " " + date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + date.get(Calendar.YEAR) + "']";
+    public static String createPathDate(Calendar date) {
+        return "//div[@aria-label='" + date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) + ", " + date.get(Calendar.DAY_OF_MONTH) + " " + date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + date.get(Calendar.YEAR) + "']";
     }
 
-    public void chooseDate(String dataK){
+    public void chooseDate(String dataK) {
         WebElement data = driver.findElement(By.xpath(dataK));
         data.click();
     }
 
-    private Calendar formatDate(String data){
+    private Calendar formatDate(String data) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Date date = null;
         try {
@@ -112,7 +110,7 @@ public class DateTimeRange extends Input {
 
     //TODO: method's name, var's names, too complicated logic ?
     private void calcDateP(int month1, int month2, Calendar givenDate) {
-        if (driver.findElements(By.xpath(createPathDate(givenDate))).size() != 0) {
+        if (!driver.findElements(By.xpath(createPathDate(givenDate))).isEmpty()) {
             WebElement we = driver.findElement(By.xpath(createPathDate(givenDate)));
             we.click();
         } else {
@@ -120,28 +118,26 @@ public class DateTimeRange extends Input {
             if (diff > 0) {
                 diff--;
                 WebElement we = null;
-                if (driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).size() != 0)
+                if (!driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).isEmpty())
                     we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
                 else
                     we = driver.findElement(By.xpath(XPATH_MONTH_NEXT));
                 for (int i = 0; i < diff; i++) {
                     we.click();
-                    if (i > 0) {
-                        if (driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).size() != 0)
-                            we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
+                    if (i > 0 && !driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).isEmpty()) {
+                        we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
                     }
                 }
             } else if (diff < 0) {
                 WebElement we = null;
-                if (driver.findElements(By.xpath(XPATH_MONTH_PREV_1)).size() != 0)
+                if (!driver.findElements(By.xpath(XPATH_MONTH_PREV_1)).isEmpty())
                     we = driver.findElement(By.xpath(XPATH_MONTH_PREV_1));
                 else
                     we = driver.findElement(By.xpath(XPATH_MONTH_PREV));
                 for (int i = 0; i > diff; i--) {
                     we.click();
-                    if (i < 0) {
-                        if (driver.findElements(By.xpath(XPATH_MONTH_PREV_1)).size() != 0)
-                            we = driver.findElement(By.xpath(XPATH_MONTH_PREV_1));
+                    if (i < 0 && !driver.findElements(By.xpath(XPATH_MONTH_PREV_1)).isEmpty()) {
+                        we = driver.findElement(By.xpath(XPATH_MONTH_PREV_1));
                     }
                 }
             }
@@ -150,46 +146,43 @@ public class DateTimeRange extends Input {
     }
 
     //TODO fix method name, duplicated code, fix var's names, whole method looks too complicated
-    private void calcDateK(int month1, int month2, int month3, Calendar givenDate){
-        if(driver.findElements(By.xpath(createPathDate(givenDate))).size() != 0) {
+    private void calcDateK(int month1, int month2, int month3, Calendar givenDate) {
+        if (!driver.findElements(By.xpath(createPathDate(givenDate))).isEmpty()) {
             WebElement we = driver.findElement(By.xpath(createPathDate(givenDate)));
             we.click();
-        }
-        else {
+        } else {
             int diff = 0;
             if (month2 <= month1) diff = month2 - month3;
             else diff = month3 - month2;
             if (diff > 0) {
                 WebElement we = null;
-                if (driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).size() != 0)
+                if (!driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).isEmpty())
                     we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
-                else
-                    if (driver.findElements(By.xpath(XPATH_MONTH_NEXT_1)).size() != 0)
+                else if (!driver.findElements(By.xpath(XPATH_MONTH_NEXT_1)).isEmpty())
                     we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_1));
                 else
                     we = driver.findElement(By.xpath(XPATH_MONTH_NEXT));
                 for (int i = 0; i < diff; i++) {
                     we.click();
-                    if (i > 0 && month3 > month1) {
-                        if (driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).size() != 0)
-                            we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
+                    if (i > 0 && month3 > month1 && !driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).isEmpty()) {
+                        we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
                     }
                 }
             } else if (diff < 0) {
-                if(-diff>month1) diff++;
+                if (-diff > month1) diff++;
                 WebElement we = null;
                 boolean n2 = false;
-                if (driver.findElements(By.xpath(XPATH_MONTH_NEXT_1)).size() != 0)
+                if (!driver.findElements(By.xpath(XPATH_MONTH_NEXT_1)).isEmpty())
                     we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_1));
-                else if (driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).size() != 0)
+                else if (!driver.findElements(By.xpath(XPATH_MONTH_NEXT_2)).isEmpty())
                     we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
                 else
                     we = driver.findElement(By.xpath(XPATH_MONTH_NEXT));
-                int j=0;
+                int j = 0;
                 int d = month1 - month2;
                 for (int i = 0; i > diff; i--) {
-                    if(n2) we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
-                    if(d==j) {
+                    if (n2) we = driver.findElement(By.xpath(XPATH_MONTH_NEXT_2));
+                    if (d == j) {
                         we = driver.findElement(By.xpath(XPATH_MONTH_NEXT));
                         n2 = true;
 
@@ -215,12 +208,12 @@ public class DateTimeRange extends Input {
         calcDateK(month1, month2, month3, dateK);
     }
 
-    public void selectDate(Calendar givenDate){
+    public void selectDate(Calendar givenDate) {
         WebElement data = driver.findElement(By.xpath(createPathDate(givenDate)));
         data.click();
     }
 
-    public void clickCalendar(String pathB){
+    public void clickCalendar(String pathB) {
         WebElement calendar = driver.findElement(By.xpath(pathB));
         calendar.click();
     }

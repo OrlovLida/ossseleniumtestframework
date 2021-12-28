@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.DelayUtils;
 
 public class CustomScrolls {
@@ -58,8 +57,8 @@ public class CustomScrolls {
         return Integer.parseInt(translateX.split("px")[0]);
     }
 
-
     public void scrollVertically(int offset) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     public int getHorizontalScrollWidth() {

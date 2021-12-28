@@ -1,7 +1,6 @@
 package com.oss.framework.components.common;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -56,15 +55,15 @@ public class AttributesChooser {
     }
 
     public List<Attribute> getAttributes() {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     public List<Attribute> getAttributes(String... path) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     public List<Attribute> getAttributesByLabel(String... pathLabel) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     public void toggleAttributeByLabel(String attributeLabel, int level) {
@@ -90,7 +89,7 @@ public class AttributesChooser {
     }
 
     public void toggleAttributeByLabel(String attributeLabel, String... pathLabel) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     public void toggleAttributeByPath(String path) {
@@ -135,9 +134,8 @@ public class AttributesChooser {
     }
 
     private Node getNodeByLabel(List<Node> nodes, String label) {
-        Node node = nodes.stream().filter(n -> n.getLabel().equals(label))
+        return nodes.stream().filter(n -> n.getLabel().equals(label))
                 .findFirst().orElseThrow(() -> new RuntimeException("Cant find node " + label));
-        return node;
     }
 
     public static class Attribute {
@@ -163,6 +161,5 @@ public class AttributesChooser {
             return isSelected;
         }
     }
-
 
 }
