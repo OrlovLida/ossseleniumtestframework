@@ -184,7 +184,7 @@ public class Wizard {
         if (stepsNumber > 1) {
             for (int i = 1; i < stepsNumber; i++) {
                 clickNext();
-                DelayUtils.waitForAppPreloaders(wait, webElement);
+                DelayUtils.waitForLoadBars(wait, webElement);
             }
         }
         clickActionById(acceptButtonId);
