@@ -9,6 +9,8 @@ import com.oss.framework.data.Data;
 
 public class Switcher extends Input {
 
+    private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+
     static Switcher create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new Switcher(driver, wait, componentId);
     }
@@ -30,23 +32,22 @@ public class Switcher extends Input {
         setSwitcherValue(value);
     }
 
-    private void setSwitcherValue(Data value){
+    private void setSwitcherValue(Data value) {
         Boolean valueToSet = Boolean.valueOf(value.getStringValue());
-        if(!valueToSet.equals(isSwitched())) {
+        if (!valueToSet.equals(isSwitched())) {
             this.webElement.findElement(By.className("switcher-inner")).click();
         }
     }
 
     @Override
     public void setValueContains(Data value) {
-
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     @Override
     public Data getValue() {
-        return null;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
-
 
     private boolean isSwitched() {
         String switched = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
@@ -55,12 +56,11 @@ public class Switcher extends Input {
 
     @Override
     public void clear() {
-
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     @Override
     public String getLabel() {
-        return "";
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
-
 }

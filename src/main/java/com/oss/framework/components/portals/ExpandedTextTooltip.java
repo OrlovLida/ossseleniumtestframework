@@ -6,12 +6,12 @@ import org.openqa.selenium.WebElement;
 
 public class ExpandedTextTooltip {
 
-    private final String expandedText = ".//div[contains(@class,'OSSRichText')]";
+    private static final String EXPANDED_TEXT = ".//div[contains(@class,'OSSRichText')]";
 
     protected final WebDriver driver;
     protected final WebElement webElement;
 
-    public ExpandedTextTooltip (WebDriver driver) {
+    public ExpandedTextTooltip(WebDriver driver) {
         this.driver = driver;
         this.webElement = driver.findElement(By.className("longTextBoxComponent"));
     }
@@ -20,11 +20,11 @@ public class ExpandedTextTooltip {
         return new ExpandedTextTooltip(driver);
     }
 
-    public WebElement getExpandedTextElement(){
-        return this.webElement.findElement(By.xpath(expandedText));
+    public WebElement getExpandedTextElement() {
+        return this.webElement.findElement(By.xpath(EXPANDED_TEXT));
     }
 
-    public String getExpandedText(){
+    public String getExpandedText() {
         return getExpandedTextElement().getText();
     }
 }

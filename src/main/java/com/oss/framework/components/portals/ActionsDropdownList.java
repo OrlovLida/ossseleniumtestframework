@@ -2,18 +2,19 @@ package com.oss.framework.components.portals;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class ActionsDropdownList {
 
-    private final String actions = ".//a";
+    private static final String ACTIONS = ".//a";
 
     protected final WebDriver driver;
     protected final WebElement webElement;
 
-    public ActionsDropdownList (WebDriver driver) {
+    public ActionsDropdownList(WebDriver driver) {
         this.driver = driver;
         this.webElement = driver.findElement(By.className("actionsList"));
     }
@@ -22,13 +23,13 @@ public class ActionsDropdownList {
         return new ActionsDropdownList(driver);
     }
 
-    public List<WebElement> getActions(){
-        return this.webElement.findElements(By.xpath(actions));
+    public List<WebElement> getActions() {
+        return this.webElement.findElements(By.xpath(ACTIONS));
     }
 
-    public List<String> getActionLabels(){
-        List<String> labels = new ArrayList<String>();
-        for(WebElement element : this.webElement.findElements(By.xpath(actions))){
+    public List<String> getActionLabels() {
+        List<String> labels = new ArrayList<>();
+        for (WebElement element : this.webElement.findElements(By.xpath(ACTIONS))) {
             labels.add(element.getText());
         }
         return labels;

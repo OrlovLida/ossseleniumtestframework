@@ -1,8 +1,5 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.data.Data;
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +7,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.data.Data;
+import com.oss.framework.utils.DelayUtils;
+
 public class SearchField extends Input {
+
+    private static final String INPUT = ".//input";
 
     private String searchFirstResultXpath(String value) {
         return "(//div[@class='ExtendedSearchComponent']//div[contains(@class,'CustomSelectList-data')][./*[contains(text(), '" + value + "')]])[1] | (//div[contains(@class, 'list-item')])[1]";
@@ -54,7 +57,7 @@ public class SearchField extends Input {
         webElement.click();
         DelayUtils.sleep();//wait for cursor
         clear();
-        webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
+        webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         chooseFirstResult(value);
     }
@@ -62,7 +65,7 @@ public class SearchField extends Input {
     @Override
     public void setValueContains(Data value) {
         webElement.click();
-        webElement.findElement(By.xpath(".//input")).sendKeys(value.getStringValue());
+        webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
@@ -70,12 +73,12 @@ public class SearchField extends Input {
 
     @Override
     public Data getValue() {
-        return Data.createSingleData(webElement.findElement(By.xpath(".//input")).getAttribute("value"));
+        return Data.createSingleData(webElement.findElement(By.xpath(INPUT)).getAttribute("value"));
     }
 
     @Override
     public void clear() {
-        WebElement input = webElement.findElement(By.xpath(".//input"));
+        WebElement input = webElement.findElement(By.xpath(INPUT));
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }

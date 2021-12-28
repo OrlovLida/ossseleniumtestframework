@@ -6,13 +6,13 @@
  */
 package com.oss.framework.prompts;
 
-import com.oss.framework.utils.CSSUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 /**
@@ -28,7 +28,7 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     private final WebDriverWait wait;
     private final WebElement prompt;
 
-    private static final String BUTTON_BY_DATA_ATTRIBUTE_NAME = "//button[@"+ CSSUtils.TEST_ID +"='%s']";
+    private static final String BUTTON_BY_DATA_ATTRIBUTE_NAME = "//button[@" + CSSUtils.TEST_ID + "='%s']";
 
     private ConfirmationBox(WebDriver driver, WebDriverWait wait, WebElement prompt) {
         this.driver = driver;
@@ -39,6 +39,7 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     public static ConfirmationBox create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'OssWindow newPrompt')]");
         WebElement prompt = driver.findElement(By.xpath("//div[contains(@class,'OssWindow newPrompt')]"));
+        DelayUtils.waitForElementToLoad(wait, prompt);
         return new ConfirmationBox(driver, wait, prompt);
     }
 

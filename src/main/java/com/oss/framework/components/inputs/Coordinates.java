@@ -1,6 +1,8 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.data.Data;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -8,11 +10,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.oss.framework.data.Data;
 
 public class Coordinates extends Input {
 
+    private static final String VALUE = "value";
     private final WebElement labelN = webElement.findElement(By.xpath(".//label[contains(@for,'-N')]"));
     private final WebElement inputN = webElement.findElement(By.xpath(".//input[contains(@id,'-N')]"));
     private final WebElement labelS = webElement.findElement(By.xpath(".//label[contains(@for,'-S')]"));
@@ -56,7 +58,7 @@ public class Coordinates extends Input {
 
     @Override
     public void setValueContains(Data value) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -69,9 +71,9 @@ public class Coordinates extends Input {
             getList.add(labelS.getText());
         }
 
-        getList.add(inputDegrees.getAttribute("value"));
-        getList.add(inputMinutes.getAttribute("value"));
-        getList.add(inputSeconds.getAttribute("value"));
+        getList.add(inputDegrees.getAttribute(VALUE));
+        getList.add(inputMinutes.getAttribute(VALUE));
+        getList.add(inputSeconds.getAttribute(VALUE));
         return Data.createMultiData(getList);
     }
 
