@@ -32,17 +32,6 @@ public class CommonHierarchyApp extends Widget {
         super(driver, widgetClass, webDriverWait);
     }
 
-    @Deprecated
-    public void setFirstObjectInHierarchy(String value) {
-        setValue(1, value);
-        selectObject(value);
-    }
-
-    @Deprecated
-    public void setNextObjectInHierarchy(String objectName) {
-        selectObject(objectName);
-    }
-
     /**
      * Goes through CommonHierarchyApp using pathLabels.
      * Should be used when there is no selection of elements at deepest level of hierarchy

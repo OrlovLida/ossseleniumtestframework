@@ -1,7 +1,5 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
-import com.oss.framework.components.inputs.Button;
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,15 +7,18 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.DelayUtils;
+
 import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
 
 public class ExportPanel {
 
     private static final Logger log = LoggerFactory.getLogger(ExportPanel.class);
 
-    private final static String EXPORT_BUTTON_ID = "export-menu-button";
-    private final static String EXPORT_PANEL_XPATH = ".//div[@data-testid='export-menu']";
-    private final static String EXPORT_BUTTON_XPATH = "//*[data-testid='export-menu-button']";
+    private static final String EXPORT_BUTTON_ID = "export-menu-button";
+    private static final String EXPORT_PANEL_XPATH = ".//div[@data-testid='export-menu']";
+    private static final String EXPORT_BUTTON_XPATH = "//*[data-testid='export-menu-button']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -42,14 +43,13 @@ public class ExportPanel {
     public void exportKpiToFile(ExportType exportType) {
         DelayUtils.waitForPageToLoad(driver, wait);
         getExportButtonWithExtension(exportType).click();
-        log.debug(CLICK_BTN + exportType + "export type");
+        log.debug(CLICK_BTN + "{} export type", exportType);
         clickExport();
         log.info("Exporting chart as {}", exportType);
     }
 
     private Button getExportButtonWithExtension(ExportType exportType) {
-        Button exportButtonWithExtension = Button.createById(driver, EXPORT_BUTTON_ID + "-" + exportType);
-        return exportButtonWithExtension;
+        return Button.createById(driver, EXPORT_BUTTON_ID + "-" + exportType);
     }
 
     private void clickExport() {

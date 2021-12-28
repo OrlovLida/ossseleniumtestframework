@@ -1,7 +1,5 @@
 package com.oss.framework.widgets;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,22 +8,20 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
-import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public abstract class Widget {
 
-    private final String searchInput = ".//input[@class='form-control SearchText']";
+    private static final String SEARCH_INPUT = ".//input[@class='form-control SearchText']";
     protected final WebDriver driver;
     protected final WebElement webElement;
     protected final WebDriverWait webDriverWait;
     protected final String id;
     protected WebElement ossWindow;
 
-    public enum WidgetType{
+    public enum WidgetType {
         TABLE_WIDGET, OLD_TABLE_WIDGET, PROPERTY_PANEL
-
     }
 
     public static void waitForWidget(WebDriverWait wait, String widgetClass) {
@@ -37,7 +33,7 @@ public abstract class Widget {
     }
 
     private static String createWidgetPath(String widgetId) {
-        return "//div[@"+ CSSUtils.TEST_ID +"='" + widgetId + "']";
+        return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']";
     }
 
     @Deprecated
@@ -56,10 +52,9 @@ public abstract class Widget {
         this.id = null;
     }
 
-
     public Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + widgetId + "']"));
+        this.webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
         this.webDriverWait = webDriverWait;
         this.id = widgetId;
     }
@@ -71,41 +66,18 @@ public abstract class Widget {
         this.id = widgetId;
     }
 
-
     protected WebElement refreshWidgetByID() {
-        if(this.id == null) {
+        if (this.id == null) {
             throw new RuntimeException("Not supported if id is not defined, use constructor with id");
         }
-        return driver.findElement(By.xpath("//div[@"+ CSSUtils.TEST_ID +"='" + this.id + "']"));
+        return driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + this.id + "']"));
     }
 
     //TODO: move to advanced search component
     @Deprecated
     public WebElement getSearchInput() {
-        DelayUtils.waitForBy(webDriverWait, By.xpath(searchInput));
-        return this.webElement.findElement(By.xpath(searchInput));
-    }
-    @Deprecated
-    public void fullSearchText (String text) {
-        AdvancedSearch.createById(driver, webDriverWait,webElement.getAttribute(CSSUtils.TEST_ID)).fullTextSearch(text);
-    }
-
-    @Deprecated
-    private List<WebElement> getActions() {
-        return this.webElement.findElements(By.xpath(".//div[@class='actionsContainer']/div"));
-    }
-
-    //TODO: rewrite method
-    @Deprecated
-    public Boolean isActionDisplayed(String expectedAction) {
-        boolean result = false;
-        DelayUtils.waitForBy(webDriverWait, By.xpath(".//div[@id='CREATE']/div"));
-        for (WebElement e : getActions()) {
-            if (e.getAttribute("id").equals(expectedAction)) {
-                result = true;
-            }
-        }
-        return result;
+        DelayUtils.waitForBy(webDriverWait, By.xpath(SEARCH_INPUT));
+        return this.webElement.findElement(By.xpath(SEARCH_INPUT));
     }
 
     @Deprecated

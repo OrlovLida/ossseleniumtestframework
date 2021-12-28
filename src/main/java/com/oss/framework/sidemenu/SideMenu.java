@@ -29,6 +29,7 @@ public class SideMenu {
     private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menuLevel']//div[@data-testid='%s']";
     private static final String SIDE_MENU_CLASS = ".//div[@class='sideMenu'] | .//div[@class='sideMenu alpha-mode']";
     private static final String SIDE_MENU_HOME = ".//div[@class='sideMenu alpha-mode']//div[@data-testid='Home']";
+    private static final String CLASS = "class";
     private final WebDriver driver;
     private final WebDriverWait wait;
 
@@ -135,11 +136,11 @@ public class SideMenu {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
         LOGGER.debug("Waiting for {} to be clicked.", testid);
         try {
-            wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), "class", "isActive"));
+            wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), CLASS, "isActive"));
         } catch (TimeoutException e) {
             LOGGER.warn("Action not active after first click. Retrying.");
             clickOnElement(driver.findElement(By.xpath(actionXpath)));
-            wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), "class", "isActive"));
+            wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), CLASS, "isActive"));
         }
         LOGGER.info("{} clicked.", testid);
     }
@@ -148,11 +149,11 @@ public class SideMenu {
         String pathXpath = String.format(ACTION_NAME_PATH_PATTERN, path);
         LOGGER.debug("Waiting for {} to be expanded", path);
         try {
-            wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), "class", "isExpanded"));
+            wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, "isExpanded"));
         } catch (TimeoutException e) {
             LOGGER.warn("Path not expanded after first click. Retrying.");
             clickOnElement(driver.findElement(By.xpath(pathXpath)));
-            wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), "class", "isExpanded"));
+            wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, "isExpanded"));
         }
         LOGGER.info("{} expanded.", path);
     }

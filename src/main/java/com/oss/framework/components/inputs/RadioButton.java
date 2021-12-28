@@ -6,7 +6,6 @@
  */
 package com.oss.framework.components.inputs;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class RadioButton extends Input {
     static RadioButton create(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         return new RadioButton(driver, webDriverWait, componentId);
     }
+
     RadioButton(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         super(driver, webDriverWait, componentId);
     }
@@ -29,7 +29,7 @@ public class RadioButton extends Input {
     @Override
     public void setValue(Data value) {
         String valueToSet = value.getStringValue();
-        DelayUtils.waitForNestedElements(webDriverWait,webElement,"//label[text()='" + valueToSet + "']");
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, "//label[text()='" + valueToSet + "']");
         WebElement radioButton = this.webElement.findElement(By.xpath("//label[text()='" + valueToSet + "']"));
         radioButton.click();
     }
@@ -37,7 +37,7 @@ public class RadioButton extends Input {
     @Override
     public void setValueContains(Data value) {
         String valueToSet = value.getStringValue();
-        DelayUtils.waitForNestedElements(webDriverWait,webElement,"//label[contains(text(),'"+ valueToSet +"')]");
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, "//label[contains(text(),'" + valueToSet + "')]");
         WebElement radioButton = this.webElement.findElement(By.xpath("//label[contains(text(),'" + valueToSet + "')]"));
         radioButton.click();
 
@@ -45,10 +45,10 @@ public class RadioButton extends Input {
 
     @Override
     public Data getValue() {
-        List<String> names = new ArrayList<String>();
-        DelayUtils.waitByElement(webDriverWait,this.webElement);
+        List<String> names = new ArrayList<>();
+        DelayUtils.waitByElement(webDriverWait, this.webElement);
         List<WebElement> radioButtons = this.webElement.findElements(By.className("radio"));
-        for (WebElement radioButton:radioButtons) {
+        for (WebElement radioButton : radioButtons) {
             names.add(radioButton.getText());
         }
         return Data.createMultiData(names);
@@ -56,7 +56,7 @@ public class RadioButton extends Input {
 
     @Override
     public void clear() {
-        throw new RuntimeException("Method not implemented for the Radio Button");
+        throw new UnsupportedOperationException("Method not implemented for the Radio Button");
     }
 
 }

@@ -40,11 +40,11 @@ public class SelectionBarComponent {
     }
 
     private boolean isActive() {
-        return driver.findElements(By.xpath("//div[@data-testid='" + widgetId + "']" + VISIBLE_SELECTION_BAR_XPATH)).size() > 0;
+        return !driver.findElements(By.xpath("//div[@data-testid='" + widgetId + "']" + VISIBLE_SELECTION_BAR_XPATH)).isEmpty();
     }
 
     private boolean areAllObjectShown() {
-        return driver.findElements(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH)).size() > 0;
+        return !driver.findElements(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH)).isEmpty();
     }
 
     public void clickUnselectAllButton() {
