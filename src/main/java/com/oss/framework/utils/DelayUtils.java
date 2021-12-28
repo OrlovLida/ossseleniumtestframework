@@ -17,6 +17,11 @@ import org.slf4j.LoggerFactory;
 public class DelayUtils {
     private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
     public static final int HUMAN_REACTION_MS = 250;
+    public static final String SPINNERS = ".//i[contains(@class,'fa-spin')]";
+    public static final String LOAD_BARS = ".//div[@class='load-bar']";
+    public static final String BARS_LOADERS = ".//div[@class='barsLoader']";
+    public static final String SKELETON_PRELOADERS = ".//div[@class='skeleton-preloader']";
+    public static final String ACTION_IN_PROGRESS = ".//a[@class='action inProgress']";
 
     public static void sleep() {
         sleep(1000);
@@ -98,15 +103,15 @@ public class DelayUtils {
     }
 
     private static List<WebElement> listOfLoaders(WebDriver driver) {
-        List<WebElement> spinners = driver.findElements(By.xpath("//i[contains(@class,'fa-spin')]"));
-        List<WebElement> loadBars = driver.findElements(By.xpath("//div[@class='load-bar']"));
-        List<WebElement> appPreloader = driver.findElements(By.xpath("//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
-        List<WebElement> preloaderWrapper = driver.findElements(By.xpath("//div[@class='preloaderWrapper']"));
-        List<WebElement> actionInProgress = driver.findElements(By.xpath("//a[@class='action inProgress']"));
+        List<WebElement> spinners = driver.findElements(By.xpath(SPINNERS));
+        List<WebElement> loadBars = driver.findElements(By.xpath(LOAD_BARS));
+        List<WebElement> barsLoader = driver.findElements(By.xpath(BARS_LOADERS));
+        List<WebElement> skeletonPreloader = driver.findElements(By.xpath(SKELETON_PRELOADERS));
+        List<WebElement> actionInProgress = driver.findElements(By.xpath(ACTION_IN_PROGRESS));
         List<WebElement> newList = new ArrayList<>(spinners);
         newList.addAll(loadBars);
-        newList.addAll(appPreloader);
-        newList.addAll(preloaderWrapper);
+        newList.addAll(barsLoader);
+        newList.addAll(skeletonPreloader);
         newList.addAll(actionInProgress);
         return newList;
     }
@@ -119,21 +124,33 @@ public class DelayUtils {
 
     public static void waitForSpinners(WebDriverWait webDriverWait, WebElement webElement) {
         DelayUtils.sleep(1000);
-        List<WebElement> spinners = webElement.findElements(By.xpath(".//i[contains(@class,'fa-spin')]"));
+        List<WebElement> spinners = webElement.findElements(By.xpath(SPINNERS));
         waitForElementsDisappear(webDriverWait, spinners);
 
     }
 
     public static void waitForLoadBars(WebDriverWait webDriverWait, WebElement webElement) {
         DelayUtils.sleep(1000);
-        List<WebElement> loadBars = webElement.findElements(By.xpath(".//div[@class='load-bar']"));
-        waitForElementsDisappear(webDriverWait, loadBars);
+        List<WebElement> loadBars = webElement.findElements(By.xpath(LOAD_BARS));
+        List<WebElement> barsLoader = webElement.findElements(By.xpath(BARS_LOADERS));
+        List<WebElement> newList = new ArrayList<>(loadBars);
+        newList.addAll(barsLoader);
+        waitForElementsDisappear(webDriverWait, newList);
     }
 
-    public static void waitForAppPreloaders(WebDriverWait webDriverWait, WebElement webElement) {
+    public static void waitForElementToLoad(WebDriverWait webDriverWait, WebElement webElement) {
         DelayUtils.sleep(1000);
-        List<WebElement> appPreloaders = webElement.findElements(By.xpath(".//div[contains(@class, 'appPreloader') and not(contains(@class, 'noDataContainer'))]"));
-        waitForElementsDisappear(webDriverWait, appPreloaders);
+        List<WebElement> spinners = webElement.findElements(By.xpath(SPINNERS));
+        List<WebElement> loadBars = webElement.findElements(By.xpath(LOAD_BARS));
+        List<WebElement> barsLoader = webElement.findElements(By.xpath(BARS_LOADERS));
+        List<WebElement> skeletonPreloader = webElement.findElements(By.xpath(SKELETON_PRELOADERS));
+        List<WebElement> actionInProgress = webElement.findElements(By.xpath(ACTION_IN_PROGRESS));
+        List<WebElement> newList = new ArrayList<>(spinners);
+        newList.addAll(loadBars);
+        newList.addAll(barsLoader);
+        newList.addAll(skeletonPreloader);
+        newList.addAll(actionInProgress);
+        waitForElementsDisappear(webDriverWait, newList);
     }
 
     private static void waitForElementsDisappear(WebDriverWait webDriverWait, List<WebElement> webElements) {
