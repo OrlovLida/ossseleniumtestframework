@@ -6,13 +6,14 @@
  */
 package com.oss.framework.mainheader;
 
-import com.oss.framework.components.inputs.Input;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Wizard;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Wizard;
 
 import static com.oss.framework.widgets.Wizard.createWizard;
 
@@ -20,23 +21,23 @@ import static com.oss.framework.widgets.Wizard.createWizard;
  * @author Gabriela Kasza
  */
 public class PerspectiveChooser {
-    private WebDriver driver;
-    private WebDriverWait wait;
     private static final String LIVE = "Live";
     private static final String NETWORK = "Network";
     private static final String PLAN = "Plan";
     private static final String WITH_REMOVE = "With removed";
     private static final String WITHOUT_REMOVED = "Without removed";
     private static final String CURRENT_TASK = "Current task";
-
-    public static PerspectiveChooser create(WebDriver driver, WebDriverWait wait) {
-        return new PerspectiveChooser(driver, wait);
-    }
+    private WebDriver driver;
+    private WebDriverWait wait;
 
     private PerspectiveChooser(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
 
+    }
+
+    public static PerspectiveChooser create(WebDriver driver, WebDriverWait wait) {
+        return new PerspectiveChooser(driver, wait);
     }
 
     public void setLivePerspective() {

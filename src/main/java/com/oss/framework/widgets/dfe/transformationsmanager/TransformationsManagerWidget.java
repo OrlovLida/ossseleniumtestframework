@@ -1,28 +1,29 @@
 package com.oss.framework.widgets.dfe.transformationsmanager;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.inputs.Combobox;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TransformationsManagerWidget extends Widget {
 
+    public static final String TRANSFORMATION_PATH = "//section[@class='TransformationComponentContainer']";
     private static final String ADD_BTN_PATH = "//button[@class='btn btn-primary btn-add-transformation']";
     private static final String SELECT_TRANSFORMATION_INPUT_ID = "availableTransformationsComboBox-input";
     private static final String TRANSFORMATIONS_MANAGER_PATH = "//div[@class='TransformationsManagerContainer']";
-    public static final String TRANSFORMATION_PATH = "//section[@class='TransformationComponentContainer']";
 
     private TransformationsManagerWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
     }
 
-    public static TransformationsManagerWidget create(WebDriver driver, WebDriverWait wait){
+    public static TransformationsManagerWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, TRANSFORMATIONS_MANAGER_PATH);
         WebElement webElement = driver.findElement(By.xpath(TRANSFORMATIONS_MANAGER_PATH));
 

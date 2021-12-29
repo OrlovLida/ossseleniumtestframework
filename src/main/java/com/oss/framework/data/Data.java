@@ -10,6 +10,16 @@ public class Data {
     private final boolean isList;
     private final List<DataWrapper> values;
 
+    private Data(List<DataWrapper> values) {
+        this.isList = true;
+        this.values = Lists.newArrayList(values);
+    }
+
+    private Data(DataWrapper values) {
+        this.isList = false;
+        this.values = Lists.newArrayList(values);
+    }
+
     public static Data createFindFirst(String readableValue) {
         DataWrapper data = new DataWrapper(readableValue, readableValue);
         return new Data(data);
@@ -17,7 +27,7 @@ public class Data {
 
     public static Data createMultiData(List<String> values) {
         List<DataWrapper> data = values.stream()
-                .map(v-> new DataWrapper(v, v)).collect(Collectors.toList());
+                .map(v -> new DataWrapper(v, v)).collect(Collectors.toList());
         return new Data(data);
     }
 
@@ -33,16 +43,6 @@ public class Data {
 
     public static Data createMultiDataWrapper(List<DataWrapper> dataWrappers) {
         return new Data(dataWrappers);
-    }
-
-    private Data(List<DataWrapper> values) {
-        this.isList = true;
-        this.values = Lists.newArrayList(values);
-    }
-
-    private Data(DataWrapper values) {
-        this.isList = false;
-        this.values = Lists.newArrayList(values);
     }
 
     public boolean isList() {
@@ -66,14 +66,6 @@ public class Data {
         private final String readableValue;
         private final boolean findFirst;
 
-        public static DataWrapper create(String value, String readableValue) {
-            return new DataWrapper(value, readableValue, false);
-        }
-
-        public static DataWrapper createFindFirst(String value, String readableValue) {
-            return new DataWrapper(value, readableValue, true);
-        }
-
         private DataWrapper(String value, String readableValue) {
             this.value = value;
             this.readableValue = readableValue;
@@ -84,6 +76,14 @@ public class Data {
             this.value = value;
             this.readableValue = readableValue;
             this.findFirst = findFirst;
+        }
+
+        public static DataWrapper create(String value, String readableValue) {
+            return new DataWrapper(value, readableValue, false);
+        }
+
+        public static DataWrapper createFindFirst(String value, String readableValue) {
+            return new DataWrapper(value, readableValue, true);
         }
 
         public boolean isFindFirst() {
@@ -97,7 +97,6 @@ public class Data {
         public String getReadableValue() {
             return readableValue;
         }
-
 
     }
 

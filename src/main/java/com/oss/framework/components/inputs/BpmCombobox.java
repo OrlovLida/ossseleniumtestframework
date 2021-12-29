@@ -16,14 +16,6 @@ public class BpmCombobox extends Input {
     private static final String SELECT = ".//select";
     private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for BpmCombobox";
 
-    static BpmCombobox create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new BpmCombobox(driver, wait, componentId);
-    }
-
-    static BpmCombobox create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new BpmCombobox(parent, driver, wait, componentId);
-    }
-
     private BpmCombobox(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
@@ -32,14 +24,12 @@ public class BpmCombobox extends Input {
         super(parent, driver, wait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        WebElement input = webElement.findElement(By.xpath(SELECT));
-        Actions action = new Actions(driver);
-        action.moveToElement(input).build().perform();
-        input.click();
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        input.findElement(By.xpath(String.format(OPTION, value.getStringValue()))).click();
+    static BpmCombobox create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new BpmCombobox(driver, wait, componentId);
+    }
+
+    static BpmCombobox create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new BpmCombobox(parent, driver, wait, componentId);
     }
 
     @Override
@@ -55,6 +45,16 @@ public class BpmCombobox extends Input {
     @Override
     public Data getValue() {
         throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public void setValue(Data value) {
+        WebElement input = webElement.findElement(By.xpath(SELECT));
+        Actions action = new Actions(driver);
+        action.moveToElement(input).build().perform();
+        input.click();
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        input.findElement(By.xpath(String.format(OPTION, value.getStringValue()))).click();
     }
 
     @Override

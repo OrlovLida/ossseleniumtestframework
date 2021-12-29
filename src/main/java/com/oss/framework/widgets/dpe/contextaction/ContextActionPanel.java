@@ -20,6 +20,12 @@ public class ContextActionPanel {
     private final WebDriverWait wait;
     private final WebElement contextActionPanelElement;
 
+    private ContextActionPanel(WebDriver driver, WebDriverWait wait, WebElement contextActionPanelElement) {
+        this.driver = driver;
+        this.wait = wait;
+        this.contextActionPanelElement = contextActionPanelElement;
+    }
+
     public static ContextActionPanel create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPageToLoad(driver, wait);
         Actions action = new Actions(driver);
@@ -27,12 +33,6 @@ public class ContextActionPanel {
         WebElement contextActionPanel = driver.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + CONTEXT_ACTION_PANEL_ID + "']"));
 
         return new ContextActionPanel(driver, wait, contextActionPanel);
-    }
-
-    private ContextActionPanel(WebDriver driver, WebDriverWait wait, WebElement contextActionPanelElement) {
-        this.driver = driver;
-        this.wait = wait;
-        this.contextActionPanelElement = contextActionPanelElement;
     }
 
     public void clickOnPanel() {

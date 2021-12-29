@@ -13,24 +13,22 @@ import com.oss.framework.utils.DelayUtils;
 public class Card {
 
     private static final Logger log = LoggerFactory.getLogger(Card.class);
-
+    private static final String MAXIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='expand'] | .//*[@aria-label='Expand']";
+    private static final String MINIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='collapse'] | .//*[@aria-label='Collapse']";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement cardElement;
-
-    private static final String MAXIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='expand'] | .//*[@aria-label='Expand']";
-    private static final String MINIMIZE_CHART_BUTTON_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='collapse'] | .//*[@aria-label='Collapse']";
-
-    public static Card createCard(WebDriver driver, WebDriverWait wait, String windowId) {
-        DelayUtils.waitByXPath(wait, ".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]");
-        WebElement card = driver.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + windowId + "']"));
-        return new Card(driver, wait, card);
-    }
 
     private Card(WebDriver driver, WebDriverWait wait, WebElement cardElement) {
         this.driver = driver;
         this.wait = wait;
         this.cardElement = cardElement;
+    }
+
+    public static Card createCard(WebDriver driver, WebDriverWait wait, String windowId) {
+        DelayUtils.waitByXPath(wait, ".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]");
+        WebElement card = driver.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + windowId + "']"));
+        return new Card(driver, wait, card);
     }
 
     public void maximizeCard() {

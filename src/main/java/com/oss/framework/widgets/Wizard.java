@@ -39,6 +39,12 @@ public class Wizard {
     private final WebDriverWait wait;
     private final WebElement webElement;
 
+    private Wizard(WebDriver driver, WebDriverWait wait, WebElement webElement) {
+        this.driver = driver;
+        this.wait = wait;
+        this.webElement = webElement;
+    }
+
     public static Wizard createWizard(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, OSS_WINDOW);
         WebElement webElement = driver.findElement(By.xpath(OSS_WINDOW));
@@ -69,10 +75,13 @@ public class Wizard {
         return new Wizard(driver, wait, webElement);
     }
 
-    private Wizard(WebDriver driver, WebDriverWait wait, WebElement webElement) {
-        this.driver = driver;
-        this.wait = wait;
-        this.webElement = webElement;
+    private static boolean isElementPresent(WebElement webElement, By by) {
+        try {
+            webElement.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public Input getComponent(String componentId, Input.ComponentType componentType) {
@@ -91,16 +100,6 @@ public class Wizard {
         Input input = getComponent(componentId, componentType);
         input.clear();
         return input;
-    }
-
-    private void clickOnButton(String xpath) {
-        DelayUtils.waitForNestedElements(wait, webElement, xpath);
-        WebElement button = webElement.findElement(By.xpath(xpath));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
-        Actions actions = new Actions(driver);
-        actions.moveToElement(button).build().perform();
-        wait.until(ExpectedConditions.elementToBeClickable(button));
-        actions.click(button).build().perform();
     }
 
     public void clickNext() {
@@ -204,18 +203,19 @@ public class Wizard {
         return 1;
     }
 
+    private void clickOnButton(String xpath) {
+        DelayUtils.waitForNestedElements(wait, webElement, xpath);
+        WebElement button = webElement.findElement(By.xpath(xpath));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(button).build().perform();
+        wait.until(ExpectedConditions.elementToBeClickable(button));
+        actions.click(button).build().perform();
+    }
+
     private boolean isStepsPresent() {
         List<WebElement> steps = this.webElement.findElements(By.xpath("//div[@class='simple-progress-bar']"));
         return !steps.isEmpty();
-    }
-
-    private static boolean isElementPresent(WebElement webElement, By by) {
-        try {
-            webElement.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
     private void waitForButtonDisappear(String buttonXpath) {

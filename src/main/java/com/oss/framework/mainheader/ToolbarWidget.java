@@ -11,10 +11,6 @@ import com.oss.framework.utils.DelayUtils;
 
 public class ToolbarWidget {
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-    private final WebElement toolbar;
-
     private static final String TOOLBAR_WIDGET_XPATH = "//header[contains(@class, 'header')]";
     private static final String LOGIN_PANEL_BUTTON_XPATH = ".//div[contains(@class, 'login')]";
     private static final String LOGIN_PANEL_XPATH = ".//div[@class='login-panel']";
@@ -26,6 +22,9 @@ public class ToolbarWidget {
     private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='oss-input__input-content']";
     private static final String SHARE_PANEL_ICON_XPATH = ".//*[@data-testid='ButtonShareView']";
     private static final String SHARE_PANEL_XPATH = ".//div[@data-testid='popup_container']";
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement toolbar;
 
     private ToolbarWidget(WebDriver driver, WebDriverWait wait, WebElement toolbar) {
         this.driver = driver;
@@ -94,6 +93,11 @@ public class ToolbarWidget {
         input.sendKeys(Keys.ENTER);
     }
 
+    public String getUserName() {
+        WebElement loginButton = toolbar.findElement(By.xpath(LOGIN_PANEL_BUTTON_XPATH));
+        return loginButton.getText();
+    }
+
     private boolean isOpen(String panelXpath) {
         return !driver.findElements(By.xpath(panelXpath)).isEmpty();
     }
@@ -106,11 +110,6 @@ public class ToolbarWidget {
     private void callAction(String buttonXpath) {
         DelayUtils.waitByXPath(wait, buttonXpath);
         this.toolbar.findElement(By.xpath(buttonXpath)).click();
-    }
-
-    public String getUserName() {
-        WebElement loginButton = toolbar.findElement(By.xpath(LOGIN_PANEL_BUTTON_XPATH));
-        return loginButton.getText();
     }
 
 }

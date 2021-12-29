@@ -24,16 +24,12 @@ import com.oss.framework.widgets.tablewidget.OldTable;
  */
 public class OldTreeTableWidget extends Widget {
 
-    public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
-        return new OldTreeTableWidget(driver, wait, dataAttributeName);
-    }
-
     private OldTreeTableWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
     }
 
-    private OldTable createTable() {
-        return OldTable.createByComponentDataAttributeName(driver, webDriverWait, id);
+    public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
+        return new OldTreeTableWidget(driver, wait, dataAttributeName);
     }
 
     public List<String> getAllVisibleNodes(String attributeNameLabel) {
@@ -63,6 +59,10 @@ public class OldTreeTableWidget extends Widget {
 
     public void callActionById(String id) {
         createTable().callAction(id);
+    }
+
+    private OldTable createTable() {
+        return OldTable.createByComponentDataAttributeName(driver, webDriverWait, id);
     }
 
     public static class Node {

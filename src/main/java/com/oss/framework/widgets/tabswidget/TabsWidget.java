@@ -64,19 +64,6 @@ public class TabsWidget implements TabsInterface {
         return new TabsWidget(driver, wait, id);
     }
 
-    private WebElement createTabs() {
-        if (this.id == null) {
-            DelayUtils.waitByXPath(webDriverWait,
-                    "//*[@class = '" + TABS_WIDGET_CLASS + "']");
-            return driver.findElement(By.className(TABS_WIDGET_CLASS));
-        }
-        DelayUtils.waitByXPath(webDriverWait,
-                String.format(TABS_XPATH, id));
-        return driver
-                .findElement(By
-                        .xpath(String.format(TABS_XPATH, id)));
-    }
-
     public Widget getWidget(String widgetId, WidgetType widgetType) {
 
         return WidgetFactory.getWidget(widgetId, widgetType, driver, webDriverWait);
@@ -116,12 +103,6 @@ public class TabsWidget implements TabsInterface {
     }
 
     @Override
-    public void callAction(String groupId, String actionId) {
-        getActionsInterface().callActionById(groupId, actionId);
-
-    }
-
-    @Override
     public void callActionByLabel(String actionLabel) {
         getActionsInterface().callActionByLabel(actionLabel);
     }
@@ -142,6 +123,12 @@ public class TabsWidget implements TabsInterface {
     }
 
     @Override
+    public void callAction(String groupId, String actionId) {
+        getActionsInterface().callActionById(groupId, actionId);
+
+    }
+
+    @Override
     public boolean isNoData(String id) {
         return false;
     }
@@ -156,46 +143,8 @@ public class TabsWidget implements TabsInterface {
         getInterfaceForButtonContainer().callActionById(id);
     }
 
-    private ActionsInterface getInterfaceForButtonContainer() {
-        return ButtonContainer.createFromParent(createTabs(), driver, webDriverWait);
-    }
-
-    private ActionsInterface getActionsInterface() {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        DelayUtils.waitForNestedElements(webDriverWait, createTabs(),
-                "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']");
-        boolean isNewActionContainer = isElementPresent(driver, By.xpath(String.format(TABS_XPATH, id) + "//*[@class='actionsContainer']"));
-        if (isNewActionContainer) {
-            return ActionsContainer.createFromParent(createTabs(), driver, webDriverWait);
-        } else {
-            return OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
-        }
-    }
-
-    private boolean isElementPresent(WebDriver driver, By by) {
-        return !driver.findElements(by).isEmpty();
-    }
-
-    private boolean isMoreVisible() {
-        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
-        List<WebElement> isMore = createTabs().findElements(By.xpath(DROPDOWN_TAB));
-        return !isMore.isEmpty();
-    }
-
     public void changeTabsOrder(String tabLabel, int position) {
         DragAndDrop.dragAndDrop(getDraggableElement(tabLabel), getDropElement(position), 60, 0, driver);
-    }
-
-    private DragAndDrop.DraggableElement getDraggableElement(String tabLabel) {
-        WebElement tab = getTabByLabel(tabLabel);
-        Actions action = new Actions(driver);
-        action.moveToElement(tab).perform();
-        return new DragAndDrop.DraggableElement(tab.findElement(By.xpath(".//div[@class = 'btn-drag']")));
-    }
-
-    private DragAndDrop.DropElement getDropElement(int position) {
-        WebElement target = createTabs().findElements(By.xpath(TABS)).get(position);
-        return new DragAndDrop.DropElement(target);
     }
 
     public WidgetChooser getWidgetChooser() {
@@ -224,6 +173,57 @@ public class TabsWidget implements TabsInterface {
     public ChooseConfigurationWizard openChooseConfigurationWizard() {
         createTabs().findElement(By.xpath(CHOOSE_CONFIGURATION_ICON)).click();
         return ChooseConfigurationWizard.create(driver, webDriverWait);
+    }
+
+    private WebElement createTabs() {
+        if (this.id == null) {
+            DelayUtils.waitByXPath(webDriverWait,
+                    "//*[@class = '" + TABS_WIDGET_CLASS + "']");
+            return driver.findElement(By.className(TABS_WIDGET_CLASS));
+        }
+        DelayUtils.waitByXPath(webDriverWait,
+                String.format(TABS_XPATH, id));
+        return driver
+                .findElement(By
+                        .xpath(String.format(TABS_XPATH, id)));
+    }
+
+    private ActionsInterface getInterfaceForButtonContainer() {
+        return ButtonContainer.createFromParent(createTabs(), driver, webDriverWait);
+    }
+
+    private ActionsInterface getActionsInterface() {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        DelayUtils.waitForNestedElements(webDriverWait, createTabs(),
+                "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']");
+        boolean isNewActionContainer = isElementPresent(driver, By.xpath(String.format(TABS_XPATH, id) + "//*[@class='actionsContainer']"));
+        if (isNewActionContainer) {
+            return ActionsContainer.createFromParent(createTabs(), driver, webDriverWait);
+        } else {
+            return OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
+        }
+    }
+
+    private boolean isElementPresent(WebDriver driver, By by) {
+        return !driver.findElements(by).isEmpty();
+    }
+
+    private boolean isMoreVisible() {
+        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
+        List<WebElement> isMore = createTabs().findElements(By.xpath(DROPDOWN_TAB));
+        return !isMore.isEmpty();
+    }
+
+    private DragAndDrop.DraggableElement getDraggableElement(String tabLabel) {
+        WebElement tab = getTabByLabel(tabLabel);
+        Actions action = new Actions(driver);
+        action.moveToElement(tab).perform();
+        return new DragAndDrop.DraggableElement(tab.findElement(By.xpath(".//div[@class = 'btn-drag']")));
+    }
+
+    private DragAndDrop.DropElement getDropElement(int position) {
+        WebElement target = createTabs().findElements(By.xpath(TABS)).get(position);
+        return new DragAndDrop.DropElement(target);
     }
 
     private WebElement getTabByLabel(String tabLabel) {

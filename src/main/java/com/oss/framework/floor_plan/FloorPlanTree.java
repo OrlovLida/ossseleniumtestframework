@@ -17,13 +17,6 @@ public class FloorPlanTree {
     private static final String LOCATION_NODE_PATTERN = "//span[text() = '%s']";
     private static final String OPEN_IN_THIS_VIEW_OPTION_PATTERN = "//li[@class = 'context-menu-item']/span[text() = 'Open in this view']";
     private static final String CELL_PATTERN = ".//li//span[text() = '%s']/parent::span/following-sibling::ul/li/span/div[contains(@class, 'treeTableCell')]";
-
-    public static FloorPlanTree createById(WebDriver driver, WebDriverWait webDriverWait, String id) {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        WebElement treeComponent = driver.findElement(By.id(id));
-        return new FloorPlanTree(driver, webDriverWait, treeComponent);
-    }
-
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponent;
@@ -32,6 +25,12 @@ public class FloorPlanTree {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.treeComponent = treeComponent;
+    }
+
+    public static FloorPlanTree createById(WebDriver driver, WebDriverWait webDriverWait, String id) {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        WebElement treeComponent = driver.findElement(By.id(id));
+        return new FloorPlanTree(driver, webDriverWait, treeComponent);
     }
 
     public void expandNodeByName(String name) {

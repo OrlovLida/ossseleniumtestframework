@@ -20,22 +20,6 @@ public abstract class Widget {
     protected final String id;
     protected WebElement ossWindow;
 
-    public enum WidgetType {
-        TABLE_WIDGET, OLD_TABLE_WIDGET, PROPERTY_PANEL
-    }
-
-    public static void waitForWidget(WebDriverWait wait, String widgetClass) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
-    }
-
-    public static void waitForWidgetById(WebDriverWait wait, String widgetId) {
-        DelayUtils.waitBy(wait, By.xpath(createWidgetPath(widgetId)));
-    }
-
-    private static String createWidgetPath(String widgetId) {
-        return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']";
-    }
-
     @Deprecated
     public Widget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         this.driver = driver;
@@ -66,11 +50,16 @@ public abstract class Widget {
         this.id = widgetId;
     }
 
-    protected WebElement refreshWidgetByID() {
-        if (this.id == null) {
-            throw new RuntimeException("Not supported if id is not defined, use constructor with id");
-        }
-        return driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + this.id + "']"));
+    public static void waitForWidget(WebDriverWait wait, String widgetClass) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
+    }
+
+    public static void waitForWidgetById(WebDriverWait wait, String widgetId) {
+        DelayUtils.waitBy(wait, By.xpath(createWidgetPath(widgetId)));
+    }
+
+    private static String createWidgetPath(String widgetId) {
+        return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']";
     }
 
     //TODO: move to advanced search component
@@ -85,5 +74,16 @@ public abstract class Widget {
         this.ossWindow = webElement.findElement(By.xpath("//ancestor::div[contains(@class,'OssWindow')]"));
         ActionsInterface actions = ActionsContainer.createFromParent(ossWindow, driver, webDriverWait);
         actions.callActionById(groupId, actionId);
+    }
+
+    protected WebElement refreshWidgetByID() {
+        if (this.id == null) {
+            throw new RuntimeException("Not supported if id is not defined, use constructor with id");
+        }
+        return driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + this.id + "']"));
+    }
+
+    public enum WidgetType {
+        TABLE_WIDGET, OLD_TABLE_WIDGET, PROPERTY_PANEL
     }
 }

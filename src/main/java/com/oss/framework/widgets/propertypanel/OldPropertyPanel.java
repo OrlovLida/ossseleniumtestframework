@@ -1,13 +1,14 @@
 package com.oss.framework.widgets.propertypanel;
 
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class OldPropertyPanel implements PropertyPanelInterface{
+import com.oss.framework.utils.DelayUtils;
+
+public class OldPropertyPanel implements PropertyPanelInterface {
 
     private static final String PROPERTY_PANEL_CLASS = "propertyPanel";
     private static final String PROPERTY_PANEL_PATH = "//div[@class='propertyPanel']";
@@ -15,11 +16,9 @@ public class OldPropertyPanel implements PropertyPanelInterface{
     private static final String PROPERTY_VALUE_PATH = "./ancestor::li[@class='row']//div[@class='item-value']";
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
 
-
     protected final WebDriverWait wait;
     protected final WebDriver driver;
     protected final WebElement webElement;
-
 
     private OldPropertyPanel(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;

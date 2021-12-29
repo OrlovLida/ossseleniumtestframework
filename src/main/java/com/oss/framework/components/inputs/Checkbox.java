@@ -9,14 +9,6 @@ import com.oss.framework.data.Data;
 
 public class Checkbox extends Input {
 
-    static Checkbox create(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        return new Checkbox(driver, webDriverWait, componentId);
-    }
-
-    static Checkbox createFromParent(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        return new Checkbox(parent, driver, webDriverWait, componentId);
-    }
-
     private Checkbox(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         super(driver, webDriverWait, componentId);
     }
@@ -25,21 +17,17 @@ public class Checkbox extends Input {
         super(parent, driver, webDriverWait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        setCheckBoxValue(value);
+    static Checkbox create(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
+        return new Checkbox(driver, webDriverWait, componentId);
+    }
+
+    static Checkbox createFromParent(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
+        return new Checkbox(parent, driver, webDriverWait, componentId);
     }
 
     @Override
     public void setValueContains(Data value) {
         setCheckBoxValue(value);
-    }
-
-    private void setCheckBoxValue(Data value) {
-        Boolean valueToSet = Boolean.valueOf(value.getStringValue());
-        if(!valueToSet.equals(isChecked())) {
-            this.webElement.findElement(By.className("checkbox-cont")).click();
-        }
     }
 
     @Override
@@ -48,14 +36,26 @@ public class Checkbox extends Input {
         return Data.createSingleData(value);
     }
 
-    private boolean isChecked() {
-        String checked = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
-        return checked.equals("true");
+    @Override
+    public void setValue(Data value) {
+        setCheckBoxValue(value);
     }
 
     @Override
     public void clear() {
         setCheckBoxValue(Data.createSingleData("false"));
+    }
+
+    private void setCheckBoxValue(Data value) {
+        Boolean valueToSet = Boolean.valueOf(value.getStringValue());
+        if (!valueToSet.equals(isChecked())) {
+            this.webElement.findElement(By.className("checkbox-cont")).click();
+        }
+    }
+
+    private boolean isChecked() {
+        String checked = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
+        return checked.equals("true");
     }
 }
 

@@ -1,27 +1,27 @@
 package com.oss.framework.listwidget;
 
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class ListGroup {
-    private final WebDriver driver;
-    private final WebDriverWait wait;
+import com.oss.framework.utils.DelayUtils;
 
+public class ListGroup {
     private static final String LIST_GROUP_CLASS = "list-group";
     private static final String ITEM_LIST_CLASS = "list-group-item";
     private static final String SELECTED_ITEM_CLASS = ITEM_LIST_CLASS + " active";
-
-    public static ListGroup create(WebDriver driver, WebDriverWait wait) {
-        return new ListGroup(driver, wait);
-    }
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
     private ListGroup(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
+    }
+
+    public static ListGroup create(WebDriver driver, WebDriverWait wait) {
+        return new ListGroup(driver, wait);
     }
 
     public void selectItemByName(String itemName) {

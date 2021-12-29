@@ -17,26 +17,16 @@ public class CustomScrolls {
     private final WebDriverWait wait;
     private final WebDriver driver;
 
-    public static CustomScrolls create(WebDriver driver, WebDriverWait wait, WebElement parent) {
-        DelayUtils.waitForNestedElements(wait, parent, SCROLLS_XPATH);
-        WebElement scrolls = parent.findElement(By.xpath(SCROLLS_XPATH));
-        return new CustomScrolls(driver, wait, scrolls);
-    }
-
     private CustomScrolls(WebDriver driver, WebDriverWait wait, WebElement scrolls) {
         this.driver = driver;
         this.wait = wait;
         this.scrolls = scrolls;
     }
 
-    private WebElement getHorizontalScroll() {
-        List<WebElement> divs = scrolls.findElements(By.xpath("./div"));
-        return divs.get(1);
-    }
-
-    private WebElement getHorizontalBar() {
-        WebElement horizontal = getHorizontalScroll();
-        return horizontal.findElement(By.xpath("./div"));
+    public static CustomScrolls create(WebDriver driver, WebDriverWait wait, WebElement parent) {
+        DelayUtils.waitForNestedElements(wait, parent, SCROLLS_XPATH);
+        WebElement scrolls = parent.findElement(By.xpath(SCROLLS_XPATH));
+        return new CustomScrolls(driver, wait, scrolls);
     }
 
     public int getHorizontalBarWidth() {
@@ -63,5 +53,15 @@ public class CustomScrolls {
 
     public int getHorizontalScrollWidth() {
         return getHorizontalScroll().getSize().width;
+    }
+
+    private WebElement getHorizontalScroll() {
+        List<WebElement> divs = scrolls.findElements(By.xpath("./div"));
+        return divs.get(1);
+    }
+
+    private WebElement getHorizontalBar() {
+        WebElement horizontal = getHorizontalScroll();
+        return horizontal.findElement(By.xpath("./div"));
     }
 }

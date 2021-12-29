@@ -36,41 +36,16 @@ public class OptionsPanel {
     private final WebDriverWait wait;
     private final WebElement optionsPanelElement;
 
-    public static OptionsPanel create(WebDriver driver, WebDriverWait webDriverWait) {
-        WebElement optionsPanel = driver.findElement(By.xpath(OPTIONS_PANEL_XPATH));
-
-        return new OptionsPanel(driver, webDriverWait, optionsPanel);
-    }
-
     private OptionsPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.wait = webDriverWait;
         this.optionsPanelElement = webElement;
     }
 
-    public enum TimePeriodChooserOption {
-        PERIOD, RANGE, LAST, MIDDLE, SMART, LATEST
-    }
+    public static OptionsPanel create(WebDriver driver, WebDriverWait webDriverWait) {
+        WebElement optionsPanel = driver.findElement(By.xpath(OPTIONS_PANEL_XPATH));
 
-    public enum AggregationMethodOption {
-        MIN, MAX, AVG, SUM, COUNT, NONE, AGG_STANDARD
-    }
-
-    public enum YAxisOption {
-        AUTO, MANUAL
-    }
-
-    public enum MiscellaneousOption {
-        DATA_COMPLETENESS, LAST_SAMPLE_TIME, SHOW_TIME_ZONE
-    }
-
-    private void moveOverElement(String elementPath) {
-        Actions action = new Actions(driver);
-        action.moveToElement(this.driver.findElement(By.xpath(elementPath))).build().perform();
-    }
-
-    private void chooseTimePeriod() {
-        moveOverElement(TIME_PERIOD_CHOOSER_PATH);
+        return new OptionsPanel(driver, webDriverWait, optionsPanel);
     }
 
     public void setLastPeriodOption(Integer days, Integer hours, Integer minutes) {
@@ -79,14 +54,6 @@ public class OptionsPanel {
         fillInput(days, "Days");
         fillInput(hours, "Hours");
         fillInput(minutes, "Minutes");
-    }
-
-    private void fillInput(Integer value, String label) {
-        String timePeriodInputXpath = String.format(TIME_PERIOD_CHOOSER_INPUT_PATH, label);
-        WebElement timePeriodInput = optionsPanelElement.findElement(By.xpath(timePeriodInputXpath));
-        timePeriodInput.sendKeys(Keys.CONTROL, Keys.chord("a"));
-        timePeriodInput.sendKeys(Keys.DELETE);
-        timePeriodInput.sendKeys(value.toString());
     }
 
     public void chooseTimePeriodOption(TimePeriodChooserOption option) {
@@ -120,10 +87,6 @@ public class OptionsPanel {
             }
         }
         log.debug("Setting time period option: {}", option);
-    }
-
-    private String createChooseOptionXPath(String option) {
-        return "//div[contains(@class,'main-options common-options')]//label[@for='time-options_" + option + "']";
     }
 
     public void chooseAggregationMethodOption(AggregationMethodOption aggregationMethod) {
@@ -161,10 +124,6 @@ public class OptionsPanel {
             }
         }
         log.debug("Selecting aggregation method: {}", aggregationMethod);
-    }
-
-    private String createChooseAggregationMethodXPath(String option) {
-        return String.format(AGGREGATION_METHOD_CHOOSER_INPUT_PATH, option);
     }
 
     public List<AggregationMethodOption> getActiveAggregationMethods() {
@@ -207,16 +166,6 @@ public class OptionsPanel {
         return activeAggMethods;
     }
 
-    private List<String> getActiveAggMethodsIds() {
-        List<WebElement> webElementsAgg = optionsPanelElement.findElements(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
-        return webElementsAgg.stream().map(aggMethod -> CSSUtils.getAttributeValue("data-testid", aggMethod))
-                .collect(Collectors.toList());
-    }
-
-    private void chooseAggregationMethod() {
-        moveOverElement(AGGREGATION_METHOD_CHOOSER_PATH);
-    }
-
     public void setYAxisOption(YAxisOption yAxisOption) {
         moveOverElement(Y_AXIS_SETTINGS_PATH);
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -227,10 +176,6 @@ public class OptionsPanel {
             optionsPanelElement.findElement(By.xpath(createChooseYAxisOptionXPath("auto"))).click();
         }
         log.debug("Setting Y axis option to: {}", yAxisOption);
-    }
-
-    private String createChooseYAxisOptionXPath(String option) {
-        return String.format(Y_AXIS_SETTINGS_INPUT_PATH, option);
     }
 
     public void setMiscellaneousOption(MiscellaneousOption miscellaneousOption) {
@@ -260,7 +205,62 @@ public class OptionsPanel {
         log.debug("Setting compare with other period option");
     }
 
+    private void moveOverElement(String elementPath) {
+        Actions action = new Actions(driver);
+        action.moveToElement(this.driver.findElement(By.xpath(elementPath))).build().perform();
+    }
+
+    private void chooseTimePeriod() {
+        moveOverElement(TIME_PERIOD_CHOOSER_PATH);
+    }
+
+    private void fillInput(Integer value, String label) {
+        String timePeriodInputXpath = String.format(TIME_PERIOD_CHOOSER_INPUT_PATH, label);
+        WebElement timePeriodInput = optionsPanelElement.findElement(By.xpath(timePeriodInputXpath));
+        timePeriodInput.sendKeys(Keys.CONTROL, Keys.chord("a"));
+        timePeriodInput.sendKeys(Keys.DELETE);
+        timePeriodInput.sendKeys(value.toString());
+    }
+
+    private String createChooseOptionXPath(String option) {
+        return "//div[contains(@class,'main-options common-options')]//label[@for='time-options_" + option + "']";
+    }
+
+    private String createChooseAggregationMethodXPath(String option) {
+        return String.format(AGGREGATION_METHOD_CHOOSER_INPUT_PATH, option);
+    }
+
+    private List<String> getActiveAggMethodsIds() {
+        List<WebElement> webElementsAgg = optionsPanelElement.findElements(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
+        return webElementsAgg.stream().map(aggMethod -> CSSUtils.getAttributeValue("data-testid", aggMethod))
+                .collect(Collectors.toList());
+    }
+
+    private void chooseAggregationMethod() {
+        moveOverElement(AGGREGATION_METHOD_CHOOSER_PATH);
+    }
+
+    private String createChooseYAxisOptionXPath(String option) {
+        return String.format(Y_AXIS_SETTINGS_INPUT_PATH, option);
+    }
+
     private String createXPathByDataTestId(String option) {
         return String.format(OPTIONS_INPUT_ID, option);
+    }
+
+    public enum TimePeriodChooserOption {
+        PERIOD, RANGE, LAST, MIDDLE, SMART, LATEST
+    }
+
+    public enum AggregationMethodOption {
+        MIN, MAX, AVG, SUM, COUNT, NONE, AGG_STANDARD
+    }
+
+    public enum YAxisOption {
+        AUTO, MANUAL
+    }
+
+    public enum MiscellaneousOption {
+        DATA_COMPLETENESS, LAST_SAMPLE_TIME, SHOW_TIME_ZONE
     }
 }

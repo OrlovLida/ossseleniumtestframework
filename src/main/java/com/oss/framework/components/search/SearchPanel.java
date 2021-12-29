@@ -36,16 +36,16 @@ public class SearchPanel {
     private final WebDriverWait wait;
     private final WebElement webElement;
 
-    public static SearchPanel create(WebDriver driver, WebDriverWait wait) {
-        WebElement webElement =
-                driver.findElement(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
-        return new SearchPanel(driver, wait, webElement);
-    }
-
     private SearchPanel(WebDriver driver, WebDriverWait wait, WebElement webElement) {
         this.driver = driver;
         this.wait = wait;
         this.webElement = webElement;
+    }
+
+    public static SearchPanel create(WebDriver driver, WebDriverWait wait) {
+        WebElement webElement =
+                driver.findElement(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
+        return new SearchPanel(driver, wait, webElement);
     }
 
     public void openFiltersSettings() {
@@ -61,15 +61,15 @@ public class SearchPanel {
         this.webElement.findElement(By.xpath(CANCEL_BTN_PATH)).click();
     }
 
+    public Input getComponent(String componentId, ComponentType componentType) {
+        return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
+    }
+
     List<String> getAllVisibleFilters() {
         return this.webElement
                 .findElements(By.xpath(FILTERS_PATH)).stream()
                 .map(filter -> filter.findElement(By.xpath(INPUT_LABEL_PATH + " | " + NEW_COMBOBOX_LABEL_PATH)).getText())
                 .collect(Collectors.toList());
-    }
-
-    public Input getComponent(String componentId, ComponentType componentType) {
-        return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
 
     void saveAsNewFilter(String name) {
@@ -86,13 +86,13 @@ public class SearchPanel {
         callSaveFilterAction(SAVE_FILTER_BTN_ID);
     }
 
+    void clickClearAll() {
+        webElement.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "= 'clearAllButton']")).click();
+    }
+
     private void callSaveFilterAction(String actionId) {
         this.webElement.findElement(By.xpath(SAVE_BUTTONS_DROPDOWN_PATH)).click();
         driver.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + actionId + "']")).click();
-    }
-
-    void clickClearAll() {
-        webElement.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "= 'clearAllButton']")).click();
     }
 
 }

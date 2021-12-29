@@ -18,20 +18,12 @@ import com.oss.framework.data.Data;
 import com.oss.framework.utils.DelayUtils;
 
 public class RadioButton extends Input {
-    static RadioButton create(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        return new RadioButton(driver, webDriverWait, componentId);
-    }
-
     RadioButton(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         super(driver, webDriverWait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        String valueToSet = value.getStringValue();
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, "//label[text()='" + valueToSet + "']");
-        WebElement radioButton = this.webElement.findElement(By.xpath("//label[text()='" + valueToSet + "']"));
-        radioButton.click();
+    static RadioButton create(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
+        return new RadioButton(driver, webDriverWait, componentId);
     }
 
     @Override
@@ -52,6 +44,14 @@ public class RadioButton extends Input {
             names.add(radioButton.getText());
         }
         return Data.createMultiData(names);
+    }
+
+    @Override
+    public void setValue(Data value) {
+        String valueToSet = value.getStringValue();
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, "//label[text()='" + valueToSet + "']");
+        WebElement radioButton = this.webElement.findElement(By.xpath("//label[text()='" + valueToSet + "']"));
+        radioButton.click();
     }
 
     @Override

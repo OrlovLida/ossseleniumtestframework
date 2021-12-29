@@ -14,32 +14,20 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class FileChooser extends Input {
-    private static final String INPUT_XPATH = "//input[@type='file']";
-    private static final String UPLOAD_SUCCESS_XPATH = "//span[@class='uploadStatus'][text()='Upload success']";
-    private static final String POPUP_XPATH = "//ul[@class='UploadedFiles']";
     public static final String DELETE_CLASS = "delete";
     public static final String UPLOAD_STATUS_XPATH = ".//span[@class='uploadStatus']";
     public static final String FILE_NAME_CLASS = "fileName";
-
-    public static FileChooser create(WebDriver driver, WebDriverWait wait, String componentId) {
-        DelayUtils.waitByXPath(wait, "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
-        return new FileChooser(driver, wait, componentId);
-    }
+    private static final String INPUT_XPATH = "//input[@type='file']";
+    private static final String UPLOAD_SUCCESS_XPATH = "//span[@class='uploadStatus'][text()='Upload success']";
+    private static final String POPUP_XPATH = "//ul[@class='UploadedFiles']";
 
     private FileChooser(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        DelayUtils.waitByElement(webDriverWait, this.webElement);
-        WebElement elem = webElement.findElement(By.xpath(INPUT_XPATH));
-        String js = "arguments[0].style.height='50px'; arguments[0].style.visibility='visible'; arguments[0].style.display='block';";
-        ((JavascriptExecutor) driver).executeScript(js, elem);
-        ((JavascriptExecutor) driver).executeScript("HTMLInputElement.prototype.click = function(){}");
-        elem.sendKeys(value.getStringValue());
-        ((JavascriptExecutor) driver).executeScript("delete HTMLInputElement.prototype.click");
-        DelayUtils.waitByXPath(webDriverWait, UPLOAD_SUCCESS_XPATH);
+    public static FileChooser create(WebDriver driver, WebDriverWait wait, String componentId) {
+        DelayUtils.waitByXPath(wait, "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
+        return new FileChooser(driver, wait, componentId);
     }
 
     @Override
@@ -57,6 +45,18 @@ public class FileChooser extends Input {
             names.add(fileName.getText());
         }
         return Data.createMultiData(names);
+    }
+
+    @Override
+    public void setValue(Data value) {
+        DelayUtils.waitByElement(webDriverWait, this.webElement);
+        WebElement elem = webElement.findElement(By.xpath(INPUT_XPATH));
+        String js = "arguments[0].style.height='50px'; arguments[0].style.visibility='visible'; arguments[0].style.display='block';";
+        ((JavascriptExecutor) driver).executeScript(js, elem);
+        ((JavascriptExecutor) driver).executeScript("HTMLInputElement.prototype.click = function(){}");
+        elem.sendKeys(value.getStringValue());
+        ((JavascriptExecutor) driver).executeScript("delete HTMLInputElement.prototype.click");
+        DelayUtils.waitByXPath(webDriverWait, UPLOAD_SUCCESS_XPATH);
     }
 
     @Override

@@ -31,6 +31,12 @@ public class ButtonContainer implements ActionsInterface {
     private final WebDriverWait wait;
     private final WebElement buttons;
 
+    private ButtonContainer(WebDriver driver, WebDriverWait wait, WebElement buttons) {
+        this.driver = driver;
+        this.wait = wait;
+        this.buttons = buttons;
+    }
+
     public static ButtonContainer create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'commonButtons')] | //div[@class='windowIcons']");
         WebElement buttons = driver.findElement(By.xpath("//div[contains(@class,'commonButtons')] | //div[class='windowIcons']"));
@@ -41,10 +47,11 @@ public class ButtonContainer implements ActionsInterface {
         return new ButtonContainer(driver, wait, parentElement);
     }
 
-    private ButtonContainer(WebDriver driver, WebDriverWait wait, WebElement buttons) {
-        this.driver = driver;
-        this.wait = wait;
-        this.buttons = buttons;
+    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
+        Actions actions = new Actions(webDriver);
+        actions.moveToElement(webElement).click(webElement).build().perform();
     }
 
     @Override
@@ -78,12 +85,5 @@ public class ButtonContainer implements ActionsInterface {
         DelayUtils.waitForNestedElements(wait, buttons, groupXpath);
         WebElement button = buttons.findElement(By.xpath(groupXpath));
         clickOnWebElement(driver, wait, button);
-    }
-
-    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
-        Actions actions = new Actions(webDriver);
-        actions.moveToElement(webElement).click(webElement).build().perform();
     }
 }

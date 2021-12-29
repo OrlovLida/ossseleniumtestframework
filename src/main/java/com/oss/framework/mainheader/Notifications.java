@@ -28,14 +28,23 @@ public class Notifications implements NotificationsInterface {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
+    private Notifications(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
+    }
+
     public static NotificationsInterface create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitBy(wait, NOTIFICATION);
         return new Notifications(driver, wait);
     }
 
-    private Notifications(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
+    private static boolean isElementPresent(WebDriver driver, By by) {
+        try {
+            driver.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     @Override
@@ -97,15 +106,6 @@ public class Notifications implements NotificationsInterface {
     private void closeNotificationContainer() {
         if (isElementPresent(driver, NOTIFICATION_OPENED)) {
             clickOnWebElement(driver.findElement(NOTIFICATION_BUTTON));
-        }
-    }
-
-    private static boolean isElementPresent(WebDriver driver, By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
         }
     }
 

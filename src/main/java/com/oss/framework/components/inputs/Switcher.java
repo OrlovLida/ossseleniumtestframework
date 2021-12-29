@@ -11,14 +11,6 @@ public class Switcher extends Input {
 
     private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
 
-    static Switcher create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new Switcher(driver, wait, componentId);
-    }
-
-    static Switcher createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new Switcher(parent, driver, wait, componentId);
-    }
-
     private Switcher(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         super(driver, webDriverWait, componentId);
     }
@@ -27,16 +19,12 @@ public class Switcher extends Input {
         super(parent, driver, webDriverWait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        setSwitcherValue(value);
+    static Switcher create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new Switcher(driver, wait, componentId);
     }
 
-    private void setSwitcherValue(Data value) {
-        Boolean valueToSet = Boolean.valueOf(value.getStringValue());
-        if (!valueToSet.equals(isSwitched())) {
-            this.webElement.findElement(By.className("switcher-inner")).click();
-        }
+    static Switcher createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new Switcher(parent, driver, wait, componentId);
     }
 
     @Override
@@ -49,9 +37,9 @@ public class Switcher extends Input {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
-    private boolean isSwitched() {
-        String switched = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
-        return switched.equals("true");
+    @Override
+    public void setValue(Data value) {
+        setSwitcherValue(value);
     }
 
     @Override
@@ -62,5 +50,17 @@ public class Switcher extends Input {
     @Override
     public String getLabel() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+    }
+
+    private void setSwitcherValue(Data value) {
+        Boolean valueToSet = Boolean.valueOf(value.getStringValue());
+        if (!valueToSet.equals(isSwitched())) {
+            this.webElement.findElement(By.className("switcher-inner")).click();
+        }
+    }
+
+    private boolean isSwitched() {
+        String switched = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
+        return switched.equals("true");
     }
 }

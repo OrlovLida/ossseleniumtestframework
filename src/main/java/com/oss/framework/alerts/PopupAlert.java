@@ -10,15 +10,15 @@ public class PopupAlert {
     private final WebDriverWait webDriverWait;
     private final Alert alert;
 
-    public static PopupAlert create(WebDriver driver, WebDriverWait webDriverWait) {
-        Alert alert = webDriverWait.until(ExpectedConditions.alertIsPresent());
-        return new PopupAlert(driver, webDriverWait, alert);
-    }
-
     private PopupAlert(WebDriver driver, WebDriverWait webDriverWait, Alert alert) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.alert = alert;
+    }
+
+    public static PopupAlert create(WebDriver driver, WebDriverWait webDriverWait) {
+        Alert alert = webDriverWait.until(ExpectedConditions.alertIsPresent());
+        return new PopupAlert(driver, webDriverWait, alert);
     }
 
     public void popupAccept() {

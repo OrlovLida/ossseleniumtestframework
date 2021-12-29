@@ -1,22 +1,21 @@
 package com.oss.framework.components.portals;
 
-import com.oss.framework.components.inputs.Input;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Wizard;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Wizard;
+
 public class SaveConfigurationWizard {
 
     public static final String SAVE_CONFIG_ID = "saveNewConfig";
-
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-
+    public static final String DEFAULT_ME_VALUE = "Me";
+    public static final String DEFAULT_ALL_VALUE = "All";
     private static final String DEFAULT_VIEW_COMBOBOX_ID = "default_view_combo";
     private static final String NAME_TEXTFIELD_ID = "name";
     private static final String DESCRIPTION_TEXTFIELD_ID = "description";
@@ -27,9 +26,8 @@ public class SaveConfigurationWizard {
     private static final String CANCEL_BUTTON_ID = "configuration_popup_button_cancel";
     private static final String GROUPS_ID = "groups-input";
     private static final String GROUPS_DROPDOWN_ID = "groups-dropdown-search";
-
-    public static final String DEFAULT_ME_VALUE = "Me";
-    public static final String DEFAULT_ALL_VALUE = "All";
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
     private SaveConfigurationWizard(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
@@ -38,10 +36,6 @@ public class SaveConfigurationWizard {
 
     public static SaveConfigurationWizard create(WebDriver driver, WebDriverWait wait) {
         return new SaveConfigurationWizard(driver, wait);
-    }
-
-    private Wizard getWizard() {
-        return Wizard.createByComponentId(driver, wait, WIZARD_ID);
     }
 
     public void saveAsNew(String name, Field... fields) {
@@ -57,6 +51,15 @@ public class SaveConfigurationWizard {
             setValue(field);
         }
         clickOnSave();
+    }
+
+    public Field createField(Property property, String... value) {
+        ArrayList<String> values = new ArrayList<>(Arrays.asList(value));
+        return new Field(property, values);
+    }
+
+    private Wizard getWizard() {
+        return Wizard.createByComponentId(driver, wait, WIZARD_ID);
     }
 
     private SaveConfigurationWizard setName(String name) {
@@ -136,11 +139,6 @@ public class SaveConfigurationWizard {
     }
 
     public enum Property {NAME, DESCRIPTION, TYPE, DEFAULT_VIEW_FOR, GROUPS}
-
-    public Field createField (Property property, String... value) {
-        ArrayList<String> values = new ArrayList<>(Arrays.asList(value));
-        return new Field(property, values);
-    }
 
     public static class Field {
         Property property;

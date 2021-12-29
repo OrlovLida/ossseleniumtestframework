@@ -31,23 +31,8 @@ public class ButtonPanel {
         return new ButtonPanel(driver, wait);
     }
 
-    private WebElement getButtonPanel() {
-        DelayUtils.waitByXPath(wait, BUTTON_PANEL_XPATH);
-        return driver.findElement(By.xpath(BUTTON_PANEL_XPATH));
-    }
-
-    private WebElement getButtonIcon(String iconId) {
-        DelayUtils.waitByXPath(wait, String.format(ICON_XPATH_PATTERN, iconId));
-        return getButtonPanel().findElement(By.xpath(String.format(ICON_XPATH_PATTERN, iconId)));
-    }
-
     public void clickOnIcon(String iconId) {
         getButtonIcon(iconId).click();
-    }
-
-    private boolean isButtonDisplayed(String iconId) {
-        DelayUtils.waitByXPath(wait, String.format(ICON_XPATH_PATTERN, iconId));
-        return !getButtonPanel().findElements(By.xpath(String.format(ICON_XPATH_PATTERN, iconId))).isEmpty();
     }
 
     public void expandLayoutMenu() {
@@ -68,6 +53,21 @@ public class ButtonPanel {
     public ChooseConfigurationWizard openDownloadConfigurationWizard() {
         clickOnIcon(DOWNLOAD_CONFIGURATION_ICON_ID);
         return ChooseConfigurationWizard.create(driver, wait);
+    }
+
+    private WebElement getButtonPanel() {
+        DelayUtils.waitByXPath(wait, BUTTON_PANEL_XPATH);
+        return driver.findElement(By.xpath(BUTTON_PANEL_XPATH));
+    }
+
+    private WebElement getButtonIcon(String iconId) {
+        DelayUtils.waitByXPath(wait, String.format(ICON_XPATH_PATTERN, iconId));
+        return getButtonPanel().findElement(By.xpath(String.format(ICON_XPATH_PATTERN, iconId)));
+    }
+
+    private boolean isButtonDisplayed(String iconId) {
+        DelayUtils.waitByXPath(wait, String.format(ICON_XPATH_PATTERN, iconId));
+        return !getButtonPanel().findElements(By.xpath(String.format(ICON_XPATH_PATTERN, iconId))).isEmpty();
     }
 
 }

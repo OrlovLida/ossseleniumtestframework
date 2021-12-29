@@ -25,6 +25,15 @@ public class DropdownList {
     private static final String DRAGGABLE_ELEMENT_XPATH = ".//li[@class='listElement']";
     private static final String DROPDOWN_LIST_XPATH = "//div[@class = 'DropdownList']";
     private static final String DROPDOWN_LIST_LABEL_XPATH = ".//div[@class='categoryLabel']";
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement dropdownListElement;
+
+    private DropdownList(WebDriver driver, WebDriverWait wait, WebElement dropdownListElement) {
+        this.driver = driver;
+        this.wait = wait;
+        this.dropdownListElement = dropdownListElement;
+    }
 
     public static DropdownList create(WebDriver driver, WebDriverWait wait, String componentName) {
         DelayUtils.waitByXPath(wait, "//div[@class = 'DropdownList']//div[contains(text(),'" + componentName + "')]");
@@ -39,16 +48,6 @@ public class DropdownList {
     private static boolean isContainsName(String componentName, WebElement dropdownList) {
         WebElement label = dropdownList.findElement(By.xpath(DROPDOWN_LIST_LABEL_XPATH));
         return label.getText().contains(componentName);
-    }
-
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-    private final WebElement dropdownListElement;
-
-    private DropdownList(WebDriver driver, WebDriverWait wait, WebElement dropdownListElement) {
-        this.driver = driver;
-        this.wait = wait;
-        this.dropdownListElement = dropdownListElement;
     }
 
     public DragAndDrop.DraggableElement getDraggableElement(String value) {

@@ -13,14 +13,6 @@ public class ScriptComponent extends Input {
 
     private static final String XPATH = ".//div[@class='CodeMirror-code']";
 
-    static ScriptComponent create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new ScriptComponent(driver, wait, componentId);
-    }
-
-    static ScriptComponent create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new ScriptComponent(parent, driver, wait, componentId);
-    }
-
     private ScriptComponent(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         super(driver, webDriverWait, componentId);
     }
@@ -29,14 +21,12 @@ public class ScriptComponent extends Input {
         super(parent, driver, webDriverWait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        clear();
-        WebElement input = webElement.findElement(By.xpath(XPATH));
-        Actions action = new Actions(driver);
-        action.moveToElement(input).click()
-                .sendKeys(value.getStringValue())
-                .perform();
+    static ScriptComponent create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new ScriptComponent(driver, wait, componentId);
+    }
+
+    static ScriptComponent create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new ScriptComponent(parent, driver, wait, componentId);
     }
 
     @Override
@@ -48,6 +38,16 @@ public class ScriptComponent extends Input {
     public Data getValue() {
         return Data.createSingleData(webElement.findElement(By.xpath(XPATH))
                 .getAttribute("value"));
+    }
+
+    @Override
+    public void setValue(Data value) {
+        clear();
+        WebElement input = webElement.findElement(By.xpath(XPATH));
+        Actions action = new Actions(driver);
+        action.moveToElement(input).click()
+                .sendKeys(value.getStringValue())
+                .perform();
     }
 
     @Override

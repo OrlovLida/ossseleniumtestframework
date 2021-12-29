@@ -22,6 +22,12 @@ public class ListApp {
     private final WebDriverWait wait;
     private final WebElement listApp;
 
+    private ListApp(WebDriver driver, WebDriverWait wait, WebElement listApp) {
+        this.driver = driver;
+        this.wait = wait;
+        this.listApp = listApp;
+    }
+
     public static ListApp createFromParent(WebDriver driver, WebDriverWait wait, String windowId) {
         DelayUtils.waitBy(wait, By.xpath(".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]//div[contains(@class, 'appList')]"));
         WebElement listApp = driver.findElement(By.xpath(".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]//div[contains(@class, 'appList')]"));
@@ -34,17 +40,6 @@ public class ListApp {
         return new ListApp(driver, wait, listApp);
     }
 
-    private ListApp(WebDriver driver, WebDriverWait wait, WebElement listApp) {
-        this.driver = driver;
-        this.wait = wait;
-        this.listApp = listApp;
-    }
-
-    private List<WebElement> getRows() {
-        DelayUtils.waitForNestedElements(wait, listApp, ".//div[contains(@class, 'first last')]");
-        return listApp.findElements(By.xpath(".//div[contains(@class, 'first last')]"));
-    }
-
     public List<String> getValue() {
         List<String> values = getRows()
                 .stream().map(row -> row.findElement(By.xpath(".//div[contains(@class, 'text-default')]")))
@@ -53,8 +48,13 @@ public class ListApp {
         return values;
     }
 
-    public void clickCreateNewNotification(){
+    public void clickCreateNewNotification() {
         log.debug("Clicking create new notification button");
         listApp.findElement(By.xpath(".//*[contains(@href,'notification')]")).click();
+    }
+
+    private List<WebElement> getRows() {
+        DelayUtils.waitForNestedElements(wait, listApp, ".//div[contains(@class, 'first last')]");
+        return listApp.findElements(By.xpath(".//div[contains(@class, 'first last')]"));
     }
 }

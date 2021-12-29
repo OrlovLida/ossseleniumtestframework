@@ -1,12 +1,13 @@
 package com.oss.framework.utils;
 
+import java.util.List;
+import java.util.Map;
+
+import org.openqa.selenium.WebElement;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.openqa.selenium.WebElement;
-
-import java.util.List;
-import java.util.Map;
 
 public class CSSUtils {
 
@@ -28,14 +29,15 @@ public class CSSUtils {
         Map<String, String> attributes = Maps.newHashMap();
         String style = webElement.getAttribute(STYLE_ATTRIBUTE);
         attributeSplitter.split(style.trim()).forEach(attribute -> {
-            if(!attribute.equals("")) {
+            if (!attribute.equals("")) {
                 List<String> split = Lists.newArrayList(valueSplitter.split(attribute));
                 attributes.put(split.get(0), split.get(1));
             }
         });
         return attributes;
     }
-    public static List<String> getAllClasses (WebElement webElement) {
+
+    public static List<String> getAllClasses(WebElement webElement) {
         String aClass = webElement.getAttribute("class");
         Iterable<String> classes = Splitter.on(" ").split(aClass);
         return Lists.newArrayList(classes);

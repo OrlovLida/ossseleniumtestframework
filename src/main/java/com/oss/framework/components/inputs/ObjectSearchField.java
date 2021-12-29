@@ -24,17 +24,12 @@ public class ObjectSearchField extends Input {
     private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
     private static final String INPUT = ".//input";
 
-    static ObjectSearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new ObjectSearchField(driver, wait, componentId);
-    }
-
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        setValue(value, false);
+    static ObjectSearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new ObjectSearchField(driver, wait, componentId);
     }
 
     public void setValue(Data value, boolean isContains) {
@@ -72,6 +67,11 @@ public class ObjectSearchField extends Input {
             return Data.createMultiData(values.stream().map(WebElement::getText).collect(Collectors.toList()));
         }
         return Data.createSingleData("");
+    }
+
+    @Override
+    public void setValue(Data value) {
+        setValue(value, false);
     }
 
     @Override
