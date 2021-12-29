@@ -14,6 +14,7 @@ public class WidgetChooser {
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement widgetChooser;
+
     private WidgetChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement widgetChooser) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;

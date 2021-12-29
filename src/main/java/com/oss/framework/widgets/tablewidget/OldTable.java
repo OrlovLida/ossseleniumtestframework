@@ -62,6 +62,7 @@ public class OldTable implements TableInterface {
     private final WebElement table;
     @Deprecated
     private WebElement window;
+
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId, WebElement table, WebElement window) {
         this.driver = driver;
         this.wait = wait;
@@ -69,6 +70,7 @@ public class OldTable implements TableInterface {
         this.table = table;
         this.window = window;
     }
+
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId, WebElement table) {
         this.driver = driver;
         this.wait = wait;

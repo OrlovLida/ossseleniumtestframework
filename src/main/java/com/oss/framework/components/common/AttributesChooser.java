@@ -21,6 +21,7 @@ public class AttributesChooser {
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement attributesChooserElement;
+
     private AttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement attributesChooserElement) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;

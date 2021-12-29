@@ -34,6 +34,7 @@ public class TreeComponent {
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
+
     private TreeComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement treeComponentElement) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;

@@ -19,6 +19,7 @@ public class AdvancedSearchWidget {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
+
     private AdvancedSearchWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.wait = webDriverWait;

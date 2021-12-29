@@ -36,22 +36,18 @@ public class Time extends Input {
         TimePicker timePicker = TimePicker.create(driver, webDriverWait);
         timePicker.chooseTime(value);
         clickTime();
-    }    @Override
+    }
+
+    @Override
+    public void setValueContains(Data value) {
+        webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
+    }
+
+    @Override
     public Data getValue() {
         return Data.createSingleData(webElement
                 .findElement(By.xpath(INPUT))
                 .getAttribute("value"));
-    }
-
-    private void clickTime() {
-        WebElement clock = this.webElement.findElement(By.xpath(CLOCK_ICON_XPATH));
-        clock.click();
-        DelayUtils.sleep();
-    }    @Override
-    public void clear() {
-        WebElement input = webElement.findElement(By.xpath(INPUT));
-        input.sendKeys(Keys.CONTROL + "a");
-        input.sendKeys(Keys.DELETE);
     }
 
     @Override
@@ -60,11 +56,16 @@ public class Time extends Input {
     }
 
     @Override
-    public void setValueContains(Data value) {
-        webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
+    public void clear() {
+        WebElement input = webElement.findElement(By.xpath(INPUT));
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
     }
 
-
-
+    private void clickTime() {
+        WebElement clock = this.webElement.findElement(By.xpath(CLOCK_ICON_XPATH));
+        clock.click();
+        DelayUtils.sleep();
+    }
 
 }

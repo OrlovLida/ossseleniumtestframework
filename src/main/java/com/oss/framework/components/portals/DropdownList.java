@@ -15,6 +15,7 @@ public class DropdownList {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement dropdownListElement;
+
     private DropdownList(WebDriver driver, WebDriverWait wait, WebElement dropdownListElement) {
         this.driver = driver;
         this.wait = wait;

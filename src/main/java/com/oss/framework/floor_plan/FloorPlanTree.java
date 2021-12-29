@@ -20,6 +20,7 @@ public class FloorPlanTree {
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponent;
+
     private FloorPlanTree(WebDriver driver, WebDriverWait webDriverWait, WebElement treeComponent) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;

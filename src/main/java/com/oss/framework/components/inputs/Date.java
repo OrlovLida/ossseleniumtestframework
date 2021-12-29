@@ -34,11 +34,25 @@ public class Date extends Input {
         webElement.findElement(By.xpath(CLOCK_ICON_XPATH)).click();
         DatePicker datePicker = DatePicker.create(driver, webDriverWait, "dateTimePicker");
         datePicker.chooseDate(date);
-    }    @Override
+    }
+
+    @Override
+    public void setValueContains(Data value) {
+        this.webElement.findElement(By.xpath(INPUT)).click();
+        this.webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
+    }
+
+    @Override
     public Data getValue() {
 
         return Data.createSingleData(this.webElement.findElement(By.xpath(INPUT))
                 .getAttribute("value"));
+    }
+
+    @Override
+    public void setValue(Data value) {
+        clear();
+        this.webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
     }
 
     @Override
@@ -49,21 +63,8 @@ public class Date extends Input {
     }
 
     @Override
-    public void setValue(Data value) {
-        clear();
-        this.webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
-    }
-
-    @Override
-    public void setValueContains(Data value) {
-        this.webElement.findElement(By.xpath(INPUT)).click();
-        this.webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
-    }
-
-    @Override
     public String getLabel() {
         return webElement.findElement(By.xpath(".//label")).getText();
     }
-
 
 }
