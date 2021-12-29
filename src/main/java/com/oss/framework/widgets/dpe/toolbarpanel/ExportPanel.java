@@ -22,7 +22,7 @@ public class ExportPanel {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement exportPanel;
+    private final WebElement exportPanelElement;
 
     public enum ExportType {
         JPG, PNG, PDF, XLSX
@@ -34,10 +34,10 @@ public class ExportPanel {
         return new ExportPanel(driver, webDriverWait, webElement);
     }
 
-    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement exportPanel) {
+    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement exportPanelElement) {
         this.driver = driver;
         this.wait = webDriverWait;
-        this.exportPanel = exportPanel;
+        this.exportPanelElement = exportPanelElement;
     }
 
     public void exportKpiToFile(ExportType exportType) {

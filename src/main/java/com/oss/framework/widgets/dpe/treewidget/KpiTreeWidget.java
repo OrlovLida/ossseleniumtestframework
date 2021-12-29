@@ -1,9 +1,7 @@
 package com.oss.framework.widgets.dpe.treewidget;
 
-import com.oss.framework.components.inputs.Button;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Widget;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +12,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Widget;
 
 import static com.oss.framework.logging.LoggerMessages.EXPAND_NODE;
 import static com.oss.framework.logging.LoggerMessages.SELECT_NODE;
@@ -24,10 +25,10 @@ public class KpiTreeWidget extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(KpiTreeWidget.class);
 
-    private final String WINDOW_XPATH = ".//ancestor::*[@class='card-shadow']";
-    private final String CARD_SHADOW_XPATH = "//*[@class='card-shadow']";
-    private final String TOOLBAR_INPUT_ID = "search-toolbar-input";
-    private final String DIMENSION_OPTIONS_BUTTON_ID = "dimension-options-button";
+    private static final String WINDOW_XPATH = ".//ancestor::*[@class='card-shadow']";
+    private static final String CARD_SHADOW_XPATH = "//*[@class='card-shadow']";
+    private static final String TOOLBAR_INPUT_ID = "search-toolbar-input";
+    private static final String DIMENSION_OPTIONS_BUTTON_ID = "dimension-options-button";
 
     public KpiTreeWidget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -57,7 +58,7 @@ public class KpiTreeWidget extends Widget {
         WebElement expandButton = findNodeElementByXPath(objectName);
         scrollToNode(expandButton);
         expandButton.click();
-        log.debug(EXPAND_NODE + objectName);
+        log.debug(EXPAND_NODE + "{}", objectName);
     }
 
     private WebElement findNodeElementByXPath(String objectName) {
@@ -76,7 +77,8 @@ public class KpiTreeWidget extends Widget {
 
         scrollToNode(objectNode);
         objectNode.click();
-        log.debug(SELECT_NODE + objectName);
+        log.debug(SELECT_NODE + "{}", objectName);
+
     }
 
     private WebElement getNode(String objectName) {

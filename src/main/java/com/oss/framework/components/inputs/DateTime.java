@@ -75,12 +75,6 @@ public class DateTime extends Input {
         DatePicker.create(driver, webDriverWait, "dateTimePicker").chooseDate(date);
     }
 
-    private void selectDate(Calendar givenDate) {
-        String day = String.valueOf(givenDate.get(Calendar.DAY_OF_MONTH));
-        WebElement data = driver.findElement(By.xpath(createPathDate(givenDate)));
-        data.click();
-    }
-
     private void clickTime() {
         WebElement clock = this.webElement.findElement(By.xpath(XPATH_CLOCK_ICON));
         clock.click();

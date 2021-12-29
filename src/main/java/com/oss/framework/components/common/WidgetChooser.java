@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WidgetChooser {
 
-    private static String X_PATH_ID = "//div[@class='widgets-chooser']";
+    private static final String X_PATH_ID = "//div[@class='widgets-chooser']";
 
     public static WidgetChooser create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);

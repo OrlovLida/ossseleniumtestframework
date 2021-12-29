@@ -8,6 +8,7 @@ package com.oss.framework.listwidget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -109,7 +110,7 @@ public class EditableList extends Widget {
                 return row;
             }
         }
-        throw new RuntimeException("Cannot find a row with the provided value");
+        throw new NoSuchElementException("Cannot find a row with the provided value");
     }
 
     public List<Row> getVisibleRows() {

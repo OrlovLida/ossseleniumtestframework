@@ -1,14 +1,15 @@
 package com.oss.framework.components.common;
 
-import com.oss.framework.components.inputs.Button;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.DragAndDrop;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 
 public class ListAttributesChooser {
 
@@ -30,12 +31,12 @@ public class ListAttributesChooser {
 
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
-    private final WebElement listAttributesChooser;
+    private final WebElement listAttributesChooserElement;
 
-    private ListAttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement listAttributesChooser) {
+    private ListAttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement listAttributesChooserElement) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
-        this.listAttributesChooser = listAttributesChooser;
+        this.listAttributesChooserElement = listAttributesChooserElement;
     }
 
     public void enableAttributeById(String attributeId) {
@@ -67,15 +68,15 @@ public class ListAttributesChooser {
     }
 
     public void clickApply() {
-        this.listAttributesChooser.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
+        this.listAttributesChooserElement.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
     }
 
     public void clickCancel() {
-        this.listAttributesChooser.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
+        this.listAttributesChooserElement.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
     }
 
     public void clickDefaultSettings() {
-        this.listAttributesChooser.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
+        this.listAttributesChooserElement.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
     }
 
     public void clickSave() {
@@ -84,7 +85,7 @@ public class ListAttributesChooser {
 
     public void selectTwoColumnsLayout() {
         if (!isTwoColumnsLayoutActive()) {
-            this.listAttributesChooser.findElement(By.xpath(INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).click();
+            this.listAttributesChooserElement.findElement(By.xpath(INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).click();
             log.debug("Switching to Two Columns Layout");
         } else {
             log.debug("Selected layout is: Two Columns");
@@ -93,7 +94,7 @@ public class ListAttributesChooser {
 
     public void selectListLayout() {
         if (isTwoColumnsLayoutActive()) {
-            this.listAttributesChooser.findElement(By.xpath(INACTIVE_LIST_LAYOUT_BUTTON_XPATH)).click();
+            this.listAttributesChooserElement.findElement(By.xpath(INACTIVE_LIST_LAYOUT_BUTTON_XPATH)).click();
             log.debug("Switching to List Layout");
         } else {
             log.debug("Selected layout is: List");
@@ -101,14 +102,14 @@ public class ListAttributesChooser {
     }
 
     private WebElement getAttribute(String attributeId) {
-        return this.listAttributesChooser.findElement(By.xpath(".//input[@id='checkbox-" + attributeId + "']"));
+        return this.listAttributesChooserElement.findElement(By.xpath(".//input[@id='checkbox-" + attributeId + "']"));
     }
 
     private WebElement dragOrDropElement(String columnId) {
-        return this.listAttributesChooser.findElement(By.xpath(".//div[@data-rbd-drag-handle-draggable-id='" + columnId + "']"));
+        return this.listAttributesChooserElement.findElement(By.xpath(".//div[@data-rbd-drag-handle-draggable-id='" + columnId + "']"));
     }
 
     private boolean isTwoColumnsLayoutActive() {
-        return !this.listAttributesChooser.findElements(By.xpath(ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).isEmpty();
+        return !this.listAttributesChooserElement.findElements(By.xpath(ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).isEmpty();
     }
 }

@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -102,7 +103,7 @@ public class DatePicker {
 
     private int getCalendarMonth() {
         WebElement selectedDay = webElement.findElements(By.className("DayPicker-Day")).stream()
-                .filter(day -> day.getAttribute("aria-selected").equals("true")).findFirst().get();
+                .filter(day -> day.getAttribute("aria-selected").equals("true")).findFirst().orElseThrow(() -> new NoSuchElementException("Cannot select day"));
         String selectedDate = selectedDay.getAttribute("aria-label");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.ENGLISH);
         Date date = null;

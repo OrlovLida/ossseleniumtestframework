@@ -1,8 +1,7 @@
 package com.oss.framework.widgets.dpe.kpichartwidget;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Widget;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Widget;
 
 import static com.oss.framework.logging.LoggerMessages.ELEMENT_PRESENT_AND_VISIBLE;
 import static com.oss.framework.logging.LoggerMessages.MOVE_MOUSE_OVER;
@@ -206,7 +207,7 @@ public class KpiChartWidget extends Widget {
     }
 
     public boolean topNBarChartIsDisplayed(String barChartId) {
-        return this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).size() > 0;
+        return !this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).isEmpty();
     }
 
     public void doubleClickOnTopNBar(String barChartId) {

@@ -1,14 +1,15 @@
 package com.oss.framework.widgets.dpe.contextaction;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 
 public class ContextActionPanel {
 
@@ -17,7 +18,7 @@ public class ContextActionPanel {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement contextActionPanel;
+    private final WebElement contextActionPanelElement;
 
     public static ContextActionPanel create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -28,14 +29,14 @@ public class ContextActionPanel {
         return new ContextActionPanel(driver, wait, contextActionPanel);
     }
 
-    private ContextActionPanel(WebDriver driver, WebDriverWait wait, WebElement contextActionPanel) {
+    private ContextActionPanel(WebDriver driver, WebDriverWait wait, WebElement contextActionPanelElement) {
         this.driver = driver;
         this.wait = wait;
-        this.contextActionPanel = contextActionPanel;
+        this.contextActionPanelElement = contextActionPanelElement;
     }
 
     public void clickOnPanel() {
-        contextActionPanel.click();
+        contextActionPanelElement.click();
     }
 
     public void callAction(String groupId) {
@@ -49,7 +50,7 @@ public class ContextActionPanel {
 
     public void callAction(String groupId, String actionClass, String color) {
         clickOnGroup(groupId);
-        WebElement action = contextActionPanel.findElement(By.className(actionClass));
+        WebElement action = contextActionPanelElement.findElement(By.className(actionClass));
         action.click();
         chooseColor(color);
     }
@@ -58,10 +59,10 @@ public class ContextActionPanel {
         if (!isPanelOpen()) {
             clickOnPanel();
         }
-        List<WebElement> actions = contextActionPanel.findElements(By.xpath(".//div[@class='btn-chart' or @class='xdr-views-container']"));
+        List<WebElement> actions = contextActionPanelElement.findElements(By.xpath(".//div[@class='btn-chart' or @class='xdr-views-container']"));
         WebElement group = actions.stream().filter(a -> a.findElement(By.xpath(".//button"))
-                        .getAttribute(CSSUtils.TEST_ID)
-                        .equals(groupId))
+                .getAttribute(CSSUtils.TEST_ID)
+                .equals(groupId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Cant find groupId: " + groupId));
         group.click();
@@ -69,18 +70,18 @@ public class ContextActionPanel {
     }
 
     private void clickOnAction(String actionLabel) {
-        List<WebElement> linksList = contextActionPanel.findElements(By.className("xdr-view-link"));
+        List<WebElement> linksList = contextActionPanelElement.findElements(By.className("xdr-view-link"));
         WebElement action;
 
         if (!linksList.isEmpty()) {
             action = linksList.stream().filter(a -> a.findElement(By.xpath(".//a"))
-                            .getText()
-                            .equals(actionLabel))
+                    .getText()
+                    .equals(actionLabel))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Link with text label " + actionLabel + " doesn't exist"));
             action.click();
         } else {
-            action = contextActionPanel.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='" + actionLabel + "']"));
+            action = contextActionPanelElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='" + actionLabel + "']"));
             action.click();
             Actions actions = new Actions(driver);
             WebElement graph = driver.findElement(By.xpath(GRAPH_LOCATOR_PATH));
@@ -89,12 +90,12 @@ public class ContextActionPanel {
     }
 
     private void chooseColor(String colorRGB) {
-        WebElement colorPalette = contextActionPanel.findElement(By.className("color-picker"));
+        WebElement colorPalette = contextActionPanelElement.findElement(By.className("color-picker"));
         WebElement color = colorPalette.findElement(By.xpath("//*[@style='background-color: " + colorRGB + ";']"));
         color.click();
     }
 
     private boolean isPanelOpen() {
-        return !contextActionPanel.findElements(By.xpath(".//i[contains(@class,'chevron-left')]")).isEmpty();
+        return !contextActionPanelElement.findElements(By.xpath(".//i[contains(@class,'chevron-left')]")).isEmpty();
     }
 }
