@@ -18,21 +18,19 @@ public class AttributesChooser {
     private static final String CANCEL_BUTTON_XPATH = ".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]";
     private static final String DEFAULT_BUTTON_XPATH = ".//div[@class='management-default-button']/a[contains(@class,'btn-flat')]";
     private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private final WebDriver driver;
+    private final WebDriverWait webDriverWait;
+    private final WebElement attributesChooserElement;
+    private AttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement attributesChooserElement) {
+        this.driver = driver;
+        this.webDriverWait = webDriverWait;
+        this.attributesChooserElement = attributesChooserElement;
+    }
 
     public static AttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
         WebElement attributesChooser = driver.findElement(By.xpath(X_PATH_ID));
         return new AttributesChooser(driver, webDriverWait, attributesChooser);
-    }
-
-    private final WebDriver driver;
-    private final WebDriverWait webDriverWait;
-    private final WebElement attributesChooserElement;
-
-    private AttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement attributesChooserElement) {
-        this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.attributesChooserElement = attributesChooserElement;
     }
 
     public AttributesChooser enableAttributeByLabel(String attributeLabel, String... path) {

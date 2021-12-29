@@ -51,12 +51,6 @@ public class FMSMTable implements TableInterface {
     }
 
     @Override
-    public String getCellValueById(int row, String columnId) {
-        Cell cell = Cell.create(tableWidget, row, columnId);
-        return cell.getTextValue();
-    }
-
-    @Override
     public int getColumnSize(int column) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 
@@ -190,6 +184,12 @@ public class FMSMTable implements TableInterface {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
+    @Override
+    public String getCellValueById(int row, String columnId) {
+        Cell cell = Cell.create(tableWidget, row, columnId);
+        return cell.getTextValue();
+    }
+
     private static class Cell {
         private final WebElement cellElement;
         private final String columnNameId;
@@ -204,20 +204,20 @@ public class FMSMTable implements TableInterface {
             return new Cell(cells.get(index), columnNameId);
         }
 
-        private boolean isIcon() {
-            return !cellElement.findElements(By.xpath(".//span[@" + OSS_ICON_VALUE + "]//i[contains(@class, '" + OSS_ICON_CLASS + "')]")).isEmpty();
-        }
-
-        private String getAttributeValue() {
-            return cellElement.findElement(By.xpath(".//span[@" + OSS_ICON_VALUE + "]")).getAttribute(OSS_ICON_VALUE);
-        }
-
         public String getTextValue() {
             if (isIcon()) {
                 return getAttributeValue();
             } else {
                 return cellElement.getText();
             }
+        }
+
+        private boolean isIcon() {
+            return !cellElement.findElements(By.xpath(".//span[@" + OSS_ICON_VALUE + "]//i[contains(@class, '" + OSS_ICON_CLASS + "')]")).isEmpty();
+        }
+
+        private String getAttributeValue() {
+            return cellElement.findElement(By.xpath(".//span[@" + OSS_ICON_VALUE + "]")).getAttribute(OSS_ICON_VALUE);
         }
     }
 }

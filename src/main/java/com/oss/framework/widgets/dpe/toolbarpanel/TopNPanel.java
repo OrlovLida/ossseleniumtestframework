@@ -25,15 +25,15 @@ public class TopNPanel {
     private final WebDriverWait wait;
     private final WebElement topNPanelElement;
 
-    public static TopNPanel create(WebDriver driver, WebDriverWait wait) {
-        WebElement topNPanel = driver.findElement(By.xpath(TOP_N_PANEL_XPATH));
-        return new TopNPanel(driver, wait, topNPanel);
-    }
-
     private TopNPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement topNPanelElement) {
         this.driver = driver;
         this.wait = webDriverWait;
         this.topNPanelElement = topNPanelElement;
+    }
+
+    public static TopNPanel create(WebDriver driver, WebDriverWait wait) {
+        WebElement topNPanel = driver.findElement(By.xpath(TOP_N_PANEL_XPATH));
+        return new TopNPanel(driver, wait, topNPanel);
     }
 
     public void setDimension(String dimensionId) {
@@ -50,15 +50,15 @@ public class TopNPanel {
         log.debug("Setting drill down levet to: {}", levelId);
     }
 
+    public void clickPerform() {
+        Button.createById(driver, PERFORM_BUTTON_ID).click();
+        log.debug(CLICK_BTN + "Perform");
+    }
+
     private void selectOptionById(String optionId) {
         WebElement optionToSelect = driver.findElement(By.xpath("//div[@data-testid='" + optionId + "']"));
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView(true);", optionToSelect);
         js.executeScript("arguments[0].click();", optionToSelect);
-    }
-
-    public void clickPerform() {
-        Button.createById(driver, PERFORM_BUTTON_ID).click();
-        log.debug(CLICK_BTN + "Perform");
     }
 }

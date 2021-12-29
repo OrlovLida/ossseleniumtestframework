@@ -12,19 +12,18 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class DropdownList {
-    public static DropdownList create(WebDriver driver, WebDriverWait webDriverWait) {
-        WebElement dropdownList = driver.findElement(By.className("portal"));
-        return new DropdownList(driver, webDriverWait, dropdownList);
-    }
-
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement dropdownListElement;
-
     private DropdownList(WebDriver driver, WebDriverWait wait, WebElement dropdownListElement) {
         this.driver = driver;
         this.wait = wait;
         this.dropdownListElement = dropdownListElement;
+    }
+
+    public static DropdownList create(WebDriver driver, WebDriverWait webDriverWait) {
+        WebElement dropdownList = driver.findElement(By.className("portal"));
+        return new DropdownList(driver, webDriverWait, dropdownList);
     }
 
     public void selectOption(String option) {

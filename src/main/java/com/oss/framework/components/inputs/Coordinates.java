@@ -23,14 +23,6 @@ public class Coordinates extends Input {
     private final WebElement inputMinutes = webElement.findElement(By.xpath(".//input[@name='minutes']"));
     private final WebElement inputSeconds = webElement.findElement(By.xpath(".//input[@name='seconds']"));
 
-    static Coordinates create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new Coordinates(driver, wait, componentId);
-    }
-
-    static Coordinates create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new Coordinates(parent, driver, wait, componentId);
-    }
-
     private Coordinates(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
@@ -39,21 +31,12 @@ public class Coordinates extends Input {
         super(parent, driver, wait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(webElement).click().build().perform();
+    static Coordinates create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new Coordinates(driver, wait, componentId);
+    }
 
-        if (value.getStringValues().get(0).equals("N")) {
-            labelN.click();
-        } else if (value.getStringValues().get(0).equals("S")) {
-            labelS.click();
-        }
-
-        clear();
-        inputDegrees.sendKeys(value.getStringValues().get(1));
-        inputMinutes.sendKeys(value.getStringValues().get(2));
-        inputSeconds.sendKeys(value.getStringValues().get(3));
+    static Coordinates create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new Coordinates(parent, driver, wait, componentId);
     }
 
     @Override
@@ -75,6 +58,23 @@ public class Coordinates extends Input {
         getList.add(inputMinutes.getAttribute(VALUE));
         getList.add(inputSeconds.getAttribute(VALUE));
         return Data.createMultiData(getList);
+    }
+
+    @Override
+    public void setValue(Data value) {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(webElement).click().build().perform();
+
+        if (value.getStringValues().get(0).equals("N")) {
+            labelN.click();
+        } else if (value.getStringValues().get(0).equals("S")) {
+            labelS.click();
+        }
+
+        clear();
+        inputDegrees.sendKeys(value.getStringValues().get(1));
+        inputMinutes.sendKeys(value.getStringValues().get(2));
+        inputSeconds.sendKeys(value.getStringValues().get(3));
     }
 
     @Override

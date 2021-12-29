@@ -22,21 +22,19 @@ public class ListAttributesChooser {
     private static final String INACTIVE_LIST_LAYOUT_BUTTON_XPATH = ".//button[@title='List']";
     private static final String INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@title='Two columns']";
     private static final String ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@class='is-columns-layout']";
+    private final WebDriver driver;
+    private final WebDriverWait webDriverWait;
+    private final WebElement listAttributesChooserElement;
+    private ListAttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement listAttributesChooserElement) {
+        this.driver = driver;
+        this.webDriverWait = webDriverWait;
+        this.listAttributesChooserElement = listAttributesChooserElement;
+    }
 
     public static ListAttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
         WebElement listAttributesChooser = driver.findElement(By.xpath(X_PATH_ID));
         return new ListAttributesChooser(driver, webDriverWait, listAttributesChooser);
-    }
-
-    private final WebDriver driver;
-    private final WebDriverWait webDriverWait;
-    private final WebElement listAttributesChooserElement;
-
-    private ListAttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement listAttributesChooserElement) {
-        this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.listAttributesChooserElement = listAttributesChooserElement;
     }
 
     public void enableAttributeById(String attributeId) {
@@ -57,14 +55,6 @@ public class ListAttributesChooser {
 
     public void dragColumnToTarget(String sourceId, String targetId) {
         DragAndDrop.dragAndDrop(getDraggableElement(sourceId), getDropElement(targetId), driver);
-    }
-
-    private DragAndDrop.DraggableElement getDraggableElement(String columnId) {
-        return new DragAndDrop.DraggableElement(dragOrDropElement(columnId));
-    }
-
-    private DragAndDrop.DropElement getDropElement(String columnId) {
-        return new DragAndDrop.DropElement(dragOrDropElement(columnId));
     }
 
     public void clickApply() {
@@ -99,6 +89,14 @@ public class ListAttributesChooser {
         } else {
             log.debug("Selected layout is: List");
         }
+    }
+
+    private DragAndDrop.DraggableElement getDraggableElement(String columnId) {
+        return new DragAndDrop.DraggableElement(dragOrDropElement(columnId));
+    }
+
+    private DragAndDrop.DropElement getDropElement(String columnId) {
+        return new DragAndDrop.DropElement(dragOrDropElement(columnId));
     }
 
     private WebElement getAttribute(String attributeId) {

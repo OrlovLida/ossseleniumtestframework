@@ -29,17 +29,17 @@ public class MessageListWidget {
     private final WebDriverWait wait;
     private final WebElement msgListWidgetElement;
 
+    private MessageListWidget(WebDriver driver, WebDriverWait wait, WebElement messageListWidget) {
+        this.driver = driver;
+        this.wait = wait;
+        this.msgListWidgetElement = messageListWidget;
+    }
+
     public static MessageListWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, MESSAGE_LIST_WIDGET_XPATH);
         WebElement messageListWidget = driver.findElement(By.xpath(MESSAGE_LIST_WIDGET_XPATH));
 
         return new MessageListWidget(driver, wait, messageListWidget);
-    }
-
-    private MessageListWidget(WebDriver driver, WebDriverWait wait, WebElement messageListWidget) {
-        this.driver = driver;
-        this.wait = wait;
-        this.msgListWidgetElement = messageListWidget;
     }
 
     public boolean hasNoData() {
@@ -74,15 +74,14 @@ public class MessageListWidget {
 
     public static class MessageItem {
 
-        private final WebElement messageElement;
-        private final WebDriver driver;
-        private final WebDriverWait wait;
-
         private static final String MESSAGE_BUTTONS_XPATH = ".//a[contains(@class, 'btn-xs') and contains(text(), '%s')]";
         private static final String KEBAB_XPATH = ".//a[contains(@class, 'btn-xs')]/i[@class='OSSIcon ossfont-kebab-menu']";
         private static final String BADGE_XPATH = ".//span[contains(@class, 'badge')]";
         private static final String MESSAGE_TEXT_XPATH = ".//div[@class='OSSRichText']";
         private static final String COMMENT_INFO_ROW_XPATH = "//div[@class='im-message-list__message--comment__header__info__row']";
+        private final WebElement messageElement;
+        private final WebDriver driver;
+        private final WebDriverWait wait;
 
         private MessageItem(WebDriver driver, WebDriverWait wait, WebElement messageItem) {
             this.driver = driver;
@@ -92,10 +91,6 @@ public class MessageListWidget {
 
         public static MessageItem create(WebDriver driver, WebDriverWait wait, WebElement messageItem) {
             return new MessageItem(driver, wait, messageItem);
-        }
-
-        public enum MessageType {
-            COMMENT, NOTIFICATION
         }
 
         public String getMessageType() {
@@ -118,13 +113,6 @@ public class MessageListWidget {
         public void clickForward() {
             clickOnKebabMenu();
             DropdownList.create(driver, wait).selectOption("Forward");
-        }
-
-        private void clickOnKebabMenu() {
-            WebElement kebab = messageElement.findElement(By.xpath(KEBAB_XPATH));
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript("arguments[0].scrollIntoView(true);", kebab);
-            js.executeScript("arguments[0].click();", kebab);
         }
 
         public String getBadgeText(int index) {
@@ -160,6 +148,17 @@ public class MessageListWidget {
                 }
             }
             return "message is not a comment";
+        }
+
+        private void clickOnKebabMenu() {
+            WebElement kebab = messageElement.findElement(By.xpath(KEBAB_XPATH));
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].scrollIntoView(true);", kebab);
+            js.executeScript("arguments[0].click();", kebab);
+        }
+
+        public enum MessageType {
+            COMMENT, NOTIFICATION
         }
     }
 }

@@ -21,24 +21,25 @@ public class InlineForm {
     private final WebDriverWait wait;
     private final WebElement webElement;
 
-    public static InlineForm create(WebDriver driver, WebDriverWait wait){
+    private InlineForm(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
+        this.webElement = driver.findElement(By.className("stickyFormContainer"));
+    }
+
+    public static InlineForm create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, "//div[contains(@class,'stickyFormContainer')]");
-        return new InlineForm(driver,wait);
+        return new InlineForm(driver, wait);
 
     }
-    private InlineForm(WebDriver driver, WebDriverWait wait){
-        this.driver=driver;
-        this.wait=wait;
-        this.webElement= driver.findElement(By.className("stickyFormContainer"));
-    }
+
     public void clickButtonByLabel(String label) {
-        WebElement button = this.webElement.findElement(By.xpath(".//a[contains(text(),'"+label+"')]"));
+        WebElement button = this.webElement.findElement(By.xpath(".//a[contains(text(),'" + label + "')]"));
         button.click();
     }
 
-    public Input getComponent(String componentId, Input.ComponentType componentType){
-      return   ComponentFactory.create(componentId, componentType, this.driver, this.wait);
+    public Input getComponent(String componentId, Input.ComponentType componentType) {
+        return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
-
 
 }

@@ -21,16 +21,16 @@ public class GisMap implements GisMapInterface {
     private WebDriverWait wait;
     private WebElement gisMapElement;
 
-    public static GisMapInterface create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, GIS_MAP_XPATH);
-        WebElement gisMap = driver.findElement(By.xpath(GIS_MAP_XPATH));
-        return new GisMap(driver, wait, gisMap);
-    }
-
     private GisMap(WebDriver driver, WebDriverWait wait, WebElement gisMapElement) {
         this.driver = driver;
         this.wait = wait;
         this.gisMapElement = gisMapElement;
+    }
+
+    public static GisMapInterface create(WebDriver driver, WebDriverWait wait) {
+        DelayUtils.waitByXPath(wait, GIS_MAP_XPATH);
+        WebElement gisMap = driver.findElement(By.xpath(GIS_MAP_XPATH));
+        return new GisMap(driver, wait, gisMap);
     }
 
     @Override

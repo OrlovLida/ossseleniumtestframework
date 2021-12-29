@@ -1,21 +1,18 @@
 package com.oss.framework.components.common;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Widget;
+
 public class TimePeriodChooser extends Widget {
 
     private final String componentId;
-
-    public enum TimePeriodChooserOption {
-        PERIOD, RANGE, LAST
-    }
 
     private TimePeriodChooser(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement webElement) {
         super(driver, webDriverWait, widgetId, webElement);
@@ -73,6 +70,10 @@ public class TimePeriodChooser extends Widget {
     private String createChooseOptionXPath(String option) {
 
         return "//div[contains(@class,'main-options common-options')]//label[@for='time-period-options_" + option + "']";
+    }
+
+    public enum TimePeriodChooserOption {
+        PERIOD, RANGE, LAST
     }
 
 }

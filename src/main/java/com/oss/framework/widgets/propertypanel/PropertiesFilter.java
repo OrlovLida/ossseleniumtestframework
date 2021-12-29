@@ -38,14 +38,6 @@ public class PropertiesFilter {
         return new PropertiesFilter(driver, wait);
     }
 
-    private WebElement getFilterIcon() {
-        return this.webElement.findElement(By.xpath(FILTER_BTN_PATH));
-    }
-
-    private WebElement getSwitcher() {
-        return this.webElement.findElement(By.xpath(SWITCHER_XPATH));
-    }
-
     public AttributesChooser clickOnFilterIcon() {
         getFilterIcon().click();
         return AttributesChooser.create(driver, wait);
@@ -105,5 +97,13 @@ public class PropertiesFilter {
 
     public void clickCheckbox(String chbxLabel) {
         propertiesFilterPanel.clickCheckbox(chbxLabel);
+    }
+
+    private WebElement getFilterIcon() {
+        return this.webElement.findElement(By.xpath(FILTER_BTN_PATH));
+    }
+
+    private WebElement getSwitcher() {
+        return this.webElement.findElement(By.xpath(SWITCHER_XPATH));
     }
 }

@@ -6,13 +6,13 @@
  */
 package com.oss.framework.prompts;
 
-import com.oss.framework.utils.CSSUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 /**
@@ -23,12 +23,10 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     public static final String PROCEED = "Proceed";
     public static final String DELETE = "Delete";
     public static final String YES = "Yes";
-
+    private static final String BUTTON_BY_DATA_ATTRIBUTE_NAME = "//button[@" + CSSUtils.TEST_ID + "='%s']";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement prompt;
-
-    private static final String BUTTON_BY_DATA_ATTRIBUTE_NAME = "//button[@"+ CSSUtils.TEST_ID +"='%s']";
 
     private ConfirmationBox(WebDriver driver, WebDriverWait wait, WebElement prompt) {
         this.driver = driver;

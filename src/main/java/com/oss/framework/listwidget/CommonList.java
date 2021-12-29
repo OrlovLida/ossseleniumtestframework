@@ -42,20 +42,15 @@ public class CommonList {
     private final WebDriverWait wait;
     private final String id;
 
-    public static CommonList create(WebDriver driver, WebDriverWait wait, String commonListAppId) {
-        DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + commonListAppId + "')]"));
-        return new CommonList(driver, wait, commonListAppId);
-    }
-
     private CommonList(WebDriver driver, WebDriverWait wait, String commonListAppId) {
         this.driver = driver;
         this.wait = wait;
         this.id = commonListAppId;
     }
 
-    private WebElement getCommonList() {
-        DelayUtils.waitByXPath(wait, "//div[contains(@" + CSSUtils.TEST_ID + ", '" + id + "')]");
-        return driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']"));
+    public static CommonList create(WebDriver driver, WebDriverWait wait, String commonListAppId) {
+        DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + commonListAppId + "')]"));
+        return new CommonList(driver, wait, commonListAppId);
     }
 
     public void callAction(String actionId) {
@@ -148,22 +143,6 @@ public class CommonList {
                 .orElseThrow(() -> new RuntimeException(PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION));
     }
 
-    private List<Row> createRows() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        List<WebElement> header = getCommonList().findElements(By.xpath(HEADERS_XPATH));
-        int size = header.size();
-        if (size != 0) {
-            ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, header.get(size - 1));
-        }
-        List<String> headers = header.stream()
-                .map(WebElement::getText)
-                .collect(Collectors.toList());
-
-        return getCommonList().findElements(By.xpath(LIST_ELEMENT_XPATH))
-                .stream().map(row -> new Row(driver, wait, row, headers)).collect(Collectors.toList());
-
-    }
-
     public List<Category> createCategories() {
         DelayUtils.waitForNestedElements(wait, getCommonList(), CATEGORY_LIST_XPATH);
         List<WebElement> categories = getCommonList().findElements(By.xpath(CATEGORY_LIST_XPATH));
@@ -180,6 +159,32 @@ public class CommonList {
         getAdvanceSearch().clickApply();
     }
 
+    public List<String> getHeaders() {
+        return getCommonList().findElements(By.xpath(HEADERS_XPATH)).stream()
+                .map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    private WebElement getCommonList() {
+        DelayUtils.waitByXPath(wait, "//div[contains(@" + CSSUtils.TEST_ID + ", '" + id + "')]");
+        return driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']"));
+    }
+
+    private List<Row> createRows() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        List<WebElement> header = getCommonList().findElements(By.xpath(HEADERS_XPATH));
+        int size = header.size();
+        if (size != 0) {
+            ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, header.get(size - 1));
+        }
+        List<String> headers = header.stream()
+                .map(WebElement::getText)
+                .collect(Collectors.toList());
+
+        return getCommonList().findElements(By.xpath(LIST_ELEMENT_XPATH))
+                .stream().map(row -> new Row(driver, wait, row, headers)).collect(Collectors.toList());
+
+    }
+
     private void openAdvancedSearch() {
         getAdvanceSearch().openSearchPanel();
     }
@@ -191,11 +196,6 @@ public class CommonList {
     private void setFilterContains(String componentId, Input.ComponentType componentType, String value) {
         Input input = getAdvanceSearch().getComponent(componentId, componentType);
         input.setSingleStringValue(value);
-    }
-
-    public List<String> getHeaders() {
-        return getCommonList().findElements(By.xpath(HEADERS_XPATH)).stream()
-                .map(WebElement::getText).collect(Collectors.toList());
     }
 
     public static class Row {
@@ -328,13 +328,13 @@ public class CommonList {
             DelayUtils.waitForPageToLoad(driver, wait);
         }
 
-        private boolean isExpanded() {
-            return !categoryElement.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
-        }
-
         public void selectCategory() {
             Actions actions = new Actions(driver);
             actions.moveToElement(categoryElement).click().build().perform();
+        }
+
+        private boolean isExpanded() {
+            return !categoryElement.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
         }
 
     }

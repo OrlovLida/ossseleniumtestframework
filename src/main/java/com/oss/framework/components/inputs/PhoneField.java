@@ -12,14 +12,6 @@ public class PhoneField extends Input {
 
     private static final String INPUT = ".//input";
 
-    static PhoneField create(WebDriver driver, WebDriverWait wait, String phoneFieldId) {
-        return new PhoneField(driver, wait, phoneFieldId);
-    }
-
-    static PhoneField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String phoneFieldId) {
-        return new PhoneField(parent, driver, wait, phoneFieldId);
-    }
-
     private PhoneField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
@@ -28,10 +20,12 @@ public class PhoneField extends Input {
         super(parent, driver, wait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        WebElement input = webElement.findElement(By.xpath(INPUT));
-        input.sendKeys(value.getStringValue());
+    static PhoneField create(WebDriver driver, WebDriverWait wait, String phoneFieldId) {
+        return new PhoneField(driver, wait, phoneFieldId);
+    }
+
+    static PhoneField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String phoneFieldId) {
+        return new PhoneField(parent, driver, wait, phoneFieldId);
     }
 
     @Override
@@ -43,6 +37,12 @@ public class PhoneField extends Input {
     @Override
     public Data getValue() {
         return Data.createSingleData(webElement.findElement(By.xpath(INPUT)).getAttribute("value"));
+    }
+
+    @Override
+    public void setValue(Data value) {
+        WebElement input = webElement.findElement(By.xpath(INPUT));
+        input.sendKeys(value.getStringValue());
     }
 
     @Override

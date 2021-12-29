@@ -26,43 +26,20 @@ public class PaginationComponent {
     private final WebDriverWait wait;
     private final WebElement paginationComponentElement;
 
-    public static PaginationComponent createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
-        WebElement paginationComponent = parent.findElement(By.xpath(PAGINATION_XPATH));
-        return new PaginationComponent(driver, wait, paginationComponent);
-    }
-
     private PaginationComponent(WebDriver driver, WebDriverWait wait, WebElement paginationComponentElement) {
         this.driver = driver;
         this.wait = wait;
         this.paginationComponentElement = paginationComponentElement;
     }
 
-    private String getRageOfRows() {
-        return this.paginationComponentElement.findElement(By.cssSelector(RAGE_OF_ROWS_SELECTOR)).getText();
+    public static PaginationComponent createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
+        WebElement paginationComponent = parent.findElement(By.xpath(PAGINATION_XPATH));
+        return new PaginationComponent(driver, wait, paginationComponent);
     }
 
     public int getStep() {
         String step = this.paginationComponentElement.findElement(By.xpath(PAGE_SIZE_OPTIONS_VALUE_XPATH)).getText();
         return Integer.parseInt(step);
-    }
-
-    private boolean isBtnEnabled(WebElement element) {
-        String cssAttribute = "class";
-        String classDisabled = "disabled";
-
-        return !element.getAttribute(cssAttribute).contains(classDisabled);
-    }
-
-    private WebElement getNextPageBtn() {
-        return this.paginationComponentElement.findElement(By.cssSelector(NEXT_PAGE_SELECTOR));
-    }
-
-    private WebElement getPrevPageBtn() {
-        return this.paginationComponentElement.findElement(By.cssSelector(PREV_PAGE_SELECTOR));
-    }
-
-    private WebElement getFirstPageBtn() {
-        return this.paginationComponentElement.findElement(By.cssSelector(FIRST_PAGE_SELECTOR));
     }
 
     public boolean isNextPageBtnEnabled() {
@@ -114,6 +91,29 @@ public class PaginationComponent {
     public void changeRowsCount(int pageSizeOption) {
         openSizeOption();
         getPageOption(pageSizeOption).click();
+    }
+
+    private String getRageOfRows() {
+        return this.paginationComponentElement.findElement(By.cssSelector(RAGE_OF_ROWS_SELECTOR)).getText();
+    }
+
+    private boolean isBtnEnabled(WebElement element) {
+        String cssAttribute = "class";
+        String classDisabled = "disabled";
+
+        return !element.getAttribute(cssAttribute).contains(classDisabled);
+    }
+
+    private WebElement getNextPageBtn() {
+        return this.paginationComponentElement.findElement(By.cssSelector(NEXT_PAGE_SELECTOR));
+    }
+
+    private WebElement getPrevPageBtn() {
+        return this.paginationComponentElement.findElement(By.cssSelector(PREV_PAGE_SELECTOR));
+    }
+
+    private WebElement getFirstPageBtn() {
+        return this.paginationComponentElement.findElement(By.cssSelector(FIRST_PAGE_SELECTOR));
     }
 
     private void openSizeOption() {

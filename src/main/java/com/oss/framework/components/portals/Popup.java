@@ -14,14 +14,14 @@ public class Popup {
     private final WebDriverWait webDriverWait;
     private final WebElement webElement;
 
-    public static Popup create(WebDriver webDriver, WebDriverWait webDriverWait) {
-        return new Popup(webDriver, webDriverWait);
-    }
-
     private Popup(WebDriver webDriver, WebDriverWait webDriverWait) {
         this.driver = webDriver;
         this.webDriverWait = webDriverWait;
         this.webElement = this.driver.findElement(By.cssSelector(POPUP_CSS_SELECTOR));
+    }
+
+    public static Popup create(WebDriver webDriver, WebDriverWait webDriverWait) {
+        return new Popup(webDriver, webDriverWait);
     }
 
     public String getPopupTitle() {

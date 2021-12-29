@@ -42,6 +42,13 @@ public class TableComponent {
 
     private PaginationComponent paginationComponent;
 
+    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String widgetId) {
+        this.driver = driver;
+        this.webDriverWait = webDriverWait;
+        this.webElement = component;
+        this.widgetId = widgetId;
+    }
+
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         DelayUtils.waitByXPath(webDriverWait, getTableComponentPath(widgetId));
         WebElement webElement = driver.findElement(By.xpath(getTableComponentPath(widgetId)));
@@ -50,13 +57,6 @@ public class TableComponent {
 
     private static String getTableComponentPath(String widgetId) {
         return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'" + TABLE_COMPONENT_CLASS + "')]";
-    }
-
-    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String widgetId) {
-        this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.webElement = component;
-        this.widgetId = widgetId;
     }
 
     public void selectRow(int index) {
@@ -173,14 +173,6 @@ public class TableComponent {
         DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader.getDropElement(), driver);
     }
 
-    private CustomScrolls getCustomScrolls() {
-        return CustomScrolls.create(driver, webDriverWait, webElement);
-    }
-
-    private WebElement getColumnsManagement() {
-        return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" + "']"));
-    }
-
     public List<String> getColumnIds() {
         return getHeaders().stream()
                 .map(Header::getColumnId).collect(Collectors.toList());
@@ -197,6 +189,14 @@ public class TableComponent {
             paginationComponent = PaginationComponent.createFromParent(this.driver, this.webDriverWait, parent);
         }
         return paginationComponent;
+    }
+
+    private CustomScrolls getCustomScrolls() {
+        return CustomScrolls.create(driver, webDriverWait, webElement);
+    }
+
+    private WebElement getColumnsManagement() {
+        return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" + "']"));
     }
 
     private Row getRow(int index) {
@@ -274,6 +274,14 @@ public class TableComponent {
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
 
+        private Header(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent, String columnId, String label) {
+            this.driver = driver;
+            this.webDriverWait = webDriverWait;
+            this.tableComponent = tableComponent;
+            this.columnId = columnId;
+            this.label = label;
+        }
+
         private static Header createHeader(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent, String columnId) {
             WebElement webElement = getHeader(tableComponent, columnId);
             String label = webElement.getText();
@@ -289,22 +297,6 @@ public class TableComponent {
 
         private static WebElement getHeader(WebElement parent, String columnId) {
             return parent.findElement(By.xpath(".//div[contains(@class, '" + HEADER_CLASS + "') and @data-col='" + columnId + "']"));
-        }
-
-        private Header(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent, String columnId, String label) {
-            this.driver = driver;
-            this.webDriverWait = webDriverWait;
-            this.tableComponent = tableComponent;
-            this.columnId = columnId;
-            this.label = label;
-        }
-
-        private String getResizeXpath() {
-            return String.format(RESIZE_XPATH, columnId);
-        }
-
-        private String getSettingsXpath() {
-            return String.format(SETTINGS_XPATH, columnId);
         }
 
         public void resize(int offset) {
@@ -354,6 +346,11 @@ public class TableComponent {
         }
 
         @Override
+        public int hashCode() {
+            return Objects.hashCode(columnId);
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o)
                 return true;
@@ -363,9 +360,12 @@ public class TableComponent {
             return Objects.equal(columnId, header.columnId);
         }
 
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(columnId);
+        private String getResizeXpath() {
+            return String.format(RESIZE_XPATH, columnId);
+        }
+
+        private String getSettingsXpath() {
+            return String.format(SETTINGS_XPATH, columnId);
         }
     }
 
@@ -383,15 +383,15 @@ public class TableComponent {
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
 
-        private static HeaderSettings createHeaderSettings(WebDriver driver, WebDriverWait webDriverWait) {
-            WebElement webElement = driver.findElement(By.xpath(COLUMN_PANEL_SETTINGS_XPATH));
-            return new HeaderSettings(driver, webDriverWait, webElement);
-        }
-
         private HeaderSettings(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
             this.driver = driver;
             this.webDriverWait = webDriverWait;
             this.webElement = webElement;
+        }
+
+        private static HeaderSettings createHeaderSettings(WebDriver driver, WebDriverWait webDriverWait) {
+            WebElement webElement = driver.findElement(By.xpath(COLUMN_PANEL_SETTINGS_XPATH));
+            return new HeaderSettings(driver, webDriverWait, webElement);
         }
 
         private List<WebElement> sortButtons() {
@@ -441,6 +441,12 @@ public class TableComponent {
         private final int index;
         private final String columnId;
 
+        private Cell(WebElement cellElement, int index, String columnId) {
+            this.cellElement = cellElement;
+            this.index = index;
+            this.columnId = columnId;
+        }
+
         private static boolean hasCheckboxCell(WebElement tableComponent, int index) {
             return tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "' and @data-col='" + CHECKBOX_COLUMN_ID + "']"))
                     .stream().findAny().isPresent();
@@ -472,12 +478,6 @@ public class TableComponent {
             return new Cell(randomCell, index, columnId);
         }
 
-        private Cell(WebElement cellElement, int index, String columnId) {
-            this.cellElement = cellElement;
-            this.index = index;
-            this.columnId = columnId;
-        }
-
         public int getSize() {
             return (int) Math.round(getWidth());
         }
@@ -504,13 +504,9 @@ public class TableComponent {
             cellElement.click();
         }
 
-        private boolean isSelected() {
-            List<String> classes = CSSUtils.getAllClasses(cellElement);
-            return classes.contains(SELECTED_CLASS);
-        }
-
-        private boolean isCheckBox() {
-            return CHECKBOX_COLUMN_ID.equals(columnId);
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(index, columnId);
         }
 
         @Override
@@ -523,9 +519,13 @@ public class TableComponent {
             return Objects.equal(index, cell1.index) && Objects.equal(columnId, cell1.columnId);
         }
 
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(index, columnId);
+        private boolean isSelected() {
+            List<String> classes = CSSUtils.getAllClasses(cellElement);
+            return classes.contains(SELECTED_CLASS);
+        }
+
+        private boolean isCheckBox() {
+            return CHECKBOX_COLUMN_ID.equals(columnId);
         }
     }
 
@@ -543,16 +543,27 @@ public class TableComponent {
             this.index = index;
         }
 
+        public String getColumnValue(String columnId) {
+            Cell cell = Cell.createFromParent(this.tableComponent, index, columnId);
+            return cell.getText();
+        }
+
+        @Override
+        public boolean isSelected() {
+            Cell cell = Cell.createRandomCell(this.tableComponent, index);
+            return cell.isSelected();
+        }
+
+        @Override
+        public int getIndex() {
+            return this.index;
+        }
+
         public void clickRow() {
             WebElement randomCell =
                     this.tableComponent.findElements(By.xpath(".//div[@data-row='" + this.index + "']"))
                             .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
             randomCell.click();
-        }
-
-        public String getColumnValue(String columnId) {
-            Cell cell = Cell.createFromParent(this.tableComponent, index, columnId);
-            return cell.getText();
         }
 
         public void selectRow() {
@@ -571,17 +582,6 @@ public class TableComponent {
             if (isSelected()) {
                 clickRow();
             }
-        }
-
-        @Override
-        public boolean isSelected() {
-            Cell cell = Cell.createRandomCell(this.tableComponent, index);
-            return cell.isSelected();
-        }
-
-        @Override
-        public int getIndex() {
-            return this.index;
         }
 
         public void callAction(String groupId, String actionId) {

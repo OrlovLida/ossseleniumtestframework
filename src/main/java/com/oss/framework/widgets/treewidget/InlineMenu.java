@@ -16,14 +16,14 @@ public class InlineMenu {
     private final WebElement webElement;
     private final WebDriverWait wait;
 
-    public static InlineMenu create(WebElement webElement, WebDriver driver, WebDriverWait wait) {
-        return new InlineMenu(webElement, driver, wait);
-    }
-
     private InlineMenu(WebElement webElement, WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
         this.webElement = webElement;
+    }
+
+    public static InlineMenu create(WebElement webElement, WebDriver driver, WebDriverWait wait) {
+        return new InlineMenu(webElement, driver, wait);
     }
 
     public void callAction(String actionId) {

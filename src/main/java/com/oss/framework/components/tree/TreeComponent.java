@@ -31,21 +31,19 @@ public class TreeComponent {
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
 
     private static final int LEFT_MARGIN_IN_PX = 24;
+    private final WebDriver driver;
+    private final WebDriverWait webDriverWait;
+    private final WebElement treeComponentElement;
+    private TreeComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement treeComponentElement) {
+        this.driver = driver;
+        this.webDriverWait = webDriverWait;
+        this.treeComponentElement = treeComponentElement;
+    }
 
     public static TreeComponent create(WebDriver driver, WebDriverWait webDriverWait, WebElement parent) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         WebElement treeComponent = parent.findElement(By.className(TREE_CLASS));
         return new TreeComponent(driver, webDriverWait, treeComponent);
-    }
-
-    private final WebDriver driver;
-    private final WebDriverWait webDriverWait;
-    private final WebElement treeComponentElement;
-
-    private TreeComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement treeComponentElement) {
-        this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.treeComponentElement = treeComponentElement;
     }
 
     public void expandNodeByPath(String path) {
@@ -66,31 +64,6 @@ public class TreeComponent {
     public Node getNodeByLabelsPath(String labels) {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(labels));
         return getNodeByPath(pathElements, true);
-    }
-
-    private Node getNodeByPath(List<String> pathElements, boolean isLabel) {
-        StringBuilder currentPath = new StringBuilder();
-        Node node = null;
-        for (int i = 0; i < pathElements.size(); i++) {
-            currentPath.append(pathElements.get(i));
-            String tempPath = currentPath.toString();
-            List<Node> nodes = getVisibleNodes();
-
-            if (isLabel) {
-                node = nodes.stream().filter(n -> n.getPathLabel().equals(tempPath))
-                        .findFirst().orElseThrow(() -> new RuntimeException("Cant find node: " + tempPath));
-            } else {
-                node = nodes.stream().filter(n -> n.getPath().equals(tempPath))
-                        .findFirst().orElseThrow(() -> new RuntimeException("Cant find node: " + tempPath));
-            }
-
-            if (i != pathElements.size() - 1) {
-                node.expandNode();
-                currentPath.append(".");
-            }
-        }
-
-        return node;
     }
 
     public List<Node> getVisibleNodes() {
@@ -118,6 +91,31 @@ public class TreeComponent {
                 .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
     }
 
+    private Node getNodeByPath(List<String> pathElements, boolean isLabel) {
+        StringBuilder currentPath = new StringBuilder();
+        Node node = null;
+        for (int i = 0; i < pathElements.size(); i++) {
+            currentPath.append(pathElements.get(i));
+            String tempPath = currentPath.toString();
+            List<Node> nodes = getVisibleNodes();
+
+            if (isLabel) {
+                node = nodes.stream().filter(n -> n.getPathLabel().equals(tempPath))
+                        .findFirst().orElseThrow(() -> new RuntimeException("Cant find node: " + tempPath));
+            } else {
+                node = nodes.stream().filter(n -> n.getPath().equals(tempPath))
+                        .findFirst().orElseThrow(() -> new RuntimeException("Cant find node: " + tempPath));
+            }
+
+            if (i != pathElements.size() - 1) {
+                node.expandNode();
+                currentPath.append(".");
+            }
+        }
+
+        return node;
+    }
+
     private String getNodeClassPath() {
         return "//div[@class='" + NODE_CLASS + "']";
     }
@@ -131,11 +129,6 @@ public class TreeComponent {
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
-
-        private Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement node) {
-            // TODO: add path to equals
-            return new Node(driver, webDriverWait, node);
-        }
 
         private Node(WebDriver driver, WebDriverWait webDriverWait, WebElement nodeElement) {
             this.driver = driver;
@@ -232,6 +225,11 @@ public class TreeComponent {
         public AdvancedSearch openAdvancedSearch() {
             clickFilter();
             return AdvancedSearch.createById(driver, webDriverWait, ADVANCED_SEARCH_PANEL_ID);
+        }
+
+        private Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement node) {
+            // TODO: add path to equals
+            return new Node(driver, webDriverWait, node);
         }
 
         private void clickFilter() {

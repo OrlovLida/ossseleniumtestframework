@@ -1,14 +1,15 @@
 package com.oss.framework.components.portals;
 
-import com.oss.framework.components.inputs.ComponentFactory;
-import com.oss.framework.components.inputs.Input;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.components.inputs.ComponentFactory;
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 
 public class PopupV2 {
 
@@ -53,8 +54,9 @@ public class PopupV2 {
     public Input getComponent(String componentId, Input.ComponentType componentType) {
         return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
-    public void clickButtonByLabel(String label){
-        DelayUtils.waitForNestedElements(this.wait,this.webElement,".//a[contains(text(),'" + label + "')]");
+
+    public void clickButtonByLabel(String label) {
+        DelayUtils.waitForNestedElements(this.wait, this.webElement, ".//a[contains(text(),'" + label + "')]");
         WebElement button = wait.until(ExpectedConditions
                 .elementToBeClickable(this.webElement.findElement(By.xpath(".//a[contains(text(),'" + label + "')]"))));
         button.click();

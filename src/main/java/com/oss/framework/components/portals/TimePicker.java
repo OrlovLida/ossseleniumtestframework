@@ -23,30 +23,17 @@ public class TimePicker {
     private final By downButton = By.xpath(".//div[contains(@class,'navButton--less')]");
     private final By value = By.xpath(".//div[@class='timePicker-value']");
 
-    public static TimePicker create(WebDriver driver, WebDriverWait webDriverWait) {
-        String timePickerXpath = "//div[@" + CSSUtils.TEST_ID + "='dateTimePicker']";
-        DelayUtils.waitByXPath(webDriverWait, timePickerXpath);
-        WebElement timePicker = driver.findElement(By.xpath(timePickerXpath));
-        return new TimePicker(driver, webDriverWait, timePicker);
-    }
-
     public TimePicker(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.webElement = webElement;
         this.webDriverWait = webDriverWait;
         this.driver = driver;
     }
 
-    private WebElement hoursContainer() {
-        return driver.findElement(this.hoursContainer);
-    }
-
-    private WebElement minutesContainer() {
-        return driver.findElement(this.minutesContainer);
-    }
-
-    private WebElement secondsContainer() {
-        return driver.findElements(this.secondsContainer).stream().findFirst()
-                .orElseThrow(() -> new RuntimeException("It is not possible provide seconds"));
+    public static TimePicker create(WebDriver driver, WebDriverWait webDriverWait) {
+        String timePickerXpath = "//div[@" + CSSUtils.TEST_ID + "='dateTimePicker']";
+        DelayUtils.waitByXPath(webDriverWait, timePickerXpath);
+        WebElement timePicker = driver.findElement(By.xpath(timePickerXpath));
+        return new TimePicker(driver, webDriverWait, timePicker);
     }
 
     public void chooseTime(String time) {
@@ -66,10 +53,6 @@ public class TimePicker {
 
     }
 
-    private int getContainerValue(WebElement container) {
-        return Integer.parseInt(container.findElement(value).getText());
-    }
-
     public void pickInContainer(WebElement container, int value) {
         WebElement upButtonElement = container.findElement(this.upButton);
         WebElement downButtonElement = container.findElement(this.downButton);
@@ -85,6 +68,23 @@ public class TimePicker {
                 downButtonElement.click();
             }
         }
+    }
+
+    private WebElement hoursContainer() {
+        return driver.findElement(this.hoursContainer);
+    }
+
+    private WebElement minutesContainer() {
+        return driver.findElement(this.minutesContainer);
+    }
+
+    private WebElement secondsContainer() {
+        return driver.findElements(this.secondsContainer).stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("It is not possible provide seconds"));
+    }
+
+    private int getContainerValue(WebElement container) {
+        return Integer.parseInt(container.findElement(value).getText());
     }
 
 }

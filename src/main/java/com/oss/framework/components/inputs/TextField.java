@@ -14,14 +14,6 @@ public class TextField extends Input {
 
     private static final String INPUT = ".//input";
 
-    static TextField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new TextField(driver, wait, componentId);
-    }
-
-    static TextField create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new TextField(parent, driver, wait, componentId);
-    }
-
     private TextField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
@@ -30,14 +22,12 @@ public class TextField extends Input {
         super(parent, driver, wait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        WebElement input = webElement.findElement(By.xpath(INPUT));
-        Actions action = new Actions(driver);
-        action.moveToElement(input).build().perform();
-        clear();
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        input.sendKeys(value.getStringValue());
+    static TextField create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new TextField(driver, wait, componentId);
+    }
+
+    static TextField create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new TextField(parent, driver, wait, componentId);
     }
 
     @Override
@@ -55,13 +45,23 @@ public class TextField extends Input {
     }
 
     @Override
+    public void setValue(Data value) {
+        WebElement input = webElement.findElement(By.xpath(INPUT));
+        Actions action = new Actions(driver);
+        action.moveToElement(input).build().perform();
+        clear();
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        input.sendKeys(value.getStringValue());
+    }
+
+    @Override
     public void clear() {
         WebElement input = webElement.findElement(By.xpath(INPUT));
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }
 
-    public boolean isMandatory(){
+    public boolean isMandatory() {
         return !webElement.findElements(By.xpath(".//span[@class='asterisk']")).isEmpty();
     }
 }

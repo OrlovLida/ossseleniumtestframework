@@ -28,16 +28,16 @@ public class FiltersPanel {
     private final WebDriverWait wait;
     private final WebElement filterPanel;
 
-    static FiltersPanel create(WebDriver driver, WebDriverWait webDriverWait) {
-        WebElement filterPanel = driver.findElement(By.xpath(FILTER_PANEL_XPATH));
-
-        return new FiltersPanel(driver, webDriverWait, filterPanel);
-    }
-
     private FiltersPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement filterPanel) {
         this.driver = driver;
         this.wait = webDriverWait;
         this.filterPanel = filterPanel;
+    }
+
+    static FiltersPanel create(WebDriver driver, WebDriverWait webDriverWait) {
+        WebElement filterPanel = driver.findElement(By.xpath(FILTER_PANEL_XPATH));
+
+        return new FiltersPanel(driver, webDriverWait, filterPanel);
     }
 
     public void clearFilters() {

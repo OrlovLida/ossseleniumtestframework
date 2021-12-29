@@ -1,39 +1,16 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.utils.CSSUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.oss.framework.utils.CSSUtils;
+
 public class Button {
 
     private final WebElement webElement;
     private final WebDriver webDriver;
-
-    public static Button create(WebDriver driver, String text) {
-        return new Button(driver, text);
-    }
-
-    public static Button create(WebDriver driver, String text, String selector) {
-        return new Button(driver, text, selector);
-    }
-
-    public static Button createById(WebDriver driver, String componentId) {
-        return new Button(componentId, driver);
-    }
-
-    public static Button createBySelectorAndId(WebDriver driver, String selector, String componentId) {
-        return new Button(selector, componentId, driver);
-    }
-
-    public static Button createByIcon(WebDriver driver, String iconClass, String buttonClass) {
-        return new Button(iconClass, driver, buttonClass);
-    }
-
-    public static Button createByXpath(String componentId, String webElement, String selector, WebDriver driver) {
-        return new Button(componentId, webElement, selector, driver);
-    }
 
     private Button(WebDriver driver, String text) {
         this.webDriver = driver;
@@ -63,6 +40,30 @@ public class Button {
     private Button(String componentId, String webElement, String selector, WebDriver driver) {
         this.webDriver = driver;
         this.webElement = driver.findElement(By.xpath("//" + webElement + "[@" + selector + "='" + componentId + "']"));
+    }
+
+    public static Button create(WebDriver driver, String text) {
+        return new Button(driver, text);
+    }
+
+    public static Button create(WebDriver driver, String text, String selector) {
+        return new Button(driver, text, selector);
+    }
+
+    public static Button createById(WebDriver driver, String componentId) {
+        return new Button(componentId, driver);
+    }
+
+    public static Button createBySelectorAndId(WebDriver driver, String selector, String componentId) {
+        return new Button(selector, componentId, driver);
+    }
+
+    public static Button createByIcon(WebDriver driver, String iconClass, String buttonClass) {
+        return new Button(iconClass, driver, buttonClass);
+    }
+
+    public static Button createByXpath(String componentId, String webElement, String selector, WebDriver driver) {
+        return new Button(componentId, webElement, selector, driver);
     }
 
     public void click() {

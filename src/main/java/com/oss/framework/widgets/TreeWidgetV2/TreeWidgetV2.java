@@ -23,13 +23,13 @@ public class TreeWidgetV2 extends Widget {
     private TreeComponent treeComponent;
     private AdvancedSearch advancedSearch;
 
+    private TreeWidgetV2(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        super(driver, webDriverWait, widgetId);
+    }
+
     public static TreeWidgetV2 create(WebDriver driver, WebDriverWait wait, String widgetId) {
         Widget.waitForWidgetById(wait, widgetId);
         return new TreeWidgetV2(driver, wait, widgetId);
-    }
-
-    private TreeWidgetV2(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
-        super(driver, webDriverWait, widgetId);
     }
 
     public List<Node> getVisibleNodes() {

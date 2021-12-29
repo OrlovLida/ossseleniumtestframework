@@ -16,9 +16,8 @@ import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
 
 public class KpiToolbarPanel extends Widget {
 
-    private static final Logger log = LoggerFactory.getLogger(KpiToolbarPanel.class);
-
     static final String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
+    private static final Logger log = LoggerFactory.getLogger(KpiToolbarPanel.class);
     private static final String APPLY_BUTTON_ID = "apply-button";
     private static final String DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH = ".//div[@data-testid='dropdown_list_type_display_data']";
     private static final String TOP_N_BUTTON_ID = "top-n-button";

@@ -22,19 +22,19 @@ import com.oss.framework.utils.DelayUtils;
  * @author Gabriela Kasza
  */
 public class LoginPanel {
-    private WebDriver driver;
-    private WebDriverWait wait;
     private static final String LANGUAGE_CHOOSER = "language-chooser";
     private static final String LOGIN_BUTTON_ID = "logout-button";
     private static final String ALPHA_MODE_SWITCHER = "alpha-mode-switcher";
-
-    public static LoginPanel create(WebDriver driver, WebDriverWait wait) {
-        return new LoginPanel(driver, wait);
-    }
+    private WebDriver driver;
+    private WebDriverWait wait;
 
     private LoginPanel(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
+    }
+
+    public static LoginPanel create(WebDriver driver, WebDriverWait wait) {
+        return new LoginPanel(driver, wait);
     }
 
     public void chooseLanguage(String language) {
