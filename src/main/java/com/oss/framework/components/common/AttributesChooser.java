@@ -17,6 +17,7 @@ public class AttributesChooser {
     private static final String APPLY_BUTTON_XPATH = ".//a[contains(@class,'btn-primary')]";
     private static final String CANCEL_BUTTON_XPATH = ".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]";
     private static final String DEFAULT_BUTTON_XPATH = ".//div[@class='management-default-button']/a[contains(@class,'btn-flat')]";
+    private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
 
     public static AttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
@@ -26,12 +27,12 @@ public class AttributesChooser {
 
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
-    private final WebElement attributesChooser;
+    private final WebElement attributesChooserElement;
 
-    private AttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement attributesChooser) {
+    private AttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement attributesChooserElement) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
-        this.attributesChooser = attributesChooser;
+        this.attributesChooserElement = attributesChooserElement;
     }
 
     public AttributesChooser enableAttributeByLabel(String attributeLabel, String... path) {
@@ -55,15 +56,15 @@ public class AttributesChooser {
     }
 
     public List<Attribute> getAttributes() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     public List<Attribute> getAttributes(String... path) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     public List<Attribute> getAttributesByLabel(String... pathLabel) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     public void toggleAttributeByLabel(String attributeLabel, int level) {
@@ -77,19 +78,19 @@ public class AttributesChooser {
     }
 
     public void clickApply() {
-        this.attributesChooser.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
+        this.attributesChooserElement.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
     }
 
     public void clickCancel() {
-        this.attributesChooser.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
+        this.attributesChooserElement.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
     }
 
     public void clickDefaultSettings() {
-        this.attributesChooser.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
+        this.attributesChooserElement.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
     }
 
     public void toggleAttributeByLabel(String attributeLabel, String... pathLabel) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     public void toggleAttributeByPath(String path) {
@@ -97,7 +98,7 @@ public class AttributesChooser {
     }
 
     private TreeComponent getTreeComponent() {
-        return TreeComponent.create(this.driver, this.webDriverWait, attributesChooser);
+        return TreeComponent.create(this.driver, this.webDriverWait, attributesChooserElement);
     }
 
     private AttributesChooser disableAttributesByLabel(int level, String... attributeLabels) {

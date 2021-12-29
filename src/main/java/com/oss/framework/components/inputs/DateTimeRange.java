@@ -21,16 +21,6 @@ public class DateTimeRange extends Input {
     private static final String XPATH_MONTH_NEXT_2 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton--next')])[2]";
     private static final String XPATH_MONTH_PREV = "//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton--prev')]";
     private static final String XPATH_MONTH_PREV_1 = "//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton--prev')][1]";
-    private static final String XPATH_MONTH_PREV_2 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton--prev')])[2]";
-    private static final String XPATH_DATE_TODAY = "//div[contains(@class,'DayPicker-Day btn DayPicker-Day--selected DayPicker-Day--today')]";
-    private static final String XPATH_NEXT_MONTH = "//span[@aria-label='Next Month']";
-    private static final String XPATH_PREVIOUS_MONTH = "//span[@aria-label='Previous Month']";
-    private static final String XPATH_YEAR_NEXT = "//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--next')]";
-    private static final String XPATH_YEAR_NEXT_1 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--next')])[1]";
-    private static final String XPATH_YEAR_NEXT_2 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--next')])[2]";
-    private static final String XPATH_YEAR_PREV = "//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--prev')]";
-    private static final String XPATH_YEAR_PREV_1 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--prev')])[1]";
-    private static final String XPATH_YEAR_PREV_2 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--prev')])[2]";
 
     static DateTimeRange create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new DateTimeRange(driver, wait, componentId);

@@ -190,12 +190,6 @@ public class TreeWidget extends Widget {
         return getVisibleNodes().get(0).isSelected();
     }
 
-    public TreeWidget expandNode() {
-        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
-        getNodesWithExpandState("collapsed").get(0).changeExpandState();
-        return this;
-    }
-
     public void expandNode(String nodeLabel) {
         getNode(nodeLabel).changeExpandState();
     }
@@ -249,12 +243,6 @@ public class TreeWidget extends Widget {
         DelayUtils.sleep();
         getCheckboxes().get(0).click();
         DelayUtils.sleep();
-        return this;
-    }
-
-    public TreeWidget selectExpandAllIcon() {
-        DelayUtils.waitForVisibility(webDriverWait, getSearchInput());
-        getVisibleNodes().get(0).clickExpandAllBtn();
         return this;
     }
 
@@ -387,7 +375,7 @@ public class TreeWidget extends Widget {
             this.webDriverWait = webDriverWait;
         }
 
-        private boolean isExpanded(){
+        private boolean isExpanded() {
             WebElement expandElement = this.webElement.findElement(By.xpath(EXPAND_ICON));
             return expandElement.getAttribute(CLASS).contains("open");
         }

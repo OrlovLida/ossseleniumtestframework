@@ -14,12 +14,12 @@ public class LayoutPanel {
 
     private static final Logger log = LoggerFactory.getLogger(LayoutPanel.class);
 
-    private final static String LAYOUT_PANEL_XPATH = "//div[@data-testid='layout-template-menu']";
-    private final static String CHART_LAYOUT_BUTTON_ID = ".//*[@data-testid='chart-layout-";
+    private static final String LAYOUT_PANEL_XPATH = "//div[@data-testid='layout-template-menu']";
+    private static final String CHART_LAYOUT_BUTTON_ID = ".//*[@data-testid='chart-layout-";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement layoutPanel;
+    private final WebElement layoutPanelElement;
 
     public enum LayoutType {
         LAYOUT_1x1("1x1"),
@@ -43,21 +43,21 @@ public class LayoutPanel {
         return new LayoutPanel(driver, webDriverWait, webElement);
     }
 
-    private LayoutPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement layoutPanel) {
+    private LayoutPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement layoutPanelElement) {
         this.driver = driver;
         this.wait = webDriverWait;
-        this.layoutPanel = layoutPanel;
+        this.layoutPanelElement = layoutPanelElement;
     }
 
     public void changeLayout(LayoutType layout) {
-        findElementByXpath(this.layoutPanel, CHART_LAYOUT_BUTTON_ID + layout.label + "']").click();
+        findElementByXpath(this.layoutPanelElement, CHART_LAYOUT_BUTTON_ID + layout.label + "']").click();
 
         log.debug(CLICK_BTN + layout.label + " layout");
         log.info("Changed layout to {}", layout.label);
     }
 
     public String chartLayoutButtonStatus(LayoutType layout) {
-        String status = findElementByXpath(this.layoutPanel, CHART_LAYOUT_BUTTON_ID + layout.label + "']").getAttribute("class");
+        String status = findElementByXpath(this.layoutPanelElement, CHART_LAYOUT_BUTTON_ID + layout.label + "']").getAttribute("class");
         log.debug("Layout {} button status: {}", layout.label, status);
         return status;
     }

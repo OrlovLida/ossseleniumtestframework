@@ -21,23 +21,15 @@ import com.oss.framework.widgets.Widget;
 
 public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
-    public static final String PROPERTIES_FILTER_CLASS = "settingsWithAddComponent";
-    private static final String FILTER_BTN_PATH = ".//i";
-    private static final String SWITCHER_XPATH = ".//div[@class='switcher']";
     private static final String KEBAB_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
     private static final String CHOOSE_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='chooseConfiguration']";
     private static final String DOWNLOAD_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='propertyPanelDownload']";
-    private static final String SAVE_NEW_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='propertyPanelSave']";
-
+    private static final String INPUT = ".//input";
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
     public static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
-    public static final String SWITCHER_CONTENT_CLASS = "switcher-content";
-
     private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow row')]";
     private static final String PROPERTY_NAME_PATH = ".//div[@class='propertyPanelRow-label']";
-    private static final String PROPERTY_VALUE_PATH =
-            ".//div[@class='propertyPanelRow-value']";
-    private static final String PROPERTY_VALUE__EMPTY_PATH = ".//div[@class='propertyPanelRow-value propertyPanelRow-value-empty']";
+    private static final String PROPERTY_VALUE_PATH = ".//div[@class='propertyPanelRow-value']";
     private final Map<String, WebElement> properties = Maps.newHashMap();
 
     @Deprecated
@@ -45,13 +37,6 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         WebDriverWait wait = new WebDriverWait(driver, 45);
         Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
         return new PropertyPanel(driver, wait);
-    }
-
-    @Deprecated
-    public static PropertyPanel createById(WebDriver driver, String id) {
-        WebDriverWait wait = new WebDriverWait(driver, 45);
-        Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
-        return new PropertyPanel(driver, wait, id);
     }
 
     public static PropertyPanel createById(WebDriver driver, WebDriverWait wait, String testId) {
@@ -72,7 +57,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public List<String> getPropertyLabels() {
-        List<String> labels = new ArrayList<String>();
+        List<String> labels = new ArrayList<>();
         for (WebElement element : this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
             labels.add(element.getText());
         }
@@ -80,7 +65,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public List<String> getVisibleAttributes() {
-        List<String> propertyId = new ArrayList<String>();
+        List<String> propertyId = new ArrayList<>();
         for (WebElement element : getProperties()) {
             propertyId.add(element.getAttribute("id"));
         }
@@ -129,12 +114,12 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public void hideEmpty() {
-        if (getSwitcher().findElement(By.xpath(".//input")).getAttribute("value").equals("false"))
+        if (getSwitcher().findElement(By.xpath(INPUT)).getAttribute("value").equals("false"))
             getSwitcher().click();
     }
 
     public void showEmpty() {
-        if (getSwitcher().findElement(By.xpath(".//input")).getAttribute("value").equals("true"))
+        if (getSwitcher().findElement(By.xpath(INPUT)).getAttribute("value").equals("true"))
             getSwitcher().click();
     }
 
@@ -206,7 +191,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
         private WebElement createSearch() {
             WebElement search = webElement.findElement(By.xpath("//ancestor::div[@" + CSSUtils.TEST_ID + "='PropertyPanelWidget-search']"));
-            return search.findElement(By.xpath(".//input"));
+            return search.findElement(By.xpath(INPUT));
         }
 
         private void fullTextSearch(String value) {

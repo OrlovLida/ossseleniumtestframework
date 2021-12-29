@@ -1,6 +1,7 @@
 package com.oss.framework.floor_plan;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,8 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.utils.DelayUtils;
 
 public class FloorPlanTable {
-    private static final String tableRows = ".//div[@class='grid-canvas']/div[contains(@class, 'slick-row')]";
-    private static final String cellPath = ".//div[contains(@class, 'slick-cell')]";
+    private static final String TABLE_ROWS = ".//div[@class='grid-canvas']/div[contains(@class, 'slick-row')]";
+    private static final String CELL_PATH = ".//div[contains(@class, 'slick-cell')]";
     private static final String CELL_IN_ROW_PATTERN = ".//div[contains(@class, 'slick-cell')][%d]/input";
 
     protected final WebDriver driver;
@@ -31,12 +32,12 @@ public class FloorPlanTable {
     public int getRowNr(String rowName) {
         List<WebElement> rows = getTableRows();
         for (WebElement row : rows) {
-            WebElement cell = row.findElement(By.xpath(cellPath));
+            WebElement cell = row.findElement(By.xpath(CELL_PATH));
             if (cell.getText().equals(rowName)) {
                 return rows.indexOf(row);
             }
         }
-        throw new RuntimeException("Cannot find a row with the provided value");
+        throw new NoSuchElementException("Cannot find a row with the provided value");
     }
 
     public void checkNthRowAndNthColumn(int rowNr, int columnNr) {
@@ -48,7 +49,7 @@ public class FloorPlanTable {
     }
 
     private List<WebElement> getTableRows() {
-        DelayUtils.waitByXPath(webDriverWait, tableRows);
-        return driver.findElements(By.xpath(tableRows));
+        DelayUtils.waitByXPath(webDriverWait, TABLE_ROWS);
+        return driver.findElements(By.xpath(TABLE_ROWS));
     }
 }

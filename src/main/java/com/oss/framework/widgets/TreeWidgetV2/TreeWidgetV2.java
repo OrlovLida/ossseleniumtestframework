@@ -1,5 +1,12 @@
 package com.oss.framework.widgets.TreeWidgetV2;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.common.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
@@ -10,12 +17,6 @@ import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.components.tree.TreeComponent.Node;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-import java.util.Optional;
 
 public class TreeWidgetV2 extends Widget {
 
@@ -43,20 +44,9 @@ public class TreeWidgetV2 extends Widget {
         throw new NoSuchElementException("Can't find node: " + label);
     }
 
-    @Deprecated
-    public void selectFirstNode() {
-        List<Node> nodes = getTreeComponent().getVisibleNodes();
-        nodes.get(0).toggleNode();
-    }
-
     public void selectNode(int nodeNumber) {
         List<Node> nodes = getTreeComponent().getVisibleNodes();
         nodes.get(nodeNumber).toggleNode();
-    }
-
-    @Deprecated
-    public Node getFirstNode() {
-        return getVisibleNodes().get(0);
     }
 
     public Node getNode(int nodeNumber) {
@@ -96,7 +86,7 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
-        AdvancedSearch advancedSearch = getAdvancedSearch();
+        advancedSearch = getAdvancedSearch();
         advancedSearch.setFilter(attributeId, componentType, value);
         advancedSearch.clickApply();
     }
@@ -126,19 +116,19 @@ public class TreeWidgetV2 extends Widget {
         getSelectionBarComponent().hideSelectionBar();
     }
 
-    public void clickUnselectAllInSelectionBar(){
+    public void clickUnselectAllInSelectionBar() {
         getSelectionBarComponent().clickUnselectAllButton();
     }
 
-    public void clickShowOnlySelectedInSelectionBar(){
+    public void clickShowOnlySelectedInSelectionBar() {
         getSelectionBarComponent().clickShowOnlySelectedButton();
     }
 
-    public void clickShowAllInSelectionBar(){
+    public void clickShowAllInSelectionBar() {
         getSelectionBarComponent().clickShowAllButton();
     }
 
-    public String getSelectedObjectCount(){
+    public String getSelectedObjectCount() {
         return getSelectionBarComponent().getSelectedObjectsCount();
     }
 

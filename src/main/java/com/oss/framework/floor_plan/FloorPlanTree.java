@@ -7,7 +7,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
@@ -69,20 +68,6 @@ public class FloorPlanTree {
                 .contextClick()
                 .build();
         seriesOfActions.perform();
-        waitForPageToLoad();
-    }
-
-    private void waitForPageToLoad() {
-        DelayUtils.sleep(500);
-        List<WebElement> spinners = driver.findElements(By.className("oss-ico-sync"));
-        long startTime = System.currentTimeMillis();
-        while ((spinners.size() > 0) && ((System.currentTimeMillis() - startTime) < 120000)) {
-            webDriverWait.until(ExpectedConditions.invisibilityOfAllElements(spinners));
-            DelayUtils.sleep(200);
-            spinners = driver.findElements(By.className("oss-ico-sync"));
-        }
-        if ((System.currentTimeMillis() - startTime) > 120000) {
-            System.out.println("Page did not load for a two minutes!");
-        }
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
     }
 }

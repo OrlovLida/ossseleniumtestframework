@@ -1,6 +1,5 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.data.Data;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -8,10 +7,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.data.Data;
 
 public class ScriptComponent extends Input {
 
-    private static String XPATH = ".//div[@class='CodeMirror-code']";
+    private static final String XPATH = ".//div[@class='CodeMirror-code']";
 
     static ScriptComponent create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new ScriptComponent(driver, wait, componentId);
@@ -41,7 +41,7 @@ public class ScriptComponent extends Input {
 
     @Override
     public void setValueContains(Data value) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override

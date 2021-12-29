@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -28,20 +27,10 @@ public class CommonList {
     private static final String CATEGORY_LIST_XPATH = ".//li[@class='categoryListElement']";
     private static final String HEADERS_XPATH = ".//div[@class='header left']";
     private static final String LIST_ELEMENT_XPATH = ".//li[@class='listElement'] | .//li[@class='listElement rowSelected']";
-    private static final String KEBAB_ID = "frameworkObjectButtonsGroup";
     private static final String STAR_BUTTON_XPATH = ".//button[contains(@class, 'favourite')]";
-    private static final String EDIT_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Edit')]";
-    private static final String DELETE_BUTTON_XPATH = "//button[contains(@class, 'square')and contains(string(), 'Delete')]";
-    private static final String CATEGORY_XPATH = "//div[@class='categoryLabel-text']";
-    private static final String TEXT_WRAPPER_XPATH = ".//span[@class='long-text__wrapper']";
-    private static final String ANCESTOR_LIST_ELEMENT_XPATH = "/ancestor::li[@class='listElement']";
-    private static final String TEXT_EQUALS_XPATH = "[text()='%s']";
-    private static final String TEXT_CONTAINS_XPATH = "[contains(text(),'%s')]";
     private static final String COLLAPSE_ICON_XPATH = ".//i[contains(@class,'chevron-up')]";
     private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
-    private static final String SHARE_ACTION_ID = "share_action";
     private static final String REMOVE_ACTION_ID = "remove_action";
-    private static final String FAVORITE_ICON_XPATH = ".//i[contains(@class, 'star-o')]";
     private static final String ACTION_CONTAINER_CLASS = "actionsContainer";
     private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
     private static final String SELECTED_ROW_CLASS = "rowSelected";
@@ -134,15 +123,6 @@ public class CommonList {
         return !noData.isEmpty();
     }
 
-    private static boolean isElementPresent(WebElement webElement, By by) {
-        try {
-            webElement.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-
     public Category getCategory(String value) {
         return createCategories().stream().filter(category -> category.getValue().equals(value)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Provided List Category doesn't exist"));
@@ -221,18 +201,18 @@ public class CommonList {
     public static class Row {
         private final WebDriver driver;
         private final WebDriverWait wait;
-        private final WebElement row;
+        private final WebElement rowElement;
         private final List<String> headers;
 
-        private Row(WebDriver driver, WebDriverWait wait, WebElement row, List<String> headers) {
+        private Row(WebDriver driver, WebDriverWait wait, WebElement rowElement, List<String> headers) {
             this.driver = driver;
             this.wait = wait;
-            this.row = row;
+            this.rowElement = rowElement;
             this.headers = headers;
         }
 
         public String getValue(String attributeName) {
-            List<WebElement> columnData = row.findElements(By.className(COLUMN_DATA_CLASS));
+            List<WebElement> columnData = rowElement.findElements(By.className(COLUMN_DATA_CLASS));
             WebElement webElement = columnData.get(headers.indexOf(attributeName));
             if (!webElement.findElements(By.xpath(CHECK_CHECKBOX_XPATH)).isEmpty()) {
                 return "true";
@@ -241,36 +221,36 @@ public class CommonList {
         }
 
         public void selectRow() {
-            if (!row.getAttribute("class").contains(SELECTED_ROW_CLASS)) {
-                row.click();
+            if (!rowElement.getAttribute("class").contains(SELECTED_ROW_CLASS)) {
+                rowElement.click();
             }
         }
 
         public boolean isFavorite() {
-            return !row.findElements(By.xpath(FAVOURITE_BUTTON_XPATH)).isEmpty();
+            return !rowElement.findElements(By.xpath(FAVOURITE_BUTTON_XPATH)).isEmpty();
         }
 
         public void setFavorite() {
             Actions action = new Actions(driver);
             if (!isFavorite()) {
-                action.moveToElement(row.findElement(By.xpath(STAR_BUTTON_XPATH))).click().build().perform();
+                action.moveToElement(rowElement.findElement(By.xpath(STAR_BUTTON_XPATH))).click().build().perform();
             }
         }
 
         // add checking for other actions
         public boolean isActionVisible(String actionId) {
-            return !row.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty();
+            return !rowElement.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty();
         }
 
         public void callAction(String groupId, String actionId) {
-            if (!row.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
-                InlineMenu.create(row, driver, wait).callAction(groupId, actionId);
+            if (!rowElement.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
+                InlineMenu.create(rowElement, driver, wait).callAction(groupId, actionId);
             }
         }
 
         public void callActionIcon(String ariaLabel) {
-            DelayUtils.waitForNestedElements(wait, row, PLACE_HOLDERS_XPATH);
-            WebElement placeholdersAndActions = row.findElement(By.xpath(PLACE_HOLDERS_XPATH));
+            DelayUtils.waitForNestedElements(wait, rowElement, PLACE_HOLDERS_XPATH);
+            WebElement placeholdersAndActions = rowElement.findElement(By.xpath(PLACE_HOLDERS_XPATH));
             WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
             DelayUtils.waitForClickability(wait, icon);
             Actions action = new Actions(driver);
@@ -279,20 +259,20 @@ public class CommonList {
 
         public void callAction(String actionId) {
             Actions action = new Actions(driver);
-            ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, row);
-            if (!row.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
-                WebElement button = row.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']"));
+            ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, rowElement);
+            if (!rowElement.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
+                WebElement button = rowElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']"));
                 action.moveToElement(button).click().perform();
                 return;
             }
-            if (!row.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
-                InlineMenu.create(row, driver, wait).callAction(actionId);
+            if (!rowElement.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
+                InlineMenu.create(rowElement, driver, wait).callAction(actionId);
             }
         }
 
         public void clickOnLink(String linkText) {
-            DelayUtils.waitForNestedElements(wait, row, LINK_XPATH);
-            WebElement rowWithLink = row.findElement(By.xpath(LINK_XPATH));
+            DelayUtils.waitForNestedElements(wait, rowElement, LINK_XPATH);
+            WebElement rowWithLink = rowElement.findElement(By.xpath(LINK_XPATH));
             WebElement link = rowWithLink.findElement(By.xpath(String.format(".//*[contains(text(),'%s')]", linkText)));
             Actions action = new Actions(driver);
             action.moveToElement(link).click().build().perform();
@@ -302,40 +282,40 @@ public class CommonList {
     public static class Category {
         private final WebDriver driver;
         private final WebDriverWait wait;
-        private final WebElement category;
+        private final WebElement categoryElement;
 
-        private Category(WebDriver driver, WebDriverWait wait, WebElement category) {
+        private Category(WebDriver driver, WebDriverWait wait, WebElement categoryElement) {
             this.driver = driver;
             this.wait = wait;
-            this.category = category;
+            this.categoryElement = categoryElement;
         }
 
         public String getValue() {
-            return category.findElement(By.className(CATEGORY_NAME_XPATH)).getText();
+            return categoryElement.findElement(By.className(CATEGORY_NAME_XPATH)).getText();
         }
 
         public void callAction(String groupId, String actionId) {
-            if (!category.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
-                InlineMenu.create(category, driver, wait).callAction(groupId, actionId);
+            if (!categoryElement.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
+                InlineMenu.create(categoryElement, driver, wait).callAction(groupId, actionId);
             }
         }
 
         public void callAction(String actionId) {
             Actions action = new Actions(driver);
-            if (!category.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
-                WebElement button = category.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']"));
+            if (!categoryElement.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty()) {
+                WebElement button = categoryElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']"));
                 action.moveToElement(button).click().perform();
                 return;
             }
-            if (!category.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
-                InlineMenu.create(category, driver, wait).callAction(actionId);
+            if (!categoryElement.findElements(By.className(ACTION_CONTAINER_CLASS)).isEmpty()) {
+                InlineMenu.create(categoryElement, driver, wait).callAction(actionId);
             }
         }
 
         public void expandCategory() {
             Actions actions = new Actions(driver);
             if (!isExpanded()) {
-                actions.moveToElement(category.findElement(By.xpath(EXPAND_ICON_XPATH))).click().build().perform();
+                actions.moveToElement(categoryElement.findElement(By.xpath(EXPAND_ICON_XPATH))).click().build().perform();
             }
             DelayUtils.waitForPageToLoad(driver, wait);
         }
@@ -343,18 +323,18 @@ public class CommonList {
         public void collapseCategory() {
             Actions actions = new Actions(driver);
             if (isExpanded()) {
-                actions.moveToElement(category.findElement(By.xpath(COLLAPSE_ICON_XPATH))).click().build().perform();
+                actions.moveToElement(categoryElement.findElement(By.xpath(COLLAPSE_ICON_XPATH))).click().build().perform();
             }
             DelayUtils.waitForPageToLoad(driver, wait);
         }
 
         private boolean isExpanded() {
-            return !category.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
+            return !categoryElement.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
         }
 
         public void selectCategory() {
             Actions actions = new Actions(driver);
-            actions.moveToElement(category).click().build().perform();
+            actions.moveToElement(categoryElement).click().build().perform();
         }
 
     }

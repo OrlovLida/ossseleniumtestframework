@@ -1,5 +1,14 @@
 package com.oss.framework.widgets.tablewidget;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
@@ -14,20 +23,13 @@ import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
     public static final String REFRESH_ACTION_ID = "refreshButton";
     private static final int REFRESH_INTERVAL = 2000;
     public static final String EXPORT_ACTION_ID = "exportButton";
+    public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
 
     private static final String KEBAB_MENU_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
 
@@ -76,7 +78,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void selectRowByAttributeValue(String attributeId, String value) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     @Override
@@ -86,12 +88,12 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     @Override
     public void selectLinkInSpecificColumn(String columnName) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     @Override
@@ -103,7 +105,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     @Override
@@ -113,7 +115,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void callActionByLabel(String actionLabel) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public int getRowNumber(String value, String attributeLabel) {
-        throw new RuntimeException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
     @Override
@@ -173,7 +175,7 @@ public class TableWidget extends Widget implements TableInterface {
     @Deprecated
     public Map<String, String> getPropertyNamesToValues() {
         // TODO: Remove that method
-        throw new RuntimeException("Not implemented for TableWidget");
+        throw new UnsupportedOperationException("Not implemented for TableWidget");
     }
 
     @Override
@@ -329,19 +331,19 @@ public class TableWidget extends Widget implements TableInterface {
         getSelectionBarComponent().hideSelectionBar();
     }
 
-    public void clickUnselectAllInSelectionBar(){
+    public void clickUnselectAllInSelectionBar() {
         getSelectionBarComponent().clickUnselectAllButton();
     }
 
-    public void clickShowOnlySelectedInSelectionBar(){
+    public void clickShowOnlySelectedInSelectionBar() {
         getSelectionBarComponent().clickShowOnlySelectedButton();
     }
 
-    public void clickShowAllInSelectionBar(){
+    public void clickShowAllInSelectionBar() {
         getSelectionBarComponent().clickShowAllButton();
     }
 
-    public String getSelectedObjectCount(){
+    public String getSelectedObjectCount() {
         return getSelectionBarComponent().getSelectedObjectsCount();
     }
 

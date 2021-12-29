@@ -43,16 +43,16 @@ public class DropdownList {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement dropdownList;
+    private final WebElement dropdownListElement;
 
-    private DropdownList(WebDriver driver, WebDriverWait wait, WebElement dropdownList) {
+    private DropdownList(WebDriver driver, WebDriverWait wait, WebElement dropdownListElement) {
         this.driver = driver;
         this.wait = wait;
-        this.dropdownList = dropdownList;
+        this.dropdownListElement = dropdownListElement;
     }
 
     public DragAndDrop.DraggableElement getDraggableElement(String value) {
-        List<WebElement> allSource = dropdownList.findElements(By.xpath(DRAGGABLE_ELEMENT_XPATH));
+        List<WebElement> allSource = dropdownListElement.findElements(By.xpath(DRAGGABLE_ELEMENT_XPATH));
         WebElement row = allSource.stream().filter(object -> object.getText().contains(value)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Object not available on the list"));
         WebElement source = row.findElement(By.xpath(DRAG_BUTTON_XPATH));
@@ -60,7 +60,7 @@ public class DropdownList {
     }
 
     public void drop(DragAndDrop.DraggableElement draggableElement) {
-        WebElement target = dropdownList.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
+        WebElement target = dropdownListElement.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
         DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), driver);
     }
 
