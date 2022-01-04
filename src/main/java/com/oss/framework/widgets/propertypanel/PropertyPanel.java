@@ -44,6 +44,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
     }
+
     @Deprecated
     public static PropertyPanel create(WebDriver driver) {
         WebDriverWait wait = new WebDriverWait(driver, 45);
@@ -51,21 +52,13 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         return new PropertyPanel(driver, wait);
     }
 
-    @Deprecated
-    public static PropertyPanel createById(WebDriver driver, String id) {
-        WebDriverWait wait = new WebDriverWait(driver, 45);
-        Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
-        return new PropertyPanel(driver, wait, id);
-    }
-
-
     public static PropertyPanel createById(WebDriver driver, WebDriverWait wait, String testId) {
         Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
         return new PropertyPanel(driver, wait, testId);
     }
 
     public List<String> getPropertyLabels() {
-        List<String> labels = new ArrayList<String>();
+        List<String> labels = new ArrayList<>();
         for (WebElement element : this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
             labels.add(element.getText());
         }
