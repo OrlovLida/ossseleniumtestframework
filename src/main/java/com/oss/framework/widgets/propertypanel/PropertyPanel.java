@@ -21,15 +21,20 @@ import com.oss.framework.widgets.Widget;
 
 public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
+    public static final String PROPERTIES_FILTER_CLASS = "settingsWithAddComponent";
+
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
     public static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
     private static final String KEBAB_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
     private static final String CHOOSE_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='chooseConfiguration']";
     private static final String DOWNLOAD_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='propertyPanelDownload']";
+    public static final String SWITCHER_CONTENT_CLASS = "switcher-content";
+
     private static final String INPUT = ".//input";
     private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow row')]";
     private static final String PROPERTY_NAME_PATH = ".//div[@class='propertyPanelRow-label']";
-    private static final String PROPERTY_VALUE_PATH = ".//div[@class='propertyPanelRow-value']";
+    private static final String PROPERTY_VALUE_PATH =
+            ".//div[@class='propertyPanelRow-value']";
     private final Map<String, WebElement> properties = Maps.newHashMap();
 
     private PropertyPanel(WebDriver driver, WebDriverWait wait) {
@@ -39,7 +44,6 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
     }
-
     @Deprecated
     public static PropertyPanel create(WebDriver driver) {
         WebDriverWait wait = new WebDriverWait(driver, 45);
@@ -47,13 +51,21 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         return new PropertyPanel(driver, wait);
     }
 
+    @Deprecated
+    public static PropertyPanel createById(WebDriver driver, String id) {
+        WebDriverWait wait = new WebDriverWait(driver, 45);
+        Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
+        return new PropertyPanel(driver, wait, id);
+    }
+
+
     public static PropertyPanel createById(WebDriver driver, WebDriverWait wait, String testId) {
         Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
         return new PropertyPanel(driver, wait, testId);
     }
 
     public List<String> getPropertyLabels() {
-        List<String> labels = new ArrayList<>();
+        List<String> labels = new ArrayList<String>();
         for (WebElement element : this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
             labels.add(element.getText());
         }
@@ -83,15 +95,15 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public void disableAttributeByLabel(String columnLabel, String... path) {
-        getAttributesChooser()
-                .disableAttributeByLabel(columnLabel, path)
-                .clickApply();
+        AttributesChooser attributesChooser = getAttributesChooser();
+        attributesChooser.disableAttributeByLabel(columnLabel, path);
+        attributesChooser.clickApply();
     }
 
     public void enableAttributeByLabel(String columnLabel, String... path) {
-        getAttributesChooser()
-                .enableAttributeByLabel(columnLabel, path)
-                .clickApply();
+        AttributesChooser attributesChooser = getAttributesChooser();
+        attributesChooser.enableAttributeByLabel(columnLabel, path);
+        attributesChooser.clickApply();
     }
 
     @Override
@@ -108,6 +120,8 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         Search search = new Search(driver, webDriverWait, webElement);
         search.fullTextSearch(value);
     }
+
+    // configuration
 
     public ChooseConfigurationWizard openChooseConfigurationWizard() {
         this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
@@ -129,22 +143,6 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         actionsContainer.callActionById(ActionsContainer.KEBAB_GROUP_ID, "propertyPanelSave");
         return SaveConfigurationWizard.create(driver, this.webDriverWait);
     }
-
-    private List<WebElement> getProperties() {
-        return this.webElement.findElements(By.xpath(PROPERTY_PATH));
-    }
-
-    private Map<String, WebElement> getPropertiesMap() {
-        for (WebElement element : getProperties()) {
-            properties.put(element.getAttribute("id"), element);
-        }
-        return properties;
-    }
-
-    private WebElement getPropertyById(String id) {
-        return this.webElement.findElement(By.id(id));
-    }
-
     private DragAndDrop.DraggableElement getDraggableElement(String id) {
         WebElement source = getPropertyById(id).findElement(By.xpath(".//div[@class = 'btn-drag']"));
         return new DragAndDrop.DraggableElement(source);
@@ -154,8 +152,6 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         WebElement target = this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH)).get(position);
         return new DragAndDrop.DropElement(target);
     }
-
-    // configuration
 
     private AttributesChooser getAttributesChooser() {
         webElement.findElement(By.className(PROPERTIES_FILTER_PANEL_CLASS)).click();
@@ -176,6 +172,22 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private WebElement getPropertyPanelParent() {
         WebElement propertyPanel = refreshWidgetByID();
         return propertyPanel.findElement(By.xpath("..//div"));
+    }
+
+    private Map<String, WebElement> getPropertiesMap() {
+        for (WebElement element: getProperties()) {
+            properties.put(element.getAttribute("id"), element);
+        }
+        return properties;
+    }
+
+    private WebElement getPropertyById(String id) {
+        return this.webElement.findElement(By.id(id));
+    }
+
+
+    private List<WebElement> getProperties() {
+        return this.webElement.findElements(By.xpath(PROPERTY_PATH));
     }
 
     public static class Search {

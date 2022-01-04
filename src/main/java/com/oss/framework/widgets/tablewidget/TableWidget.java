@@ -30,6 +30,7 @@ public class TableWidget extends Widget implements TableInterface {
     public static final String EXPORT_ACTION_ID = "exportButton";
     public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
     private static final int REFRESH_INTERVAL = 2000;
+
     private static final String KEBAB_MENU_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
 
     private AdvancedSearch advancedSearch;
@@ -82,15 +83,16 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void disableColumnByLabel(String columnLabel, String... path) {
-        getAttributesChooser().disableAttributeByLabel(columnLabel, path)
-                .clickApply();
+        AttributesChooser attributesChooser = getAttributesChooser();
+        attributesChooser.disableAttributeByLabel(columnLabel, path);
+        attributesChooser.clickApply();
     }
 
     @Override
     public void enableColumnByLabel(String columnLabel, String... path) {
-        getAttributesChooser()
-                .enableAttributeByLabel(columnLabel, path)
-                .clickApply();
+        AttributesChooser attributesChooser = getAttributesChooser();
+        attributesChooser.enableAttributeByLabel(columnLabel, path);
+        attributesChooser.clickApply();
     }
 
     @Override
