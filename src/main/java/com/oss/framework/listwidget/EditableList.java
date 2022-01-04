@@ -173,14 +173,8 @@ public class EditableList extends Widget {
         }
 
         public boolean isEditableAttribute(String columnId) {
-            if (columnId.contains(String.valueOf(index))) {
-                return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
-                        .contains("editable");
-            } else {
-                return webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + index + "_" + columnId + "']"))
-                        .getAttribute("class").contains("editable");
-            }
-
+            return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
+                    .contains("editable");
         }
 
         public void callActionIcon(String ariaLabel) {
