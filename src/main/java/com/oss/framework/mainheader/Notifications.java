@@ -24,6 +24,10 @@ public class Notifications implements NotificationsInterface {
     private static final By NOTIFICATION_LIST = By.xpath("//div[@class='notificationContainer']/div[not(@class = 'notificationEmpty')]");
     private static final By NOTIFICATION_DETAILS = By.xpath("(//a[@class='detailsLink'])[1]");
     private static final By DOWNLOAD_FILE = By.xpath("//div[@class='notificationWrapper']//a[contains (text(), 'Download file')]");
+    private static final String NOTIFICATION_LABEL_XPATH = ".//div[@class='notificationLabel']";
+    private static final String NOTIFICATION_CONTAINER_XPATH = "//div[@class='notificationContainer']";
+    private static final String NOTIFICATION_TEXT_CONTAINER_XPATH = "//div[@class='notificationTextContainer']";
+    private static final String NOTIFICATION_BY_TEXT_AND_STATUS_PATTERN = "/span[contains(text(), '%s') and contains(text(), '%s')]";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -48,14 +52,14 @@ public class Notifications implements NotificationsInterface {
     }
 
     @Override
-    public String waitAndGetFinishedNotificationText() {
+    public String getNotificationMessage() {
         openNotificationContainer();
-        DelayUtils.waitByXPath(wait, ".//div[@class='notificationLabel']");
+        DelayUtils.waitByXPath(wait, NOTIFICATION_LABEL_XPATH);
         wait.until(ExpectedConditions.not(ExpectedConditions
-                .attributeToBe(driver.findElement(By.xpath("//div[@class='notificationContainer']/div")), "class", "notification progressNotification")));
+                .attributeToBe(driver.findElement(By.xpath(NOTIFICATION_CONTAINER_XPATH + "/div")), "class", "notification progressNotification")));
         String notificationText =
                 wait.until(ExpectedConditions
-                        .visibilityOf(driver.findElement(By.xpath(".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span"))))
+                        .visibilityOf(driver.findElement(By.xpath(NOTIFICATION_LABEL_XPATH + NOTIFICATION_TEXT_CONTAINER_XPATH + "/span"))))
                         .getText();
         clickOnWebElement(driver.findElement(CLEAR_NOTIFICATION));
         closeNotificationContainer();
@@ -64,9 +68,10 @@ public class Notifications implements NotificationsInterface {
     }
 
     @Override
-    public void waitForSpecificNotification(String text, String notificationStatus) {
+    public void waitForNotification(String text, String notificationStatus) {
         openNotificationContainer();
-        DelayUtils.waitByXPath(wait, ".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span[contains(text(), '" + text + "') and contains(text(), '" + notificationStatus + "')]");
+        String notificationByTextAndStatus = String.format(NOTIFICATION_BY_TEXT_AND_STATUS_PATTERN, text, notificationStatus);
+        DelayUtils.waitByXPath(wait, NOTIFICATION_LABEL_XPATH + NOTIFICATION_TEXT_CONTAINER_XPATH + notificationByTextAndStatus);
         clickOnWebElement(driver.findElement(CLEAR_NOTIFICATION));
     }
 
@@ -79,19 +84,22 @@ public class Notifications implements NotificationsInterface {
     }
 
     @Override
-    public int getAmountOfNotifications() {
+    public int countNotifications() {
         int amount = driver.findElements(NOTIFICATION_LIST).size();
         LOGGER.info("The list of notifications includes {} elements", amount);
         return amount;
     }
 
-    public void openDetailsForSpecificNotification(String text, String notificationStatus) {
+    @Override
+    public void openDetails(String text, String notificationStatus) {
         openNotificationContainer();
-        DelayUtils.waitByXPath(wait, ".//div[@class='notificationLabel']//div[@class='notificationTextContainer']/span[contains(text(), '" + text + "') and contains(text(), '" + notificationStatus + "')]");
+        String notificationByTextAndStatus = String.format(NOTIFICATION_BY_TEXT_AND_STATUS_PATTERN, text, notificationStatus);
+        DelayUtils.waitByXPath(wait, NOTIFICATION_LABEL_XPATH + NOTIFICATION_TEXT_CONTAINER_XPATH + notificationByTextAndStatus);
         clickOnWebElement(driver.findElement(NOTIFICATION_DETAILS));
         closeNotificationContainer();
     }
 
+    @Override
     public void clickDownloadFile() {
         clickOnWebElement(driver.findElement(DOWNLOAD_FILE));
     }
