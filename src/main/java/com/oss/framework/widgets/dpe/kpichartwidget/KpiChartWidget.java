@@ -1,8 +1,7 @@
 package com.oss.framework.widgets.dpe.kpichartwidget;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Widget;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Widget;
 
 import static com.oss.framework.logging.LoggerMessages.ELEMENT_PRESENT_AND_VISIBLE;
 import static com.oss.framework.logging.LoggerMessages.MOVE_MOUSE_OVER;
@@ -50,15 +51,15 @@ public class KpiChartWidget extends Widget {
     private static final String ZOOM_OUT_BUTTON_PATH = ".//*[@data-testid='amchart-zoomout-button']";
     private static final String ZOOM_OUT_HIDDEN_BUTTON_PATH = ".//*[@data-testid='amchart-zoomout-button' and @visibility='hidden']";
 
+    private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
+        super(driver, webDriverWait, widgetId, widget);
+    }
+
     public static KpiChartWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, KPI_CHART_WIDGET_PATH);
         WebElement widget = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + KPI_CHART_WIDGET_ID + "']"));
 
         return new KpiChartWidget(driver, wait, KPI_CHART_WIDGET_ID, widget);
-    }
-
-    private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
-        super(driver, webDriverWait, widgetId, widget);
     }
 
     public void waitForPresenceAndVisibility() {
@@ -73,23 +74,6 @@ public class KpiChartWidget extends Widget {
 
         moveOverElement(findElementByXpath(pointXpath));
         DelayUtils.sleep();
-    }
-
-    private int getNumberOfSamples() {
-        List<WebElement> numberOfSamples = webElement.findElements(By.xpath("//*[starts-with(@class,'amcharts-Container amcharts-Bullet amcharts-CircleBullet')]//*[@class='amcharts-Sprite-group amcharts-Circle-group']"));
-        return numberOfSamples.size() - 1;
-    }
-
-    private void moveOverElement(WebElement webElement) {
-        Actions action = new Actions(driver);
-        action.moveToElement(webElement).click().build().perform();
-        log.debug(MOVE_MOUSE_OVER + "point");
-    }
-
-    private void clickElementWithOffset(WebElement webElement, int offsetX, int offsetY) {
-        Actions action = new Actions(driver);
-        action.moveToElement(webElement, offsetX, offsetY).click().build().perform();
-        log.debug(MOVE_MOUSE_OVER + "point");
     }
 
     public int countColumns() {
@@ -206,7 +190,7 @@ public class KpiChartWidget extends Widget {
     }
 
     public boolean topNBarChartIsDisplayed(String barChartId) {
-        return this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).size() > 0;
+        return !this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).isEmpty();
     }
 
     public void doubleClickOnTopNBar(String barChartId) {
@@ -238,6 +222,23 @@ public class KpiChartWidget extends Widget {
 
     public int countCharts() {
         return driver.findElements(By.xpath(".//*[@data-testid='am-chart']")).size();
+    }
+
+    private int getNumberOfSamples() {
+        List<WebElement> numberOfSamples = webElement.findElements(By.xpath("//*[starts-with(@class,'amcharts-Container amcharts-Bullet amcharts-CircleBullet')]//*[@class='amcharts-Sprite-group amcharts-Circle-group']"));
+        return numberOfSamples.size() - 1;
+    }
+
+    private void moveOverElement(WebElement webElement) {
+        Actions action = new Actions(driver);
+        action.moveToElement(webElement).click().build().perform();
+        log.debug(MOVE_MOUSE_OVER + "point");
+    }
+
+    private void clickElementWithOffset(WebElement webElement, int offsetX, int offsetY) {
+        Actions action = new Actions(driver);
+        action.moveToElement(webElement, offsetX, offsetY).click().build().perform();
+        log.debug(MOVE_MOUSE_OVER + "point");
     }
 
     private WebElement findElementByXpath(String xpath) {

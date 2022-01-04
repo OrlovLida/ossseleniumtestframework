@@ -1,11 +1,12 @@
 package com.oss.framework.navigation;
 
-import com.oss.framework.components.inputs.Input;
-import com.oss.framework.components.portals.PopupV2;
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.portals.PopupV2;
+import com.oss.framework.utils.DelayUtils;
 
 public class CategoryWizard extends PopupV2 {
 
@@ -16,8 +17,6 @@ public class CategoryWizard extends PopupV2 {
     private static final String AI_CONTROL_DESK_ICON_FULL_XPATH = "//div[@class='popupBackground']//i[@class='OSSIcon ossfont-AI-Control-Desk']";
     private static final String ASSET_MANAGEMENT_ICON_FULL_XPATH = "//div[@class='popupBackground']//i[@class='OSSIcon ossfont-Asset-Management']";
     private static final String SAVE_BUTTON_FULL_XPATH = "//div[@class='popupBackground']//a[@class='CommonButton btn btn-primary btn-md']";
-    private static final String ICONS_CLASS = "icons-chooser__icons";
-    private static final String ANTENNA_ICON = "OSSIcon ossfont-Antenna";
 
     private CategoryWizard(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);

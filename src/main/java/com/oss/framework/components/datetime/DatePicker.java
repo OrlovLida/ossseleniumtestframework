@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,25 +18,24 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class DatePicker {
+    private static final String TODAY_BUTTON_XPATH = ".//button[text()='Today']";
     private final WebElement webElement;
     private final WebDriver driver;
     private final WebDriverWait wait;
-
     private final By prev = By.xpath(".//span[contains(@class,'prev')]");
     private final By next = By.xpath(".//span[contains(@class,'next')]");
-    private static final String TODAY_BUTTON_XPATH = ".//button[text()='Today']";
+
+    public DatePicker(WebDriver driver, WebDriverWait wait, WebElement webElement) {
+        this.driver = driver;
+        this.webElement = webElement;
+        this.wait = wait;
+    }
 
     public static DatePicker create(WebDriver driver, WebDriverWait wait, String componentId) {
         WebElement dayPicker = driver.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
         DelayUtils.waitByXPath(wait, ".//span[contains(@class,'next')]");
 
         return new DatePicker(driver, wait, dayPicker);
-    }
-
-    public DatePicker(WebDriver driver, WebDriverWait wait, WebElement webElement) {
-        this.driver = driver;
-        this.webElement = webElement;
-        this.wait = wait;
     }
 
     // yyyy-mm-dd
@@ -102,7 +102,7 @@ public class DatePicker {
 
     private int getCalendarMonth() {
         WebElement selectedDay = webElement.findElements(By.className("DayPicker-Day")).stream()
-                .filter(day -> day.getAttribute("aria-selected").equals("true")).findFirst().get();
+                .filter(day -> day.getAttribute("aria-selected").equals("true")).findFirst().orElseThrow(() -> new NoSuchElementException("Cannot select day"));
         String selectedDate = selectedDay.getAttribute("aria-label");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.ENGLISH);
         Date date = null;

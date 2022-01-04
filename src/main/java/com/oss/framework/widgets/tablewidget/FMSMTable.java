@@ -1,16 +1,17 @@
 package com.oss.framework.widgets.tablewidget;
 
-import com.google.common.collect.Multimap;
-import com.oss.framework.components.inputs.Input;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+import java.util.Map;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Multimap;
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 
 /**
  * @author Bartosz Nowak
@@ -47,12 +48,6 @@ public class FMSMTable implements TableInterface {
         } else {
             rowElement.get(row).click();
         }
-    }
-
-    @Override
-    public String getCellValueById(int row, String columnId) {
-        Cell cell = Cell.create(tableWidget, row, columnId);
-        return cell.getTextValue();
     }
 
     @Override
@@ -189,12 +184,18 @@ public class FMSMTable implements TableInterface {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
+    @Override
+    public String getCellValueById(int row, String columnId) {
+        Cell cell = Cell.create(tableWidget, row, columnId);
+        return cell.getTextValue();
+    }
+
     private static class Cell {
-        private final WebElement cell;
+        private final WebElement cellElement;
         private final String columnNameId;
 
-        private Cell(WebElement cell, String columnNameId) {
-            this.cell = cell;
+        private Cell(WebElement cellElement, String columnNameId) {
+            this.cellElement = cellElement;
             this.columnNameId = columnNameId;
         }
 
@@ -203,20 +204,20 @@ public class FMSMTable implements TableInterface {
             return new Cell(cells.get(index), columnNameId);
         }
 
-        private boolean isIcon() {
-            return !cell.findElements(By.xpath(".//span[@" + OSS_ICON_VALUE + "]//i[contains(@class, '" + OSS_ICON_CLASS + "')]")).isEmpty();
-        }
-
-        private String getAttributeValue() {
-            return cell.findElement(By.xpath(".//span[@" + OSS_ICON_VALUE + "]")).getAttribute(OSS_ICON_VALUE);
-        }
-
         public String getTextValue() {
             if (isIcon()) {
                 return getAttributeValue();
             } else {
-                return cell.getText();
+                return cellElement.getText();
             }
+        }
+
+        private boolean isIcon() {
+            return !cellElement.findElements(By.xpath(".//span[@" + OSS_ICON_VALUE + "]//i[contains(@class, '" + OSS_ICON_CLASS + "')]")).isEmpty();
+        }
+
+        private String getAttributeValue() {
+            return cellElement.findElement(By.xpath(".//span[@" + OSS_ICON_VALUE + "]")).getAttribute(OSS_ICON_VALUE);
         }
     }
 }

@@ -23,12 +23,10 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     public static final String PROCEED = "Proceed";
     public static final String DELETE = "Delete";
     public static final String YES = "Yes";
-
+    private static final String BUTTON_BY_DATA_ATTRIBUTE_NAME = "//button[@" + CSSUtils.TEST_ID + "='%s']";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement prompt;
-
-    private static final String BUTTON_BY_DATA_ATTRIBUTE_NAME = "//button[@" + CSSUtils.TEST_ID + "='%s']";
 
     private ConfirmationBox(WebDriver driver, WebDriverWait wait, WebElement prompt) {
         this.driver = driver;

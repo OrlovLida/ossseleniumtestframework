@@ -1,14 +1,15 @@
 package com.oss.framework.components.common;
 
-import com.oss.framework.components.inputs.Button;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.DragAndDrop;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 
 public class ListAttributesChooser {
 
@@ -21,21 +22,20 @@ public class ListAttributesChooser {
     private static final String INACTIVE_LIST_LAYOUT_BUTTON_XPATH = ".//button[@title='List']";
     private static final String INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@title='Two columns']";
     private static final String ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@class='is-columns-layout']";
+    private final WebDriver driver;
+    private final WebDriverWait webDriverWait;
+    private final WebElement listAttributesChooserElement;
+
+    private ListAttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement listAttributesChooserElement) {
+        this.driver = driver;
+        this.webDriverWait = webDriverWait;
+        this.listAttributesChooserElement = listAttributesChooserElement;
+    }
 
     public static ListAttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
         WebElement listAttributesChooser = driver.findElement(By.xpath(X_PATH_ID));
         return new ListAttributesChooser(driver, webDriverWait, listAttributesChooser);
-    }
-
-    private final WebDriver driver;
-    private final WebDriverWait webDriverWait;
-    private final WebElement listAttributesChooser;
-
-    private ListAttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement listAttributesChooser) {
-        this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.listAttributesChooser = listAttributesChooser;
     }
 
     public void enableAttributeById(String attributeId) {
@@ -58,24 +58,16 @@ public class ListAttributesChooser {
         DragAndDrop.dragAndDrop(getDraggableElement(sourceId), getDropElement(targetId), driver);
     }
 
-    private DragAndDrop.DraggableElement getDraggableElement(String columnId) {
-        return new DragAndDrop.DraggableElement(dragOrDropElement(columnId));
-    }
-
-    private DragAndDrop.DropElement getDropElement(String columnId) {
-        return new DragAndDrop.DropElement(dragOrDropElement(columnId));
-    }
-
     public void clickApply() {
-        this.listAttributesChooser.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
+        this.listAttributesChooserElement.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
     }
 
     public void clickCancel() {
-        this.listAttributesChooser.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
+        this.listAttributesChooserElement.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
     }
 
     public void clickDefaultSettings() {
-        this.listAttributesChooser.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
+        this.listAttributesChooserElement.findElement(By.xpath(DEFAULT_BUTTON_XPATH)).click();
     }
 
     public void clickSave() {
@@ -84,7 +76,7 @@ public class ListAttributesChooser {
 
     public void selectTwoColumnsLayout() {
         if (!isTwoColumnsLayoutActive()) {
-            this.listAttributesChooser.findElement(By.xpath(INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).click();
+            this.listAttributesChooserElement.findElement(By.xpath(INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).click();
             log.debug("Switching to Two Columns Layout");
         } else {
             log.debug("Selected layout is: Two Columns");
@@ -93,22 +85,30 @@ public class ListAttributesChooser {
 
     public void selectListLayout() {
         if (isTwoColumnsLayoutActive()) {
-            this.listAttributesChooser.findElement(By.xpath(INACTIVE_LIST_LAYOUT_BUTTON_XPATH)).click();
+            this.listAttributesChooserElement.findElement(By.xpath(INACTIVE_LIST_LAYOUT_BUTTON_XPATH)).click();
             log.debug("Switching to List Layout");
         } else {
             log.debug("Selected layout is: List");
         }
     }
 
+    private DragAndDrop.DraggableElement getDraggableElement(String columnId) {
+        return new DragAndDrop.DraggableElement(dragOrDropElement(columnId));
+    }
+
+    private DragAndDrop.DropElement getDropElement(String columnId) {
+        return new DragAndDrop.DropElement(dragOrDropElement(columnId));
+    }
+
     private WebElement getAttribute(String attributeId) {
-        return this.listAttributesChooser.findElement(By.xpath(".//input[@id='checkbox-" + attributeId + "']"));
+        return this.listAttributesChooserElement.findElement(By.xpath(".//input[@id='checkbox-" + attributeId + "']"));
     }
 
     private WebElement dragOrDropElement(String columnId) {
-        return this.listAttributesChooser.findElement(By.xpath(".//div[@data-rbd-drag-handle-draggable-id='" + columnId + "']"));
+        return this.listAttributesChooserElement.findElement(By.xpath(".//div[@data-rbd-drag-handle-draggable-id='" + columnId + "']"));
     }
 
     private boolean isTwoColumnsLayoutActive() {
-        return !this.listAttributesChooser.findElements(By.xpath(ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).isEmpty();
+        return !this.listAttributesChooserElement.findElements(By.xpath(ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH)).isEmpty();
     }
 }

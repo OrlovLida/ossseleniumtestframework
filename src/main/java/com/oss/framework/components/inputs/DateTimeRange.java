@@ -21,24 +21,6 @@ public class DateTimeRange extends Input {
     private static final String XPATH_MONTH_NEXT_2 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton--next')])[2]";
     private static final String XPATH_MONTH_PREV = "//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton--prev')]";
     private static final String XPATH_MONTH_PREV_1 = "//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton--prev')][1]";
-    private static final String XPATH_MONTH_PREV_2 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton--prev')])[2]";
-    private static final String XPATH_DATE_TODAY = "//div[contains(@class,'DayPicker-Day btn DayPicker-Day--selected DayPicker-Day--today')]";
-    private static final String XPATH_NEXT_MONTH = "//span[@aria-label='Next Month']";
-    private static final String XPATH_PREVIOUS_MONTH = "//span[@aria-label='Previous Month']";
-    private static final String XPATH_YEAR_NEXT = "//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--next')]";
-    private static final String XPATH_YEAR_NEXT_1 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--next')])[1]";
-    private static final String XPATH_YEAR_NEXT_2 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--next')])[2]";
-    private static final String XPATH_YEAR_PREV = "//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--prev')]";
-    private static final String XPATH_YEAR_PREV_1 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--prev')])[1]";
-    private static final String XPATH_YEAR_PREV_2 = "(//span[contains(@class,'DayPicker-NavButton DayPicker-NavButton-year--prev')])[2]";
-
-    static DateTimeRange create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new DateTimeRange(driver, wait, componentId);
-    }
-
-    static DateTimeRange createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new DateTimeRange(parent, driver, wait, componentId);
-    }
 
     private DateTimeRange(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -46,32 +28,6 @@ public class DateTimeRange extends Input {
 
     private DateTimeRange(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         super(parent, driver, wait, componentId);
-    }
-
-    @Override
-    public Data getValue() {
-        return Data.createSingleData(webElement.getAttribute("value"));
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public void setValue(Data value) {
-        webElement.click();
-        webElement.sendKeys(value.getStringValue());
-    }
-
-    @Override
-    public void setValueContains(Data value) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public String getLabel() {
-        return webElement.getText();
     }
 
     public static String createPath(String label) {
@@ -90,9 +46,66 @@ public class DateTimeRange extends Input {
         return "//div[@aria-label='" + date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) + ", " + date.get(Calendar.DAY_OF_MONTH) + " " + date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + date.get(Calendar.YEAR) + "']";
     }
 
+    static DateTimeRange create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new DateTimeRange(driver, wait, componentId);
+    }
+
+    static DateTimeRange createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new DateTimeRange(parent, driver, wait, componentId);
+    }
+
+    @Override
+    public void setValueContains(Data value) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public Data getValue() {
+        return Data.createSingleData(webElement.getAttribute("value"));
+    }
+
+    @Override
+    public void setValue(Data value) {
+        webElement.click();
+        webElement.sendKeys(value.getStringValue());
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public String getLabel() {
+        return webElement.getText();
+    }
+
     public void chooseDate(String dataK) {
         WebElement data = driver.findElement(By.xpath(dataK));
         data.click();
+    }
+
+    //TODO, do we need this ? fix method's name, var's names
+    public void chooseDate2(String dataP, String dataK) {
+        Calendar today = new GregorianCalendar();
+        Calendar dateP = formatDate(dataP);
+        Calendar dateK = formatDate(dataK);
+
+        int month1 = today.get(Calendar.MONTH);
+        int month2 = dateP.get(Calendar.MONTH);
+        int month3 = dateK.get(Calendar.MONTH);
+        calcDateP(month1, month2, dateP);
+        calcDateK(month1, month2, month3, dateK);
+    }
+
+    public void selectDate(Calendar givenDate) {
+        WebElement data = driver.findElement(By.xpath(createPathDate(givenDate)));
+        data.click();
+    }
+
+    public void clickCalendar(String pathB) {
+        WebElement calendar = driver.findElement(By.xpath(pathB));
+        calendar.click();
     }
 
     private Calendar formatDate(String data) {
@@ -193,29 +206,6 @@ public class DateTimeRange extends Input {
             }
             selectDate(givenDate);
         }
-    }
-
-    //TODO, do we need this ? fix method's name, var's names
-    public void chooseDate2(String dataP, String dataK) {
-        Calendar today = new GregorianCalendar();
-        Calendar dateP = formatDate(dataP);
-        Calendar dateK = formatDate(dataK);
-
-        int month1 = today.get(Calendar.MONTH);
-        int month2 = dateP.get(Calendar.MONTH);
-        int month3 = dateK.get(Calendar.MONTH);
-        calcDateP(month1, month2, dateP);
-        calcDateK(month1, month2, month3, dateK);
-    }
-
-    public void selectDate(Calendar givenDate) {
-        WebElement data = driver.findElement(By.xpath(createPathDate(givenDate)));
-        data.click();
-    }
-
-    public void clickCalendar(String pathB) {
-        WebElement calendar = driver.findElement(By.xpath(pathB));
-        calendar.click();
     }
 
 }

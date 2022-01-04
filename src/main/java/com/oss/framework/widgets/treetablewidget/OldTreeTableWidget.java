@@ -12,11 +12,9 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.tablewidget.OldTable;
@@ -25,21 +23,13 @@ import com.oss.framework.widgets.tablewidget.OldTable;
  * @author Comarch
  */
 public class OldTreeTableWidget extends Widget {
-    public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
-        return new OldTreeTableWidget(driver, wait, dataAttributeName);
-
-    }
-    private final String id;
 
     private OldTreeTableWidget(WebDriver driver, WebDriverWait wait, String id) {
-      super(driver,wait,id);
-       this.id =id;
-
-
+        super(driver, wait, id);
     }
 
-    private OldTable createTable() {
-        return OldTable.createByComponentDataAttributeName(driver, webDriverWait,id );
+    public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
+        return new OldTreeTableWidget(driver, wait, dataAttributeName);
     }
 
     public List<String> getAllVisibleNodes(String attributeNameLabel) {
@@ -57,25 +47,31 @@ public class OldTreeTableWidget extends Widget {
         new Node(driver, webDriverWait, rowNumber).expandNode();
     }
 
-    public void selectNode(String value, String attributeNameLabel){
+    public void selectNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
         createTable().selectRow(rowNumber);
     }
+
     public void collapseNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
         new Node(driver, webDriverWait, rowNumber).collapseNode();
     }
-    public void callActionById(String id){
+
+    public void callActionById(String id) {
         createTable().callAction(id);
+    }
+
+    private OldTable createTable() {
+        return OldTable.createByComponentDataAttributeName(driver, webDriverWait, id);
     }
 
     public static class Node {
         private static final String TREE_NODE_EXPAND_ICON_XPATH = ".//i[contains(@class,'tree-node-expand-icon')]";
         private static final String TREE_NODE_ADD_ICON_XPATH = ".//i[@aria-label='ADD']";
         private static final String TREE_NODE_MINUS_ICON_XPATH = ".//i[@aria-label='MINUS']";
-        final private int row;
-        final private WebDriver driver;
-        final private WebDriverWait wait;
+        private final int row;
+        private final WebDriver driver;
+        private final WebDriverWait wait;
 
         Node(WebDriver driver, WebDriverWait wait, int row) {
             this.driver = driver;
@@ -91,10 +87,10 @@ public class OldTreeTableWidget extends Widget {
         private void expandNode() {
 
             WebElement node = getNodeExpandIcons().get(row);
-            if (!isExpanded(node)){
+            if (!isExpanded(node)) {
                 wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH))));
                 node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH)).click();
-                DelayUtils.waitForPageToLoad(driver,wait);
+                DelayUtils.waitForPageToLoad(driver, wait);
 
             }
         }
@@ -104,7 +100,7 @@ public class OldTreeTableWidget extends Widget {
             if (isExpanded(node)) {
                 wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(TREE_NODE_MINUS_ICON_XPATH))));
                 node.findElement(By.xpath(TREE_NODE_MINUS_ICON_XPATH)).click();
-                DelayUtils.waitForPageToLoad(driver,wait);
+                DelayUtils.waitForPageToLoad(driver, wait);
             }
         }
 

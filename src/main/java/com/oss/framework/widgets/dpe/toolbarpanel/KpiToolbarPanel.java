@@ -1,9 +1,5 @@
 package com.oss.framework.widgets.dpe.toolbarpanel;
 
-import com.oss.framework.components.inputs.Button;
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Widget;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,25 +7,29 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oss.framework.components.inputs.Button;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Widget;
+
 import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
 
 public class KpiToolbarPanel extends Widget {
 
+    static final String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
     private static final Logger log = LoggerFactory.getLogger(KpiToolbarPanel.class);
-
-    final static String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
-    private final static String APPLY_BUTTON_ID = "apply-button";
+    private static final String APPLY_BUTTON_ID = "apply-button";
     private static final String DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH = ".//div[@data-testid='dropdown_list_type_display_data']";
-    private final static String TOP_N_BUTTON_ID = "top-n-button";
-    private final static String OPTIONS_BUTTON_ID = "options-menu-button";
-    private final static String LAYOUT_BUTTON_ID = "layout-button";
-    private final static String OPENED_TOP_N_PANEL_XPATH = "//div[@class='window']/div[@data-testid='drill-down-menu']";
-    private final static String OPENED_OPTIONS_PANEL_XPATH = "//div[@class='window']/div[@data-testid='options-menu']";
-    private final static String OPENED_LAYOUT_PANEL_XPATH = "//div[@class='window']/div[@data-testid='layout-template-menu']";
-    private final static String EXPORT_BUTTON_ID = "export-button";
-    private final static String OPENED_EXPORT_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='export-menu']";
-    private final static String OPENED_FILTERS_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='filter-menu']";
-    private final static String FILTER_BUTTON_ID = "filter-button";
+    private static final String TOP_N_BUTTON_ID = "top-n-button";
+    private static final String OPTIONS_BUTTON_ID = "options-menu-button";
+    private static final String LAYOUT_BUTTON_ID = "layout-button";
+    private static final String OPENED_TOP_N_PANEL_XPATH = "//div[@class='window']/div[@data-testid='drill-down-menu']";
+    private static final String OPENED_OPTIONS_PANEL_XPATH = "//div[@class='window']/div[@data-testid='options-menu']";
+    private static final String OPENED_LAYOUT_PANEL_XPATH = "//div[@class='window']/div[@data-testid='layout-template-menu']";
+    private static final String EXPORT_BUTTON_ID = "export-button";
+    private static final String OPENED_EXPORT_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='export-menu']";
+    private static final String OPENED_FILTERS_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='filter-menu']";
+    private static final String FILTER_BUTTON_ID = "filter-button";
 
     private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
@@ -98,7 +98,7 @@ public class KpiToolbarPanel extends Widget {
     }
 
     private boolean isTopNPanelOpen() {
-        return driver.findElements(By.xpath(OPENED_TOP_N_PANEL_XPATH)).size() > 0;
+        return !driver.findElements(By.xpath(OPENED_TOP_N_PANEL_XPATH)).isEmpty();
     }
 
     private void clickTopNButton() {
@@ -107,7 +107,7 @@ public class KpiToolbarPanel extends Widget {
     }
 
     private boolean isOptionsPanelOpen() {
-        return driver.findElements(By.xpath(OPENED_OPTIONS_PANEL_XPATH)).size() > 0;
+        return !driver.findElements(By.xpath(OPENED_OPTIONS_PANEL_XPATH)).isEmpty();
     }
 
     private void clickOptionsButton() {
@@ -116,7 +116,7 @@ public class KpiToolbarPanel extends Widget {
     }
 
     private boolean isLayoutPanelOpen() {
-        return driver.findElements(By.xpath(OPENED_LAYOUT_PANEL_XPATH)).size() > 0;
+        return !driver.findElements(By.xpath(OPENED_LAYOUT_PANEL_XPATH)).isEmpty();
     }
 
     private void clickLayoutButton() {
@@ -125,7 +125,7 @@ public class KpiToolbarPanel extends Widget {
     }
 
     private boolean isExportPanelOpen() {
-        return driver.findElements(By.xpath(OPENED_EXPORT_PANEL_XPATH)).size() > 0;
+        return !driver.findElements(By.xpath(OPENED_EXPORT_PANEL_XPATH)).isEmpty();
     }
 
     private void clickExportButton() {
@@ -134,7 +134,7 @@ public class KpiToolbarPanel extends Widget {
     }
 
     private boolean isFilterPanelOpen() {
-        return driver.findElements(By.xpath(OPENED_FILTERS_PANEL_XPATH)).size() > 0;
+        return !driver.findElements(By.xpath(OPENED_FILTERS_PANEL_XPATH)).isEmpty();
     }
 
     private void clickFilterButton() {

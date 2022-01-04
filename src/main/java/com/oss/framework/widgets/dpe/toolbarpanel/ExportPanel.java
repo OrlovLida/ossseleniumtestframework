@@ -22,22 +22,18 @@ public class ExportPanel {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement exportPanel;
+    private final WebElement exportPanelElement;
 
-    public enum ExportType {
-        JPG, PNG, PDF, XLSX
+    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement exportPanelElement) {
+        this.driver = driver;
+        this.wait = webDriverWait;
+        this.exportPanelElement = exportPanelElement;
     }
 
     static ExportPanel create(WebDriver driver, WebDriverWait webDriverWait) {
         WebElement webElement = driver.findElement(By.xpath(EXPORT_PANEL_XPATH));
 
         return new ExportPanel(driver, webDriverWait, webElement);
-    }
-
-    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement exportPanel) {
-        this.driver = driver;
-        this.wait = webDriverWait;
-        this.exportPanel = exportPanel;
     }
 
     public void exportKpiToFile(ExportType exportType) {
@@ -56,5 +52,9 @@ public class ExportPanel {
         Button.createById(driver, EXPORT_BUTTON_ID).click();
         log.debug(CLICK_BTN + "Export");
         DelayUtils.waitForButtonDisappear(driver, EXPORT_BUTTON_XPATH);
+    }
+
+    public enum ExportType {
+        JPG, PNG, PDF, XLSX
     }
 }

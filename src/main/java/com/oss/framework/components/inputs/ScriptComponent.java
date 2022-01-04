@@ -1,6 +1,5 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.data.Data;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -8,10 +7,19 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.data.Data;
 
 public class ScriptComponent extends Input {
 
-    private static String XPATH = ".//div[@class='CodeMirror-code']";
+    private static final String XPATH = ".//div[@class='CodeMirror-code']";
+
+    private ScriptComponent(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
+        super(driver, webDriverWait, componentId);
+    }
+
+    private ScriptComponent(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
+        super(parent, driver, webDriverWait, componentId);
+    }
 
     static ScriptComponent create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new ScriptComponent(driver, wait, componentId);
@@ -21,12 +29,15 @@ public class ScriptComponent extends Input {
         return new ScriptComponent(parent, driver, wait, componentId);
     }
 
-    private ScriptComponent(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        super(driver, webDriverWait, componentId);
+    @Override
+    public void setValueContains(Data value) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    private ScriptComponent(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        super(parent, driver, webDriverWait, componentId);
+    @Override
+    public Data getValue() {
+        return Data.createSingleData(webElement.findElement(By.xpath(XPATH))
+                .getAttribute("value"));
     }
 
     @Override
@@ -37,17 +48,6 @@ public class ScriptComponent extends Input {
         action.moveToElement(input).click()
                 .sendKeys(value.getStringValue())
                 .perform();
-    }
-
-    @Override
-    public void setValueContains(Data value) {
-
-    }
-
-    @Override
-    public Data getValue() {
-        return Data.createSingleData(webElement.findElement(By.xpath(XPATH))
-                .getAttribute("value"));
     }
 
     @Override

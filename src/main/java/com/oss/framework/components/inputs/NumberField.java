@@ -12,14 +12,6 @@ public class NumberField extends Input {
 
     private static final String INPUT = ".//input";
 
-    static NumberField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new NumberField(driver, wait, componentId);
-    }
-
-    static NumberField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new NumberField(parent, driver, wait, componentId);
-    }
-
     private NumberField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
@@ -28,11 +20,12 @@ public class NumberField extends Input {
         super(parent, driver, wait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        WebElement input = webElement.findElement(By.xpath(INPUT));
-        clear();
-        input.sendKeys(value.getStringValue());
+    static NumberField create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new NumberField(driver, wait, componentId);
+    }
+
+    static NumberField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new NumberField(parent, driver, wait, componentId);
     }
 
     @Override
@@ -45,6 +38,13 @@ public class NumberField extends Input {
     public Data getValue() {
         WebElement input = webElement.findElement(By.xpath(INPUT));
         return Data.createSingleData(input.getAttribute("value"));
+    }
+
+    @Override
+    public void setValue(Data value) {
+        WebElement input = webElement.findElement(By.xpath(INPUT));
+        clear();
+        input.sendKeys(value.getStringValue());
     }
 
     @Override

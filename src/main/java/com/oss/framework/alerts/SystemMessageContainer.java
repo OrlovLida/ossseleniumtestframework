@@ -30,11 +30,6 @@ import com.oss.framework.utils.DelayUtils;
 public class SystemMessageContainer implements SystemMessageInterface {
 
     private static final Logger log = LoggerFactory.getLogger(SystemMessageContainer.class);
-
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private WebElement messageContainer;
-
     private static final String CLOSE_SINGLE_MESSAGE_BUTTON = ".//div[contains(@class,'closeButton')]";
     private static final String CLOSE_MESSAGE_CONTAINER_BUTTON = ".//i[@aria-label='Close']";
     private static final String PATH_TO_SHOW_MESSAGES = ".//i[@aria-label='Show/Hide messages' and contains(@class, 'down')]";
@@ -45,9 +40,14 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private static final String WARNING_MESSAGE_TYPE_CLASS = "warning";
     private static final String INFO_MESSAGE_TYPE_CLASS = "info";
     private static final String CANNOT_MAP_TO_MESSAGE_EXCEPTION = "Cannot map to message type";
+    private WebDriver driver;
+    private WebDriverWait wait;
+    private WebElement messageContainer;
 
-    public enum MessageType {
-        DANGER, WARNING, SUCCESS, INFO
+    private SystemMessageContainer(WebDriver driver, WebDriverWait wait, WebElement messageContainer) {
+        this.driver = driver;
+        this.wait = wait;
+        this.messageContainer = messageContainer;
     }
 
     public static SystemMessageInterface create(WebDriver driver, WebDriverWait wait) {
@@ -58,12 +58,6 @@ public class SystemMessageContainer implements SystemMessageInterface {
         return new SystemMessageContainer(driver, wait, messageContainer);
     }
 
-    private SystemMessageContainer(WebDriver driver, WebDriverWait wait, WebElement messageContainer) {
-        this.driver = driver;
-        this.wait = wait;
-        this.messageContainer = messageContainer;
-    }
-
     @Override
     public List<Message> getMessages() {
         log.info("Starting getting messages");
@@ -71,6 +65,31 @@ public class SystemMessageContainer implements SystemMessageInterface {
         List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
         log.info("Found {} system messages", messageItems.size());
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Message> getFirstMessage() {
+        return getMessages().stream().findFirst();
+    }
+
+    @Override
+    public void close() {
+        if (!messageContainer.findElements(By.xpath(CLOSE_MESSAGE_CONTAINER_BUTTON)).isEmpty()) {
+            tryToClose(CLOSE_MESSAGE_CONTAINER_BUTTON);
+        } else {
+            tryToClose(CLOSE_SINGLE_MESSAGE_BUTTON);
+        }
+    }
+
+    @Override
+    public void clickMessageLink() {
+        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
+        messageContainer.findElement(By.xpath(".//a[contains(@href, '#')]")).click();
+    }
+
+    @Override
+    public void waitForMessageDisappear() {
+        DelayUtils.waitForElementDisappear(wait, driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM)));
     }
 
     @Override
@@ -96,23 +115,17 @@ public class SystemMessageContainer implements SystemMessageInterface {
         return messages;
     }
 
+    public void expandSystemMessagesContainer() {
+        if (!messageContainer.findElements(By.xpath(PATH_TO_SHOW_MESSAGES)).isEmpty()) {
+            log.debug("Clicking show button in system message");
+            Actions builder = new Actions(driver);
+            builder.click(messageContainer.findElement(By.xpath(PATH_TO_SHOW_MESSAGES))).build().perform();
+        }
+    }
+
     private void printErrors(List<Message> messages) {
         messages
                 .forEach(message -> log.error(message.getText()));
-    }
-
-    @Override
-    public Optional<Message> getFirstMessage() {
-        return getMessages().stream().findFirst();
-    }
-
-    @Override
-    public void close() {
-        if (!messageContainer.findElements(By.xpath(CLOSE_MESSAGE_CONTAINER_BUTTON)).isEmpty()) {
-            tryToClose(CLOSE_MESSAGE_CONTAINER_BUTTON);
-        } else {
-            tryToClose(CLOSE_SINGLE_MESSAGE_BUTTON);
-        }
     }
 
     private void tryToClose(String closeButtonXpath) {
@@ -127,14 +140,6 @@ public class SystemMessageContainer implements SystemMessageInterface {
             log.debug("System message closed");
         } catch (NoSuchElementException | TimeoutException e) {
             log.warn("Cannot click close button in system message");
-        }
-    }
-
-    public void expandSystemMessagesContainer() {
-        if (!messageContainer.findElements(By.xpath(PATH_TO_SHOW_MESSAGES)).isEmpty()) {
-            log.debug("Clicking show button in system message");
-            Actions builder = new Actions(driver);
-            builder.click(messageContainer.findElement(By.xpath(PATH_TO_SHOW_MESSAGES))).build().perform();
         }
     }
 
@@ -165,6 +170,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
         throw new IllegalArgumentException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);
     }
 
+    public enum MessageType {
+        DANGER, WARNING, SUCCESS, INFO
+    }
+
     public static class Message {
 
         private final String text;
@@ -182,16 +191,5 @@ public class SystemMessageContainer implements SystemMessageInterface {
         public MessageType getMessageType() {
             return messageType;
         }
-    }
-
-    @Override
-    public void clickMessageLink() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
-        messageContainer.findElement(By.xpath(".//a[contains(@href, '#')]")).click();
-    }
-
-    @Override
-    public void waitForMessageDisappear() {
-        DelayUtils.waitForElementDisappear(wait, driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM)));
     }
 }

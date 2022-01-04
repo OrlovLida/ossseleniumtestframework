@@ -47,9 +47,8 @@ public class AggregatesManagerWidget extends Widget {
     public static class AggregateSingleConfiguration {
 
         public static final String AGGREGATE_FORM_PATH = "//div[@class='AggregateForm']";
-        private static final String AGGREGATE_HEADER_PATH = "//div[@class='AggregateHeader']";
         public static final String AGGREGATE_COMPONENT_PATH = "//section[@class='AggregateComponentContainer']";
-
+        private static final String AGGREGATE_HEADER_PATH = "//div[@class='AggregateHeader']";
         private static final String INPUT_NAME_ID = "nameId";
         private static final String INPUT_TABLE_BASE_NAME_ID = "tableBaseNameId";
         private static final String INPUT_DIMENSIONS_PATH = "factColumnsId";
@@ -90,28 +89,28 @@ public class AggregatesManagerWidget extends Widget {
             return (MultiCombobox) getComponent(INPUT_DIMENSIONS_PATH, Input.ComponentType.MULTI_COMBOBOX);
         }
 
-        public void setName(String value) {
-            getNameInput().setSingleStringValue(value);
-        }
-
         public String getName() {
             return getNameInput().getStringValue();
         }
 
-        public void setBaseTableName(String value) {
-            getBaseTableNameInput().setSingleStringValue(value);
+        public void setName(String value) {
+            getNameInput().setSingleStringValue(value);
         }
 
         public String getBaseTableName() {
             return getBaseTableNameInput().getStringValue();
         }
 
-        public void setDimensions(String value) {
-            getDimensionsInput().setSingleStringValue(value);
+        public void setBaseTableName(String value) {
+            getBaseTableNameInput().setSingleStringValue(value);
         }
 
         public Data getDimensions() {
             return getDimensionsInput().getValue();
+        }
+
+        public void setDimensions(String value) {
+            getDimensionsInput().setSingleStringValue(value);
         }
 
         private Input getComponent(String componentId, Input.ComponentType componentType) {

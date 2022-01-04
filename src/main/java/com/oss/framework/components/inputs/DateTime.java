@@ -20,14 +20,6 @@ public class DateTime extends Input {
     private static final String XPATH_CLOCK_ICON = ".//button//i[@class='OSSIcon fa fa-calendar']";
     private static final String INPUT = ".//input";
 
-    static DateTime create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new DateTime(driver, wait, componentId);
-    }
-
-    static DateTime createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new DateTime(parent, driver, wait, componentId);
-    }
-
     private DateTime(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
@@ -36,11 +28,18 @@ public class DateTime extends Input {
         super(parent, driver, wait, componentId);
     }
 
-    @Override
-    public void setValue(Data value) {
-        clear();
-        WebElement input = webElement.findElement(By.xpath(INPUT));
-        input.sendKeys(value.getStringValue());
+    public static String createPathDate(Calendar date) {
+        return "//div[@aria-label='" + date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) + ", " +
+                date.get(Calendar.DAY_OF_MONTH) + " " +
+                date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + date.get(Calendar.YEAR) + "']";
+    }
+
+    static DateTime create(WebDriver driver, WebDriverWait wait, String componentId) {
+        return new DateTime(driver, wait, componentId);
+    }
+
+    static DateTime createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        return new DateTime(parent, driver, wait, componentId);
     }
 
     @Override
@@ -55,6 +54,13 @@ public class DateTime extends Input {
     }
 
     @Override
+    public void setValue(Data value) {
+        clear();
+        WebElement input = webElement.findElement(By.xpath(INPUT));
+        input.sendKeys(value.getStringValue());
+    }
+
+    @Override
     public void clear() {
         WebElement input = webElement.findElement(By.xpath(INPUT));
         input.sendKeys(Keys.CONTROL + "a");
@@ -64,27 +70,9 @@ public class DateTime extends Input {
         DelayUtils.sleep();
     }
 
-    public static String createPathDate(Calendar date) {
-        return "//div[@aria-label='" + date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) + ", " +
-                date.get(Calendar.DAY_OF_MONTH) + " " +
-                date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + date.get(Calendar.YEAR) + "']";
-    }
-
     public void chooseDate(String date) {
         clickCalendar();
         DatePicker.create(driver, webDriverWait, "dateTimePicker").chooseDate(date);
-    }
-
-    private void selectDate(Calendar givenDate) {
-        String day = String.valueOf(givenDate.get(Calendar.DAY_OF_MONTH));
-        WebElement data = driver.findElement(By.xpath(createPathDate(givenDate)));
-        data.click();
-    }
-
-    private void clickTime() {
-        WebElement clock = this.webElement.findElement(By.xpath(XPATH_CLOCK_ICON));
-        clock.click();
-        DelayUtils.sleep();
     }
 
     public void clickCalendar() {
@@ -98,5 +86,11 @@ public class DateTime extends Input {
         clickTime();
         TimePicker.create(driver, webDriverWait).chooseTime(time);
         clickTime();
+    }
+
+    private void clickTime() {
+        WebElement clock = this.webElement.findElement(By.xpath(XPATH_CLOCK_ICON));
+        clock.click();
+        DelayUtils.sleep();
     }
 }

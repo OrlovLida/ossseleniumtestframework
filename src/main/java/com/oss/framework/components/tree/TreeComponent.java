@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.treewidget.InlineMenu;
@@ -28,23 +29,25 @@ public class TreeComponent {
     private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
-    
+
+
+    private static final int LEFT_MARGIN_IN_PX = 24;
+    private final WebDriver driver;
+    private final WebDriverWait webDriverWait;
+    private final WebElement treeComponentElement;
+
+    private TreeComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement treeComponentElement) {
+        this.driver = driver;
+        this.webDriverWait = webDriverWait;
+        this.treeComponentElement = treeComponentElement;
+    }
+
     public static TreeComponent create(WebDriver driver, WebDriverWait webDriverWait, WebElement parent) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         WebElement treeComponent = parent.findElement(By.className(TREE_CLASS));
         return new TreeComponent(driver, webDriverWait, treeComponent);
     }
-    
-    private final WebDriver driver;
-    private final WebDriverWait webDriverWait;
-    private final WebElement treeElement;
-    
-    private TreeComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement treeComponent) {
-        this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.treeElement = treeComponent;
-    }
-    
+
     public void expandNodeByPath(String path) {
         Node node = getNodeByPath(path);
         node.expandNode();
@@ -64,7 +67,12 @@ public class TreeComponent {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(labels));
         return getNodeByPath(pathElements, true);
     }
-    
+    public List<Node> getVisibleNodes() {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        return this.treeComponentElement.findElements(By.xpath("." + getNodeClassPath())).stream()
+                .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
+    }
+
     private Node getNodeByPath(List<String> pathElements, boolean isLabel) {
         StringBuilder currentPath = new StringBuilder();
         Node node = null;
@@ -87,13 +95,7 @@ public class TreeComponent {
         }
         return node;
     }
-    
-    public List<Node> getVisibleNodes() {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        return this.treeElement.findElements(By.xpath("." + getNodeClassPath())).stream()
-                .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
-    }
-    
+
     private String getNodeClassPath() {
         return "//div[@class='" + NODE_CLASS + "']";
     }
@@ -101,7 +103,10 @@ public class TreeComponent {
     public static class Node {
         private static final String DATA_GUID_ATTR = "data-guid";
         private static final String DATA_PATH_LABEL_ATTR = "data-label-path";
-        
+
+        private static final String FILTERS_BUTTON_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='filters-panel-button']";
+        private static final String ADVANCED_SEARCH_PANEL_ID = "advanced-search_panel";
+
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
@@ -128,7 +133,7 @@ public class TreeComponent {
         public void toggleNode() {
             Actions action = new Actions(driver);
             action.moveToElement(nodeElement).perform();
-            
+
             WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
             input.click();
         }
@@ -184,7 +189,7 @@ public class TreeComponent {
         public void callAction(String groupId, String actionId) {
             Actions actions = new Actions(driver);
             actions.moveToElement(nodeElement).build().perform();
-            
+
             InlineMenu menu = InlineMenu.create(nodeElement, driver, webDriverWait);
             menu.callAction(groupId, actionId);
         }
@@ -192,9 +197,27 @@ public class TreeComponent {
         public void callAction(String actionId) {
             Actions actions = new Actions(driver);
             actions.moveToElement(nodeElement).build().perform();
-            
+
             InlineMenu menu = InlineMenu.create(nodeElement, driver, webDriverWait);
             menu.callAction(actionId);
+        }
+
+        public AdvancedSearch openAdvancedSearch() {
+            clickFilter();
+            return AdvancedSearch.createById(driver, webDriverWait, ADVANCED_SEARCH_PANEL_ID);
+        }
+
+        private void clickFilter() {
+            if (isFilterDisabled()) {
+                Actions actions = new Actions(driver);
+                WebElement filterButton = nodeElement.findElement(By.xpath(FILTERS_BUTTON_XPATH));
+                actions.moveToElement(filterButton).click(filterButton).build().perform();
+            } else
+                throw new RuntimeException("Filter Node is not available for Node " + getLabel());
+        }
+
+        private boolean isFilterDisabled() {
+            return !nodeElement.findElements(By.xpath(FILTERS_BUTTON_XPATH)).isEmpty();
         }
     }
 }

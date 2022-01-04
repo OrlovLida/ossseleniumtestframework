@@ -25,17 +25,17 @@ public class TabWindowWidget implements TabsInterface {
     private final WebDriverWait wait;
     private final WebElement tabs;
 
+    private TabWindowWidget(WebDriver driver, WebDriverWait wait, WebElement tabs) {
+        this.driver = driver;
+        this.wait = wait;
+        this.tabs = tabs;
+    }
+
     public static TabsInterface create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(500);
         DelayUtils.waitByXPath(wait, OSS_WINDOW_TAB);
         WebElement widget = driver.findElement(By.xpath(OSS_WINDOW_TAB));
         return new TabWindowWidget(driver, wait, widget);
-    }
-
-    private TabWindowWidget(WebDriver driver, WebDriverWait wait, WebElement tabs) {
-        this.driver = driver;
-        this.wait = wait;
-        this.tabs = tabs;
     }
 
     @Override
@@ -60,11 +60,6 @@ public class TabWindowWidget implements TabsInterface {
     }
 
     @Override
-    public void callActionById(String id) {
-        getActionsInterface().callActionById(id);
-    }
-
-    @Override
     public void callActionByLabel(String groupLabel, String label) {
         getActionsInterface().callActionByLabel(groupLabel, label);
     }
@@ -74,20 +69,14 @@ public class TabWindowWidget implements TabsInterface {
         getActionsInterface().callActionById(groupLabel, id);
     }
 
-    private ActionsInterface getActionsInterface() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        DelayUtils.waitForNestedElements(wait, this.tabs,
-                "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']");
-        boolean isNewActionContainer = isElementPresent(driver, By.className("actionsContainer"));
-        if (isNewActionContainer) {
-            return ActionsContainer.createFromParent(this.tabs, driver, wait);
-        } else {
-            return OldActionsContainer.createFromParent(driver, wait, this.tabs);
-        }
+    @Override
+    public void callActionById(String id) {
+        getActionsInterface().callActionById(id);
     }
 
-    private boolean isElementPresent(WebDriver driver, By by) {
-        return !driver.findElements(by).isEmpty();
+    @Override
+    public void callAction(String groupId, String actionId) {
+        throw new UnsupportedOperationException("Method not implemented");
     }
 
     @Override
@@ -104,13 +93,24 @@ public class TabWindowWidget implements TabsInterface {
     }
 
     @Override
-    public void callAction(String groupId, String actionId) {
+    public void clickButtonById(String id) {
         throw new UnsupportedOperationException("Method not implemented");
     }
 
-    @Override
-    public void clickButtonById(String id) {
-        throw new UnsupportedOperationException("Method not implemented");
+    private ActionsInterface getActionsInterface() {
+        DelayUtils.waitForPageToLoad(driver, wait);
+        DelayUtils.waitForNestedElements(wait, this.tabs,
+                "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']");
+        boolean isNewActionContainer = isElementPresent(driver, By.className("actionsContainer"));
+        if (isNewActionContainer) {
+            return ActionsContainer.createFromParent(this.tabs, driver, wait);
+        } else {
+            return OldActionsContainer.createFromParent(driver, wait, this.tabs);
+        }
+    }
+
+    private boolean isElementPresent(WebDriver driver, By by) {
+        return !driver.findElements(by).isEmpty();
     }
 
     private boolean isMoreVisible() {

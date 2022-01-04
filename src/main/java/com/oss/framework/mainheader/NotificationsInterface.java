@@ -2,15 +2,15 @@ package com.oss.framework.mainheader;
 
 public interface NotificationsInterface {
 
-    String waitAndGetFinishedNotificationText();
+    String getNotificationMessage();
 
-    void waitForSpecificNotification(String text, String notificationStatus);
+    void waitForNotification(String text, String notificationStatus);
 
     void clearAllNotification();
 
-    int getAmountOfNotifications();
+    int countNotifications();
 
-    void openDetailsForSpecificNotification(String text, String notificationStatus);
+    void openDetails(String text, String notificationStatus);
 
     void clickDownloadFile();
 }

@@ -1,11 +1,12 @@
 package com.oss.framework.floor_plan;
 
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.utils.DelayUtils;
 
 public class FloorPlanTab {
     private static final String TABS_LIST_XPATH = ".//div[contains(@class, tabs-list)]";

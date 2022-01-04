@@ -17,14 +17,14 @@ public class SelectionBarComponent {
     private final WebDriverWait wait;
     private final String widgetId;
 
-    public static SelectionBarComponent create(WebDriver driver, WebDriverWait wait, String widgetId) {
-        return new SelectionBarComponent(driver, wait, widgetId);
-    }
-
     private SelectionBarComponent(WebDriver driver, WebDriverWait wait, String widgetId) {
         this.driver = driver;
         this.wait = wait;
         this.widgetId = widgetId;
+    }
+
+    public static SelectionBarComponent create(WebDriver driver, WebDriverWait wait, String widgetId) {
+        return new SelectionBarComponent(driver, wait, widgetId);
     }
 
     public void openSelectionBar() {
@@ -37,14 +37,6 @@ public class SelectionBarComponent {
         if (isActive()) {
             driver.findElement(By.xpath("//div[@data-testid='" + widgetId + "']" + TOGGLER_BUTTON_XPATH)).click();
         }
-    }
-
-    private boolean isActive() {
-        return !driver.findElements(By.xpath("//div[@data-testid='" + widgetId + "']" + VISIBLE_SELECTION_BAR_XPATH)).isEmpty();
-    }
-
-    private boolean areAllObjectShown() {
-        return !driver.findElements(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH)).isEmpty();
     }
 
     public void clickUnselectAllButton() {
@@ -71,5 +63,13 @@ public class SelectionBarComponent {
             openSelectionBar();
         }
         return driver.findElement(By.xpath("//*[@data-testid='" + widgetId + "']" + SELECTION_BAR_SELECTED_OBJECTS_COUNT_LABEL_XPATH)).getText();
+    }
+
+    private boolean isActive() {
+        return !driver.findElements(By.xpath("//div[@data-testid='" + widgetId + "']" + VISIBLE_SELECTION_BAR_XPATH)).isEmpty();
+    }
+
+    private boolean areAllObjectShown() {
+        return !driver.findElements(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH)).isEmpty();
     }
 }

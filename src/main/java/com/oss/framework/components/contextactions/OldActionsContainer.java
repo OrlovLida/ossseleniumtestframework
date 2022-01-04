@@ -15,6 +15,7 @@ import com.oss.framework.utils.DelayUtils;
 
 public class OldActionsContainer implements ActionsInterface {
 
+    public static final String KEBAB_GROUP_ID = "frameworkCustomEllipsis";
     private static final String WINDOW_TOOLBAR_XPATH = "//div[contains(@class, 'windowToolbar')]";
     private static final String CONTEXT_WINDOW_TOOLBAR_XPATH = "." + WINDOW_TOOLBAR_XPATH;
     private static final String MAIN_WINDOW_TOOLBAR = "//div[@class='OssWindow']//div[@class='windowHeader']//div[@class='windowToolbar']";
@@ -23,13 +24,18 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String ACTION_BY_LABEL_XPATH = ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')]";
     private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for the old actions container";
     private static final String KEBAB_BUTTON_XPATH = "//li[@data-group-id='frameworkCustomEllipsis']";
-    public static final String KEBAB_GROUP_ID = "frameworkCustomEllipsis";
     private static final String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
     private static final String DROPDOWN_XPATH = "//a[@class='dropdown']//div[text()='%s']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement toolbar;
+
+    private OldActionsContainer(WebDriver driver, WebDriverWait wait, WebElement toolbar) {
+        this.driver = driver;
+        this.wait = wait;
+        this.toolbar = toolbar;
+    }
 
     public static OldActionsContainer createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitForNestedElements(wait, parent, WINDOW_TOOLBAR_XPATH);
@@ -49,10 +55,20 @@ public class OldActionsContainer implements ActionsInterface {
         return new OldActionsContainer(driver, wait, toolbar);
     }
 
-    private OldActionsContainer(WebDriver driver, WebDriverWait wait, WebElement toolbar) {
-        this.driver = driver;
-        this.wait = wait;
-        this.toolbar = toolbar;
+    private static boolean isElementPresent(WebElement webElement, By by) {
+        try {
+            webElement.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
+        Actions actions = new Actions(webDriver);
+        actions.moveToElement(webElement).click(webElement).build().perform();
     }
 
     @Override
@@ -119,21 +135,5 @@ public class OldActionsContainer implements ActionsInterface {
     private void clickActionByXpath(String xpath) {
         DelayUtils.waitForNestedElements(wait, toolbar, xpath);
         clickOnWebElement(driver, wait, this.toolbar.findElement(By.xpath(xpath)));
-    }
-
-    private static boolean isElementPresent(WebElement webElement, By by) {
-        try {
-            webElement.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-
-    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
-        Actions actions = new Actions(webDriver);
-        actions.moveToElement(webElement).click(webElement).build().perform();
     }
 }

@@ -8,9 +8,8 @@ import com.oss.framework.widgets.propertypanel.PropertyPanel;
 
 public class WidgetFactory {
 
-
     public static Widget getWidget(String widgetId, WidgetType widgetType, WebDriver webDriver, WebDriverWait wait) {
-        switch(widgetType) {
+        switch (widgetType) {
             case TABLE_WIDGET: {
                 break;
             }
