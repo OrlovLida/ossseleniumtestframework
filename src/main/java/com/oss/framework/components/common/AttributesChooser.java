@@ -11,7 +11,7 @@ import com.oss.framework.utils.DelayUtils;
 
 public class AttributesChooser {
 
-    private static final String X_PATH_ID = "//div[@id='attributes-management']";
+    private static final String ATTRIBUTE_MANAGEMENT_ID_XPATH = "//div[@id='attributes-management']";
     private static final String APPLY_BUTTON_XPATH = ".//a[contains(@class,'btn-primary')]";
     private static final String CANCEL_BUTTON_XPATH = ".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]";
     private static final String DEFAULT_BUTTON_XPATH = ".//div[@class='management-default-button']/a[contains(@class,'btn-flat')]";
@@ -26,8 +26,8 @@ public class AttributesChooser {
     }
 
     public static AttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
-        DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
-        WebElement attributesChooser = driver.findElement(By.xpath(X_PATH_ID));
+        DelayUtils.waitByXPath(webDriverWait, ATTRIBUTE_MANAGEMENT_ID_XPATH);
+        WebElement attributesChooser = driver.findElement(By.xpath(ATTRIBUTE_MANAGEMENT_ID_XPATH));
         return new AttributesChooser(driver, webDriverWait, attributesChooser);
     }
 
@@ -35,7 +35,6 @@ public class AttributesChooser {
         String nodePath = getAttributePath(attributeLabel, path);
         Node attributeByLabelsPath = getAttributeByLabelsPath(nodePath);
         enableAttributesByLabel(attributeByLabelsPath);
-
     }
 
     public void disableAttributeByLabel(String attributeLabel, String... path) {
