@@ -1,6 +1,7 @@
 package com.oss.framework.components.search;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.CSSUtils;
@@ -26,12 +28,13 @@ public class FiltersSettings {
     private static final String FAVORITE = "FAVOURITE";
     private static final String SAVE_LABEL = "Save";
     private static final String APPLY_LABEL = "Apply";
-    private static final String STAR_ICON_PATH = ".//div[@class='filters-element-icon']//i";
+    private static final String STAR_ICON_XPATH = ".//div[@class='filters-element-icon']//i";
     private static final String SELECTED_ATTRIBUTE_PATH = ".//input[@checked]";
     private static final String INPUT_PATH = ".//input";
     private static final String FILTER_WITH_PROVIDED_NAME_DOESNT_EXIST_EXCEPTION = "Filter with provided name doesn't exist.";
     private static final String ARIA_LABEL = "aria-label";
-
+    private static final String CANNOT_FIND_FILTER_WITH_NAME_EXCEPTION = "Cannot find filter with Name:  ";
+    
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
@@ -46,11 +49,11 @@ public class FiltersSettings {
         return new FiltersSettings(driver, wait);
     }
     
-    public List<SavedFilter> getFiltersList() {
+    List<SavedFilter> getFiltersList() {
         openSavedFilters();
         DelayUtils.waitByXPath(wait, NO_FILTERS + " | " + SAVED_FILTER_LABEL);
         return this.webElement.findElements(By.cssSelector(SAVED_FILTERS_SELECTOR)).stream()
-                .map(savedFilter -> new SavedFilter(driver, wait, savedFilter))
+                .map(savedFilter -> SavedFilter.create(driver, wait, savedFilter, webElement))
                 .collect(Collectors.toList());
     }
     
@@ -59,12 +62,12 @@ public class FiltersSettings {
         theFilter.markAsFavorite();
     }
     
-    public void chooseFilterByLabel(String filterLabel) {
-        getFilterByLabel(filterLabel).chooseFilter();
+    void chooseFilterByLabel(String filterLabel) {
+        getFilterByLabel(filterLabel).selectFilter();
         getSaveButton(APPLY_LABEL).ifPresent(WebElement::click);
     }
     
-    public void unselectAttributes(List<String> attributeIds) {
+    void unselectAttributes(List<String> attributeIds) {
         List<Attribute> attributes = getAttributes(attributeIds);
         attributes.forEach(attribute -> {
             if (attribute.isSelected()) {
@@ -74,7 +77,7 @@ public class FiltersSettings {
         getSaveButton(SAVE_LABEL).ifPresent(WebElement::click);
     }
     
-    public void selectAttributes(List<String> attributeIds) {
+    void selectAttributes(List<String> attributeIds) {
         List<Attribute> attributes = getAttributes(attributeIds);
         attributes.forEach(attribute -> {
             if (!attribute.isSelected()) {
@@ -139,39 +142,58 @@ public class FiltersSettings {
     }
     
     protected static class SavedFilter {
-        private final WebElement filter;
+        private static final String FILTERS_ELEMENT_CLASS = "filters-element";
+        private static final String FILTER_LABEL_CLASS = "filter-label";
         private final WebDriver driver;
         private final WebDriverWait wait;
+        private final String filterName;
+        private final WebElement parent;
         
-        private SavedFilter(WebDriver driver, WebDriverWait wait, WebElement filter) {
+        private SavedFilter(WebDriver driver, WebDriverWait wait, String filterName, WebElement parent) {
             this.driver = driver;
-            this.filter = filter;
             this.wait = wait;
+            this.filterName = filterName;
+            this.parent = parent;
+        }
+        
+        private static SavedFilter create(WebDriver driver, WebDriverWait wait, WebElement filter, WebElement parent) {
+            String filterName = filter.findElement(By.className(FILTER_LABEL_CLASS)).getText();
+            return new SavedFilter(driver, wait, filterName, parent);
+        }
+        
+        private WebElement getFilter() {
+            return parent.findElements(By.className(FILTERS_ELEMENT_CLASS)).stream()
+                    .filter(filter -> filter
+                            .getText()
+                            .equals(filterName))
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_FILTER_WITH_NAME_EXCEPTION + filterName));
         }
         
         public boolean isFavorite() {
             return getStar().getAttribute(ARIA_LABEL).equals(FAVORITE);
         }
         
-        public String getFilterLabel() {
-            return filter.getText();
+        String getFilterLabel() {
+            return filterName;
         }
         
         private void markAsFavorite() {
+            Actions action = new Actions(driver);
             if (!isFavorite()) {
-                getStar().click();
-                DelayUtils.waitByXPath(wait, "//i[@" + ARIA_LABEL + "='" + FAVORITE + "']");
+                action.click(getStar()).pause(100).build().perform();
+                wait.until(ExpectedConditions.attributeToBe(getStar(), ARIA_LABEL, FAVORITE));
             }
         }
         
         private WebElement getStar() {
-            return filter.findElement(By.xpath(STAR_ICON_PATH));
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(STAR_ICON_XPATH)));
+            return getFilter().findElement(By.xpath(STAR_ICON_XPATH));
         }
         
-        private void chooseFilter() {
+        private void selectFilter() {
             Actions action = new Actions(driver);
-            action.moveToElement(filter).click(filter).build().perform();
-            
+            action.moveToElement(getFilter()).click(getFilter()).build().perform();
         }
     }
 }
