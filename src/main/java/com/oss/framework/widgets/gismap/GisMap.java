@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.gisMap;
+package com.oss.framework.widgets.gismap;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -9,13 +9,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.utils.DelayUtils;
 
 public class GisMap implements GisMapInterface {
 
     private static final String GIS_MAP_XPATH = "//div[@class='OssWindow']";
     private static final String GIS_MAP_SEARCH_XPATH = "//input[@class='form-control mapSearchInput']";
-    private static final String CANVAS = "//canvas";
+    private static final String CANVAS_XPATH = "//canvas";
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -40,7 +41,7 @@ public class GisMap implements GisMapInterface {
     }
 
     @Override
-    public void searchFirstResult(String value) {
+    public void setValueContains(String value) {
         DelayUtils.waitByXPath(wait, GIS_MAP_SEARCH_XPATH);
         WebElement search = gisMapElement.findElement(By.xpath(GIS_MAP_SEARCH_XPATH));
         search.clear();
@@ -51,7 +52,7 @@ public class GisMap implements GisMapInterface {
     }
 
     @Override
-    public void searchResult(String value) {
+    public void setValue(String value) {
         DelayUtils.waitByXPath(wait, GIS_MAP_SEARCH_XPATH);
         WebElement search = gisMapElement.findElement(By.xpath(GIS_MAP_SEARCH_XPATH));
         search.clear();
@@ -61,30 +62,30 @@ public class GisMap implements GisMapInterface {
     }
 
     @Override
-    public void clickOnMapByCoordinates(int x, int y) {
+    public void clickMapByCoordinates(int x, int y) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        WebElement canvas = driver.findElement(By.xpath(CANVAS));
+        WebElement canvas = driver.findElement(By.xpath(CANVAS_XPATH));
         new Actions(driver).moveToElement(canvas, 0, 0).moveByOffset(canvas.getSize().width / x, canvas.getSize().height / y).click().build().perform();
     }
 
     @Override
-    public void doubleClickOnMapByCoordinates(int x, int y) {
+    public void doubleClickMapByCoordinates(int x, int y) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        WebElement canvas = driver.findElement(By.xpath(CANVAS));
+        WebElement canvas = driver.findElement(By.xpath(CANVAS_XPATH));
         new Actions(driver).moveToElement(canvas, 0, 0).moveByOffset(canvas.getSize().width / x, canvas.getSize().height / y).doubleClick().build().perform();
     }
 
     @Override
-    public void clickOnMapByCoordinatesWithShift(int x, int y) {
+    public void clickMapByCoordinatesWithShift(int x, int y) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        WebElement canvas = driver.findElement(By.xpath(CANVAS));
+        WebElement canvas = driver.findElement(By.xpath(CANVAS_XPATH));
         new Actions(driver).moveToElement(canvas, 0, 0).moveByOffset(canvas.getSize().width / x, canvas.getSize().height / y).keyDown(Keys.SHIFT).click().keyUp(Keys.SHIFT).build().perform();
     }
 
     @Override
     public void dragAndDropObject(int xSource, int ySource, int xDestination, int yDestination) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        WebElement canvas = driver.findElement(By.xpath(CANVAS));
+        WebElement canvas = driver.findElement(By.xpath(CANVAS_XPATH));
         Actions action = new Actions(driver);
         action
                 .moveToElement(canvas, 0, 0)
@@ -93,5 +94,10 @@ public class GisMap implements GisMapInterface {
                 .moveToElement(canvas, 0, 0)
                 .moveByOffset(canvas.getSize().width / xDestination, canvas.getSize().height / yDestination)
                 .release().perform();
+    }
+
+    @Override
+    public TreeComponent getLayersTree() {
+        return TreeComponent.create(driver, wait, gisMapElement);
     }
 }
