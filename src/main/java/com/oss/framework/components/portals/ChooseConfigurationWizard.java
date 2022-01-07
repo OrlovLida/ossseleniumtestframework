@@ -41,15 +41,15 @@ public class ChooseConfigurationWizard {
     }
 
     public void apply() {
-        getWizard().clickActionById(APPLY_BUTTON_ID);
+        getWizard().clickButtonById(APPLY_BUTTON_ID);
     }
 
     public void download() {
-        getWizard().clickActionById(DOWNLOAD_BUTTON_ID);
+        getWizard().clickButtonById(DOWNLOAD_BUTTON_ID);
     }
 
     public void cancel() {
-        getWizard().clickActionById(CANCEL_BUTTON_ID);
+        getWizard().clickButtonById(CANCEL_BUTTON_ID);
     }
 
     private Wizard getWizard() {
