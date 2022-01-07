@@ -43,6 +43,7 @@ public class Wizard {
         this.webElement = webElement;
     }
 
+    @Deprecated
     public static Wizard createWizard(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, OSS_WINDOW);
         WebElement webElement = driver.findElement(By.xpath(OSS_WINDOW));
