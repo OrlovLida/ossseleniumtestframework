@@ -20,12 +20,10 @@ import com.oss.framework.utils.DelayUtils;
 
 public class Wizard {
 
-    private static final String POPUP_ID = "Popup";
     private static final String OSS_WINDOW = "//div[contains(@class,'OssWindow')]";
     private static final String NEXT_BUTTON = ".//button[text()='Next']";
     private static final String NEXT_STEP = ".//button[text()='Next Step']";
     private static final String ACCEPT_BUTTON = ".//button[text()='Accept']";
-    private static final String SUBMIT_BUTTON = ".//button[text()='Submit']";
     private static final String CANCEL_BUTTON = ".//button[text()='Cancel']";
     private static final String DELETE_BUTTON = ".//a[text()='Delete']";
     private static final String OK_BUTTON = ".//a[text()='OK']";
@@ -57,24 +55,6 @@ public class Wizard {
         return new Wizard(driver, wait, webElement);
     }
 
-    public static Wizard createPopupWizard(WebDriver driver, WebDriverWait wait) {
-        return createByComponentId(driver, wait, POPUP_ID);
-    }
-
-    //TODO: temporary method due to OSSWEB-9886 and OSSWEB-9896
-    public static Wizard createWizardByHeaderText(WebDriver driver, WebDriverWait wait, String headerText) {
-        DelayUtils.waitByXPath(wait, OSS_WINDOW);
-        WebElement webElement = driver.findElement(By.xpath(".//div[text()='" + headerText + "']/../../../../.."));
-        return new Wizard(driver, wait, webElement);
-    }
-
-    //TODO: temporary method due to OSSWEB-9886 and OSSWEB-9896
-    public static Wizard createWizardByClassArrayIndex(WebDriver driver, WebDriverWait wait, String index) {
-        DelayUtils.waitByXPath(wait, "//div[@class='OssWindow'][" + index + "]");
-        WebElement webElement = driver.findElement(By.xpath("//div[@class='OssWindow'][" + index + "]"));
-        return new Wizard(driver, wait, webElement);
-    }
-
     private static boolean isElementPresent(WebElement webElement, By by) {
         try {
             webElement.findElement(by);
@@ -95,6 +75,7 @@ public class Wizard {
         return input;
     }
 
+    @Deprecated
     public Input clearComponent(String componentId, Input.ComponentType componentType) {
         DelayUtils.waitForNestedElements(wait, webElement, String.format(DATA_TEST_ID_XPATH, componentId));
         Input input = getComponent(componentId, componentType);
@@ -103,73 +84,56 @@ public class Wizard {
     }
 
     public void clickNext() {
-        clickOnButton(NEXT_BUTTON);
+        clickButton(NEXT_BUTTON);
     }
 
     public void clickNextStep() {
-        clickOnButton(NEXT_STEP);
+        clickButton(NEXT_STEP);
     }
 
     public void clickAccept() {
-        clickOnButton(ACCEPT_BUTTON);
+        clickButton(ACCEPT_BUTTON);
     }
 
-    public void submit() {
-        clickOnButton(SUBMIT_BUTTON);
+    public void clickCancel() {
+        clickButton(CANCEL_BUTTON);
     }
 
-    public void cancel() {
-        clickOnButton(CANCEL_BUTTON);
-    }
-
-    public void proceed() {
-        clickOnButton(PROCEED_BUTTON);
+    public void clickProceed() {
+        clickButton(PROCEED_BUTTON);
     }
 
     public void clickSave() {
-        clickOnButton(SAVE_BUTTON);
+        clickButton(SAVE_BUTTON);
     }
 
     public void clickUpdate() {
-        clickOnButton(UPDATE_BUTTON);
+        clickButton(UPDATE_BUTTON);
     }
 
     public void clickOK() {
-        clickOnButton(OK_BUTTON);
+        clickButton(OK_BUTTON);
     }
 
     public void clickDelete() {
-        clickOnButton(DELETE_BUTTON);
+        clickButton(DELETE_BUTTON);
     }
 
-    public void clickActionById(String actionId) {
-        clickOnButton(String.format(DATA_TEST_ID_XPATH, actionId));
+    public void clickButtonById(String actionId) {
+        clickButton(String.format(DATA_TEST_ID_XPATH, actionId));
     }
 
     public void clickButtonByLabel(String label) {
-        clickOnButton(String.format(BY_TEXT_XPATH, label));
+        clickButton(String.format(BY_TEXT_XPATH, label));
     }
 
-    public void clickAcceptOldWizard() {
-        DelayUtils.waitByXPath(wait, OSS_WINDOW);
-        WebElement wizardElement = driver.findElement(By.xpath(OSS_WINDOW));
-        DelayUtils.waitForNestedElements(wait, wizardElement, ACCEPT_BUTTON);
-        wait.until(ExpectedConditions.elementToBeClickable(wizardElement.findElement(By.xpath(ACCEPT_BUTTON)))).click();
-        waitForButtonDisappear(ACCEPT_BUTTON);
+    public void clickButtonById(String groupId, String actionId) {
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement, driver, wait);
+        buttonContainer.callActionById(groupId, actionId);
     }
 
     public void waitToClose() {
         wait.until(ExpectedConditions.invisibilityOf(this.webElement));
-    }
-
-    public void callButtonByLabel(String label) {
-        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement, driver, wait);
-        buttonContainer.callActionByLabel(label);
-    }
-
-    public void callButtonById(String id) {
-        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement, driver, wait);
-        buttonContainer.callActionById(id);
     }
 
     public void rolloutById(String id) {
@@ -186,12 +150,7 @@ public class Wizard {
                 DelayUtils.waitForLoadBars(wait, webElement);
             }
         }
-        clickActionById(acceptButtonId);
-    }
-
-    public void clickButtonById(String groupLabel, String actionId) {
-        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement, driver, wait);
-        buttonContainer.callActionById(groupLabel, actionId);
+        clickButtonById(acceptButtonId);
     }
 
     public int numberOfSteps() {
@@ -203,7 +162,7 @@ public class Wizard {
         return 1;
     }
 
-    private void clickOnButton(String xpath) {
+    private void clickButton(String xpath) {
         DelayUtils.waitForNestedElements(wait, webElement, xpath);
         WebElement button = webElement.findElement(By.xpath(xpath));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
@@ -216,9 +175,5 @@ public class Wizard {
     private boolean isStepsPresent() {
         List<WebElement> steps = this.webElement.findElements(By.xpath("//div[@class='simple-progress-bar']"));
         return !steps.isEmpty();
-    }
-
-    private void waitForButtonDisappear(String buttonXpath) {
-        DelayUtils.waitForButtonDisappear(driver, buttonXpath);
     }
 }

@@ -105,17 +105,17 @@ public class SaveConfigurationWizard {
 
     private void clickOnSaveAsNew() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        getWizard().clickActionById(SAVE_AS_NEW_ID);
+        getWizard().clickButtonById(SAVE_AS_NEW_ID);
     }
 
     private void clickOnSave() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        getWizard().clickActionById(SAVE_ID);
+        getWizard().clickButtonById(SAVE_ID);
     }
 
     private void clickOnCancel() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        getWizard().clickActionById(CANCEL_BUTTON_ID);
+        getWizard().clickButtonById(CANCEL_BUTTON_ID);
     }
 
     private void setValue(Field field) {
