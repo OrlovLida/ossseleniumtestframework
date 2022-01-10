@@ -22,23 +22,12 @@ public class Combobox extends Input {
     private static final String COMBOBOX_CLOSE_XPATH = ".//i[@aria-label ='CLOSE']";
     private static final String LIST_ITEM_XPATH = "//div[@class='list-item'] | //div[@class='combo-box__list-item']";
 
-    private Combobox(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
-        super(driver, webDriverWait, webElement);
-    }
-
     private Combobox(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
 
     private Combobox(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         super(parent, driver, wait, componentId);
-    }
-
-    // TODO: remove after resolving OSSSD-2035 - setting data-testId in status Combobox
-    public static Combobox createServiceDeskStatusComboBox(WebDriver driver, WebDriverWait webDriverWait) {
-        String xPath = "//div[contains(@class, 'most-wanted__inputs')]//div[contains(@class, 'combo-box')]";
-        WebElement webElement = driver.findElement(By.xpath(xPath));
-        return new Combobox(driver, webDriverWait, webElement);
     }
 
     static Combobox create(WebDriver driver, WebDriverWait wait, String comboboxId) {
