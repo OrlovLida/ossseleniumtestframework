@@ -3,15 +3,16 @@ package com.oss.framework.components.inputs;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.data.Data;
-import com.oss.framework.data.Data.DataWrapper;
-import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.data.Data;
+import com.oss.framework.data.Data.DataWrapper;
+import com.oss.framework.utils.DelayUtils;
 
 public class Combobox extends Input {
 
@@ -48,7 +49,7 @@ public class Combobox extends Input {
     @Override
     public Data getValue() {
         WebElement input =
-            webElement.findElement(By.xpath(COMBOBOX_INPUT_XPATH));
+                webElement.findElement(By.xpath(COMBOBOX_INPUT_XPATH));
         return Data.createSingleData(input.getAttribute("value"));
 
     }
