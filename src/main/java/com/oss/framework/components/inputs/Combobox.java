@@ -3,16 +3,15 @@ package com.oss.framework.components.inputs;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.data.Data;
+import com.oss.framework.data.Data.DataWrapper;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.data.Data;
-import com.oss.framework.data.Data.DataWrapper;
-import com.oss.framework.utils.DelayUtils;
 
 public class Combobox extends Input {
 
@@ -22,23 +21,12 @@ public class Combobox extends Input {
     private static final String COMBOBOX_CLOSE_XPATH = ".//i[@aria-label ='CLOSE']";
     private static final String LIST_ITEM_XPATH = "//div[@class='list-item'] | //div[@class='combo-box__list-item']";
 
-    private Combobox(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
-        super(driver, webDriverWait, webElement);
-    }
-
     private Combobox(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
 
     private Combobox(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         super(parent, driver, wait, componentId);
-    }
-
-    // TODO: remove after resolving OSSSD-2035 - setting data-testId in status Combobox
-    public static Combobox createServiceDeskStatusComboBox(WebDriver driver, WebDriverWait webDriverWait) {
-        String xPath = "//div[contains(@class, 'most-wanted__inputs')]//div[contains(@class, 'combo-box')]";
-        WebElement webElement = driver.findElement(By.xpath(xPath));
-        return new Combobox(driver, webDriverWait, webElement);
     }
 
     static Combobox create(WebDriver driver, WebDriverWait wait, String comboboxId) {
@@ -60,7 +48,7 @@ public class Combobox extends Input {
     @Override
     public Data getValue() {
         WebElement input =
-                webElement.findElement(By.xpath(COMBOBOX_INPUT_XPATH));
+            webElement.findElement(By.xpath(COMBOBOX_INPUT_XPATH));
         return Data.createSingleData(input.getAttribute("value"));
 
     }
