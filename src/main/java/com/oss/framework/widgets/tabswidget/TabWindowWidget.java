@@ -10,16 +10,20 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
-import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class TabWindowWidget implements TabsInterface {
 
-    private static final String DROPDOWN_TAB = ".//div[@class= 'dropdown']";
-    private static final String OSS_WINDOW_TAB = "//div[@class='OssWindow tabWindow']";
-    private static final String ALL_TABS = "//div[@class='tabs']";
+    private static final String DROPDOWN_TAB_XPATH = ".//div[@class= 'dropdown']";
+    private static final String OSS_WINDOW_TAB_XPATH = "//div[@class='OssWindow tabWindow']";
+    private static final String ALL_TABS_XPATH = "//div[@class='tabs']";
+    private static final String ACTIONS_CONTAINER_XPATH = "//*[@class='actionsContainer']";
+    private static final String CONTEXT_ACTIONS_XPATH = "//div[contains(@class, 'windowToolbar')] | " + ACTIONS_CONTAINER_XPATH;
+    private static final String TAB_BY_LABEL_PATTERN = ".//button[@class='oss-tab']//div[contains(text(),'%s')]";
+    private static final String TAB_BY_ID_PATTERN = "//button[@aria-controls='%s']";
+    private static final String NO_DATA_PATTERN = "//div[@" + CSSUtils.TEST_ID + "='%s']//h3[contains(@class,'noDataWithColumns')]";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -33,25 +37,23 @@ public class TabWindowWidget implements TabsInterface {
 
     public static TabsInterface create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(500);
-        DelayUtils.waitByXPath(wait, OSS_WINDOW_TAB);
-        WebElement widget = driver.findElement(By.xpath(OSS_WINDOW_TAB));
+        DelayUtils.waitByXPath(wait, OSS_WINDOW_TAB_XPATH);
+        WebElement widget = driver.findElement(By.xpath(OSS_WINDOW_TAB_XPATH));
         return new TabWindowWidget(driver, wait, widget);
     }
 
     @Override
     public void selectTabByLabel(String tabLabel) {
-        DelayUtils.waitForNestedElements(wait, this.tabs, OSS_WINDOW_TAB);
-        String xpath = ".//button[@class='oss-tab']//div[contains(text(),'" + tabLabel + "')]";
+        DelayUtils.waitForNestedElements(wait, this.tabs, OSS_WINDOW_TAB_XPATH);
+        String xpath = String.format(TAB_BY_LABEL_PATTERN, tabLabel);
         getTabToSelect(xpath).click();
-
     }
 
     @Override
     public void selectTabById(String ariaControls) {
-        DelayUtils.waitForNestedElements(wait, this.tabs, OSS_WINDOW_TAB);
-        String xpath = "//button[@aria-controls='" + ariaControls + "']";
+        DelayUtils.waitForNestedElements(wait, this.tabs, OSS_WINDOW_TAB_XPATH);
+        String xpath = String.format(TAB_BY_ID_PATTERN, ariaControls);
         getTabToSelect(xpath).click();
-
     }
 
     @Override
@@ -75,33 +77,16 @@ public class TabWindowWidget implements TabsInterface {
     }
 
     @Override
-    public void callAction(String groupId, String actionId) {
-        throw new UnsupportedOperationException("Method not implemented");
-    }
-
-    @Override
-    public boolean isNoData(String id) {
+    public boolean hasNoData(String id) {
         List<WebElement> noData =
-                driver.findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']//h3[contains(@class,'noDataWithColumns')]"));
+                driver.findElements(By.xpath(String.format(NO_DATA_PATTERN, id)));
         return !noData.isEmpty();
-    }
-
-    @Override
-    public void clickButtonByLabel(String label) {
-        ActionsInterface buttonContainer = ButtonContainer.createFromParent(this.tabs, driver, wait);
-        buttonContainer.callActionByLabel(label);
-    }
-
-    @Override
-    public void clickButtonById(String id) {
-        throw new UnsupportedOperationException("Method not implemented");
     }
 
     private ActionsInterface getActionsInterface() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        DelayUtils.waitForNestedElements(wait, this.tabs,
-                "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']");
-        boolean isNewActionContainer = isElementPresent(driver, By.className("actionsContainer"));
+        DelayUtils.waitForNestedElements(wait, this.tabs, CONTEXT_ACTIONS_XPATH);
+        boolean isNewActionContainer = isElementPresent(driver, By.xpath(ACTIONS_CONTAINER_XPATH));
         if (isNewActionContainer) {
             return ActionsContainer.createFromParent(this.tabs, driver, wait);
         } else {
@@ -113,17 +98,16 @@ public class TabWindowWidget implements TabsInterface {
         return !driver.findElements(by).isEmpty();
     }
 
-    private boolean isMoreVisible() {
-        DelayUtils.waitForNestedElements(wait, this.tabs, ALL_TABS);
-        WebElement allTabs = this.tabs.findElement(By.xpath(ALL_TABS));
-        List<WebElement> isMore = allTabs.findElements(By.xpath(DROPDOWN_TAB));
+    private boolean isMoreDisplayed() {
+        DelayUtils.waitForNestedElements(wait, this.tabs, ALL_TABS_XPATH);
+        WebElement allTabs = this.tabs.findElement(By.xpath(ALL_TABS_XPATH));
+        List<WebElement> isMore = allTabs.findElements(By.xpath(DROPDOWN_TAB_XPATH));
         return !isMore.isEmpty();
-
     }
 
     private WebElement getTabToSelect(String xPathForTab) {
-        if (isMoreVisible()) {
-            WebElement moreTab = this.tabs.findElement(By.xpath(DROPDOWN_TAB));
+        if (isMoreDisplayed()) {
+            WebElement moreTab = this.tabs.findElement(By.xpath(DROPDOWN_TAB_XPATH));
             wait.until(ExpectedConditions.elementToBeClickable(moreTab));
             moreTab.click();
             DelayUtils.waitByXPath(wait, xPathForTab);
