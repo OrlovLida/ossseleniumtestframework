@@ -7,12 +7,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.data.Data;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class HtmlEditor extends Input {
 
-    // TODO: Use data-testId after resolving OSSSD-2039
-    private static final String HTML_EDITOR_COMPONENT_XPATH = "//label[contains(@for, '%s')]/ancestor::div[contains(@class, 'html-editor-component')]";
+    private static final String HTML_EDITOR_COMPONENT_XPATH = "//div[@" + CSSUtils.TEST_ID + "='%s']";
     private static final String INPUT_XPATH = ".//div[contains(@role, 'textbox')]";
 
     public HtmlEditor(WebDriver webDriver, WebDriverWait webDriverWait, WebElement component) {
