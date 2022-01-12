@@ -10,6 +10,7 @@ package com.oss.framework.widgets.tabswidget;
  * @author Gabriela Kasza
  */
 public interface TabsInterface {
+
     void selectTabByLabel(String tabLabel);
 
     void selectTabById(String id);
@@ -22,11 +23,5 @@ public interface TabsInterface {
 
     void callActionById(String id);
 
-    void callAction(String groupId, String actionId);
-
-    boolean isNoData(String id);
-
-    void clickButtonByLabel(String label);
-
-    void clickButtonById(String id);
+    boolean hasNoData(String id);
 }
