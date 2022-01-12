@@ -139,16 +139,19 @@ public class TabsWidget implements TabsInterface {
         return false;
     }
 
+    @Deprecated
     public SaveConfigurationWizard openSaveConfigurationWizard() {
         createTabs().findElement(By.xpath(SAVE_TAB_ICON_XPATH)).click();
         return SaveConfigurationWizard.create(driver, webDriverWait);
     }
 
+    @Deprecated
     public ChooseConfigurationWizard openDownloadConfigurationWizard() {
         createTabs().findElement(By.xpath(DOWNLOAD_CONFIGURATION_ICON_XPATH)).click();
         return ChooseConfigurationWizard.create(driver, webDriverWait);
     }
 
+    @Deprecated
     public ChooseConfigurationWizard openChooseConfigurationWizard() {
         createTabs().findElement(By.xpath(CHOOSE_CONFIGURATION_ICON_XPATH)).click();
         return ChooseConfigurationWizard.create(driver, webDriverWait);
