@@ -30,7 +30,7 @@ import com.oss.framework.utils.DelayUtils;
 public class SystemMessageContainer implements SystemMessageInterface {
 
     private static final Logger log = LoggerFactory.getLogger(SystemMessageContainer.class);
-    private static final String CLOSE_SINGLE_MESSAGE_BUTTON = ".//div[contains(@class,'closeButton')]";
+    private static final String CLOSE_SINGLE_MESSAGE_BUTTON = ".//*[contains(@class,'closeButton')]";
     private static final String CLOSE_MESSAGE_CONTAINER_BUTTON = ".//i[@aria-label='Close']";
     private static final String PATH_TO_SHOW_MESSAGES = ".//i[@aria-label='Show/Hide messages' and contains(@class, 'down')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_CONTAINER = "//div[contains(@class, 'systemMessagesContainer')]";
