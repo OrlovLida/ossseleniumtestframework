@@ -24,7 +24,7 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String ACTION_BY_LABEL_XPATH = ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')]";
     private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for the old actions container";
     private static final String KEBAB_BUTTON_XPATH = "//li[@data-group-id='frameworkCustomEllipsis']";
-    private static final String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
+    private static final String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH = "//a[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s'] | //*[@data-widget-id='%s']";
     private static final String DROPDOWN_XPATH = "//a[@class='dropdown']//div[text()='%s']";
 
     private final WebDriver driver;
@@ -86,7 +86,7 @@ public class OldActionsContainer implements ActionsInterface {
     @Override
     public void callActionById(String id) {
         DelayUtils.waitForVisibility(wait, toolbar);
-        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, id, id);
+        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, id, id, id);
         DelayUtils.waitForPageToLoad(driver, wait);
         if (!isElementPresent(toolbar, By.xpath(actionXpath))) {
             clickActionByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, MORE_GROUP_DATA_GROUP_ID));
@@ -101,7 +101,7 @@ public class OldActionsContainer implements ActionsInterface {
             return;
         }
         String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId);
-        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionId, actionId);
+        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionId, actionId, actionId);
         DelayUtils.waitForNestedElements(wait, toolbar, groupXpath);
         clickOnWebElement(driver, wait, toolbar.findElement(By.xpath(groupXpath)));
         clickOnWebElement(driver, wait, driver.findElement(By.xpath(actionXpath)));
@@ -110,7 +110,7 @@ public class OldActionsContainer implements ActionsInterface {
     public void callActionById(String groupId, String innerGroupLabel, String actionDataAttributeName) {
         DelayUtils.waitForVisibility(wait, toolbar);
         String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId);
-        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName);
+        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName, actionDataAttributeName);
         if (isElementPresent(toolbar, By.xpath(groupXpath))) {
             clickActionByXpath(groupXpath);
         } else {
