@@ -16,6 +16,11 @@ import com.oss.framework.utils.DelayUtils;
 public class Notifications implements NotificationsInterface {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Notifications.class);
+    private static final String PROGRESS_NOTIFICATION_CLASS = "notification progressNotification";
+    private static final String NOTIFICATION_LABEL_XPATH = ".//div[@class='notificationLabel']";
+    private static final String NOTIFICATION_CONTAINER_XPATH = "//div[@class='notificationContainer']";
+    private static final String NOTIFICATION_TEXT_CONTAINER_XPATH = "//div[@class='notificationTextContainer']";
+    private static final String NOTIFICATION_BY_TEXT_AND_STATUS_PATTERN = "/span[contains(text(), '%s') and contains(text(), '%s')]";
     private static final By NOTIFICATION = By.xpath("//div[@class='notifications-button']");
     private static final By CLEAR_NOTIFICATION = By.xpath("//a[@class='clear-action']");
     private static final By NOTIFICATION_BUTTON = By.xpath("//div[@class='notifications-button']/button");
@@ -24,10 +29,7 @@ public class Notifications implements NotificationsInterface {
     private static final By NOTIFICATION_LIST = By.xpath("//div[@class='notificationContainer']/div[not(@class = 'notificationEmpty')]");
     private static final By NOTIFICATION_DETAILS = By.xpath("(//a[@class='detailsLink'])[1]");
     private static final By DOWNLOAD_FILE = By.xpath("//div[@class='notificationWrapper']//a[contains (text(), 'Download file')]");
-    private static final String NOTIFICATION_LABEL_XPATH = ".//div[@class='notificationLabel']";
-    private static final String NOTIFICATION_CONTAINER_XPATH = "//div[@class='notificationContainer']";
-    private static final String NOTIFICATION_TEXT_CONTAINER_XPATH = "//div[@class='notificationTextContainer']";
-    private static final String NOTIFICATION_BY_TEXT_AND_STATUS_PATTERN = "/span[contains(text(), '%s') and contains(text(), '%s')]";
+    private static final By NOTIFICATION_IN_PROGRESS = By.xpath(NOTIFICATION_CONTAINER_XPATH + "/div[@class='" + PROGRESS_NOTIFICATION_CLASS + "']");
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -55,8 +57,10 @@ public class Notifications implements NotificationsInterface {
     public String getNotificationMessage() {
         openNotificationContainer();
         DelayUtils.waitByXPath(wait, NOTIFICATION_LABEL_XPATH);
-        wait.until(ExpectedConditions.not(ExpectedConditions
-                .attributeToBe(driver.findElement(By.xpath(NOTIFICATION_CONTAINER_XPATH + "/div")), "class", "notification progressNotification")));
+        if (isElementPresent(driver, NOTIFICATION_IN_PROGRESS)) {
+            wait.until(ExpectedConditions.not(ExpectedConditions
+                    .attributeToBe(driver.findElement(By.xpath(NOTIFICATION_CONTAINER_XPATH + "/div")), "class", PROGRESS_NOTIFICATION_CLASS)));
+        }
         String notificationText =
                 wait.until(ExpectedConditions
                         .visibilityOf(driver.findElement(By.xpath(NOTIFICATION_LABEL_XPATH + NOTIFICATION_TEXT_CONTAINER_XPATH + "/span"))))
