@@ -76,14 +76,6 @@ public class Wizard {
         return input;
     }
 
-    @Deprecated
-    public Input clearComponent(String componentId, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_DATA_TEST_ID_PATTERN, componentId));
-        Input input = getComponent(componentId, componentType);
-        input.clear();
-        return input;
-    }
-
     public void clickNext() {
         clickButton(NEXT_BUTTON_XPATH);
     }
