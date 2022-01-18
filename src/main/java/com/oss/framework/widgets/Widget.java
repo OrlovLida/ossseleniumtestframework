@@ -55,6 +55,10 @@ public abstract class Widget {
         return driver.findElement(By.cssSelector(String.format(WEB_ELEMENT_PATTERN, this.id)));
     }
 
+    public WebElement getWebElement() {
+        return webElement;
+    }
+
     public enum WidgetType {
         TABLE_WIDGET, OLD_TABLE_WIDGET, PROPERTY_PANEL
     }

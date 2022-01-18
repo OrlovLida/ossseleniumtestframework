@@ -165,4 +165,8 @@ public class Wizard {
         List<WebElement> steps = this.webElement.findElements(By.xpath("//div[@class='simple-progress-bar']"));
         return !steps.isEmpty();
     }
+
+    public boolean isElementPresent(By by) {
+        return isElementPresent(webElement,by);
+    }
 }

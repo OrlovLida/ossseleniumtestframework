@@ -6,6 +6,7 @@
  */
 package com.oss.framework.navigation.sidemenu;
 
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -99,7 +100,8 @@ public class SideMenu {
 
     private WebElement moveToElement(String xpath) {
         DelayUtils.waitForLoadBars(wait, getSideMenu());
-        WebElement foundElement = driver.findElement(By.xpath(xpath));
+        List<WebElement> foundElements = driver.findElements(By.xpath(xpath));
+        WebElement foundElement = foundElements.get(foundElements.size() - 1);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", foundElement);
         return foundElement;
     }

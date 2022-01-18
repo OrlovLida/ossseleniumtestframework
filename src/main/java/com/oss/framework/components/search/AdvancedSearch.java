@@ -160,9 +160,9 @@ public class AdvancedSearch {
     }
 
     private WebElement getFullTextSearch() {
-        DelayUtils.waitForNestedElements(wait, webElement, ".//div[@" + CSSUtils.TEST_ID + "='search']");
-        WebElement search = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='search']"));
-        return search.findElement(By.xpath(".//input"));
+        DelayUtils.waitForNestedElements(wait, webElement, ".//div[@class='fields']");
+        WebElement fields = webElement.findElement(By.xpath(".//div[@class='fields']"));
+        return fields.findElement(By.xpath(".//input"));
     }
 
     private Input getQuickFilter() {
