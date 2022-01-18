@@ -6,7 +6,8 @@
  */
 package com.oss.framework.navigation.sidemenu;
 
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;

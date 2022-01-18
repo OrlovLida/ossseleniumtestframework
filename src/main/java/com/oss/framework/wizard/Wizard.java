@@ -166,7 +166,8 @@ public class Wizard {
         return !steps.isEmpty();
     }
 
-    public boolean isElementPresent(By by) {
-        return isElementPresent(webElement,by);
+    public boolean isElementPresentById(String id) {
+        return isElementPresent(webElement, By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + id + "']"));
     }
+
 }
