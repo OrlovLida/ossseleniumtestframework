@@ -59,6 +59,10 @@ public abstract class Widget {
         return webElement;
     }
 
+    public WebElement getWebElement() {
+        return webElement;
+    }
+
     public enum WidgetType {
         TABLE_WIDGET, OLD_TABLE_WIDGET, PROPERTY_PANEL
     }
