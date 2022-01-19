@@ -15,6 +15,7 @@ public class ContextActionPanel {
 
     private static final String GRAPH_LOCATOR_PATH = "//*[starts-with(@class,'multipleChart ')]";
     private static final String CONTEXT_ACTION_PANEL_ID = "context-action-panel";
+    private static final String CONTEXT_ACTIONS_BUTTON_XPATH = ".//button[@data-testid='context-action-panel']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -36,7 +37,7 @@ public class ContextActionPanel {
     }
 
     public void clickOnPanel() {
-        contextActionPanelElement.click();
+        contextActionPanelElement.findElement(By.xpath(CONTEXT_ACTIONS_BUTTON_XPATH)).click();
     }
 
     public void callAction(String groupId) {
