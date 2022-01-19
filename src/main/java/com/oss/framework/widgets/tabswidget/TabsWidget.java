@@ -195,7 +195,7 @@ public class TabsWidget implements TabsInterface {
         return !driver.findElements(by).isEmpty();
     }
 
-    private boolean isMoreDisplayed() {
+    private boolean isMorePresent() {
         DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
         List<WebElement> isMore = createTabs().findElements(By.xpath(DROPDOWN_TAB_XPATH));
         return !isMore.isEmpty();
@@ -221,7 +221,7 @@ public class TabsWidget implements TabsInterface {
     }
 
     private WebElement getTabToSelect(String xPathForTab) {
-        if (isMoreDisplayed()) {
+        if (isMorePresent()) {
             WebElement moreTab = createTabs().findElement(By.xpath(DROPDOWN_TAB_XPATH));
             webDriverWait.until(ExpectedConditions.elementToBeClickable(moreTab));
             moreTab.click();

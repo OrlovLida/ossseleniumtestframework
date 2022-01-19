@@ -94,13 +94,13 @@ public class CommonList {
         getCategory(name).selectCategory();
     }
 
-    public boolean isRowVisible(String attributeName, String value) {
+    public boolean isRowDisplayed(String attributeName, String value) {
         List<String> rows = createRows().stream().map(row -> row.getValue(attributeName)).collect(Collectors.toList());
         return rows.contains(value);
 
     }
 
-    public boolean isCategoryVisible(String name) {
+    public boolean isCategoryDisplayed(String name) {
         return createCategories().stream().map(category -> category.getValue().equals(name)).count() != 0;
     }
 
@@ -112,7 +112,7 @@ public class CommonList {
         return createCategories().size();
     }
 
-    public boolean isNoData() {
+    public boolean hasNoData() {
         List<WebElement> noData = this.driver
                 .findElements(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']" + NO_DATA_TEXT_XPATH));
         return !noData.isEmpty();
@@ -238,7 +238,7 @@ public class CommonList {
         }
 
         // add checking for other actions
-        public boolean isActionVisible(String actionId) {
+        public boolean isActionPresent(String actionId) {
             return !rowElement.findElements(By.xpath(".//button[@" + CSSUtils.TEST_ID + "= '" + actionId + "']")).isEmpty();
         }
 

@@ -47,13 +47,13 @@ public class SelectionBarComponent {
     }
 
     public void clickShowOnlySelectedButton() {
-        if (isActive() && areAllObjectShown()) {
+        if (isActive() && areAllObjectPresent()) {
             driver.findElement(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
         }
     }
 
     public void clickShowAllButton() {
-        if (isActive() && !areAllObjectShown()) {
+        if (isActive() && !areAllObjectPresent()) {
             driver.findElement(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_ONLY_SELECTED_BUTTON_XPATH)).click();
         }
     }
@@ -69,7 +69,7 @@ public class SelectionBarComponent {
         return !driver.findElements(By.xpath("//div[@data-testid='" + widgetId + "']" + VISIBLE_SELECTION_BAR_XPATH)).isEmpty();
     }
 
-    private boolean areAllObjectShown() {
+    private boolean areAllObjectPresent() {
         return !driver.findElements(By.xpath("//*[@data-testid='" + widgetId + "']" + SHOW_SELECTED_ONLY_BUTTON_ACTIVE_XPATH)).isEmpty();
     }
 }

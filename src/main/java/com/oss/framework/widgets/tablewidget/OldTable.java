@@ -359,7 +359,7 @@ public class OldTable implements TableInterface {
                 table.findElements(By.xpath(COLUMNS_WITHOUT_CHECKBOX))
                         .stream().map(columnElement -> new Column(columnElement, wait, driver)).collect(Collectors.toList());
         for (Column column : Lists.reverse(columns2)) {
-            if (column.checkIfLabelExist()) {
+            if (column.isLabelPresent()) {
                 columns.put(column.getLabel(), column);
             }
         }
@@ -436,7 +436,7 @@ public class OldTable implements TableInterface {
             return new DragAndDrop.DraggableElement(dragButton);
         }
 
-        private boolean checkIfLabelExist() {
+        private boolean isLabelPresent() {
             try {
                 return !columnElement.findElement(By.xpath(INPUT)).getAttribute("label").equals("");
             } catch (NoSuchElementException e) {

@@ -124,7 +124,7 @@ public class KpiChartWidget extends Widget {
         return visibleDataCompleteness;
     }
 
-    public boolean isTimeZoneDisplayed() {
+    public boolean isTimeZonePresent() {
         return !this.webElement.findElements(By.xpath(TIME_ZONE_DISPLAYED_PATH)).isEmpty();
     }
 
@@ -171,25 +171,25 @@ public class KpiChartWidget extends Widget {
         log.debug("Clicking first data series on legend");
     }
 
-    public boolean dataViewPanelVisibility() {
+    public boolean isDataViewPanelPresent() {
         int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DATA_VIEW_PATH)).size();
         log.debug("Data View panel is visible: {}", visibleDataViewPanel);
         return visibleDataViewPanel == 1;
     }
 
-    public boolean indicatorsTreeVisibility() {
+    public boolean isIndicatorsTreePresent() {
         int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_INDICATORS_TREE_PATH)).size();
         log.debug("Indicators tree is visible: {}", visibleDataViewPanel);
         return visibleDataViewPanel == 1;
     }
 
-    public boolean dimensionsTreeVisibility() {
+    public boolean isDimensionsTreePresent() {
         int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DIMENSIONS_TREE_PATH)).size();
         log.debug("Dimension tree is visible: {}", visibleDataViewPanel);
         return visibleDataViewPanel == 1;
     }
 
-    public boolean topNBarChartIsDisplayed(String barChartId) {
+    public boolean isTopNBarChartIsPresent(String barChartId) {
         return !this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).isEmpty();
     }
 
@@ -201,7 +201,7 @@ public class KpiChartWidget extends Widget {
         log.debug("Double clicking on bar in TopN BarChart");
     }
 
-    public boolean isTopNNavigationBarVisible() {
+    public boolean isTopNNavigationBarPresent() {
         return !this.webElement.findElements(By.xpath(TOP_N_NAVIGATION_BAR_PATH)).isEmpty();
     }
 
@@ -211,7 +211,7 @@ public class KpiChartWidget extends Widget {
         log.debug("Zooming Data View with offset x = 100, y = 100");
     }
 
-    public boolean isZoomOutButtonVisible() {
+    public boolean isZoomOutButtonPresent() {
         return this.webElement.findElements(By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH)).isEmpty();
     }
 

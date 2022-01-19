@@ -93,7 +93,7 @@ public class AdvancedSearch {
     }
 
     public SearchPanel openSearchPanel() {
-        if (!isSearchPanelOpen()) {
+        if (!isSearchPanelPresent()) {
             this.webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)).click();
         }
         return getSearchPanel();
@@ -212,7 +212,7 @@ public class AdvancedSearch {
     }
 
     private FiltersSettings openFiltersSettings() {
-        if (!isFiltersSettingsOpen()) {
+        if (!isFiltersSettingsPresent()) {
             openSearchPanel().openFiltersSettings();
         }
         return getFiltersSettings();
@@ -228,11 +228,11 @@ public class AdvancedSearch {
         return SearchPanel.create(this.driver, this.wait);
     }
 
-    private boolean isFiltersSettingsOpen() {
+    private boolean isFiltersSettingsPresent() {
         return !driver.findElements(By.className(FILTERS_SETTINGS_CLASS)).isEmpty();
     }
 
-    private boolean isSearchPanelOpen() {
+    private boolean isSearchPanelPresent() {
         return !webElement.findElements(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"))
                 .isEmpty();
     }
