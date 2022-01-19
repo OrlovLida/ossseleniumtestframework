@@ -39,7 +39,7 @@ public class ButtonContainer implements ActionsInterface {
     }
 
     public static ButtonContainer create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, BUTTON_CONTAINER_XPATH);
+        DelayUtils.waitForPresence(wait, By.xpath(BUTTON_CONTAINER_XPATH));
         WebElement buttons = driver.findElement(By.xpath(BUTTON_CONTAINER_XPATH));
         return new ButtonContainer(driver, wait, buttons);
     }
