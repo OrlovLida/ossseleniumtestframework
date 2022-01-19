@@ -25,11 +25,10 @@ public class KpiChartWidget extends Widget {
     private static final String KPI_CHART_WIDGET_ID = "am-chart-wrapper";
 
     private static final String CHART_COLUMN_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='menuitem')]";
-    private static final String CHART_LINE_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='group')]";
-    private static final String BARCHART_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='list')]";
+    private static final String CHART_LINE_PATH = "//*[contains(@class, 'LineSeries') and (@role='group') and not(contains(@data-testid, 'amchart-series-undefined-selected'))]";
+    private static final String BARCHART_PATH = "//*[contains(@class, 'ColumnSeries') and (@role='list')]";
     private static final String PIE_CHART_PATH = ".//*[contains(@class, 'amcharts-PieChart-group')]";
 
-    private static final String FIRST_TOP_N_COLUMN_PATH = ".//*[@class='amcharts-Sprite-group amcharts-Container-group' and @role='menuitem'][1]";
     private static final String TOP_N_NAVIGATION_BAR_PATH = ".//*[@class='amcharts-Container amcharts-Component amcharts-NavigationBar']";
 
     private static final String LEGEND_PATH = "//*[starts-with(@class,'amcharts-Container amcharts-Component amcharts-Legend')]";
@@ -37,19 +36,18 @@ public class KpiChartWidget extends Widget {
 
     private static final String HIDDEN_Y_AXIS_PATH = "//*[@display = 'none' and contains (@class,'amcharts-v')]";
     private static final String VISIBLE_Y_AXIS_PATH = "//*[not (contains(@display, 'none')) and contains (@class,'amcharts-v')]";
-    private static final String Y_AXIS_VALUES_PATH = "//*[contains(@class, 'amcharts-AxisLabel' and @style, 'user-select')]"; // do zbadania wartości na Y axis
 
-    private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[contains(@data-testid, 'last-sample-time-chart')]";
-    private static final String DATA_COMPLETENESS_DISPLAYED_PATH = ".//*[@data-testid='amchart-legend-selected']//*[contains(text(), '%')]";
-    private static final String TIME_ZONE_DISPLAYED_PATH = ".//*[starts-with(@data-testid, 'timezone-chart')]";
-    private static final String OTHER_PERIOD_DISPLAYED_PATH = ".//*[@data-testid='amchart-legend-other-period']";
+    private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='last-sample-time' and not(contains(@display, 'none'))]";
+    private static final String DATA_COMPLETENESS_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-legend-selected']//*[contains(text(), '%')]";
+    private static final String TIME_ZONE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='timezone' and not(contains(@display, 'none'))]";
+    private static final String OTHER_PERIOD_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-legend-other-period']";
 
-    private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
-    private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
-    private static final String VISIBLE_DATA_VIEW_PATH = "//div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
+    private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
+    private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
+    private static final String VISIBLE_DATA_VIEW_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
 
-    private static final String ZOOM_OUT_BUTTON_PATH = ".//*[@data-testid='amchart-zoomout-button']";
-    private static final String ZOOM_OUT_HIDDEN_BUTTON_PATH = ".//*[@data-testid='amchart-zoomout-button' and @visibility='hidden']";
+    private static final String ZOOM_OUT_BUTTON_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-zoomout-button']";
+    private static final String ZOOM_OUT_HIDDEN_BUTTON_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-zoomout-button' and @visibility='hidden']";
 
     private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
         super(driver, webDriverWait, widgetId, widget);
@@ -70,7 +68,7 @@ public class KpiChartWidget extends Widget {
     public void hoverMouseOverPoint() {
         int size = getNumberOfSamples();
         log.trace("Number of samples: {}", size);
-        String pointXpath = "(//*[starts-with(@class,'amcharts-Container amcharts-Bullet amcharts-CircleBullet')]//*[@class='amcharts-Sprite-group amcharts-Circle-group'])[" + (size / 2) + "]";
+        String pointXpath = "(//*[contains(@class,'amcharts-Container amcharts-Series-bullets')]//*[@class='amcharts-Sprite-group amcharts-Circle-group'])[" + (size / 2) + "]";
 
         moveOverElement(findElementByXpath(pointXpath));
         DelayUtils.sleep();
@@ -225,7 +223,7 @@ public class KpiChartWidget extends Widget {
     }
 
     private int getNumberOfSamples() {
-        List<WebElement> numberOfSamples = webElement.findElements(By.xpath("//*[starts-with(@class,'amcharts-Container amcharts-Bullet amcharts-CircleBullet')]//*[@class='amcharts-Sprite-group amcharts-Circle-group']"));
+        List<WebElement> numberOfSamples = webElement.findElements(By.xpath("//*[contains(@class,'amcharts-Container amcharts-Series-bullets')]//*[@class='amcharts-Sprite-group amcharts-Circle-group']"));
         return numberOfSamples.size() - 1;
     }
 
