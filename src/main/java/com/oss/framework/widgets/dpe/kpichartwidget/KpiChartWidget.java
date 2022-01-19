@@ -66,11 +66,11 @@ public class KpiChartWidget extends Widget {
     }
 
     public void hoverMouseOverPoint() {
-        int size = getNumberOfSamples();
+        int size = countSamples();
         log.trace("Number of samples: {}", size);
         String pointXpath = "(//*[contains(@class,'amcharts-Container amcharts-Series-bullets')]//*[@class='amcharts-Sprite-group amcharts-Circle-group'])[" + (size / 2) + "]";
 
-        moveOverElement(findElementByXpath(pointXpath));
+        clickElement(findElementByXpath(pointXpath));
         DelayUtils.sleep();
     }
 
@@ -132,31 +132,31 @@ public class KpiChartWidget extends Widget {
         return visibleOtherPeriod;
     }
 
-    public String dataSeriesLineWidth() {
+    public String getDataSeriesLineWidth() {
         String strokeWidth = findElementByXpath(CHART_LINE_PATH).getCssValue("stroke-width");
         log.debug("Line width: {}", strokeWidth);
         return strokeWidth;
     }
 
-    public String dataSeriesVisibility() {
+    public String getDataSeriesVisibility() {
         String dataSeriesVisibility = findElementByXpath(CHART_LINE_PATH).getCssValue("visibility");
         log.debug("Data Series visibility: {}", dataSeriesVisibility);
         return dataSeriesVisibility;
     }
 
-    public String dataSeriesFillOpacity() {
+    public String getDataSeriesFillOpacity() {
         String fillOpacity = findElementByXpath(CHART_LINE_PATH).getCssValue("fill-opacity");
         log.debug("Data Series fill opacity: {}", fillOpacity);
         return fillOpacity;
     }
 
-    public String barDataSeriesFillOpacity() {
+    public String getBarDataSeriesFillOpacity() {
         String fillOpacity = findElementByXpath(BARCHART_PATH).getCssValue("fill-opacity");
         log.debug("Bar chart Data Series fill opacity: {}", fillOpacity);
         return fillOpacity;
     }
 
-    public String dataSeriesColor() {
+    public String getDataSeriesColor() {
         String strokeColor = findElementByXpath(CHART_LINE_PATH).getCssValue("stroke");
         log.debug("Data Series color: {}", strokeColor);
         return strokeColor;
@@ -191,7 +191,7 @@ public class KpiChartWidget extends Widget {
         return !this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).isEmpty();
     }
 
-    public void doubleClickOnTopNBar(String barChartId) {
+    public void doubleClickTopNBar(String barChartId) {
         WebElement barInTopNBarChart = this.webElement.findElement(By.xpath(".//*[@data-testid='" + barChartId + "']//*[@role='menuitem'][1]"));
         Actions action = new Actions(driver);
         action.moveToElement(barInTopNBarChart).click(barInTopNBarChart).build().perform();
@@ -213,7 +213,7 @@ public class KpiChartWidget extends Widget {
         return this.webElement.findElements(By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH)).isEmpty();
     }
 
-    public void clickZoomOutButton() {
+    public void clickZoomOut() {
         this.webElement.findElement(By.xpath(ZOOM_OUT_BUTTON_PATH)).click();
         log.debug("Clicking Zoom Out button");
     }
@@ -222,12 +222,12 @@ public class KpiChartWidget extends Widget {
         return driver.findElements(By.xpath(".//*[@data-testid='am-chart']")).size();
     }
 
-    private int getNumberOfSamples() {
+    private int countSamples() {
         List<WebElement> numberOfSamples = webElement.findElements(By.xpath("//*[contains(@class,'amcharts-Container amcharts-Series-bullets')]//*[@class='amcharts-Sprite-group amcharts-Circle-group']"));
         return numberOfSamples.size() - 1;
     }
 
-    private void moveOverElement(WebElement webElement) {
+    private void clickElement(WebElement webElement) {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).click().build().perform();
         log.debug(MOVE_MOUSE_OVER + "point");
