@@ -42,16 +42,16 @@ public class PaginationComponent {
         return Integer.parseInt(step);
     }
 
-    public boolean isNextPageBtnEnabled() {
-        return isBtnEnabled(getNextPageBtn());
+    public boolean isNextPageButtonPresent() {
+        return isButtonPresent(getNextPageBtn());
     }
 
-    public boolean isPrevPageBtnEnabled() {
-        return isBtnEnabled(getPrevPageBtn());
+    public boolean isPreviousPageButtonPresent() {
+        return isButtonPresent(getPrevPageBtn());
     }
 
-    public boolean isFirstPageBtnEnabled() {
-        return isBtnEnabled(getFirstPageBtn());
+    public boolean isFirstPageButtonPresent() {
+        return isButtonPresent(getFirstPageBtn());
     }
 
     public void goOnNextPage() {
@@ -97,10 +97,9 @@ public class PaginationComponent {
         return this.paginationComponentElement.findElement(By.cssSelector(RAGE_OF_ROWS_SELECTOR)).getText();
     }
 
-    private boolean isBtnEnabled(WebElement element) {
+    private boolean isButtonPresent(WebElement element) {
         String cssAttribute = "class";
         String classDisabled = "disabled";
-
         return !element.getAttribute(cssAttribute).contains(classDisabled);
     }
 

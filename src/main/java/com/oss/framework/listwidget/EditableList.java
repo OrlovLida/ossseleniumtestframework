@@ -124,7 +124,7 @@ public class EditableList extends Widget {
 
     }
 
-    public boolean isNoData() {
+    public boolean hasNoData() {
         List<WebElement> noData = this.driver
                 .findElements(By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]"));
         return !noData.isEmpty();

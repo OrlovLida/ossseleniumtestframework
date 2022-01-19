@@ -37,10 +37,6 @@ public class ListGroup {
         action.moveToElement(getIconForItem(itemName)).click().perform();
     }
 
-    public boolean notVisible(String itemName) {
-        return getListGroup().findElements(By.xpath("//*[@class='" + ITEM_LIST_CLASS + "']//*[text() = '" + itemName + "']")).isEmpty();
-    }
-
     private boolean notSelected(String itemName) {
         return getListGroup().findElements(By.xpath("//*[@class='" + SELECTED_ITEM_CLASS + "']//*[text() = '" + itemName + "']")).isEmpty();
     }

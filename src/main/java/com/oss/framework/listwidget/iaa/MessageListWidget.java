@@ -57,7 +57,7 @@ public class MessageListWidget {
     }
 
     public void clickButtonByLabel(String label) {
-        if (!isButtonDisabled(label)) {
+        if (!isButtonPresent(label)) {
             msgListWidgetElement.findElement(By.xpath(String.format(BUTTONS_XPATH, label))).click();
         } else {
             log.debug("Button is disabled");
@@ -68,7 +68,7 @@ public class MessageListWidget {
         msgListWidgetElement.findElement(By.xpath(String.format(CHECKBOX_XPATH, checkboxLabel))).click();
     }
 
-    public boolean isButtonDisabled(String label) {
+    public boolean isButtonPresent(String label) {
         return !msgListWidgetElement.findElements(By.xpath(String.format(DISABLED_BUTTON, label))).isEmpty();
     }
 

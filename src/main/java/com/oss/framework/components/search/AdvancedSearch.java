@@ -28,10 +28,8 @@ public class AdvancedSearch {
     private static final String FILTERS_SETTINGS_XPATH = "//div[contains(@class,'filters-settings')]";
     private static final String FILTERS_SETTINGS_CLASS = "filters-settings";
     private static final String SEARCH_PANEL_OPEN_BUTTON = ".//button[@class='button-filters-panel']";
-    private static final String ADD_BTN_PATH = ".//a[text()='Add']";
     private static final String FILTER_BOX_PATH = "//*[@class='filters-box']";
     private static final String TAG_CLOSE_BUTTON_PATH = ".//span[@class='md-input-close']";
-
     private static final String TAGS_SEPARATOR = ": ";
 
     private final WebDriver driver;
@@ -137,10 +135,6 @@ public class AdvancedSearch {
 
     public void clickApply() {
         getSearchPanel().applyFilter();
-    }
-
-    public void clickAdd() {
-        this.webElement.findElement(By.xpath(ADD_BTN_PATH)).click();
     }
 
     public void clickCancel() {

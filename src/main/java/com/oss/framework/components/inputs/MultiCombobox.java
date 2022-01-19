@@ -51,7 +51,7 @@ public class MultiCombobox extends Input {
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
         DelayUtils.waitForSpinners(webDriverWait, webElement);
-        if (isSearchEnabled()) {
+        if (isSearchPresent()) {
             searchItem(value.getStringValue(), true);
         } else
             chooseItem(String.format(TITLE_ITEM_CONTAINS_XPATH, value.getStringValue()));
@@ -70,7 +70,7 @@ public class MultiCombobox extends Input {
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).click().build().perform();
         DelayUtils.waitForSpinners(webDriverWait, webElement);
-        if (isSearchEnabled()) {
+        if (isSearchPresent()) {
             searchItem(value.getStringValue(), false);
         } else
             chooseItem(String.format(TITLE_ITEM_EQUAL_XPATH, value.getStringValue()));
@@ -98,7 +98,7 @@ public class MultiCombobox extends Input {
         return "//input[@id='" + componentId + "-dropdown-search']";
     }
 
-    private boolean isSearchEnabled() {
+    private boolean isSearchPresent() {
         return !webElement.findElements(By.xpath(createDropdownSearchInputPath())).isEmpty();
     }
 
