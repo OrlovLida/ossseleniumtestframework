@@ -3,6 +3,7 @@ package com.oss.framework.components.portals;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -12,6 +13,13 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class DropdownList {
+
+    private static final String PORTAL_CLASS = "portal";
+    private static final String INPUT_XPATH = ".//div[@class='search-cont']//input";
+    private static final String BY_ID_PATTERN = ".//*[@" + CSSUtils.TEST_ID + "='%s'] | .//*[@id='%s']";
+    private static final String BY_TEXT_PATTERN = ".//div[text()='%s']";
+    private static final String BY_TEXT_CONTAINS_PATTERN = ".//*[contains(text(), '%s')]";
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement dropdownListElement;
@@ -23,39 +31,31 @@ public class DropdownList {
     }
 
     public static DropdownList create(WebDriver driver, WebDriverWait webDriverWait) {
-        WebElement dropdownList = driver.findElement(By.className("portal"));
+        WebElement dropdownList = driver.findElement(By.className(PORTAL_CLASS));
         return new DropdownList(driver, webDriverWait, dropdownList);
     }
 
     public void selectOption(String option) {
-        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(".//div[text()='" + option + "']")));
+        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, option))));
         WebElement foundedElement =
-                dropdownListElement.findElement(By.xpath(".//div[text()='" + option + "']"));
+                dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, option)));
         foundedElement.click();
     }
 
     public void selectOptionContains(String option) {
-        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(".//*[contains(text(), '" + option + "')]")));
+        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, option))));
         Actions action = new Actions(driver);
         WebElement foundedElement =
-                dropdownListElement.findElement(By.xpath(".//*[contains(text(), '" + option + "')]"));
-        action.moveToElement(foundedElement).click().perform();
-    }
-
-    public void selectOptionWithIconContains(String option) {
-        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(".//a[contains(text(), '" + option + "')]")));
-        Actions action = new Actions(driver);
-        WebElement foundedElement =
-                dropdownListElement.findElement(By.xpath(".//a[contains(text(), '" + option + "')]"));
+                dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, option)));
         action.moveToElement(foundedElement).click().perform();
     }
 
     public void selectOptionWithId(String option) {
         Actions action = new Actions(driver);
         DelayUtils.waitByElement(wait, dropdownListElement
-                .findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + option + "'] | .//*[@id='" + option + "'] ")));
+                .findElement(By.xpath(String.format(BY_ID_PATTERN, option, option))));
         WebElement foundedElement = dropdownListElement
-                .findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + option + "'] | .//*[@id='" + option + "'] "));
+                .findElement(By.xpath(String.format(BY_ID_PATTERN, option, option)));
         action.moveToElement(foundedElement).click().perform();
     }
 
@@ -65,5 +65,21 @@ public class DropdownList {
 
     public void selectOptionsContains(List<String> options) {
         options.forEach(this::selectOptionContains);
+    }
+
+    public void search(String value) {
+        clear();
+        Actions action = new Actions(driver);
+        WebElement input = dropdownListElement.findElement(By.xpath(INPUT_XPATH));
+        action.moveToElement(input).click().build().perform();
+        input.sendKeys(value);
+    }
+
+    public void clear() {
+        Actions action = new Actions(driver);
+        WebElement input = dropdownListElement.findElement(By.xpath(INPUT_XPATH));
+        action.moveToElement(input).click().build().perform();
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
     }
 }
