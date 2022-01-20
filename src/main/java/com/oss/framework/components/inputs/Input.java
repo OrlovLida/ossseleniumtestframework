@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.portals.ComponentMessages;
+import com.oss.framework.components.portals.InputMessage;
 import com.oss.framework.components.portals.Tooltip;
 import com.oss.framework.data.Data;
 import com.oss.framework.utils.CSSUtils;
@@ -90,7 +90,7 @@ public abstract class Input {
     }
 
     public final List<String> getMessages() {
-        ComponentMessages messages = new ComponentMessages(this.webElement);
+        InputMessage messages = new InputMessage(this.webElement);
         return messages.getMessages();
     }
 
