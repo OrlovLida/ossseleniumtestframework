@@ -51,6 +51,7 @@ public class MultiSearchField extends Input {
         DelayUtils.waitByXPath(webDriverWait, selectListPath);
         WebElement dropdownElement = webElement.findElement(By.xpath(selectListPath));
         actions.moveToElement(dropdownElement).click(dropdownElement).build().perform();
+        input = webElement.findElement(By.xpath(MULTI_SEARCH_PATH));
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }
@@ -72,6 +73,7 @@ public class MultiSearchField extends Input {
         DelayUtils.waitByXPath(webDriverWait, selectListPath);
         WebElement dropdownElement = webElement.findElement(By.xpath(selectListPath));
         actions.moveToElement(dropdownElement).click(dropdownElement).build().perform();
+        input = webElement.findElement(By.xpath(MULTI_SEARCH_PATH));
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }
