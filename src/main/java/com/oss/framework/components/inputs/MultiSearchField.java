@@ -13,7 +13,7 @@ import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.data.Data;
 
 public class MultiSearchField extends Input {
-    private static final String CLOSE_XPATH = ".//span[@class='md-input-close']";
+    private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
 
     private MultiSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
