@@ -1,5 +1,6 @@
 package com.oss.framework.components.inputs;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -12,6 +13,7 @@ import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.data.Data;
 
 public class MultiSearchField extends Input {
+    private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
 
     private MultiSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -62,12 +64,17 @@ public class MultiSearchField extends Input {
 
     @Override
     public void clear() {
-        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
-        dropdownList.clear();
+        List<WebElement> closeButtons = webElement.findElements(By.xpath(CLOSE_XPATH));
+        closeButtons.forEach(this::clearSingle);
     }
 
     @Override
     public String getLabel() {
         return webElement.findElement(By.xpath(".//span")).getText();
+    }
+
+    private void clearSingle(WebElement closeButton) {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(closeButton).click().build().perform();
     }
 }
