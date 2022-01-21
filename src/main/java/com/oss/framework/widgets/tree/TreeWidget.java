@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.treewidget;
+package com.oss.framework.widgets.tree;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 

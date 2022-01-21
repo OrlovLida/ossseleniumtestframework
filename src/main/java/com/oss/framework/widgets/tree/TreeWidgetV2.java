@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.TreeWidgetV2;
+package com.oss.framework.widgets.tree;
 
 import java.util.List;
 import java.util.Optional;

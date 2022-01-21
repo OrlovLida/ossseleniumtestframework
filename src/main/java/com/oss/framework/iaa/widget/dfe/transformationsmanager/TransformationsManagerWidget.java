@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.dfe.transformationsmanager;
+package com.oss.framework.iaa.widget.dfe.transformationsmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.inputs.Combobox;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
-import com.oss.framework.data.Data;
+import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 

@@ -1,4 +1,4 @@
-package com.oss.framework.mainheader;
+package com.oss.framework.components.mainheader;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;

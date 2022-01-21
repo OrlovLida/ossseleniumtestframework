@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.dpe.toolbarpanel;
+package com.oss.framework.iaa.widget.dpe.toolbarpanel;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oss.framework.components.inputs.Button;
 
-import static com.oss.framework.logging.LoggerMessages.CLICK_BTN;
+
 
 public class TopNPanel {
 
@@ -20,6 +20,7 @@ public class TopNPanel {
     private static final String TOP_N_PANEL_XPATH = "//div[@data-testid='drill-down-menu']";
     private static final String DIMENSION_COMBOBOX_XPATH = ".//div[@data-testid='drill-down-dimension-select']";
     private static final String LEVEL_COMBOBOX_XPATH = ".//div[@data-testid='level-drill-down-select']";
+    private static final String CLICK_BTN = "Clicking button: ";
 
     private final WebDriver driver;
     private final WebDriverWait wait;

@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.treewidget.InlineMenu;
+import com.oss.framework.components.contextactions.InlineMenu;
 
 public class TreeComponent {
 
