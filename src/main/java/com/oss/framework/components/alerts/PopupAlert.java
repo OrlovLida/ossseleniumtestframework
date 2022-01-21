@@ -1,4 +1,4 @@
-package com.oss.framework.alerts;
+package com.oss.framework.components.alerts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
