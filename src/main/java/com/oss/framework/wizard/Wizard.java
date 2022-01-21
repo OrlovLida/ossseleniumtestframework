@@ -1,4 +1,4 @@
-package com.oss.framework.widgets;
+package com.oss.framework.wizard;
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.Widget;
 
 public class Wizard {
 
