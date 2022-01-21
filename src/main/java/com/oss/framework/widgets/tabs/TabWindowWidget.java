@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.tabswidget;
+package com.oss.framework.widgets.tabs;
 
 import java.util.List;
 
