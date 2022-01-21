@@ -25,8 +25,8 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.DragAndDrop.DraggableElement;
 import com.oss.framework.utils.DragAndDrop.DropElement;
-import com.oss.framework.widgets.tablewidget.TableRow;
-import com.oss.framework.widgets.treewidget.InlineMenu;
+import com.oss.framework.widgets.table.TableRow;
+import com.oss.framework.components.contextactions.InlineMenu;
 
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";

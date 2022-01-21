@@ -1,9 +1,9 @@
-package com.oss.framework.alerts;
+package com.oss.framework.components.alerts;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.oss.framework.alerts.SystemMessageContainer.Message;
+import com.oss.framework.components.alerts.SystemMessageContainer.Message;
 
 public interface SystemMessageInterface {
 

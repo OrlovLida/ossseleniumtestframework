@@ -4,7 +4,7 @@
  * duplication or redistribution of this software is allowed only according to
  * separate agreement prepared in written between Comarch and authorized party.
  */
-package com.oss.framework.sidemenu;
+package com.oss.framework.navigation.sidemenu;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;

@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.tablewidget;
+package com.oss.framework.widgets.table;
 
 public interface TableRow {
 

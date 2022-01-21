@@ -4,7 +4,7 @@
  * duplication or redistribution of this software is allowed only according to
  * separate agreement prepared in written between Comarch and authorized party.
  */
-package com.oss.framework.alerts;
+package com.oss.framework.components.alerts;
 
 import java.util.List;
 import java.util.Optional;
