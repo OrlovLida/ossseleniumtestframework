@@ -6,8 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.datetime.DatePicker;
-import com.oss.framework.data.Data;
+import com.oss.framework.components.inputs.datetime.DatePicker;
+import com.oss.framework.components.data.Data;
 
 public class Date extends Input {
 

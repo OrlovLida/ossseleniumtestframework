@@ -6,8 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.portals.TimePicker;
-import com.oss.framework.data.Data;
+import com.oss.framework.components.inputs.datetime.TimePicker;
+import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.DelayUtils;
 
 public class Time extends Input {

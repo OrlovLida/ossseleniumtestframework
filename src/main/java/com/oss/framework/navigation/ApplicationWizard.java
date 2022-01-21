@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.portals.PopupV2;
-import com.oss.framework.listwidget.EditableList;
+import com.oss.framework.widgets.list.EditableList;
 
 public class ApplicationWizard extends PopupV2 {
 

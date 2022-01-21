@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.data.Data;
+import com.oss.framework.components.data.Data;
 
 public class ScriptComponent extends Input {
 
