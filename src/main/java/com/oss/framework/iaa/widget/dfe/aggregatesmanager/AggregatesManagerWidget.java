@@ -8,11 +8,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.data.Data;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.MultiCombobox;
 import com.oss.framework.components.inputs.TextField;
-import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -21,14 +21,15 @@ public class AggregatesManagerWidget extends Widget {
     private static final String ADD_BTN_PATH = "//button[@class='btn btn-primary btn-add-aggregate']";
     private static final String AGGREGATES_MANAGER_PATH = "//div[@class='AggregatesManagerContainer']";
 
+    @Deprecated
     private AggregatesManagerWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
     }
 
+    @Deprecated
     public static AggregatesManagerWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, AGGREGATES_MANAGER_PATH);
         WebElement webElement = driver.findElement(By.xpath(AGGREGATES_MANAGER_PATH));
-
         return new AggregatesManagerWidget(driver, wait, webElement);
     }
 

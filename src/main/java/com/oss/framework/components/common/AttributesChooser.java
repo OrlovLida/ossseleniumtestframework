@@ -43,14 +43,6 @@ public class AttributesChooser {
         disableAttributesByLabel(attributeByLabelsPath);
     }
 
-    private String getAttributePath(String attributeLabel, String... path) {
-        StringBuilder level = new StringBuilder();
-        for (String attributeCategory: path) {
-            level.append(attributeCategory).append(".");
-        }
-        return level.append(attributeLabel).toString();
-    }
-
     public void clickApply() {
         this.attributesChooserElement.findElement(By.xpath(APPLY_BUTTON_XPATH)).click();
     }
@@ -72,6 +64,14 @@ public class AttributesChooser {
         getTreeComponent().toggleNodeByPath(path);
     }
 
+    private String getAttributePath(String attributeLabel, String... path) {
+        StringBuilder level = new StringBuilder();
+        for (String attributeCategory : path) {
+            level.append(attributeCategory).append(".");
+        }
+        return level.append(attributeLabel).toString();
+    }
+
     private TreeComponent getTreeComponent() {
         return TreeComponent.create(this.driver, this.webDriverWait, attributesChooserElement);
     }
@@ -90,6 +90,5 @@ public class AttributesChooser {
 
     private Node getAttributeByLabelsPath(String attributeLabel) {
         return getTreeComponent().getNodeByLabelsPath(attributeLabel);
-
     }
 }

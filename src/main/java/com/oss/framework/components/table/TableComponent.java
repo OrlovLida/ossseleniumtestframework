@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.common.ListAttributesChooser;
 import com.oss.framework.components.common.PaginationComponent;
+import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.scrolls.CustomScrolls;
@@ -26,13 +27,11 @@ import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.DragAndDrop.DraggableElement;
 import com.oss.framework.utils.DragAndDrop.DropElement;
 import com.oss.framework.widgets.table.TableRow;
-import com.oss.framework.components.contextactions.InlineMenu;
 
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
     private static final String EMPTY_DATA_ROW_XPATH = ".//div[contains(@class, 'empty_data_row')]";
     private static final String HEADER_CLASS = "table-component__header";
-
     private static final String TABLE_COMPONENT_CLASS = "table-component";
 
     private final WebDriver driver;
@@ -80,7 +79,6 @@ public class TableComponent {
     public List<TableRow> getVisibleRows() {
         String firstColumn = getColumnIds().stream().findFirst().orElse("");
         String xpath = ".//div[@data-col='" + firstColumn + "']";
-
         List<Integer> rowIds = this.webElement
                 .findElements(By.xpath(xpath))
                 .stream().filter(e -> e.getAttribute("data-col").equals(firstColumn)).filter(e -> e.getAttribute("data-row") != null)

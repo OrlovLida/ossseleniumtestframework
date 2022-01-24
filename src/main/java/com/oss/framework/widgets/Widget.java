@@ -6,19 +6,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public abstract class Widget {
 
-    private static final String SEARCH_INPUT = ".//input[@class='form-control SearchText']";
     protected final WebDriver driver;
     protected final WebElement webElement;
     protected final WebDriverWait webDriverWait;
     protected final String id;
-    protected WebElement ossWindow;
 
     @Deprecated
     public Widget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
@@ -62,23 +58,9 @@ public abstract class Widget {
         return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']";
     }
 
-    //TODO: move to advanced search component
-    @Deprecated
-    public WebElement getSearchInput() {
-        DelayUtils.waitForBy(webDriverWait, By.xpath(SEARCH_INPUT));
-        return this.webElement.findElement(By.xpath(SEARCH_INPUT));
-    }
-
-    @Deprecated
-    public void callOssWindowActionById(String groupId, String actionId) {
-        this.ossWindow = webElement.findElement(By.xpath("//ancestor::div[contains(@class,'OssWindow')]"));
-        ActionsInterface actions = ActionsContainer.createFromParent(ossWindow, driver, webDriverWait);
-        actions.callActionById(groupId, actionId);
-    }
-
     protected WebElement refreshWidgetByID() {
         if (this.id == null) {
-            throw new RuntimeException("Not supported if id is not defined, use constructor with id");
+            throw new UnsupportedOperationException("Not supported if id is not defined, use constructor with id");
         }
         return driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + this.id + "']"));
     }

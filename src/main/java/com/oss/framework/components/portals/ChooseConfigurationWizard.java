@@ -4,9 +4,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.widgets.list.ListGroup;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.list.ListGroup;
 import com.oss.framework.wizard.Wizard;
+
 @Deprecated
 public class ChooseConfigurationWizard {
 

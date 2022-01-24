@@ -34,23 +34,24 @@ public class EditableList extends Widget {
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
 
+    @Deprecated
     private EditableList(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         super(driver, widgetClass, webDriverWait);
     }
 
-    private EditableList(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
-        super(driver, webElement, webDriverWait);
+    private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        super(driver, webDriverWait, widgetId);
     }
 
+    @Deprecated
     public static EditableList create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]"));
         return new EditableList(driver, LIST_WIDGET_CLASS, webDriverWait);
     }
 
     public static EditableList createById(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        DelayUtils.waitBy(webDriverWait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + componentId + "')]"));
-        WebElement webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
-        return new EditableList(driver, webElement, webDriverWait);
+        DelayUtils.waitBy(webDriverWait, By.xpath("//div[@" + CSSUtils.TEST_ID + "= '" + componentId + "']"));
+        return new EditableList(driver, webDriverWait, componentId);
     }
 
     public Row addRow() {

@@ -10,12 +10,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.wizard.Wizard;
+
 @Deprecated
 public class SaveConfigurationWizard {
 
     public static final String SAVE_CONFIG_ID = "saveNewConfig";
     public static final String DEFAULT_ME_VALUE = "Me";
-    public static final String DEFAULT_ALL_VALUE = "All";
     private static final String DEFAULT_VIEW_COMBOBOX_ID = "default_view_combo";
     private static final String NAME_TEXTFIELD_ID = "name";
     private static final String DESCRIPTION_TEXTFIELD_ID = "description";
@@ -23,7 +23,6 @@ public class SaveConfigurationWizard {
     private static final String WIZARD_ID = "configuration_popup";
     private static final String SAVE_AS_NEW_ID = "configuration_popup_button_save_as_new";
     private static final String SAVE_ID = "configuration_popup_button_save";
-    private static final String CANCEL_BUTTON_ID = "configuration_popup_button_cancel";
     private static final String GROUPS_ID = "groups-input";
     private static final String GROUPS_DROPDOWN_ID = "groups-dropdown-search";
     private final WebDriver driver;
@@ -77,11 +76,6 @@ public class SaveConfigurationWizard {
         return this;
     }
 
-    private SaveConfigurationWizard setAsDefaultForMe() {
-        getWizard().getComponent(DEFAULT_VIEW_COMBOBOX_ID, Input.ComponentType.COMBOBOX).setSingleStringValue(DEFAULT_ME_VALUE);
-        return this;
-    }
-
     private SaveConfigurationWizard setAsDefaultForGroup(List<String> groupNames) {
         setAsDefault("Groups");
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -90,11 +84,6 @@ public class SaveConfigurationWizard {
             getWizard().getComponent(GROUPS_DROPDOWN_ID, Input.ComponentType.COMBOBOX).setSingleStringValue(groupName);
         }
         getWizard().getComponent(NAME_TEXTFIELD_ID, Input.ComponentType.COMBOBOX).click();
-        return this;
-    }
-
-    private SaveConfigurationWizard setAsDefaultForAll() {
-        getWizard().getComponent(DEFAULT_VIEW_COMBOBOX_ID, Input.ComponentType.COMBOBOX).setSingleStringValue(DEFAULT_ALL_VALUE);
         return this;
     }
 
@@ -111,11 +100,6 @@ public class SaveConfigurationWizard {
     private void clickOnSave() {
         DelayUtils.waitForPageToLoad(driver, wait);
         getWizard().clickButtonById(SAVE_ID);
-    }
-
-    private void clickOnCancel() {
-        DelayUtils.waitForPageToLoad(driver, wait);
-        getWizard().clickButtonById(CANCEL_BUTTON_ID);
     }
 
     private void setValue(Field field) {

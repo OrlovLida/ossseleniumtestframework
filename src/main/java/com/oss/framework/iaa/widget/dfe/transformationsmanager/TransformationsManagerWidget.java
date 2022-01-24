@@ -5,10 +5,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.data.Data;
 import com.oss.framework.components.inputs.Combobox;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
-import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -19,10 +19,12 @@ public class TransformationsManagerWidget extends Widget {
     private static final String SELECT_TRANSFORMATION_INPUT_ID = "availableTransformationsComboBox-input";
     private static final String TRANSFORMATIONS_MANAGER_PATH = "//div[@class='TransformationsManagerContainer']";
 
+    @Deprecated
     private TransformationsManagerWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         super(driver, webElement, webDriverWait);
     }
 
+    @Deprecated
     public static TransformationsManagerWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, TRANSFORMATIONS_MANAGER_PATH);
         WebElement webElement = driver.findElement(By.xpath(TRANSFORMATIONS_MANAGER_PATH));

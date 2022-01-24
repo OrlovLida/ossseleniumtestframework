@@ -12,7 +12,6 @@ import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
-
 public class KpiToolbarPanel extends Widget {
 
     static final String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
@@ -31,10 +30,12 @@ public class KpiToolbarPanel extends Widget {
     private static final String FILTER_BUTTON_ID = "filter-button";
     private static final String CLICK_BTN = "Clicking button: ";
 
+    @Deprecated
     private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
         super(driver, webElement, webDriverWait);
     }
 
+    @Deprecated
     public static KpiToolbarPanel create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, KPI_TOOLBAR_PATH);
         WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
