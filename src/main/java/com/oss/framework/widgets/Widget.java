@@ -11,12 +11,14 @@ import com.oss.framework.utils.DelayUtils;
 
 public abstract class Widget {
 
+    private static final String WEB_ELEMENT_PATTERN = "//div[@" + CSSUtils.TEST_ID + "='%s']";
+
     protected final WebDriver driver;
     protected final WebElement webElement;
     protected final WebDriverWait webDriverWait;
     protected final String id;
 
-    @Deprecated
+    @Deprecated //OSSWEB-16424
     public Widget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
         this.driver = driver;
         this.webElement = driver.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]"));
@@ -24,22 +26,14 @@ public abstract class Widget {
         this.id = null;
     }
 
-    @Deprecated
-    public Widget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
+    protected Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         this.driver = driver;
-        this.webElement = webElement;
-        this.webDriverWait = webDriverWait;
-        this.id = null;
-    }
-
-    public Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
-        this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+        this.webElement = driver.findElement(By.xpath(String.format(WEB_ELEMENT_PATTERN, widgetId)));
         this.webDriverWait = webDriverWait;
         this.id = widgetId;
     }
 
-    public Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
+    protected Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
         this.driver = driver;
         this.webElement = widget;
         this.webDriverWait = webDriverWait;
@@ -51,18 +45,14 @@ public abstract class Widget {
     }
 
     public static void waitForWidgetById(WebDriverWait wait, String widgetId) {
-        DelayUtils.waitBy(wait, By.xpath(createWidgetPath(widgetId)));
+        DelayUtils.waitBy(wait, By.xpath(String.format(WEB_ELEMENT_PATTERN, widgetId)));
     }
 
-    private static String createWidgetPath(String widgetId) {
-        return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']";
-    }
-
-    protected WebElement refreshWidgetByID() {
+    protected WebElement refreshWidgetById() {
         if (this.id == null) {
             throw new UnsupportedOperationException("Not supported if id is not defined, use constructor with id");
         }
-        return driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + this.id + "']"));
+        return driver.findElement(By.xpath(String.format(WEB_ELEMENT_PATTERN, this.id)));
     }
 
     public enum WidgetType {

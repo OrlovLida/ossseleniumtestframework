@@ -134,7 +134,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private WebElement getPropertyPanelParent() {
-        WebElement propertyPanel = refreshWidgetByID();
+        WebElement propertyPanel = refreshWidgetById();
         return propertyPanel.findElement(By.xpath("..//div"));
     }
 

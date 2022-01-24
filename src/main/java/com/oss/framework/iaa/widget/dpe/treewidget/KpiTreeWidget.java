@@ -29,18 +29,14 @@ public class KpiTreeWidget extends Widget {
     private static final String DIMENSION_OPTIONS_BUTTON_ID = "dimension-options-button";
     private static final String EXPAND_NODE = "Expanding node: ";
 
-    @Deprecated
-    public KpiTreeWidget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
-        super(driver, webElement, webDriverWait);
+    public KpiTreeWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        super(driver, webDriverWait, widgetId);
     }
 
-    @Deprecated
-    public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String componentId) {
-        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
+    public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String widgetId) {
+        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
         DelayUtils.waitByXPath(wait, xPath);
-        WebElement webElement = driver.findElement(By.xpath(xPath));
-
-        return new KpiTreeWidget(driver, webElement, wait);
+        return new KpiTreeWidget(driver, wait, widgetId);
     }
 
     public void selectNodes(List<String> nodesToExpand, List<String> nodesToSelect) {

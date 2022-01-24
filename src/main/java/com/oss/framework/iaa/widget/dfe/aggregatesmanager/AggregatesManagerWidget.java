@@ -18,19 +18,17 @@ import com.oss.framework.widgets.Widget;
 
 public class AggregatesManagerWidget extends Widget {
 
+    private static final String WIDGET_ID = "aggregates-manager";
     private static final String ADD_BTN_PATH = "//button[@class='btn btn-primary btn-add-aggregate']";
     private static final String AGGREGATES_MANAGER_PATH = "//div[@class='AggregatesManagerContainer']";
 
-    @Deprecated
-    private AggregatesManagerWidget(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
-        super(driver, webElement, webDriverWait);
+    private AggregatesManagerWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        super(driver, webDriverWait, widgetId);
     }
 
-    @Deprecated
     public static AggregatesManagerWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, AGGREGATES_MANAGER_PATH);
-        WebElement webElement = driver.findElement(By.xpath(AGGREGATES_MANAGER_PATH));
-        return new AggregatesManagerWidget(driver, wait, webElement);
+        return new AggregatesManagerWidget(driver, wait, WIDGET_ID);
     }
 
     public List<AggregateSingleConfiguration> getAggregateConfigurations() {
