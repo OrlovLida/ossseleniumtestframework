@@ -435,11 +435,13 @@ public class TableComponent {
         private static final String SELECTED_CLASS = "table-component__cell--selected";
         private static final String CHECKBOX_COLUMN_ID = "checkbox";
 
+        private final WebDriver driver;
         private final WebElement cellElement;
         private final int index;
         private final String columnId;
 
-        private Cell(WebElement cellElement, int index, String columnId) {
+        private Cell(WebDriver driver, WebElement cellElement, int index, String columnId) {
+            this.driver = driver;
             this.cellElement = cellElement;
             this.index = index;
             this.columnId = columnId;
@@ -450,30 +452,30 @@ public class TableComponent {
                     .stream().findAny().isPresent();
         }
 
-        private static Cell createFromWrapper(WebElement wrapper) {
+        private static Cell createFromWrapper(WebDriver driver, WebElement wrapper) {
             WebElement cell = wrapper.findElement(By.xpath("./div"));
             int index = CSSUtils.getIntegerValue("data-row", cell);
             String columnId = cell.getCssValue("data-col");
-            return new Cell(cell, index, columnId);
+            return new Cell(driver, cell, index, columnId);
         }
 
-        private static Cell createCheckboxCell(WebElement tableComponent, int index) {
-            return createFromParent(tableComponent, index, CHECKBOX_COLUMN_ID);
+        private static Cell createCheckboxCell(WebDriver driver, WebElement tableComponent, int index) {
+            return createFromParent(driver, tableComponent, index, CHECKBOX_COLUMN_ID);
         }
 
-        private static Cell createFromParent(WebElement tableComponent, int index, String columnId) {
+        private static Cell createFromParent(WebDriver driver, WebElement tableComponent, int index, String columnId) {
             WebElement cell = tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "' and @data-col='" + columnId + "']"))
                     .stream().findFirst()
                     .orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + index + " columnId: " + columnId));
-            return new Cell(cell, index, columnId);
+            return new Cell(driver, cell, index, columnId);
         }
 
-        private static Cell createRandomCell(WebElement tableComponent, int index) {
+        private static Cell createRandomCell(WebDriver driver, WebElement tableComponent, int index) {
             WebElement randomCell =
                     tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "']"))
                             .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + index));
             String columnId = CSSUtils.getAttributeValue("data-col", randomCell);
-            return new Cell(randomCell, index, columnId);
+            return new Cell(driver, randomCell, index, columnId);
         }
 
         public int getSize() {
@@ -499,7 +501,8 @@ public class TableComponent {
         }
 
         public void click() {
-            cellElement.click();
+            Actions actions = new Actions(driver);
+            actions.moveToElement(cellElement).click(cellElement).build().perform();
         }
 
         @Override
@@ -542,13 +545,13 @@ public class TableComponent {
         }
 
         public String getColumnValue(String columnId) {
-            Cell cell = Cell.createFromParent(this.tableComponent, index, columnId);
+            Cell cell = Cell.createFromParent(driver, this.tableComponent, index, columnId);
             return cell.getText();
         }
 
         @Override
         public boolean isSelected() {
-            Cell cell = Cell.createRandomCell(this.tableComponent, index);
+            Cell cell = Cell.createRandomCell(driver, this.tableComponent, index);
             return cell.isSelected();
         }
 
@@ -558,19 +561,20 @@ public class TableComponent {
         }
 
         public void clickRow() {
+            Actions actions = new Actions(driver);
             WebElement randomCell =
                     this.tableComponent.findElements(By.xpath(".//div[@data-row='" + this.index + "']"))
                             .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
-            randomCell.click();
+            actions.moveToElement(randomCell).click(randomCell).build().perform();
         }
 
         public void selectRow() {
             if (!isSelected()) {
                 Cell cell;
                 if (Cell.hasCheckboxCell(this.tableComponent, index)) {
-                    cell = Cell.createCheckboxCell(this.tableComponent, index);
+                    cell = Cell.createCheckboxCell(driver, this.tableComponent, index);
                 } else {
-                    cell = Cell.createRandomCell(this.tableComponent, index);
+                    cell = Cell.createRandomCell(driver, this.tableComponent, index);
                 }
                 cell.click();
             }
