@@ -9,8 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.widgets.Wizard;
-
+import com.oss.framework.wizard.Wizard;
+@Deprecated
 public class SaveConfigurationWizard {
 
     public static final String SAVE_CONFIG_ID = "saveNewConfig";

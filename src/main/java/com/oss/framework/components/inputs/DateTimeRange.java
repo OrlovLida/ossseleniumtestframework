@@ -12,7 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.data.Data;
+import com.oss.framework.components.data.Data;
 
 public class DateTimeRange extends Input {
 

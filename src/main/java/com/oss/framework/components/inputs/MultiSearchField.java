@@ -10,7 +10,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.data.Data;
+import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.DelayUtils;
 
 public class MultiSearchField extends Input {
     private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
@@ -45,6 +46,7 @@ public class MultiSearchField extends Input {
         actions.moveToElement(webElement).click().build().perform();
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.search(value.getStringValue());
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         dropdownList.selectOptionContains(value.getStringValue());
     }
 
@@ -59,6 +61,7 @@ public class MultiSearchField extends Input {
         actions.moveToElement(webElement).click().build().perform();
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.search(value.getStringValue());
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         dropdownList.selectOption(value.getStringValue());
     }
 
