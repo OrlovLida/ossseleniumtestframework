@@ -14,39 +14,30 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
-
 public class KpiChartWidget extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(KpiChartWidget.class);
 
     private static final String KPI_CHART_WIDGET_PATH = "//*[@" + CSSUtils.TEST_ID + "='am-chart-wrapper']";
     private static final String KPI_CHART_WIDGET_ID = "am-chart-wrapper";
-
     private static final String CHART_COLUMN_PATH = "//div[@class='chart']/div/*[name()='svg']//*[name()='g']/*[name()='g' and (@role='menuitem')]";
     private static final String CHART_LINE_PATH = "//*[contains(@class, 'LineSeries') and (@role='group') and not(contains(@data-testid, 'amchart-series-undefined-selected'))]";
     private static final String BARCHART_PATH = "//*[contains(@class, 'ColumnSeries') and (@role='list')]";
     private static final String PIE_CHART_PATH = ".//*[contains(@class, 'amcharts-PieChart-group')]";
-
     private static final String TOP_N_NAVIGATION_BAR_PATH = ".//*[@class='amcharts-Container amcharts-Component amcharts-NavigationBar']";
-
     private static final String LEGEND_PATH = "//*[starts-with(@class,'amcharts-Container amcharts-Component amcharts-Legend')]";
     private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
-
     private static final String HIDDEN_Y_AXIS_PATH = "//*[@display = 'none' and contains (@class,'amcharts-v')]";
     private static final String VISIBLE_Y_AXIS_PATH = "//*[not (contains(@display, 'none')) and contains (@class,'amcharts-v')]";
-
     private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='last-sample-time' and not(contains(@display, 'none'))]";
     private static final String DATA_COMPLETENESS_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-legend-selected']//*[contains(text(), '%')]";
     private static final String TIME_ZONE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='timezone' and not(contains(@display, 'none'))]";
     private static final String OTHER_PERIOD_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-legend-other-period']";
-
     private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
     private static final String VISIBLE_DATA_VIEW_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
-
     private static final String ZOOM_OUT_BUTTON_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-zoomout-button']";
     private static final String ZOOM_OUT_HIDDEN_BUTTON_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-zoomout-button' and @visibility='hidden']";
-
     private static final String MOVE_MOUSE_OVER = "Moving mouse over: ";
     private static final String ELEMENT_PRESENT_AND_VISIBLE = "Element is present and visible: ";
 

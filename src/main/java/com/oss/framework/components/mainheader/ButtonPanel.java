@@ -14,7 +14,7 @@ import com.oss.framework.utils.DelayUtils;
 public class ButtonPanel {
 
     private static final String BUTTON_PANEL_XPATH = "//div[@class='view-actions-container']";
-    private static final String ICON_XPATH_PATTERN = ".//*[contains(@"+ CSSUtils.TEST_ID +",'%s')]";
+    private static final String ICON_XPATH_PATTERN = ".//*[contains(@" + CSSUtils.TEST_ID + ",'%s')]";
     private static final String SAVE_CONFIGURATION_ICON_ID = "fa fa-fw fa-floppy-o";
     private static final String CHOOSE_CONFIGURATION_ICON_ID = "fa fa-fw fa-cog";
     private static final String DOWNLOAD_CONFIGURATION_ICON_ID = "fa fa-fw fa-download";
@@ -41,7 +41,7 @@ public class ButtonPanel {
         getButton(buttonId).click();
     }
 
-    public void clickButton(String groupId, String actionId){
+    public void clickButton(String groupId, String actionId) {
         clickButton(groupId);
         DropdownList.create(driver, wait).selectOptionWithId(actionId);
     }
@@ -60,7 +60,8 @@ public class ButtonPanel {
         clickButton(DOWNLOAD_CONFIGURATION_ICON_ID);
         return ChooseConfigurationWizard.create(driver, wait);
     }
-    public boolean isHorizontalLayout(){
+
+    public boolean isHorizontalLayout() {
         return !webElement.findElements(By.className(HORIZONTAL_LAYOUT_BUTTON_CLASS)).isEmpty();
     }
 

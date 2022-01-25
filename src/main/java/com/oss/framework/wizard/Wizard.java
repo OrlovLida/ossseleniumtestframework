@@ -15,6 +15,7 @@ import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -154,6 +155,10 @@ public class Wizard {
             return steps.size();
         }
         return 1;
+    }
+
+    public TreeComponent getTreeComponent() {
+        return TreeComponent.create(driver, wait, webElement);
     }
 
     private void clickButton(String xpath) {

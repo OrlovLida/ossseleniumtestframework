@@ -9,9 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.data.Data;
 import com.oss.framework.components.portals.InputMessage;
 import com.oss.framework.components.portals.Tooltip;
-import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 

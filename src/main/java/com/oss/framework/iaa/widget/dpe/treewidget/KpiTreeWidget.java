@@ -21,25 +21,22 @@ import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 
 public class KpiTreeWidget extends Widget {
 
+    public static final String SELECT_NODE = "Selecting node: ";
     private static final Logger log = LoggerFactory.getLogger(KpiTreeWidget.class);
-
     private static final String WINDOW_XPATH = ".//ancestor::*[@class='card-shadow']";
     private static final String CARD_SHADOW_XPATH = "//*[@class='card-shadow']";
     private static final String TOOLBAR_INPUT_ID = "search-toolbar-input";
     private static final String DIMENSION_OPTIONS_BUTTON_ID = "dimension-options-button";
     private static final String EXPAND_NODE = "Expanding node: ";
-    public static final String SELECT_NODE = "Selecting node: ";
 
-    public KpiTreeWidget(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
-        super(driver, webElement, webDriverWait);
+    public KpiTreeWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        super(driver, webDriverWait, widgetId);
     }
 
-    public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String componentId) {
-        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
+    public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String widgetId) {
+        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
         DelayUtils.waitByXPath(wait, xPath);
-        WebElement webElement = driver.findElement(By.xpath(xPath));
-
-        return new KpiTreeWidget(driver, webElement, wait);
+        return new KpiTreeWidget(driver, wait, widgetId);
     }
 
     public void selectNodes(List<String> nodesToExpand, List<String> nodesToSelect) {

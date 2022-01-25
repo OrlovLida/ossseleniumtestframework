@@ -12,10 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.collect.Maps;
 import com.oss.framework.components.common.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.widgets.Widget;
 
@@ -25,11 +23,10 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
     public static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
+    public static final String SWITCHER_CONTENT_CLASS = "switcher-content";
     private static final String KEBAB_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
     private static final String CHOOSE_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='chooseConfiguration']";
     private static final String DOWNLOAD_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='propertyPanelDownload']";
-    public static final String SWITCHER_CONTENT_CLASS = "switcher-content";
-
     private static final String INPUT = ".//input";
     private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow row')]";
     private static final String PROPERTY_NAME_PATH = ".//div[@class='propertyPanelRow-label']";
@@ -37,19 +34,8 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
             ".//div[@class='propertyPanelRow-value']";
     private final Map<String, WebElement> properties = Maps.newHashMap();
 
-    private PropertyPanel(WebDriver driver, WebDriverWait wait) {
-        super(driver, PROPERTY_PANEL_CLASS, wait);
-    }
-
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
-    }
-
-    @Deprecated
-    public static PropertyPanel create(WebDriver driver) {
-        WebDriverWait wait = new WebDriverWait(driver, 45);
-        Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
-        return new PropertyPanel(driver, wait);
     }
 
     public static PropertyPanel createById(WebDriver driver, WebDriverWait wait, String testId) {
@@ -114,28 +100,13 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         search.fullTextSearch(value);
     }
 
-    // configuration
-
-    public ChooseConfigurationWizard openChooseConfigurationWizard() {
-        this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
-        DelayUtils.waitByXPath(this.webDriverWait, CHOOSE_CONFIGURATION_XPATH);
-        this.webElement.findElement(By.xpath(CHOOSE_CONFIGURATION_XPATH)).click();
-        return ChooseConfigurationWizard.create(driver, this.webDriverWait);
-    }
-
-    public ChooseConfigurationWizard openDownloadConfigurationWizard() {
-        this.webElement.findElement(By.xpath(KEBAB_XPATH)).click();
-        DelayUtils.waitByXPath(this.webDriverWait, DOWNLOAD_CONFIGURATION_XPATH);
-        this.webElement.findElement(By.xpath(DOWNLOAD_CONFIGURATION_XPATH)).click();
-        return ChooseConfigurationWizard.create(driver, this.webDriverWait);
-    }
-
     public SaveConfigurationWizard openSaveAsNewConfigurationWizard() {
         WebElement parentElement = getPropertyPanelParent();
         ActionsContainer actionsContainer = ActionsContainer.createFromParent(parentElement, this.driver, this.webDriverWait);
         actionsContainer.callActionById(ActionsContainer.KEBAB_GROUP_ID, "propertyPanelSave");
         return SaveConfigurationWizard.create(driver, this.webDriverWait);
     }
+
     private DragAndDrop.DraggableElement getDraggableElement(String id) {
         WebElement source = getPropertyById(id).findElement(By.xpath(".//div[@class = 'btn-drag']"));
         return new DragAndDrop.DraggableElement(source);
@@ -163,21 +134,19 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private WebElement getPropertyPanelParent() {
-        WebElement propertyPanel = refreshWidgetByID();
+        WebElement propertyPanel = refreshWidgetById();
         return propertyPanel.findElement(By.xpath("..//div"));
     }
 
-    private Map<String, WebElement> getPropertiesMap() {
-        for (WebElement element: getProperties()) {
+    private void getPropertiesMap() {
+        for (WebElement element : getProperties()) {
             properties.put(element.getAttribute("id"), element);
         }
-        return properties;
     }
 
     private WebElement getPropertyById(String id) {
         return this.webElement.findElement(By.id(id));
     }
-
 
     private List<WebElement> getProperties() {
         return this.webElement.findElements(By.xpath(PROPERTY_PATH));
