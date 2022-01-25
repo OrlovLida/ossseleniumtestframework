@@ -1,4 +1,4 @@
-package com.oss.framework.widgets.table;
+package com.oss.framework.iaa.widget.table;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +12,8 @@ import com.google.common.collect.Multimap;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.widgets.table.TableInterface;
+import com.oss.framework.widgets.table.TableRow;
 
 /**
  * @author Bartosz Nowak
