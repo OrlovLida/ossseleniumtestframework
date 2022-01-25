@@ -2,7 +2,6 @@ package com.oss.framework.iaa.widget.dpe.toolbarpanel;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import com.oss.framework.components.inputs.Button;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
-
 
 public class KpiToolbarPanel extends Widget {
 
@@ -30,16 +28,15 @@ public class KpiToolbarPanel extends Widget {
     private static final String OPENED_FILTERS_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='filter-menu']";
     private static final String FILTER_BUTTON_ID = "filter-button";
     private static final String CLICK_BTN = "Clicking button: ";
+    private static final String WIDGET_ID = "_Data_View";
 
-    private KpiToolbarPanel(WebDriver driver, WebElement webElement, WebDriverWait webDriverWait) {
-        super(driver, webElement, webDriverWait);
+    private KpiToolbarPanel(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        super(driver, webDriverWait, widgetId);
     }
 
     public static KpiToolbarPanel create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, KPI_TOOLBAR_PATH);
-        WebElement webElement = driver.findElement(By.xpath(KPI_TOOLBAR_PATH));
-
-        return new KpiToolbarPanel(driver, webElement, wait);
+        return new KpiToolbarPanel(driver, wait, WIDGET_ID);
     }
 
     public LayoutPanel openLayoutPanel() {

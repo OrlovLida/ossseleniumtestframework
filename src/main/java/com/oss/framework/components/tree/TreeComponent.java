@@ -1,6 +1,7 @@
 package com.oss.framework.components.tree;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -11,10 +12,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.components.contextactions.InlineMenu;
 
 public class TreeComponent {
 
@@ -159,7 +160,7 @@ public class TreeComponent {
                 action.moveToElement(button).click().perform();
                 DelayUtils.waitForElementDisappear(webDriverWait, nodeElement.findElement(By.xpath(SPIN_XPATH)));
             } else
-                throw new RuntimeException("Expand Next Level is not available for Node " + getLabel());
+                throw new NoSuchElementException("Expand Next Level is not available for Node " + getLabel());
 
         }
 
@@ -213,7 +214,7 @@ public class TreeComponent {
                 WebElement filterButton = nodeElement.findElement(By.xpath(FILTERS_BUTTON_XPATH));
                 actions.moveToElement(filterButton).click(filterButton).build().perform();
             } else
-                throw new RuntimeException("Filter Node is not available for Node " + getLabel());
+                throw new NoSuchElementException("Filter Node is not available for Node " + getLabel());
         }
 
         private boolean isFilterButtonPresent() {

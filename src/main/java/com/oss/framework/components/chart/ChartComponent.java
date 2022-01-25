@@ -10,9 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
-
-
-
 public class ChartComponent {
 
     private static final Logger log = LoggerFactory.getLogger(ChartComponent.class);
@@ -24,7 +21,6 @@ public class ChartComponent {
     private WebElement webElement;
 
     private ChartComponent(WebDriver driver, WebDriverWait webDriverWait, String windowId, WebElement webElement) {
-
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.windowId = windowId;
@@ -33,10 +29,9 @@ public class ChartComponent {
 
     public static ChartComponent create(WebDriver driver, WebDriverWait webDriverWait, String windowId) {
         String chartXpath = String.format(CHART_PATTERN, windowId);
-        waitForPresenceAndVisibility(webDriverWait,chartXpath );
+        waitForPresenceAndVisibility(webDriverWait, chartXpath);
         DelayUtils.waitByXPath(webDriverWait, chartXpath);
         WebElement webElement = driver.findElement(By.xpath(CHART_PATTERN));
-
         return new ChartComponent(driver, webDriverWait, windowId, webElement);
     }
 

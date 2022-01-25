@@ -11,11 +11,11 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.components.contextactions.InlineMenu;
 
 public class CommonList {
 
@@ -182,7 +182,6 @@ public class CommonList {
 
         return getCommonList().findElements(By.xpath(LIST_ELEMENT_XPATH))
                 .stream().map(row -> new Row(driver, wait, row, headers)).collect(Collectors.toList());
-
     }
 
     private void openAdvancedSearch() {

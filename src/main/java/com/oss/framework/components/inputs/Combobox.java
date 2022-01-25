@@ -9,9 +9,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.components.data.Data;
 import com.oss.framework.components.data.Data.DataWrapper;
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
 
 public class Combobox extends Input {
@@ -51,18 +51,15 @@ public class Combobox extends Input {
         WebElement input =
                 webElement.findElement(By.xpath(COMBOBOX_INPUT_XPATH));
         return Data.createSingleData(input.getAttribute("value"));
-
     }
 
     @Override
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
         DataWrapper wrapper = value.getWrapper();
-
         WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
         clear();
         input.sendKeys(wrapper.getReadableValue());
-
         if (wrapper.isFindFirst()) {
             DelayUtils.waitForSpinners(webDriverWait, webElement);
             input.sendKeys(Keys.DOWN);

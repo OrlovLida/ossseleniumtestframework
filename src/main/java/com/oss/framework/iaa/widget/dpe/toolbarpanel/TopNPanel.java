@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.oss.framework.components.inputs.Button;
 
-
-
 public class TopNPanel {
 
     private static final Logger log = LoggerFactory.getLogger(TopNPanel.class);

@@ -6,8 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.inputs.datetime.DatePicker;
 import com.oss.framework.components.data.Data;
+import com.oss.framework.components.inputs.datetime.DatePicker;
 
 public class Date extends Input {
 
@@ -44,7 +44,6 @@ public class Date extends Input {
 
     @Override
     public Data getValue() {
-
         return Data.createSingleData(this.webElement.findElement(By.xpath(INPUT))
                 .getAttribute("value"));
     }

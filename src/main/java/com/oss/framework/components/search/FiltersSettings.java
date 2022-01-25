@@ -34,21 +34,26 @@ public class FiltersSettings {
     private static final String FILTER_WITH_PROVIDED_NAME_DOESNT_EXIST_EXCEPTION = "Filter with provided name doesn't exist.";
     private static final String ARIA_LABEL = "aria-label";
     private static final String CANNOT_FIND_FILTER_WITH_NAME_EXCEPTION = "Cannot find filter with Name:  ";
-    
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
-    
+
     private FiltersSettings(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
         this.webElement = this.driver.findElement(By.xpath(".//*[@class='" + FILTERS_SETTINGS_PANEL + "']"));
     }
-    
+
     public static FiltersSettings create(WebDriver driver, WebDriverWait wait) {
         return new FiltersSettings(driver, wait);
     }
-    
+
+    public void markFilterAsFavByLabel(String filterLabel) {
+        SavedFilter theFilter = getFilterByLabel(filterLabel);
+        theFilter.markAsFavorite();
+    }
+
     List<SavedFilter> getFiltersList() {
         openSavedFilters();
         DelayUtils.waitByXPath(wait, NO_FILTERS + " | " + SAVED_FILTER_LABEL);
@@ -56,17 +61,12 @@ public class FiltersSettings {
                 .map(savedFilter -> SavedFilter.create(driver, wait, savedFilter, webElement))
                 .collect(Collectors.toList());
     }
-    
-    public void markFilterAsFavByLabel(String filterLabel) {
-        SavedFilter theFilter = getFilterByLabel(filterLabel);
-        theFilter.markAsFavorite();
-    }
-    
+
     void chooseFilterByLabel(String filterLabel) {
         getFilterByLabel(filterLabel).selectFilter();
         getSaveButton(APPLY_LABEL).ifPresent(WebElement::click);
     }
-    
+
     void unselectAttributes(List<String> attributeIds) {
         List<Attribute> attributes = getAttributes(attributeIds);
         attributes.forEach(attribute -> {
@@ -76,7 +76,7 @@ public class FiltersSettings {
         });
         getSaveButton(SAVE_LABEL).ifPresent(WebElement::click);
     }
-    
+
     void selectAttributes(List<String> attributeIds) {
         List<Attribute> attributes = getAttributes(attributeIds);
         attributes.forEach(attribute -> {
@@ -86,21 +86,21 @@ public class FiltersSettings {
         });
         getSaveButton(SAVE_LABEL).ifPresent(WebElement::click);
     }
-    
+
     private Predicate<WebElement> findByLabel(String label) {
         return element -> element.getText().contains(label);
     }
-    
+
     private List<Attribute> getAllAttributes() {
         List<WebElement> attributes = this.webElement.findElements(By.xpath(ATTRIBUTE_PATH));
         return attributes.stream().map(Attribute::new).collect(Collectors.toList());
     }
-    
+
     private void openSavedFilters() {
         WebElement savedFiltersTab = this.webElement.findElement(By.cssSelector(SAVED_FILTERS_TAB_SELECTOR));
         savedFiltersTab.click();
     }
-    
+
     private Optional<WebElement> getSaveButton(String label) {
         return this.webElement
                 .findElements(By.xpath(FILTERS_BUTTONS_PATH))
@@ -108,39 +108,39 @@ public class FiltersSettings {
                 .filter(findByLabel(label))
                 .findFirst();
     }
-    
+
     private SavedFilter getFilterByLabel(String filterLabel) {
         return getFiltersList().stream().filter(filter -> filter.getFilterLabel().contains(filterLabel)).findFirst()
                 .orElseThrow(() -> new RuntimeException(FILTER_WITH_PROVIDED_NAME_DOESNT_EXIST_EXCEPTION));
     }
-    
+
     private List<Attribute> getAttributes(List<String> attributeIds) {
         return getAllAttributes().stream().filter(filter -> {
             String attributeId = filter.getAttributeId();
             return attributeIds.contains(attributeId);
         }).collect(Collectors.toList());
     }
-    
+
     private static class Attribute {
         private final WebElement attributeElement;
-        
+
         private Attribute(WebElement attributeElement) {
             this.attributeElement = attributeElement;
         }
-        
+
         private boolean isSelected() {
             return !attributeElement.findElements(By.xpath(SELECTED_ATTRIBUTE_PATH)).isEmpty();
         }
-        
+
         private String getAttributeId() {
             return attributeElement.getAttribute(CSSUtils.TEST_ID);
         }
-        
+
         private void toggleAttributes() {
             attributeElement.findElement(By.xpath(INPUT_PATH)).click();
         }
     }
-    
+
     protected static class SavedFilter {
         private static final String FILTERS_ELEMENT_CLASS = "filters-element";
         private static final String FILTER_LABEL_CLASS = "filter-label";
@@ -148,19 +148,27 @@ public class FiltersSettings {
         private final WebDriverWait wait;
         private final String filterName;
         private final WebElement parent;
-        
+
         private SavedFilter(WebDriver driver, WebDriverWait wait, String filterName, WebElement parent) {
             this.driver = driver;
             this.wait = wait;
             this.filterName = filterName;
             this.parent = parent;
         }
-        
+
         private static SavedFilter create(WebDriver driver, WebDriverWait wait, WebElement filter, WebElement parent) {
             String filterName = filter.findElement(By.className(FILTER_LABEL_CLASS)).getText();
             return new SavedFilter(driver, wait, filterName, parent);
         }
-        
+
+        public boolean isFavorite() {
+            return getStar().getAttribute(ARIA_LABEL).equals(FAVORITE);
+        }
+
+        String getFilterLabel() {
+            return filterName;
+        }
+
         private WebElement getFilter() {
             return parent.findElements(By.className(FILTERS_ELEMENT_CLASS)).stream()
                     .filter(filter -> filter
@@ -169,28 +177,20 @@ public class FiltersSettings {
                     .findFirst()
                     .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_FILTER_WITH_NAME_EXCEPTION + filterName));
         }
-        
-        public boolean isFavorite() {
-            return getStar().getAttribute(ARIA_LABEL).equals(FAVORITE);
-        }
-        
-        String getFilterLabel() {
-            return filterName;
-        }
-        
+
         private void markAsFavorite() {
             Actions action = new Actions(driver);
             if (!isFavorite()) {
-                action.click(getStar()).pause(100).build().perform();
+                action.click(getStar()).pause(1000).build().perform();
                 wait.until(ExpectedConditions.attributeToBe(getStar(), ARIA_LABEL, FAVORITE));
             }
         }
-        
+
         private WebElement getStar() {
             wait.until(ExpectedConditions.elementToBeClickable(By.xpath(STAR_ICON_XPATH)));
             return getFilter().findElement(By.xpath(STAR_ICON_XPATH));
         }
-        
+
         private void selectFilter() {
             Actions action = new Actions(driver);
             action.moveToElement(getFilter()).click(getFilter()).build().perform();

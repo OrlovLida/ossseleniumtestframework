@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
@@ -15,6 +16,7 @@ public class PopupV2 {
 
     private static final String POPUP_CSS_SELECTOR = ".popupContainer";
     private static final String POPUP_TITLE_XPATH = ".//span[@class='popupTitle']";
+    private static final String BUTTON_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')]";
 
     protected final WebDriver driver;
     protected final WebDriverWait wait;
@@ -55,10 +57,14 @@ public class PopupV2 {
         return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
 
+    public TreeComponent getTreeComponent() {
+        return TreeComponent.create(driver, wait, webElement);
+    }
+
     public void clickButtonByLabel(String label) {
-        DelayUtils.waitForNestedElements(this.wait, this.webElement, ".//a[contains(text(),'" + label + "')]");
+        DelayUtils.waitForNestedElements(this.wait, this.webElement, String.format(BUTTON_BY_LABEL_PATTERN, label));
         WebElement button = wait.until(ExpectedConditions
-                .elementToBeClickable(this.webElement.findElement(By.xpath(".//a[contains(text(),'" + label + "')]"))));
+                .elementToBeClickable(this.webElement.findElement(By.xpath(String.format(BUTTON_BY_LABEL_PATTERN, label)))));
         button.click();
         wait.until(ExpectedConditions.invisibilityOf(button));
     }
