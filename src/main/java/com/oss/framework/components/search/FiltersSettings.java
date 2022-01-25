@@ -181,7 +181,7 @@ public class FiltersSettings {
         private void markAsFavorite() {
             Actions action = new Actions(driver);
             if (!isFavorite()) {
-                action.click(getStar()).pause(100).build().perform();
+                action.click(getStar()).pause(1000).build().perform();
                 wait.until(ExpectedConditions.attributeToBe(getStar(), ARIA_LABEL, FAVORITE));
             }
         }
