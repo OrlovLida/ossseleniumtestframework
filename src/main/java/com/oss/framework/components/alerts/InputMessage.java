@@ -1,4 +1,4 @@
-package com.oss.framework.components.portals;
+package com.oss.framework.components.alerts;
 
 import java.util.List;
 import java.util.stream.Collectors;

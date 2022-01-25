@@ -1,4 +1,4 @@
-package com.oss.framework.components.common;
+package com.oss.framework.components.pagination;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

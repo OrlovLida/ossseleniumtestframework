@@ -1,4 +1,4 @@
-package com.oss.framework.components.portals;
+package com.oss.framework.components.prompts;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
