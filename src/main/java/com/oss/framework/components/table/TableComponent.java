@@ -437,7 +437,7 @@ public class TableComponent {
         private static final String SELECTED_CLASS = "table-component__cell--selected";
         private static final String CHECKBOX_COLUMN_ID = "checkbox";
         
-        private WebDriver driver;
+        private final WebDriver driver;
         private final WebElement cellElement;
         private final int index;
         private final String columnId;
