@@ -139,7 +139,7 @@ public class TableComponent {
     }
 
     public String getCellValue(int row, String columnId) {
-        Cell cell = Cell.createFromParent(webElement, row, columnId);
+        Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
         return cell.getText();
     }
 
