@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.table;
+package com.oss.framework.iaa.widgets.table;
 
 import java.util.List;
 import java.util.Map;

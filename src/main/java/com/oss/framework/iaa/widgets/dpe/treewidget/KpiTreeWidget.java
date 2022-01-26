@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.dpe.treewidget;
+package com.oss.framework.iaa.widgets.dpe.treewidget;
 
 import java.util.List;
 

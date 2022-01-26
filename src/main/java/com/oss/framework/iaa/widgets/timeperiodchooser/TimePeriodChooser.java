@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.timeperiodchooser;
+package com.oss.framework.iaa.widgets.timeperiodchooser;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

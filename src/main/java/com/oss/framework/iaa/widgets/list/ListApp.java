@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.list;
+package com.oss.framework.iaa.widgets.list;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.servicedeskadvancedsearch;
+package com.oss.framework.iaa.widgets.servicedeskadvancedsearch;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

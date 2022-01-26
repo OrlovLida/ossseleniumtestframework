@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.dpe.kpichartwidget;
+package com.oss.framework.iaa.widgets.dpe.kpichartwidget;
 
 import java.util.List;
 

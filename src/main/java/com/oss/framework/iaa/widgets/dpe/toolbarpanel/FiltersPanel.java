@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.dpe.toolbarpanel;
+package com.oss.framework.iaa.widgets.dpe.toolbarpanel;
 
 import java.util.List;
 import java.util.NoSuchElementException;

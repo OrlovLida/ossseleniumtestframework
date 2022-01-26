@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.dfe.aggregatesmanager;
+package com.oss.framework.iaa.widgets.dfe.aggregatesmanager;
 
 import java.util.List;
 import java.util.stream.Collectors;

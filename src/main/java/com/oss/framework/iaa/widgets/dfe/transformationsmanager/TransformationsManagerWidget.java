@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.dfe.transformationsmanager;
+package com.oss.framework.iaa.widgets.dfe.transformationsmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
