@@ -14,9 +14,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import com.oss.framework.components.common.AttributesChooser;
-import com.oss.framework.components.common.ListAttributesChooser;
-import com.oss.framework.components.common.PaginationComponent;
+import com.oss.framework.components.attributechooser.AttributesChooser;
+import com.oss.framework.components.attributechooser.ListAttributesChooser;
+import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;

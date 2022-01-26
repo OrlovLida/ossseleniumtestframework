@@ -7,7 +7,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.common.PaginationComponent;
+import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.inputs.Input;

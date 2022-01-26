@@ -5,9 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.portals.ChooseConfigurationWizard;
 import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
@@ -33,7 +31,6 @@ public class ButtonPanel {
 
     public static ButtonPanel create(WebDriver driver, WebDriverWait wait) {
         WebElement buttonPanel = driver.findElement(By.cssSelector(BUTTON_PANEL_CSS));
-
         return new ButtonPanel(driver, wait, buttonPanel);
     }
 
@@ -44,21 +41,6 @@ public class ButtonPanel {
     public void clickButton(String groupId, String actionId) {
         clickButton(groupId);
         DropdownList.create(driver, wait).selectOptionWithId(actionId);
-    }
-
-    public SaveConfigurationWizard openSaveConfigurationWizard() {
-        clickButton(SAVE_CONFIGURATION_ICON_ID);
-        return SaveConfigurationWizard.create(driver, wait);
-    }
-
-    public ChooseConfigurationWizard openChooseConfigurationWizard() {
-        clickButton(CHOOSE_CONFIGURATION_ICON_ID);
-        return ChooseConfigurationWizard.create(driver, wait);
-    }
-
-    public ChooseConfigurationWizard openDownloadConfigurationWizard() {
-        clickButton(DOWNLOAD_CONFIGURATION_ICON_ID);
-        return ChooseConfigurationWizard.create(driver, wait);
     }
 
     public boolean isHorizontalLayout() {

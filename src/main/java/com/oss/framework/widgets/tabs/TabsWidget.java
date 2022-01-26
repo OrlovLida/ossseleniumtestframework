@@ -10,13 +10,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Lists;
-import com.oss.framework.components.common.WidgetChooser;
+import com.oss.framework.components.widgetchooser.WidgetChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.contextactions.OldActionsContainer;
-import com.oss.framework.components.portals.ChooseConfigurationWizard;
-import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
@@ -137,24 +135,6 @@ public class TabsWidget implements TabsInterface {
                 return true;
         }
         return false;
-    }
-
-    @Deprecated
-    public SaveConfigurationWizard openSaveConfigurationWizard() {
-        createTabs().findElement(By.xpath(SAVE_TAB_ICON_XPATH)).click();
-        return SaveConfigurationWizard.create(driver, webDriverWait);
-    }
-
-    @Deprecated
-    public ChooseConfigurationWizard openDownloadConfigurationWizard() {
-        createTabs().findElement(By.xpath(DOWNLOAD_CONFIGURATION_ICON_XPATH)).click();
-        return ChooseConfigurationWizard.create(driver, webDriverWait);
-    }
-
-    @Deprecated
-    public ChooseConfigurationWizard openChooseConfigurationWizard() {
-        createTabs().findElement(By.xpath(CHOOSE_CONFIGURATION_ICON_XPATH)).click();
-        return ChooseConfigurationWizard.create(driver, webDriverWait);
     }
 
     private List<String> getTabLabels() {

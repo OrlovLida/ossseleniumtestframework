@@ -10,13 +10,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Multimap;
-import com.oss.framework.components.common.AttributesChooser;
-import com.oss.framework.components.common.PaginationComponent;
+import com.oss.framework.components.attributechooser.AttributesChooser;
+import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.inputs.Input.ComponentType;
-import com.oss.framework.components.portals.ChooseConfigurationWizard;
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.components.portals.SaveConfigurationWizard;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
@@ -268,21 +265,6 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clickCancel();
     }
 
-    public SaveConfigurationWizard openSaveConfigurationWizard() {
-        callAction(ActionsContainer.KEBAB_GROUP_ID, SaveConfigurationWizard.SAVE_CONFIG_ID);
-        return SaveConfigurationWizard.create(driver, webDriverWait);
-    }
-
-    public ChooseConfigurationWizard openChooseConfigurationWizard() {
-        callAction(ActionsContainer.KEBAB_GROUP_ID, ChooseConfigurationWizard.CHOOSE_CONFIG_ID);
-        return ChooseConfigurationWizard.create(driver, webDriverWait);
-    }
-
-    public ChooseConfigurationWizard openDownloadConfigurationWizard() {
-        clickOnKebabMenu();
-        DropdownList.create(driver, webDriverWait).selectOptionWithId("table_gql_Download");
-        return ChooseConfigurationWizard.create(driver, webDriverWait);
-    }
 
     public AttributesChooser getAttributesChooser() {
         return getTableComponent().getAttributesChooser();
@@ -376,13 +358,5 @@ public class TableWidget extends Widget implements TableInterface {
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
         getAdvancedSearch().setFilter(componentId, componentType, value);
-    }
-
-    private void clickOnKebabMenu() {
-        getKebabMenuBtn().click();
-    }
-
-    private WebElement getKebabMenuBtn() {
-        return this.webElement.findElement(By.xpath(KEBAB_MENU_XPATH));
     }
 }
