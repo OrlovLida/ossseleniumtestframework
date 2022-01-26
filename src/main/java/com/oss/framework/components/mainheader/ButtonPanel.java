@@ -40,7 +40,7 @@ public class ButtonPanel {
 
     public void clickButton(String groupId, String actionId) {
         clickButton(groupId);
-        DropdownList.create(driver, wait).selectOptionWithId(actionId);
+        DropdownList.create(driver, wait).selectOptionById(actionId);
     }
 
     public boolean isHorizontalLayout() {

@@ -16,8 +16,8 @@ public class DropdownList {
 
     private static final String PORTAL_CLASS = "portal";
     private static final String INPUT_XPATH = ".//div[@class='search-cont']//input";
-    private static final String BY_ID_PATTERN = ".//*[@" + CSSUtils.TEST_ID + "='%s'] | .//*[@id='%s']";
-    private static final String BY_TEXT_PATTERN = ".//div[text()='%s']";
+    private static final String BY_ID_PATTERN = "//*[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
+    private static final String BY_TEXT_PATTERN = ".//*[text()='%s']";
     private static final String BY_TEXT_CONTAINS_PATTERN = ".//*[contains(text(), '%s')]";
 
     private final WebDriver driver;
@@ -38,7 +38,7 @@ public class DropdownList {
     public void selectOption(String option) {
         DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, option))));
         WebElement foundedElement =
-                dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, option)));
+               dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, option)));
         foundedElement.click();
     }
 
@@ -50,7 +50,7 @@ public class DropdownList {
         action.moveToElement(foundedElement).click().perform();
     }
 
-    public void selectOptionWithId(String option) {
+    public void selectOptionById(String option) {
         Actions action = new Actions(driver);
         DelayUtils.waitByElement(wait, dropdownListElement
                 .findElement(By.xpath(String.format(BY_ID_PATTERN, option, option))));
@@ -59,8 +59,8 @@ public class DropdownList {
         action.moveToElement(foundedElement).click().perform();
     }
 
-    public void selectOptions(List<String> options) {
-        options.forEach(this::selectOption);
+    public void selectOptions(List<String> optionsId) {
+        optionsId.forEach(this::selectOptionById);
     }
 
     public void selectOptionsContains(List<String> options) {
