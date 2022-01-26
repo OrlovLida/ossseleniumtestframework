@@ -100,7 +100,8 @@ public class ActionsContainer implements ActionsInterface {
     }
     
     private void clickOnGroup(String groupId) {
-        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, "//div[@id='" + groupId + "']");
+        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement,
+                ".//div[@id='" + groupId + "'] | .//div[@id= '" + MORE_GROUP_ID + "']");
         if (isElementPresent(webElement, By.id(groupId))) {
             clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(groupId)));
         } else {
