@@ -6,9 +6,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
-import com.oss.framework.components.prompts.PopupV2;
+import com.oss.framework.components.prompts.Popup;
 
-public class ApplicationWizard extends PopupV2 {
+public class ApplicationWizard extends Popup {
 
     private static final String APPLICATION_INPUT_ID = "application-input";
     private static final String NAME_TEXT_FIELD_ID = "name";

@@ -5,10 +5,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.inputs.Input;
-import com.oss.framework.components.prompts.PopupV2;
+import com.oss.framework.components.prompts.Popup;
 import com.oss.framework.utils.DelayUtils;
 
-public class CategoryWizard extends PopupV2 {
+public class CategoryWizard extends Popup {
 
     private static final String NAME_FIELD_ID_IN_CATEGORY_POPUP = "category-popup--input1";
     private static final String DESCRIPTION_FIELD_ID_IN_CATEGORY_POPUP = "category-popup--input2";
