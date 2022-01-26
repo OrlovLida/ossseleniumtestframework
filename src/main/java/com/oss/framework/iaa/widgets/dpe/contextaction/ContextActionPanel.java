@@ -1,4 +1,4 @@
-package com.oss.framework.iaa.widget.dpe.contextaction;
+package com.oss.framework.iaa.widgets.dpe.contextaction;
 
 import java.util.List;
 
