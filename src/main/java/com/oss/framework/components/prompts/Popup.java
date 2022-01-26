@@ -12,7 +12,7 @@ import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
-public class PopupV2 {
+public class Popup {
 
     private static final String POPUP_CSS_SELECTOR = ".popupContainer";
     private static final String POPUP_TITLE_XPATH = ".//span[@class='popupTitle']";
@@ -22,14 +22,14 @@ public class PopupV2 {
     protected final WebDriverWait wait;
     protected final WebElement webElement;
 
-    public PopupV2(WebDriver driver, WebDriverWait wait) {
+    public Popup(WebDriver driver, WebDriverWait wait) {
         this.wait = wait;
         this.driver = driver;
         this.webElement = driver.findElement(By.className("popupContainer"));
     }
 
-    public static PopupV2 create(WebDriver driver, WebDriverWait wait) {
-        return new PopupV2(driver, wait);
+    public static Popup create(WebDriver driver, WebDriverWait wait) {
+        return new Popup(driver, wait);
     }
 
     public static void waitForPopupBookmarks(WebDriverWait wait) {
