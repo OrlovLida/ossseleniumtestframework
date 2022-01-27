@@ -504,8 +504,6 @@ public class TableComponent {
         public void click() {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cellElement);
             cellElement.click();
-//            Actions actions = new Actions(driver);
-//            actions.moveToElement(cellElement).click(cellElement).build().perform();
         }
 
         @Override
