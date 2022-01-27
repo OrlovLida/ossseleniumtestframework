@@ -34,13 +34,13 @@ public class StatusIcon {
         return new StatusIcon(driver, wait, iconListWidget);
     }
 
-    public List<IconItem> getIconCirclesList() {
+    public List<IconItem> getIconCircles() {
         return iconListWidgetElement.findElements(By.xpath(LIST_ICON_CIRCLES_XPATH)).stream()
                 .map(iconCircleItem -> IconItem.create(driver, wait, iconCircleItem))
                 .collect(Collectors.toList());
     }
 
-    public List<IconItem> getIconLabelsList() {
+    public List<IconItem> getIconLabels() {
         return iconListWidgetElement.findElements(By.xpath(LIST_ICON_LABELS_XPATH)).stream()
                 .map(iconLabelItem -> IconItem.create(driver, wait, iconLabelItem))
                 .collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class StatusIcon {
             return new IconItem(driver, wait, iconItem);
         }
 
-        public boolean isIconIsGreen() {
+        public boolean isIconGreen() {
             return iconElement.getAttribute("class").contains(ICON_SUCCESS);
         }
 
