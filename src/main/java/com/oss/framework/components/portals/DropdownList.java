@@ -52,8 +52,7 @@ public class DropdownList {
 
     public void selectOptionById(String option) {
         Actions action = new Actions(driver);
-        DelayUtils.waitByElement(wait, dropdownListElement
-                .findElement(By.xpath(String.format(BY_ID_PATTERN, option, option))));
+        DelayUtils.waitByXPath(wait, String.format(BY_ID_PATTERN, option, option));
         WebElement foundedElement = dropdownListElement
                 .findElement(By.xpath(String.format(BY_ID_PATTERN, option, option)));
         action.moveToElement(foundedElement).click().perform();
