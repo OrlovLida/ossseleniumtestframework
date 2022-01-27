@@ -17,7 +17,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.InlineForm;
 import com.oss.framework.components.inputs.Input;
@@ -33,6 +33,7 @@ public class EditableList extends Widget {
     private static final String LIST_WIDGET_CLASS = "ExtendedList";
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
+    private static final String EMPTY_RESULTS_XPATH = "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
 
     private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -45,53 +46,22 @@ public class EditableList extends Widget {
 
     public Row addRow() {
         DelayUtils.waitByXPath(webDriverWait, XPATH_ADD_ROW);
-        WebElement row = driver.findElement(By.xpath(XPATH_ADD_ROW));
-        row.click();
+        WebElement addRowButton = driver.findElement(By.xpath(XPATH_ADD_ROW));
+        addRowButton.click();
         List<Row> visibleRows = getVisibleRows();
         return visibleRows.get(visibleRows.size() - 1);
     }
 
-    public void setValueByRowIndex(int rowIndex, String value, String columnId, String componentId, Input.ComponentType componentType) {
-        Row row = getRow(rowIndex - 1);
-        row.setEditableAttributeValue(value, columnId, componentId, componentType);
-    }
-
-    public void callActionByLabel(String actionLabel, int row) {
-        getRow(row - 1).click();
-        ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
-        action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
-    }
-
-    public void callActionByLabel(String actionLabel, String columnId, String value) {
-        getRowByAttributeValue(columnId, value).click();
-        ActionsContainer action = ActionsContainer.createFromParent(webElement, driver, webDriverWait);
-        action.callActionByLabel("frameworkObjectButtonsGroup", actionLabel);
-    }
-
-    public void callActionIcon(String actionLabel, int row) {
-        getRow(row - 1).callActionIcon(actionLabel);
-    }
-
-    public void callActionIcon(String actionLabel, String columnId, String value) {
-        getRowByAttributeValue(columnId, value).callActionIcon(actionLabel);
-    }
-
-    // TODO update xpath
-    public List<String> getValues() {
-        List<String> values = new ArrayList<>();
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, "//div[contains(@class,'rowData')]");
-        List<WebElement> allRows = webElement.findElements(By.xpath(".//div[contains(@class,'rowData')]"));
-        for (WebElement value : allRows) {
-            values.add(value.getText());
-        }
-        return values;
+    public void setValue(int rowIndex, String value, String columnId, String componentId, Input.ComponentType componentType) {
+        Row row = getRow(rowIndex);
+        row.setValue(value, columnId, componentId, componentType);
     }
 
     public Row getRow(int row) {
         return getVisibleRows().get(row);
     }
 
-    public Row getRowByAttributeValue(String columnId, String value) {
+    public Row getRowByValue(String columnId, String value) {
         List<Row> allRows = getVisibleRows();
         for (Row row : allRows) {
             Row.Cell cell = row.getCell(columnId);
@@ -107,36 +77,35 @@ public class EditableList extends Widget {
         DelayUtils.waitByXPath(webDriverWait, XPATH_ROWS_OF_LIST);
         List<WebElement> listElements = webElement.findElements(By.xpath(XPATH_ROWS_OF_LIST));
         List<Row> rows = new ArrayList<>();
-        for (int index = 0; index < listElements.size(); index++) {
-            rows.add(new Row(driver, webDriverWait, listElements.get(index), index + 1));
+        for (WebElement listElement : listElements) {
+            rows.add(new Row(driver, webDriverWait, listElement));
         }
         return rows;
-
     }
 
     public boolean hasNoData() {
-        List<WebElement> noData = this.driver
-                .findElements(By.xpath("//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]"));
+        List<WebElement> noData = this.driver.findElements(By.xpath(EMPTY_RESULTS_XPATH));
         return !noData.isEmpty();
     }
 
     public static class Row {
         private static final String ROW_CHECKBOX_XPATH = ".//div[contains(@class,'checkbox')]";
+        private static final String CELL_PATTERN = ".//div[@" + CSSUtils.TEST_ID + "='%s']";
+        private static final String PLACEHOLDERS_XPATH = ".//div[contains(@class,'placeholders')]";
+        private static final String ARIA_LABEL_PATTERN = ".//i[@aria-label='%s']";
 
         private final WebDriver driver;
         private final WebDriverWait wait;
         private final WebElement webElement;
-        private final int index;
 
-        private Row(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, int index) {
+        private Row(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
             this.driver = driver;
             this.wait = webDriverWait;
             this.webElement = webElement;
-            this.index = index;
         }
 
         public void click() {
-            if (isCheckboxEnabled()) {
+            if (isCheckboxPresent()) {
                 WebElement checkbox = webElement.findElement(By.xpath(ROW_CHECKBOX_XPATH));
                 checkbox.click();
             } else {
@@ -145,8 +114,8 @@ public class EditableList extends Widget {
         }
 
         public Cell getCell(String columnId) {
-            DelayUtils.waitByXPath(wait, ".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']");
-            WebElement cell = webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']"));
+            DelayUtils.waitByXPath(wait, String.format(CELL_PATTERN, columnId));
+            WebElement cell = webElement.findElement(By.xpath(String.format(CELL_PATTERN, columnId)));
             return new Cell(driver, wait, cell);
         }
 
@@ -154,7 +123,7 @@ public class EditableList extends Widget {
             return getCell(columnId).getText();
         }
 
-        public void setEditableAttributeValue(String value, String columnId, String componentId, Input.ComponentType componentType) {
+        public void setValue(String value, String columnId, String componentId, Input.ComponentType componentType) {
             getCell(columnId).setValue(value, componentId, componentType);
         }
 
@@ -162,29 +131,32 @@ public class EditableList extends Widget {
             getCell(columnId).clearValue(componentId, componentType);
         }
 
-        public boolean isEditableAttribute(String columnId) {
-            return webElement.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + columnId + "']")).getAttribute("class")
-                    .contains("editable");
+        public boolean isAttributeEditable(String columnId) {
+            return getCell(columnId).isAttributeEditable();
+        }
+
+        public void callAction(String actionId) {
+            InlineMenu inlineMenu = InlineMenu.create(webElement, driver, wait);
+            inlineMenu.callAction(actionId);
         }
 
         public void callActionIcon(String ariaLabel) {
-            DelayUtils.waitForNestedElements(wait, webElement, ".//div[contains(@class,'placeholders')]");
-            WebElement placeholdersAndActions = webElement.findElement(By.xpath(".//div[contains(@class,'placeholders')]"));
-            WebElement icon = placeholdersAndActions.findElement(By.xpath(".//i[@aria-label='" + ariaLabel + "']"));
+            DelayUtils.waitForNestedElements(wait, webElement, PLACEHOLDERS_XPATH);
+            WebElement placeholdersAndActions = webElement.findElement(By.xpath(PLACEHOLDERS_XPATH));
+            WebElement icon = placeholdersAndActions.findElement(By.xpath(String.format(ARIA_LABEL_PATTERN, ariaLabel)));
             DelayUtils.waitForClickability(wait, icon);
             Actions action = new Actions(driver);
             action.moveToElement(icon).click().build().perform();
         }
 
-        private boolean isCheckboxEnabled() {
+        private boolean isCheckboxPresent() {
             return !webElement.findElements(By.xpath(ROW_CHECKBOX_XPATH)).isEmpty();
         }
 
         public static class Cell {
-            public static final String TEXT_CONTAINER = "textContainer";
-            public static final String TEXT_WRAPPER = "text-wrapper";
-
+            private static final String TEXT_XPATH = ".//div[@class='text-wrapper' or 'textContainer']";
             private static final String SAVE_BUTTON = "Save";
+
             private final WebDriver driver;
             private final WebDriverWait wait;
             private final WebElement webElement;
@@ -196,7 +168,7 @@ public class EditableList extends Widget {
             }
 
             public String getText() {
-                return webElement.findElement(By.xpath(".//div[@class= '" + TEXT_WRAPPER + "' or '" + TEXT_CONTAINER + "']")).getText();
+                return webElement.findElement(By.xpath(TEXT_XPATH)).getText();
             }
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
@@ -229,8 +201,9 @@ public class EditableList extends Widget {
                 inlineForm.clickButtonByLabel(SAVE_BUTTON);
             }
 
+            public boolean isAttributeEditable() {
+                return webElement.getAttribute("class").contains("editable");
+            }
         }
-
     }
-
 }

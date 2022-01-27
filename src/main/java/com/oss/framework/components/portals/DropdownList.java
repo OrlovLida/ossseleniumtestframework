@@ -35,26 +35,26 @@ public class DropdownList {
         return new DropdownList(driver, webDriverWait, dropdownList);
     }
 
-    public void selectOption(String option) {
-        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, option))));
+    public void selectOption(String optionLabel) {
+        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, optionLabel))));
         WebElement foundedElement =
-               dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, option)));
+                dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, optionLabel)));
         foundedElement.click();
     }
 
-    public void selectOptionContains(String option) {
-        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, option))));
+    public void selectOptionContains(String optionLabel) {
+        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, optionLabel))));
         Actions action = new Actions(driver);
         WebElement foundedElement =
-                dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, option)));
+                dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, optionLabel)));
         action.moveToElement(foundedElement).click().perform();
     }
 
-    public void selectOptionById(String option) {
+    public void selectOptionById(String optionId) {
         Actions action = new Actions(driver);
-        DelayUtils.waitByXPath(wait, String.format(BY_ID_PATTERN, option, option));
+        DelayUtils.waitByXPath(wait, String.format(BY_ID_PATTERN, optionId, optionId));
         WebElement foundedElement = dropdownListElement
-                .findElement(By.xpath(String.format(BY_ID_PATTERN, option, option)));
+                .findElement(By.xpath(String.format(BY_ID_PATTERN, optionId, optionId)));
         action.moveToElement(foundedElement).click().perform();
     }
 
