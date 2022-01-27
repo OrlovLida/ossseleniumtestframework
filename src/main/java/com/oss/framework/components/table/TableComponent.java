@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -501,8 +502,10 @@ public class TableComponent {
         }
 
         public void click() {
-            Actions actions = new Actions(driver);
-            actions.moveToElement(cellElement).click(cellElement).build().perform();
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cellElement);
+            cellElement.click();
+//            Actions actions = new Actions(driver);
+//            actions.moveToElement(cellElement).click(cellElement).build().perform();
         }
 
         @Override
