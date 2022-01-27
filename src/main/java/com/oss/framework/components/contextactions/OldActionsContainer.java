@@ -122,7 +122,7 @@ public class OldActionsContainer implements ActionsInterface {
 
     private void callActionFromKebab(String actionId) {
         clickOnWebElement(driver, wait, this.toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH)));
-        DropdownList.create(driver, wait).selectOptionWithId(actionId);
+        DropdownList.create(driver, wait).selectOptionById(actionId);
     }
 
     private void moveToInnerActionByXpath(String innerActionXpath) {
