@@ -56,10 +56,10 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     }
 
     @Override
-    public void clickButtonByDataAttributeName(String dataAttributeName) {
+    public void clickButtonById(String id) {
         DelayUtils.waitForElementToLoad(wait, prompt);
         WebElement button = wait.until(ExpectedConditions
-                .elementToBeClickable(this.prompt.findElement(By.cssSelector(String.format(BUTTON_CSS, dataAttributeName)))));
+                .elementToBeClickable(this.prompt.findElement(By.cssSelector(String.format(BUTTON_CSS, id)))));
         button.click();
         wait.until(ExpectedConditions.invisibilityOf(button));
     }

@@ -12,7 +12,7 @@ package com.oss.framework.components.prompts;
 public interface ConfirmationBoxInterface {
     void clickButtonByLabel(String label);
 
-    void clickButtonByDataAttributeName(String dataAttributeName);
+    void clickButtonById(String id);
 
     String getMessage();
 }
