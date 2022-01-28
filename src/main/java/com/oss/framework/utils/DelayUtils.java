@@ -128,12 +128,14 @@ public class DelayUtils {
 
     public static void waitForElementToLoad(WebDriverWait webDriverWait, WebElement webElement) {
         DelayUtils.sleep(1000);
-        List<WebElement> spinners = webElement.findElements(By.xpath(FA_SPIN_XPATH));
+        List<WebElement> faSpins = webElement.findElements(By.xpath(FA_SPIN_XPATH));
+        List<WebElement> spinners = webElement.findElements(By.xpath(SPINNER_XPATH));
         List<WebElement> loadBars = webElement.findElements(By.xpath(LOAD_BARS_XPATH));
         List<WebElement> barsLoader = webElement.findElements(By.xpath(BARS_LOADERS_XPATH));
         List<WebElement> skeletonPreloader = webElement.findElements(By.xpath(SKELETON_PRELOADERS_XPATH));
         List<WebElement> actionInProgress = webElement.findElements(By.xpath(ACTION_IN_PROGRESS_XPATH));
-        List<WebElement> newList = new ArrayList<>(spinners);
+        List<WebElement> newList = new ArrayList<>(faSpins);
+        newList.addAll(spinners);
         newList.addAll(loadBars);
         newList.addAll(barsLoader);
         newList.addAll(skeletonPreloader);
