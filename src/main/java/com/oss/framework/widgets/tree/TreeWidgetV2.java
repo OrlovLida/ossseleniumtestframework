@@ -104,6 +104,10 @@ public class TreeWidgetV2 extends Widget {
         return getTreeComponent().getNodeByLabelsPath(labels);
     }
 
+    public Optional<Node> findNodeByLabelsPath(String labels){
+        return getTreeComponent().findNodeByLabelsPath(labels);
+    }
+
     public PaginationComponent getPagination() {
         return PaginationComponent.createFromParent(driver, webDriverWait, webElement);
     }
