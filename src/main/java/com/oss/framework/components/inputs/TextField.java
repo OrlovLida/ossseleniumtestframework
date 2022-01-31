@@ -50,7 +50,7 @@ public class TextField extends Input {
         Actions action = new Actions(driver);
         action.moveToElement(input).build().perform();
         clear();
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        DelayUtils.waitForClickability(webDriverWait, input);
         input.sendKeys(value.getStringValue());
     }
 
