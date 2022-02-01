@@ -22,13 +22,8 @@ public class KpiChartWidget extends Widget {
     private static final String KPI_CHART_WIDGET_ID = "am-chart-wrapper";
 
     private static final String CHART_COLUMN_PATH = ".//*[name()='g' and (@role='listitem')]";
-    private static final String CHART_LINE_PATH = "//*[contains(@class, 'LineSeries') and (@role='group') and not(contains(@data-testid, 'amchart-series-undefined-selected'))]";
-    private static final String BARCHART_PATH = "//*[contains(@class, 'ColumnSeries') and (@role='list')]";
-
-    private static final String BAR_CHART_TYPE_XPATH = ".//*[@data-series-type='bar']";
     private static final String LINE_CHART_TYPE_XPATH = ".//*[@data-series-type='line']";
-
-    private static final String PARTIAL_CHART_ID = ".//*[starts-with(@data-testid, 'amchart-series')]";
+    private static final String PARTIAL_CHART_ID = ".//*[starts-with(@" + CSSUtils.TEST_ID + ", 'amchart-series')]";
 
     private static final String PIE_CHART_PATH = ".//*[contains(@class, 'amcharts-PieChart-group')]";
     private static final String TOP_N_NAVIGATION_BAR_PATH = ".//*[@class='amcharts-Container amcharts-Component amcharts-NavigationBar']";
@@ -141,20 +136,6 @@ public class KpiChartWidget extends Widget {
         String dataSeriesVisibility = findElementByXpath(LINE_CHART_TYPE_XPATH).getCssValue("visibility");
         log.debug("Data Series visibility: {}", dataSeriesVisibility);
         return dataSeriesVisibility;
-    }
-
-    @Deprecated
-    public String getDataSeriesFillOpacity() {
-        String fillOpacity = findElementByXpath(LINE_CHART_TYPE_XPATH).getCssValue("fill-opacity");
-        log.debug("Data Series fill opacity: {}", fillOpacity);
-        return fillOpacity;
-    }
-
-    @Deprecated
-    public String getBarDataSeriesFillOpacity() {
-        String fillOpacity = findElementByXpath(BAR_CHART_TYPE_XPATH).getCssValue("fill-opacity");
-        log.debug("Bar chart Data Series fill opacity: {}", fillOpacity);
-        return fillOpacity;
     }
 
     public String getDataSeriesType() {
