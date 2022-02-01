@@ -40,7 +40,8 @@ public class EditableList extends Widget {
     }
 
     public static EditableList createById(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        DelayUtils.waitBy(webDriverWait, By.xpath("//div[@" + CSSUtils.TEST_ID + "= '" + componentId + "']"));
+        Widget.waitForWidget(webDriverWait, LIST_WIDGET_CLASS);
+        Widget.waitForWidgetById(webDriverWait, componentId);
         return new EditableList(driver, webDriverWait, componentId);
     }
 
