@@ -13,31 +13,27 @@ import com.oss.framework.utils.DelayUtils;
 public class ChartComponent {
 
     private static final Logger log = LoggerFactory.getLogger(ChartComponent.class);
-    private static final String ELEMENT_PRESENT_AND_VISIBLE = "Element is present and visible: ";
+    private static final String ELEMENT_PRESENT_AND_VISIBLE = "Chart is present and visible.";
     private static final String CHART_PATTERN = "//div[@" + CSSUtils.TEST_ID + "='%s']//*[@class='chartContainer']";
+
     private WebDriver driver;
     private WebDriverWait webDriverWait;
-    private String windowId;
     private WebElement webElement;
 
-    private ChartComponent(WebDriver driver, WebDriverWait webDriverWait, String windowId, WebElement webElement) {
+    private ChartComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
-        this.windowId = windowId;
         this.webElement = webElement;
     }
 
     public static ChartComponent create(WebDriver driver, WebDriverWait webDriverWait, String windowId) {
-        String chartXpath = String.format(CHART_PATTERN, windowId);
-        waitForPresenceAndVisibility(webDriverWait, chartXpath);
-        DelayUtils.waitByXPath(webDriverWait, chartXpath);
-        WebElement webElement = driver.findElement(By.xpath(CHART_PATTERN));
-        return new ChartComponent(driver, webDriverWait, windowId, webElement);
+        waitForPresenceAndVisibility(webDriverWait, String.format(CHART_PATTERN, windowId));
+        WebElement webElement = driver.findElement(By.xpath(String.format(CHART_PATTERN, windowId)));
+        return new ChartComponent(driver, webDriverWait, webElement);
     }
 
     private static void waitForPresenceAndVisibility(WebDriverWait webDriverWait, String xpath) {
         DelayUtils.waitForPresenceAndVisibility(webDriverWait, By.xpath(xpath));
-        log.debug(ELEMENT_PRESENT_AND_VISIBLE + "Chart");
-        log.info("chart is visible");
+        log.info(ELEMENT_PRESENT_AND_VISIBLE);
     }
 }
