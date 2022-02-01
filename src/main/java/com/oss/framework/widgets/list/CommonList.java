@@ -66,7 +66,7 @@ public class CommonList extends Widget {
         categories.forEach(Category::collapseCategory);
     }
 
-    public void clickOnCategoryByName(String name) {
+    public void expandCategory(String name) {
         getCategory(name).expandCategory();
     }
 
