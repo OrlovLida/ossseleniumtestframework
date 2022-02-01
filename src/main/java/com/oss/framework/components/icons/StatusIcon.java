@@ -35,20 +35,6 @@ public class StatusIcon {
         return new StatusIcon(driver, wait, iconListWidget);
     }
 
-    @Deprecated
-    public List<IconItem> getIconCircles() {
-        return iconListWidgetElement.findElements(By.xpath(LIST_ICON_CIRCLES_XPATH)).stream()
-                .map(iconCircleItem -> IconItem.create(driver, wait, iconCircleItem))
-                .collect(Collectors.toList());
-    }
-
-    @Deprecated
-    public List<IconItem> getIconLabels() {
-        return iconListWidgetElement.findElements(By.xpath(LIST_ICON_LABELS_XPATH)).stream()
-                .map(iconLabelItem -> IconItem.create(driver, wait, iconLabelItem))
-                .collect(Collectors.toList());
-    }
-
     public List<IconItem> getIcons() {
         return iconListWidgetElement.findElements(By.xpath(ICON_PANEL_XPATH)).stream()
                 .map(iconItem -> IconItem.create(driver, wait, iconItem))

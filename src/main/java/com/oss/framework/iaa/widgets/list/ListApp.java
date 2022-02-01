@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
-@Deprecated
 public class ListApp {
 
     private static final Logger log = LoggerFactory.getLogger(ListApp.class);
@@ -46,11 +45,6 @@ public class ListApp {
                 .map(text -> text.getText()).collect(Collectors.toList());
         log.debug("Getting all values from app list");
         return values;
-    }
-
-    public void clickCreateNewNotification() {
-        log.debug("Clicking create new notification button");
-        listApp.findElement(By.xpath(".//*[contains(@href,'notification')]")).click();
     }
 
     private List<WebElement> getRows() {
