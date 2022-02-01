@@ -17,6 +17,7 @@ public class StatusIcon {
     private static final String LIST_ICON_CIRCLES_XPATH = ".//div[starts-with(@class, 'icon-wrapper')]";
     private static final String LIST_ICON_LABELS_XPATH = ".//div[starts-with(@class, 'icon-panel__label')]";
     private static final String ICON_SUCCESS = "btn-success";
+    private static final String ICON_PANEL_XPATH = ".//div[@class='icon-panel']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -34,15 +35,23 @@ public class StatusIcon {
         return new StatusIcon(driver, wait, iconListWidget);
     }
 
+    @Deprecated
     public List<IconItem> getIconCircles() {
         return iconListWidgetElement.findElements(By.xpath(LIST_ICON_CIRCLES_XPATH)).stream()
                 .map(iconCircleItem -> IconItem.create(driver, wait, iconCircleItem))
                 .collect(Collectors.toList());
     }
 
+    @Deprecated
     public List<IconItem> getIconLabels() {
         return iconListWidgetElement.findElements(By.xpath(LIST_ICON_LABELS_XPATH)).stream()
                 .map(iconLabelItem -> IconItem.create(driver, wait, iconLabelItem))
+                .collect(Collectors.toList());
+    }
+
+    public List<IconItem> getIcons() {
+        return iconListWidgetElement.findElements(By.xpath(ICON_PANEL_XPATH)).stream()
+                .map(iconItem -> IconItem.create(driver, wait, iconItem))
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +72,7 @@ public class StatusIcon {
         }
 
         public boolean isIconGreen() {
-            return iconElement.getAttribute("class").contains(ICON_SUCCESS);
+            return iconElement.findElement(By.xpath(LIST_ICON_CIRCLES_XPATH)).getAttribute("class").contains(ICON_SUCCESS);
         }
 
         public String getIconLabel() {
