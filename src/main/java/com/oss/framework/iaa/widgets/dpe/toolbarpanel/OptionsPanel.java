@@ -31,6 +31,7 @@ public class OptionsPanel {
     private static final String MISCELLANEOUS_OPTIONS_PATH = "//*[@data-testid = 'miscellaneous-options-common-form']";
     private static final String OPTIONS_INPUT_ID = "//*[@data-testid = '%s']";
     private static final String COMPARE_WITH_OTHER_PERIOD_OPTIONS_PATH = "//*[@data-testid = 'compare-with-period-common-form']";
+    private static final String AGGREGATION_METHODS_SELECT_XPATH = "//*[@data-testid = 'aggregation-method-select']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -231,7 +232,8 @@ public class OptionsPanel {
     }
 
     private List<String> getActiveAggMethodsIds() {
-        List<WebElement> webElementsAgg = optionsPanelElement.findElements(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
+        WebElement aggregationMethodList = driver.findElement(By.xpath(AGGREGATION_METHODS_SELECT_XPATH));
+        List<WebElement> webElementsAgg = aggregationMethodList.findElements(By.xpath(ACTIVE_AGGREGATION_METHOT_XPATH));
         return webElementsAgg.stream().map(aggMethod -> CSSUtils.getAttributeValue("data-testid", aggMethod))
                 .collect(Collectors.toList());
     }
