@@ -7,7 +7,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 
 public class LayoutPanel {
 
@@ -34,14 +33,14 @@ public class LayoutPanel {
     }
 
     public void changeLayout(LayoutType layout) {
-        findElementByXpath(this.layoutPanelElement, CHART_LAYOUT_BUTTON_ID + layout.label + "']").click();
+        this.layoutPanelElement.findElement(By.xpath(CHART_LAYOUT_BUTTON_ID + layout.label + "']")).click();
 
         log.debug(CLICK_BTN + layout.label + " layout");
         log.info("Changed layout to {}", layout.label);
     }
 
     public String chartLayoutButtonStatus(LayoutType layout) {
-        String status = findElementByXpath(this.layoutPanelElement, CHART_LAYOUT_BUTTON_ID + layout.label + "']").getAttribute("class");
+        String status = this.layoutPanelElement.findElement(By.xpath(CHART_LAYOUT_BUTTON_ID + layout.label + "']")).getAttribute("class");
         log.debug("Layout {} button status: {}", layout.label, status);
         return status;
     }

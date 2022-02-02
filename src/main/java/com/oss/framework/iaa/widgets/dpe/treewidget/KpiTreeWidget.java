@@ -17,7 +17,6 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
-import static com.oss.framework.utils.WidgetUtils.findElementByXpath;
 
 public class KpiTreeWidget extends Widget {
 
@@ -104,7 +103,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     private WebElement findNodeElementByXPath(String objectName) {
-        return findElementByXpath(this.webElement, "//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']");
+        return this.webElement.findElement(By.xpath( "//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']"));
     }
 
     private void selectNode(String objectName) {
@@ -117,7 +116,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     private WebElement getNode(String objectName) {
-        return findElementByXpath(this.webElement, "//div[@title='" + objectName + "']")
+        return webElement.findElement(By.xpath( "//div[@title='" + objectName + "']"))
                 .findElement(By.xpath("following-sibling::*"));
     }
 
