@@ -38,7 +38,7 @@ public interface TableInterface {
 
     boolean hasNoData();
 
-    void selectLinkInSpecificColumn(String columnName);
+    void clickLink(String columnName);
 
     int getRowNumber(String value, String attributeLabel);
 
@@ -56,17 +56,11 @@ public interface TableInterface {
 
     void callAction(String groupId, String actionId);
 
-    void selectTabByLabel(String tabLabel, String id);
-
     void callActionByLabel(String groupLabel, String actionLabel);
 
     void doRefreshWhileNoData(int waitTime, String refreshId);
 
     Multimap<String, String> getAppliedFilters();
-
-    @Deprecated
-        //TODO: this method does not belongs here, it should be moved to property panel implementation
-    Map<String, String> getPropertyNamesToValues();
 
     List<TableRow> getSelectedRows();
 

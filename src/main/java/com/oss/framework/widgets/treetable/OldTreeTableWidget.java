@@ -34,7 +34,7 @@ public class OldTreeTableWidget extends Widget {
 
     public List<String> getAllVisibleNodes(String attributeNameLabel) {
         List<String> visibleNodes = new ArrayList<>();
-        int tableObjectsCount = createTable().getNumberOfRowsInTable(attributeNameLabel);
+        int tableObjectsCount = createTable().countRows(attributeNameLabel);
         for (int i = 0; i < tableObjectsCount; i++) {
             String cellValue = createTable().getCellValue(i, attributeNameLabel);
             visibleNodes.add(cellValue);
@@ -62,7 +62,7 @@ public class OldTreeTableWidget extends Widget {
     }
 
     private OldTable createTable() {
-        return OldTable.createByComponentDataAttributeName(driver, webDriverWait, id);
+        return OldTable.createById(driver, webDriverWait, id);
     }
 
     public static class Node {
