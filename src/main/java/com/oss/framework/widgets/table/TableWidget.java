@@ -1,23 +1,19 @@
 package com.oss.framework.widgets.table;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.attributechooser.AttributesChooser;
-import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.inputs.Input.ComponentType;
+import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
-import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -28,8 +24,6 @@ public class TableWidget extends Widget implements TableInterface {
     public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
     private static final int REFRESH_INTERVAL = 2000;
 
-    private static final String KEBAB_MENU_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
-
     private AdvancedSearch advancedSearch;
     private TableComponent tableComponent;
 
@@ -37,30 +31,15 @@ public class TableWidget extends Widget implements TableInterface {
         super(driver, wait, tableWidgetId);
     }
 
-    private TableWidget(WebDriver driver, WebDriverWait wait, String tableWidgetId, WebElement widget) {
-        super(driver, wait, tableWidgetId, widget);
-    }
-
-    @Deprecated
-    public static TableWidget create(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
-        DelayUtils.waitBy(webDriverWait, By.className(widgetClass)); // TODO: change to id
-        WebElement webElement = driver.findElement(By.className(widgetClass));
-        String widgetId = webElement.getAttribute(CSSUtils.TEST_ID);
-        return new TableWidget(driver, webDriverWait, widgetId, webElement);
-    }
-
     public static TableWidget createById(WebDriver driver, String tableWidgetId, WebDriverWait webDriverWait) {
-        DelayUtils.waitBy(webDriverWait, By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + tableWidgetId + "']"));
+        Widget.waitForWidget(webDriverWait, TABLE_WIDGET_CLASS);
+        Widget.waitForWidgetById(webDriverWait, tableWidgetId);
         return new TableWidget(driver, webDriverWait, tableWidgetId);
-    }
-
-    public ActionsContainer getContextActions() {
-        return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
     }
 
     @Override
     public void selectRow(int row) {
-        selectTableRow(row);
+        getTableComponent().selectRow(row);
     }
 
     @Override
@@ -108,7 +87,7 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void selectLinkInSpecificColumn(String columnName) {
+    public void clickLink(String columnName) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
     }
 
@@ -155,11 +134,6 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public void selectTabByLabel(String tabLabel, String id) {
-        // TODO: remove that method
-    }
-
-    @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         getContextActions().callActionByLabel(groupLabel, actionLabel);
     }
@@ -180,13 +154,6 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    @Deprecated
-    public Map<String, String> getPropertyNamesToValues() {
-        // TODO: Remove that method
-        throw new UnsupportedOperationException("Not implemented for TableWidget");
-    }
-
-    @Override
     public List<TableRow> getSelectedRows() {
         return getTableComponent().getVisibleRows().stream()
                 .filter(TableRow::isSelected).collect(Collectors.toList());
@@ -195,6 +162,10 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public String getCellValueById(int row, String columnId) {
         return getCellValue(row, columnId);
+    }
+
+    public ActionsContainer getContextActions() {
+        return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
     }
 
     public void selectVisibilitySearchAttributes(List<String> attributeIds) {
@@ -211,7 +182,6 @@ public class TableWidget extends Widget implements TableInterface {
         openAdvancedSearch();
         List<String> filters = getAdvancedSearch().getAllVisibleFilters();
         getAdvancedSearch().clickCancel();
-
         return filters;
     }
 
@@ -265,7 +235,6 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clickCancel();
     }
 
-
     public AttributesChooser getAttributesChooser() {
         return getTableComponent().getAttributesChooser();
     }
@@ -282,11 +251,11 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().selectAll();
     }
 
-    public void unselectTableRow(int row) {
+    public void unselectRow(int row) {
         getTableComponent().unselectRow(row);
     }
 
-    public void typeIntoSearch(String text) {
+    public void fullTextSearch(String text) {
         getAdvancedSearch().fullTextSearch(text);
     }
 
@@ -331,10 +300,6 @@ public class TableWidget extends Widget implements TableInterface {
             advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
         }
         return advancedSearch;
-    }
-
-    private void selectTableRow(int row) {
-        getTableComponent().selectRow(row);
     }
 
     private TableComponent getTableComponent() {
