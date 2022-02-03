@@ -32,10 +32,6 @@ public class Popup {
         return new Popup(driver, wait);
     }
 
-    public static void waitForPopupBookmarks(WebDriverWait wait) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(POPUP_CSS_SELECTOR)));
-    }
-
     public String getPopupTitle() {
         return this.webElement.findElement(By.xpath(POPUP_TITLE_XPATH)).getText();
     }

@@ -18,14 +18,8 @@ import com.oss.framework.widgets.Widget;
 
 public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
-    public static final String PROPERTIES_FILTER_CLASS = "settingsWithAddComponent";
-
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
     public static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
-    public static final String SWITCHER_CONTENT_CLASS = "switcher-content";
-    private static final String KEBAB_XPATH = ".//div[@id='frameworkCustomButtonsGroup']";
-    private static final String CHOOSE_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='chooseConfiguration']";
-    private static final String DOWNLOAD_CONFIGURATION_XPATH = "//a[@" + CSSUtils.TEST_ID + "='propertyPanelDownload']";
     private static final String INPUT = ".//input";
     private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow row')]";
     private static final String PROPERTY_NAME_PATH = ".//div[@class='propertyPanelRow-label']";
@@ -34,13 +28,14 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String DRAGGABLE_ELEMENT_XPATH = ".//div[@class = 'btn-drag']";
     private final Map<String, WebElement> properties = Maps.newHashMap();
 
-    private PropertyPanel(WebDriver driver, WebDriverWait wait, String id) {
-        super(driver, wait, id);
+    private PropertyPanel(WebDriver driver, WebDriverWait wait, String id, WebElement propertyPanel) {
+        super(driver, wait, id, propertyPanel);
     }
 
     public static PropertyPanel createById(WebDriver driver, WebDriverWait wait, String testId) {
         Widget.waitForWidget(wait, PROPERTY_PANEL_CLASS);
-        return new PropertyPanel(driver, wait, testId);
+        WebElement propertyPanel = driver.findElement(By.cssSelector("." + PROPERTY_PANEL_CLASS + "[" + CSSUtils.TEST_ID + "='" + testId + "']"));
+        return new PropertyPanel(driver, wait, testId, propertyPanel);
     }
 
     public List<String> getPropertyLabels() {

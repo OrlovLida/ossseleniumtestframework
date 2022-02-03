@@ -144,6 +144,7 @@ public class FiltersSettings {
     protected static class SavedFilter {
         private static final String FILTERS_ELEMENT_CLASS = "filters-element";
         private static final String FILTER_LABEL_CLASS = "filter-label";
+        private static final String SUCCESS_CSS = ".success";
         private final WebDriver driver;
         private final WebDriverWait wait;
         private final String filterName;
@@ -182,6 +183,7 @@ public class FiltersSettings {
             Actions action = new Actions(driver);
             if (!isFavorite()) {
                 action.click(getStar()).pause(1000).build().perform();
+                DelayUtils.waitBy(wait,By.cssSelector(SUCCESS_CSS));
                 wait.until(ExpectedConditions.attributeToBe(getStar(), ARIA_LABEL, FAVORITE));
             }
         }
