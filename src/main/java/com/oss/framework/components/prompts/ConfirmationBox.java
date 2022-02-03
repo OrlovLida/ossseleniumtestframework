@@ -25,7 +25,7 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     public static final String YES = "Yes";
     private static final String BUTTON_CSS = "[" + CSSUtils.TEST_ID + "='%s']";
     private static final String BUTTON_BY_TEXT_PATTERN = ".//button[contains(text(),'%s')] | .//a[contains(text(),'%s')]";
-    private static final String NEW_PROMPT_XPATH = "//div[contains(@class,'OssWindow newPrompt')]";
+    private static final String CONFIRMATION_BOX_CLASS = "ConfirmationBox";
     private static final String WINDOW_CONTENT_XPATH = ".//div[contains(@class, 'windowContent')]";
     private static final String RICH_TEXT_XPATH = ".//div[contains(@class, 'OSSRichText')]";
 
@@ -40,8 +40,8 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     }
 
     public static ConfirmationBox create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, NEW_PROMPT_XPATH);
-        WebElement prompt = driver.findElement(By.xpath(NEW_PROMPT_XPATH));
+        DelayUtils.waitBy(wait, By.className(CONFIRMATION_BOX_CLASS));
+        WebElement prompt = driver.findElement(By.className(CONFIRMATION_BOX_CLASS));
         DelayUtils.waitForElementToLoad(wait, prompt);
         return new ConfirmationBox(driver, wait, prompt);
     }

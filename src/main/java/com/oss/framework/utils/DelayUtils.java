@@ -81,10 +81,6 @@ public class DelayUtils {
         wait.until(ExpectedConditions.elementToBeClickable(webelement));
     }
 
-    public static void waitForBy(WebDriverWait wait, By by) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-    }
-
     public static void waitForPageToLoad(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(1000);
         waitByXPath(wait, OSS_APP_XPATH);
