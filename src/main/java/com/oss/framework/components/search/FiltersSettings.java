@@ -182,6 +182,7 @@ public class FiltersSettings {
             Actions action = new Actions(driver);
             if (!isFavorite()) {
                 action.click(getStar()).pause(1000).build().perform();
+                DelayUtils.waitBy(wait,By.cssSelector(".success"));
                 wait.until(ExpectedConditions.attributeToBe(getStar(), ARIA_LABEL, FAVORITE));
             }
         }

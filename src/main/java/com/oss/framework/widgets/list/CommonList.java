@@ -23,7 +23,7 @@ public class CommonList extends Widget {
     private static final String COMMON_LIST_CLASS = "CommonListApp";
     private static final String CATEGORY_LIST_XPATH = ".//li[@class='categoryListElement']";
     private static final String HEADERS_XPATH = ".//div[@class='header left']";
-    private static final String LIST_ELEMENT_XPATH = ".//li[contains(@class,'listElement')]";
+    private static final String LIST_ELEMENT_XPATH = ".//li[@class='listElement']";
     private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
     private static final String NO_DATA_TEXT_XPATH = "//h3[contains(@class,'emptyResultsText')]";
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
