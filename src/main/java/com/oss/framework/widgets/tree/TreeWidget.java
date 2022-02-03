@@ -24,8 +24,8 @@ public class TreeWidget extends Widget {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TreeWidget.class);
     private static final String TREE_VIEW_CLASS = "TreeView";
-    private static final String TREE_ROW_PATTERN = "//p[@class='TreeViewLabel'][text()='%s']//ancestor::div[@class='TreeRow']";
-    private static final String TREE_ROW_CONTAINS_PATTERN = "//p[@class='TreeViewLabel'][contains(text(), '%s')]//ancestor::div[@class='TreeRow']";
+    private static final String TREE_ROW_PATTERN = "//p[contains(@class,'TreeViewLabel')][text()='%s']//ancestor::div[@class='TreeRow']";
+    private static final String TREE_ROW_CONTAINS_PATTERN = "//p[contains(@class,'TreeViewLabel')][contains(text(), '%s')]//ancestor::div[@class='TreeRow']";
     private static final String NO_TREE_ROWS_EXCEPTION = "Can't find any TreeRow.";
 
     private TreeWidget(WebDriver driver, WebDriverWait webDriverWait, String dataAttributeName) {
