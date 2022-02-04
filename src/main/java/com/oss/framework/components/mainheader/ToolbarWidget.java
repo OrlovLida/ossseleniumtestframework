@@ -22,6 +22,7 @@ public class ToolbarWidget {
     private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='oss-input__input-content']";
     private static final String SHARE_PANEL_ICON_XPATH = ".//*[@data-testid='ButtonShareView']";
     private static final String SHARE_PANEL_XPATH = ".//div[@data-testid='popup_container']";
+    private static final String VIEW_TITLE_XPATH = ".//div[contains(@class, 'header-title')]";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement toolbar;
@@ -98,6 +99,10 @@ public class ToolbarWidget {
         return loginButton.getText();
     }
 
+    public String getViewTitle() {
+        return toolbar.findElement(By.xpath(VIEW_TITLE_XPATH)).getText();
+    }
+
     private boolean isOpen(String panelXpath) {
         return !driver.findElements(By.xpath(panelXpath)).isEmpty();
     }
@@ -111,5 +116,4 @@ public class ToolbarWidget {
         DelayUtils.waitByXPath(wait, buttonXpath);
         this.toolbar.findElement(By.xpath(buttonXpath)).click();
     }
-
 }
