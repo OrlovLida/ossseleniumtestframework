@@ -8,10 +8,10 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <scm>
-        <connection>scm:git:ssh://git@makumba-vm-1.krakow.comarch/ossseleniumtests/ossseleniumtestframework.git
+        <connection>scm:git:ssh://git@gitlab.czk.comarch:2222/toss/pfm/seleniumtests/ossseleniumtestframework.git
         </connection>
         <developerConnection>
-            scm:git:ssh://git@makumba-vm-1.krakow.comarch/ossseleniumtests/ossseleniumtestframework.git
+           scm:git:ssh://git@gitlab.czk.comarch:2222/toss/pfm/seleniumtests/ossseleniumtestframework.git
         </developerConnection>
         <tag>HEAD</tag>
     </scm>
