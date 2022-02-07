@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import com.oss.framework.components.inputs.Button;
 
-
-
 public class FiltersPanel {
 
     private static final Logger log = LoggerFactory.getLogger(FiltersPanel.class);

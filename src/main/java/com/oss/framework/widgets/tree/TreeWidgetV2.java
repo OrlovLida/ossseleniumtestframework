@@ -7,10 +7,10 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.tree.TreeComponent;
@@ -104,7 +104,7 @@ public class TreeWidgetV2 extends Widget {
         return getTreeComponent().getNodeByLabelsPath(labels);
     }
 
-    public Optional<Node> findNodeByLabelsPath(String labels){
+    public Optional<Node> findNodeByLabelsPath(String labels) {
         return getTreeComponent().findNodeByLabelsPath(labels);
     }
 

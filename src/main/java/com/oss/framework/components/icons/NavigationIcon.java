@@ -18,22 +18,22 @@ import com.oss.framework.utils.DelayUtils;
  * @author Gabriela Zaranek
  */
 public class NavigationIcon {
-    
+
     private static final String ICONS_CHOOSER_CSS = ".icons-chooser";
 
     private final WebElement icons;
-    
+
     public NavigationIcon(WebElement icons) {
 
         this.icons = icons;
     }
-    
+
     public static NavigationIcon create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPresence(wait, By.cssSelector(ICONS_CHOOSER_CSS));
         WebElement icons = driver.findElement(By.cssSelector(ICONS_CHOOSER_CSS));
         return new NavigationIcon(icons);
     }
-    
+
     public void selectIcon(String iconId) {
         icons.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + iconId + "']"));
     }

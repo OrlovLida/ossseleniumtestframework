@@ -18,7 +18,7 @@ import com.oss.framework.utils.DragAndDrop;
 /**
  * @author Gabriela Zaranek
  */
- class Application {
+class Application {
     private static final String APPLICATION_LINK_XPATH = ".//a[@class='category-box__content__link']";
     private static final String APPLICATIONS_IN_SUBCATEGORY_CSS = "div.category-box";
     private static final String APPLICATION_LINK_CLASS = "category-box__content__link";
@@ -70,11 +70,11 @@ import com.oss.framework.utils.DragAndDrop;
         return applicationName;
     }
 
-     DragAndDrop.DropElement getDropElement() {
+    DragAndDrop.DropElement getDropElement() {
         return new DragAndDrop.DropElement(applicationBox);
     }
 
-     DragAndDrop.DraggableElement getDragElement() {
+    DragAndDrop.DraggableElement getDragElement() {
         WebElement dragButton = applicationBox.findElement(By.xpath(DRAG_BUTTON_XPATH));
         return new DragAndDrop.DraggableElement(dragButton);
     }

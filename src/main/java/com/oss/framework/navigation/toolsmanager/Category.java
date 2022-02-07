@@ -23,7 +23,7 @@ import com.oss.framework.utils.DragAndDrop;
 /**
  * @author Gabriela Zaranek
  */
- class Category {
+class Category {
     private static final String CATEGORIES_NAME_CLASS = "categories__bar__content__name";
     private static final String CANNOT_FIND_CATEGORY_WITH_PROVIDED_NAME_EXCEPTION = "Cannot find category with provided name";
     private static final String CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS = "div.categories__bar__content__name";
@@ -58,57 +58,9 @@ import com.oss.framework.utils.DragAndDrop;
         return new Category(driver, wait, categoryElement);
     }
 
-    private String getName() {
-        String categoryText = getCategoryText();
-        return categoryText.substring(0, (categoryText.length() - getDescription().length() - 1));
-    }
-
-    private String getCategoryText() {
-        return categoryElement.findElement(By.cssSelector(CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS)).getText();
-    }
-
-    private String getDescription() {
-        return categoryElement.findElement(By.cssSelector(CATEGORIES_DESCRIPTION_CSS)).getText();
-    }
-
     public void callAction(String actionId) {
         InlineMenu inlineMenu = InlineMenu.create(categoryElement, driver, wait);
         inlineMenu.callAction(actionId);
-    }
-
-     void collapseCategory() {
-        if (isCategoryExpanded()) {
-            toggleCategory();
-        }
-    }
-
-    void expandCategory() {
-        if (!isCategoryExpanded()) {
-            toggleCategory();
-        }
-        DelayUtils.waitBy(this.wait, By.className(CHEVRON_UP_ICON_CLASS));
-    }
-
-    private void toggleCategory() {
-        WebElement expanderIcon = categoryElement.findElement(By.className(CATEGORIES_BUTTON_EXPANDER_CSS));
-        Actions actions = new Actions(driver);
-        actions.moveToElement(categoryElement).click(expanderIcon).build().perform();
-    }
-
-     boolean isCategoryExpanded() {
-        return !this.categoryElement
-                .findElements(By.className(CHEVRON_UP_ICON_CLASS))
-                .isEmpty();
-    }
-
-     List<Subcategory> getSubcategories() {
-        if (!isCategoryExpanded()) {
-            expandCategory();
-        }
-        List<WebElement> subcategories = categoryElement.findElements(By.cssSelector(SUBCATEGORIES_CSS));
-        return subcategories.stream()
-                .map(subcategory -> Subcategory.createSubcategory(driver, wait, subcategory))
-                .collect(Collectors.toList());
     }
 
     public List<Application> getApplications() {
@@ -122,13 +74,61 @@ import com.oss.framework.utils.DragAndDrop;
                 .collect(Collectors.toList());
     }
 
-     DragAndDrop.DraggableElement getDragElement() {
+    void collapseCategory() {
+        if (isCategoryExpanded()) {
+            toggleCategory();
+        }
+    }
+
+    void expandCategory() {
+        if (!isCategoryExpanded()) {
+            toggleCategory();
+        }
+        DelayUtils.waitBy(this.wait, By.className(CHEVRON_UP_ICON_CLASS));
+    }
+
+    boolean isCategoryExpanded() {
+        return !this.categoryElement
+                .findElements(By.className(CHEVRON_UP_ICON_CLASS))
+                .isEmpty();
+    }
+
+    List<Subcategory> getSubcategories() {
+        if (!isCategoryExpanded()) {
+            expandCategory();
+        }
+        List<WebElement> subcategories = categoryElement.findElements(By.cssSelector(SUBCATEGORIES_CSS));
+        return subcategories.stream()
+                .map(subcategory -> Subcategory.createSubcategory(driver, wait, subcategory))
+                .collect(Collectors.toList());
+    }
+
+    DragAndDrop.DraggableElement getDragElement() {
         WebElement dragButton = categoryElement.findElement(By.xpath(DRAG_BUTTON_XPATH));
         return new DragAndDrop.DraggableElement(dragButton);
     }
 
-     DragAndDrop.DropElement getDropElement() {
+    DragAndDrop.DropElement getDropElement() {
         return new DragAndDrop.DropElement(categoryElement);
+    }
+
+    private String getName() {
+        String categoryText = getCategoryText();
+        return categoryText.substring(0, (categoryText.length() - getDescription().length() - 1));
+    }
+
+    private String getCategoryText() {
+        return categoryElement.findElement(By.cssSelector(CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS)).getText();
+    }
+
+    private String getDescription() {
+        return categoryElement.findElement(By.cssSelector(CATEGORIES_DESCRIPTION_CSS)).getText();
+    }
+
+    private void toggleCategory() {
+        WebElement expanderIcon = categoryElement.findElement(By.className(CATEGORIES_BUTTON_EXPANDER_CSS));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(categoryElement).click(expanderIcon).build().perform();
     }
 }
 

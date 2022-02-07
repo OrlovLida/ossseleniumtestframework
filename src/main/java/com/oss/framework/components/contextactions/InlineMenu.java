@@ -11,37 +11,37 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.portals.DropdownList;
 
 public class InlineMenu {
-    
+
     private static final String GROUP_BUTTON_ID = "frameworkObjectButtonsGroup";
-    
+
     private final WebDriver driver;
     private final WebElement webElement;
     private final WebDriverWait wait;
-    
+
     private InlineMenu(WebElement webElement, WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
         this.webElement = webElement;
     }
-    
+
     public static InlineMenu create(WebElement webElement, WebDriver driver, WebDriverWait wait) {
         return new InlineMenu(webElement, driver, wait);
     }
-    
+
     public void callAction(String actionId) {
         expandKebabMenu();
         DropdownList.create(driver, wait).selectOptionById(actionId);
     }
-    
+
     public void callAction(String groupId, String actionId) {
         expandKebabMenu();
         DropdownList.create(driver, wait).selectOptions(Arrays.asList(groupId, actionId));
     }
-    
+
     private void expandKebabMenu() {
         WebElement inlineKebab = webElement.findElement(By.id(GROUP_BUTTON_ID));
         Actions actions = new Actions(driver);
         actions.moveToElement(inlineKebab).click(inlineKebab).build().perform();
     }
-    
+
 }

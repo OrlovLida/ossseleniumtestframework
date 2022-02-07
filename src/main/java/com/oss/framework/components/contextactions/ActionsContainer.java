@@ -22,17 +22,17 @@ public class ActionsContainer implements ActionsInterface {
     public static final String SHOW_ON_GROUP_ID = "NAVIGATION";
     private static final String MORE_GROUP_ID = "moreActions";
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";
-    
+
     private final WebElement webElement;
     private final WebDriver webDriver;
     private final WebDriverWait webDriverWait;
-    
+
     private ActionsContainer(WebElement activeContextActions, WebDriver webDriver, WebDriverWait webDriverWait) {
         this.webDriver = webDriver;
         this.webElement = activeContextActions;
         this.webDriverWait = webDriverWait;
     }
-    
+
     public static ActionsContainer createFromParent(WebElement parentElement, WebDriver webDriver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.className(CONTEXT_ACTIONS_CLASS));
         List<WebElement> allContextAction = parentElement.findElements(By.className(CONTEXT_ACTIONS_CLASS));
@@ -40,22 +40,22 @@ public class ActionsContainer implements ActionsInterface {
                 .orElseThrow(() -> new RuntimeException("No active Context Action"));
         return new ActionsContainer(activeContextActions, webDriver, webDriverWait);
     }
-    
+
     private static boolean isElementPresent(WebElement webElement, By by) {
         return !webElement.findElements(by).isEmpty();
     }
-    
+
     @Override
     public void callActionByLabel(String label) {
         throw new UnsupportedOperationException("Method not implemented for Actions Container");
     }
-    
+
     @Override
     public void callActionByLabel(String groupId, String actionLabel) {
         clickOnGroup(groupId);
         DropdownList.create(webDriver, webDriverWait).selectOption(actionLabel);
     }
-    
+
     @Override
     public void callActionById(String id) {
         if (isElementPresent(webElement, By.id(id))) {
@@ -65,13 +65,13 @@ public class ActionsContainer implements ActionsInterface {
             DropdownList.create(webDriver, webDriverWait).selectOptionById(id);
         }
     }
-    
+
     @Override
     public void callActionById(String groupId, String actionId) {
         clickOnGroup(groupId);
         DropdownList.create(webDriver, webDriverWait).selectOptionById(actionId);
     }
-    
+
     private void clickOnGroup(String groupId) {
         DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement,
                 ".//div[@id='" + groupId + "'] | .//div[@id= '" + MORE_GROUP_ID + "']");
@@ -82,7 +82,7 @@ public class ActionsContainer implements ActionsInterface {
             DropdownList.create(webDriver, webDriverWait).selectOptionById(groupId);
         }
     }
-    
+
     private void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
         Actions actions = new Actions(webDriver);
@@ -90,5 +90,5 @@ public class ActionsContainer implements ActionsInterface {
         webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
         actions.click(webElement).build().perform();
     }
-    
+
 }

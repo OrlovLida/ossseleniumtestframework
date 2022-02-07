@@ -7,7 +7,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class LayoutPanel {
 
     private static final Logger log = LoggerFactory.getLogger(LayoutPanel.class);
