@@ -56,6 +56,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String FIND_BY_PARTIAL_NAME_AND_INDEX_PATTERN =
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
     private static final String TABLE_PATTERN = "[" + CSSUtils.TEST_ID + "='%s']";
+    private static final String TEXT_ICON_CLASS = "OSSRichTextIcon";
 
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId) {
         super(driver, wait, widgetId);
@@ -397,7 +398,21 @@ public class OldTable extends Widget implements TableInterface {
             ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, cell);
             Actions action = new Actions(driver);
             action.moveToElement(cell).build().perform();
+            if(isIconPresent(cell)) {
+                return getIconTitles(index);
+            }
             return cell.getText();
+        }
+
+        private boolean isIconPresent(WebElement cell) {
+            return !cell.findElements(By.xpath(".//i")).isEmpty();
+        }
+
+        private String getIconTitles(int cellIndex) {
+            List<WebElement> textIcons = getCellByIndex(cellIndex).findElements(By.className(TEXT_ICON_CLASS));
+            List<String> iconTitles = textIcons.stream().map(icon -> icon.getAttribute("title")).collect(Collectors.toList());
+
+            return String.join(",", iconTitles);
         }
 
         private WebElement getCellByIndex(int index) {
