@@ -28,9 +28,6 @@ public class TabsWidget implements TabsInterface {
     private static final String CHILD_TABS_XPATH = ".//a";
     private static final String ACTIVE_TAB_XPATH = ".//a[contains(@class,'active')]";
     private static final String ADD_TAB_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-plus']";
-    private static final String SAVE_TAB_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-save']";
-    private static final String DOWNLOAD_CONFIGURATION_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-download']";
-    private static final String CHOOSE_CONFIGURATION_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-cog']";
     private static final String DROPDOWN_TAB_XPATH = ".//div[@class= 'dropdown-tab']";
     private static final String TABS_CONTAINER_XPATH = ".//div[contains(@class,'tabsContainerTabs')]";
     private static final String DRAGGABLE_ELEMENT_XPATH = ".//div[@class = 'btn-drag']";
