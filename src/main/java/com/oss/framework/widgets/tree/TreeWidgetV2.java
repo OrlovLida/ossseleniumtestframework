@@ -57,9 +57,14 @@ public class TreeWidgetV2 extends Widget {
         getAdvancedSearch().fullTextSearch(text);
     }
 
-    public void callActionById(String groupLabel, String id) {
+    public void callActionById(String groupId, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
-        actionsContainer.callActionById(groupLabel, id);
+        actionsContainer.callActionById(groupId, id);
+    }
+
+    public void callActionById(String id) {
+        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
+        actionsContainer.callActionById(id);
     }
 
     public void selectNodeByLabel(String label) {
