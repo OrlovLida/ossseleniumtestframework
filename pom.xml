@@ -11,7 +11,7 @@
         <connection>scm:git:ssh://git@gitlab.czk.comarch:2222/toss/pfm/seleniumtests/ossseleniumtestframework.git
         </connection>
         <developerConnection>
-           scm:git:ssh://git@gitlab.czk.comarch:2222/toss/pfm/seleniumtests/ossseleniumtestframework.git
+            scm:git:ssh://git@gitlab.czk.comarch:2222/toss/pfm/seleniumtests/ossseleniumtestframework.git
         </developerConnection>
         <tag>HEAD</tag>
     </scm>

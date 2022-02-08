@@ -19,12 +19,12 @@ public class ListApp {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement listApp;
+    private final WebElement listAppElement;
 
-    private ListApp(WebDriver driver, WebDriverWait wait, WebElement listApp) {
+    private ListApp(WebDriver driver, WebDriverWait wait, WebElement listAppElement) {
         this.driver = driver;
         this.wait = wait;
-        this.listApp = listApp;
+        this.listAppElement = listAppElement;
     }
 
     public static ListApp createFromParent(WebDriver driver, WebDriverWait wait, String windowId) {
@@ -33,22 +33,22 @@ public class ListApp {
         return new ListApp(driver, wait, listApp);
     }
 
-    public static ListApp createById(WebDriver driver, WebDriverWait wait, String ListAppId) {
-        DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + ListAppId + "')]"));
-        WebElement listApp = driver.findElement(By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + ListAppId + "')]"));
+    public static ListApp createById(WebDriver driver, WebDriverWait wait, String listAppId) {
+        DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + listAppId + "')]"));
+        WebElement listApp = driver.findElement(By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + listAppId + "')]"));
         return new ListApp(driver, wait, listApp);
     }
 
     public List<String> getValue() {
         List<String> values = getRows()
                 .stream().map(row -> row.findElement(By.xpath(".//div[contains(@class, 'text-default')]")))
-                .map(text -> text.getText()).collect(Collectors.toList());
+                .map(WebElement::getText).collect(Collectors.toList());
         log.debug("Getting all values from app list");
         return values;
     }
 
     private List<WebElement> getRows() {
-        DelayUtils.waitForNestedElements(wait, listApp, ".//div[contains(@class, 'first last')]");
-        return listApp.findElements(By.xpath(".//div[contains(@class, 'first last')]"));
+        DelayUtils.waitForNestedElements(wait, listAppElement, ".//div[contains(@class, 'first last')]");
+        return listAppElement.findElements(By.xpath(".//div[contains(@class, 'first last')]"));
     }
 }

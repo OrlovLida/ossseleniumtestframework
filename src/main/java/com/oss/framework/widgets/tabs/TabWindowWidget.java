@@ -11,9 +11,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
-import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
+@Deprecated //not available in V2 views, change to TabsWidget
 public class TabWindowWidget implements TabsInterface {
 
     private static final String DROPDOWN_TAB_XPATH = ".//div[@class= 'dropdown']";
@@ -23,7 +23,6 @@ public class TabWindowWidget implements TabsInterface {
     private static final String CONTEXT_ACTIONS_XPATH = "//div[contains(@class, 'windowToolbar')] | " + ACTIONS_CONTAINER_XPATH;
     private static final String TAB_BY_LABEL_PATTERN = ".//button[@class='oss-tab']//div[contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = "//button[@aria-controls='%s']";
-    private static final String NO_DATA_PATTERN = "//div[@" + CSSUtils.TEST_ID + "='%s']//h3[contains(@class,'noDataWithColumns')]";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -74,13 +73,6 @@ public class TabWindowWidget implements TabsInterface {
     @Override
     public void callActionById(String id) {
         getActionsInterface().callActionById(id);
-    }
-
-    @Override
-    public boolean hasNoData(String id) {
-        List<WebElement> noData =
-                driver.findElements(By.xpath(String.format(NO_DATA_PATTERN, id)));
-        return !noData.isEmpty();
     }
 
     private ActionsInterface getActionsInterface() {

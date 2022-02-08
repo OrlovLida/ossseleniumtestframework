@@ -10,56 +10,35 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Lists;
-import com.oss.framework.components.widgetchooser.WidgetChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.components.widgetchooser.WidgetChooser;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.widgets.Widget;
-import com.oss.framework.widgets.Widget.WidgetType;
 import com.oss.framework.widgets.WidgetFactory;
 
-public class TabsWidget implements TabsInterface {
+public class TabsWidget extends Widget implements TabsInterface {
 
     public static final String TABS_WIDGET_CLASS = "tabsContainer";
     private static final String CHILD_TABS_XPATH = ".//a";
     private static final String ACTIVE_TAB_XPATH = ".//a[contains(@class,'active')]";
     private static final String ADD_TAB_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-plus']";
-    private static final String SAVE_TAB_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-save']";
-    private static final String DOWNLOAD_CONFIGURATION_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-download']";
-    private static final String CHOOSE_CONFIGURATION_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-cog']";
     private static final String DROPDOWN_TAB_XPATH = ".//div[@class= 'dropdown-tab']";
     private static final String TABS_CONTAINER_XPATH = ".//div[contains(@class,'tabsContainerTabs')]";
     private static final String DRAGGABLE_ELEMENT_XPATH = ".//div[@class = 'btn-drag']";
     private static final String ACTIONS_CONTAINER_XPATH = "//*[@class='actionsContainer']";
     private static final String OLD_ACTIONS_CONTAINER_XPATH = "//div[contains(@class, 'windowToolbar')]";
     private static final String CONTEXT_ACTIONS_XPATH = OLD_ACTIONS_CONTAINER_XPATH + " | " + ACTIONS_CONTAINER_XPATH;
-    private static final String TABS_PATTERN = "//div[@class = '" + TABS_WIDGET_CLASS + "' and @" + CSSUtils.TEST_ID + "= '%s']";
+    private static final String TABS_PATTERN = "//div[@" + CSSUtils.TEST_ID + "= '%s']";
     private static final String TAB_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')] | .//div[@class='tab-label'][contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = ".//a[@id='%s']";
-    private static final String METHOD_NOT_IMPLEMENTED_EXCEPTION = "Method not implemented for Button Container";
-
-    protected final WebDriver driver;
-    protected final WebDriverWait webDriverWait;
-    protected final String id;
-
-    private TabsWidget(WebDriver driver, WebDriverWait webDriverWait) {
-        this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.id = null;
-    }
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
-        this.driver = driver;
-        this.webDriverWait = wait;
-        this.id = id;
-    }
-
-    public static TabsWidget create(WebDriver driver, WebDriverWait webDriverWait) {
-        return new TabsWidget(driver, webDriverWait);
+        super(driver, wait, id);
     }
 
     public static TabsWidget createById(WebDriver driver, WebDriverWait wait, String id) {
@@ -113,11 +92,6 @@ public class TabsWidget implements TabsInterface {
     @Override
     public void callActionById(String id) {
         getActionsInterface().callActionById(id);
-    }
-
-    @Override
-    public boolean hasNoData(String id) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED_EXCEPTION);
     }
 
     public void changeTabsOrder(String tabLabel, int position) {
