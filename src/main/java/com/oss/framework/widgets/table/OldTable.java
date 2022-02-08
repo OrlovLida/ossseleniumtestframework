@@ -43,7 +43,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String CONTEXT_ACTIONS_CONTAINER_XPATH = "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']";
     private static final String TABLE_IN_ACTIVE_TAB_XPATH =
             "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='AppComponentContainer']/div";
-    private static final String OSSWINDOW_ANCESTOR_XPATH = ".//ancestor::div[contains(@class,'card-shadow')]";
+    private static final String ANCESTOR_XPATH = ".//ancestor::div[contains(@class,'card-shadow')]";
     private static final String NO_DATA_XPATH = ".//h3[contains(@class,'noDataWithColumns')]";
     private static final String BUTTON_XPATH = ".//button";
     private static final String AVAILABLE_COLUMNS_LOG = "Available columns:";
@@ -174,14 +174,14 @@ public class OldTable extends Widget implements TableInterface {
 
     @Override
     public void callAction(String actionId) {
-        WebElement window = webElement.findElement(By.xpath(OSSWINDOW_ANCESTOR_XPATH));
+        WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, webDriverWait, window);
         actions.callActionById(actionId);
     }
 
     @Override
     public void callActionByLabel(String actionLabel) {
-        WebElement window = webElement.findElement(By.xpath(OSSWINDOW_ANCESTOR_XPATH));
+        WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, webDriverWait, window);
         actions.callActionByLabel(actionLabel);
     }
@@ -289,7 +289,7 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private ActionsInterface getActionsInterface() {
-        WebElement window = webElement.findElement(By.xpath(OSSWINDOW_ANCESTOR_XPATH));
+        WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         DelayUtils.waitForNestedElements(webDriverWait, window, CONTEXT_ACTIONS_CONTAINER_XPATH);
         boolean isNewActionContainer = isElementPresent(window, By.className(ACTIONS_CONTAINER_CLASS));
         if (isNewActionContainer) {
