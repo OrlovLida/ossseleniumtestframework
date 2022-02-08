@@ -1,7 +1,5 @@
 package com.oss.framework.navigation.toolsmanager;
 
-import static com.oss.framework.utils.DragAndDrop.dragAndDrop;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,11 +7,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.DelayUtils;
+
+import static com.oss.framework.utils.DragAndDrop.dragAndDrop;
 
 public class ToolsManagerWindow {
 
@@ -76,15 +76,6 @@ public class ToolsManagerWindow {
         return subcategories.stream().map(Subcategory::getSubcategoryName).collect(Collectors.toList());
     }
 
-    private List<Subcategory> getSubcategories(String categoryName) {
-        Category category = Category.createCategoryByName(driver, wait, toolsManager, categoryName);
-        if (!category.isCategoryExpanded()) {
-            category.expandCategory();
-        }
-        return category.getSubcategories();
-
-    }
-
     public void expandSubcategory(String subcategoryName) {
         Subcategory subcategory = Subcategory.createSubcategoryByName(driver, wait, toolsManager, subcategoryName);
         subcategory.clickShowAll();
@@ -123,18 +114,6 @@ public class ToolsManagerWindow {
                 .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_SUBCATEGORY_WITH_NAME_EXCEPTION + subcategoryName));
     }
 
-    private Application getApplication(String applicationName, String categoryName) {
-        Category category = Category.createCategoryByName(driver, wait, toolsManager, categoryName);
-        if (!category.isCategoryExpanded()) {
-            category.expandCategory();
-        }
-
-        return category.getApplications().stream().filter(application -> application.getApplicationName()
-                .equals(applicationName))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_APPLICATION_WITH_NAME_EXCEPTION + applicationName));
-    }
-
     public void openApplication(String categoryName, String applicationName) {
         Application application = getApplication(applicationName, categoryName);
         application.openApplication();
@@ -157,6 +136,27 @@ public class ToolsManagerWindow {
         Application sourceApplication = getApplication(applicationName, categoryName);
         Application target = getCategoryByName(categoryName).getApplications().get(position);
         dragAndDrop(sourceApplication.getDragElement(), target.getDropElement(), driver);
+    }
+
+    private List<Subcategory> getSubcategories(String categoryName) {
+        Category category = Category.createCategoryByName(driver, wait, toolsManager, categoryName);
+        if (!category.isCategoryExpanded()) {
+            category.expandCategory();
+        }
+        return category.getSubcategories();
+
+    }
+
+    private Application getApplication(String applicationName, String categoryName) {
+        Category category = Category.createCategoryByName(driver, wait, toolsManager, categoryName);
+        if (!category.isCategoryExpanded()) {
+            category.expandCategory();
+        }
+
+        return category.getApplications().stream().filter(application -> application.getApplicationName()
+                .equals(applicationName))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_APPLICATION_WITH_NAME_EXCEPTION + applicationName));
     }
 
     private List<Category> getCategories() {

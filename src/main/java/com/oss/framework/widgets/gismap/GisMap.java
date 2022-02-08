@@ -14,7 +14,7 @@ import com.oss.framework.utils.DelayUtils;
 
 public class GisMap implements GisMapInterface {
 
-    private static final String GIS_MAP_XPATH = "//div[@class='OssWindow']";
+    private static final String GIS_MAP_XPATH = "//div[@class='simple-card-container']";
     private static final String GIS_MAP_SEARCH_XPATH = "//input[@class='form-control mapSearchInput']";
     private static final String CANVAS_XPATH = "//canvas";
 

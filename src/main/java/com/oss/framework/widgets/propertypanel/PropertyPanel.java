@@ -40,7 +40,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
     public List<String> getPropertyLabels() {
         List<String> labels = new ArrayList<>();
-        for (WebElement element: this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
+        for (WebElement element : this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
             labels.add(element.getText());
         }
         return labels;
@@ -48,7 +48,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
     public List<String> getVisibleAttributes() {
         List<String> propertyId = new ArrayList<>();
-        for (WebElement element: getProperties()) {
+        for (WebElement element : getProperties()) {
             propertyId.add(element.getAttribute("id"));
         }
         return propertyId;

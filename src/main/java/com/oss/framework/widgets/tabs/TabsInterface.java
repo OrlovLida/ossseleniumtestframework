@@ -23,5 +23,4 @@ public interface TabsInterface {
 
     void callActionById(String id);
 
-    boolean hasNoData(String id);
 }

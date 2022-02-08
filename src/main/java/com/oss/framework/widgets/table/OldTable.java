@@ -43,7 +43,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String CONTEXT_ACTIONS_CONTAINER_XPATH = "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']";
     private static final String TABLE_IN_ACTIVE_TAB_XPATH =
             "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='AppComponentContainer']/div";
-    private static final String OSSWINDOW_ANCESTOR_XPATH = ".//ancestor::div[contains(@class,'card-shadow')]";
+    private static final String ANCESTOR_XPATH = ".//ancestor::div[contains(@class,'card-shadow')]";
     private static final String NO_DATA_XPATH = ".//h3[contains(@class,'noDataWithColumns')]";
     private static final String BUTTON_XPATH = ".//button";
     private static final String AVAILABLE_COLUMNS_LOG = "Available columns:";
@@ -56,6 +56,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String FIND_BY_PARTIAL_NAME_AND_INDEX_PATTERN =
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
     private static final String TABLE_PATTERN = "[" + CSSUtils.TEST_ID + "='%s']";
+    private static final String TEXT_ICON_CLASS = "OSSRichTextIcon";
 
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId) {
         super(driver, wait, widgetId);
@@ -174,14 +175,14 @@ public class OldTable extends Widget implements TableInterface {
 
     @Override
     public void callAction(String actionId) {
-        WebElement window = webElement.findElement(By.xpath(OSSWINDOW_ANCESTOR_XPATH));
+        WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, webDriverWait, window);
         actions.callActionById(actionId);
     }
 
     @Override
     public void callActionByLabel(String actionLabel) {
-        WebElement window = webElement.findElement(By.xpath(OSSWINDOW_ANCESTOR_XPATH));
+        WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, webDriverWait, window);
         actions.callActionByLabel(actionLabel);
     }
@@ -289,7 +290,7 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private ActionsInterface getActionsInterface() {
-        WebElement window = webElement.findElement(By.xpath(OSSWINDOW_ANCESTOR_XPATH));
+        WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         DelayUtils.waitForNestedElements(webDriverWait, window, CONTEXT_ACTIONS_CONTAINER_XPATH);
         boolean isNewActionContainer = isElementPresent(window, By.className(ACTIONS_CONTAINER_CLASS));
         if (isNewActionContainer) {
@@ -397,7 +398,21 @@ public class OldTable extends Widget implements TableInterface {
             ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, cell);
             Actions action = new Actions(driver);
             action.moveToElement(cell).build().perform();
+            if(isIconPresent(cell)) {
+                return getIconTitles(index);
+            }
             return cell.getText();
+        }
+
+        private boolean isIconPresent(WebElement cell) {
+            return !cell.findElements(By.xpath(".//i")).isEmpty();
+        }
+
+        private String getIconTitles(int cellIndex) {
+            List<WebElement> textIcons = getCellByIndex(cellIndex).findElements(By.className(TEXT_ICON_CLASS));
+            List<String> iconTitles = textIcons.stream().map(icon -> icon.getAttribute("title")).collect(Collectors.toList());
+
+            return String.join(",", iconTitles);
         }
 
         private WebElement getCellByIndex(int index) {

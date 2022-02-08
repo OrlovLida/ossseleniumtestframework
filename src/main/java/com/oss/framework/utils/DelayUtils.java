@@ -23,6 +23,7 @@ public class DelayUtils {
     public static final String SKELETON_PRELOADERS_XPATH = ".//div[@class='skeleton-preloader']";
     public static final String ACTION_IN_PROGRESS_XPATH = ".//a[@class='action inProgress']";
     public static final String OSS_APP_XPATH = "//div[@id='ossApp']";
+    public static final String INTERRUPTED_EXCEPTION = "Interrputed exception occured.";
     private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
 
     public static void sleep() {
@@ -33,7 +34,8 @@ public class DelayUtils {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            //Do nothing
+            log.warn(INTERRUPTED_EXCEPTION);
+            Thread.currentThread().interrupt();
         }
     }
 

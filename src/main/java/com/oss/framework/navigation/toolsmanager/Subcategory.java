@@ -21,7 +21,7 @@ import com.oss.framework.utils.DragAndDrop;
 /**
  * @author Gabriela Zaranek
  */
- class Subcategory {
+class Subcategory {
     private static final String SUBCATEGORIES_NAME_CSS = "div.subcategories__name";
     private static final String SUBCATEGORIES_CONTENT_SEE_ALL_CSS = "div.subcategories__content__see-all--text";
     private static final String DRAG_BUTTON_CSS = ".btn-drag";
@@ -78,6 +78,16 @@ import com.oss.framework.utils.DragAndDrop;
         }
     }
 
+    DragAndDrop.DropElement getDropElement() {
+        return new DragAndDrop.DropElement(subcategoryElement);
+    }
+
+    DragAndDrop.DraggableElement getDragElement() {
+        WebElement subcategory = subcategoryElement.findElement(By.xpath(ANCESTOR_SUBCATEGORIES_XPATH));
+        WebElement dragButton = subcategory.findElement(By.cssSelector(DRAG_BUTTON_CSS));
+        return new DragAndDrop.DraggableElement(dragButton);
+    }
+
     private void toggleSeeAll() {
         subcategoryElement.findElement(By.xpath(SUBCATEGORIES_CONTENT_SEE_ALL_CSS)).click();
     }
@@ -85,15 +95,5 @@ import com.oss.framework.utils.DragAndDrop;
     private boolean isExpanded() {
         String expandedText = subcategoryElement.findElement(By.xpath(SUBCATEGORIES_CONTENT_SEE_ALL_CSS)).getText();
         return expandedText.equals("Less");
-    }
-
-     DragAndDrop.DropElement getDropElement() {
-        return new DragAndDrop.DropElement(subcategoryElement);
-    }
-
-     DragAndDrop.DraggableElement getDragElement() {
-        WebElement subcategory = subcategoryElement.findElement(By.xpath(ANCESTOR_SUBCATEGORIES_XPATH));
-        WebElement dragButton = subcategory.findElement(By.cssSelector(DRAG_BUTTON_CSS));
-        return new DragAndDrop.DraggableElement(dragButton);
     }
 }
