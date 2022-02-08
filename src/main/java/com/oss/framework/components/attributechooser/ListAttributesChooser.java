@@ -16,12 +16,15 @@ public class ListAttributesChooser {
     private static final Logger log = LoggerFactory.getLogger(ListAttributesChooser.class);
 
     private static final String X_PATH_ID = "//div[@id='attributes-management']";
+    private static final String ATTRIBUTE_MANAGEMENT_PATTERN = "#%s";
+    private static final String ATTRIBUTE_MANAGEMENT_ID = "attributes-management";
     private static final String APPLY_BUTTON_XPATH = ".//a[contains(@class,'btn-primary')]";
     private static final String CANCEL_BUTTON_XPATH = ".//div[@class='management-basic-buttons']/a[contains(@class,'btn-flat')]";
     private static final String DEFAULT_BUTTON_XPATH = ".//div[@class='management-default-button']/a[contains(@class,'btn-flat')]";
     private static final String INACTIVE_LIST_LAYOUT_BUTTON_XPATH = ".//button[@title='List']";
     private static final String INACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@title='Two columns']";
     private static final String ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@class='is-columns-layout']";
+    private static final String SAVE_LABEL = "Save (selected columns)";
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement listAttributesChooserElement;
@@ -33,8 +36,8 @@ public class ListAttributesChooser {
     }
 
     public static ListAttributesChooser create(WebDriver driver, WebDriverWait webDriverWait) {
-        DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
-        WebElement listAttributesChooser = driver.findElement(By.xpath(X_PATH_ID));
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(String.format(ATTRIBUTE_MANAGEMENT_PATTERN,ATTRIBUTE_MANAGEMENT_ID)));
+        WebElement listAttributesChooser = driver.findElement(By.cssSelector(String.format(ATTRIBUTE_MANAGEMENT_PATTERN,ATTRIBUTE_MANAGEMENT_ID)));
         return new ListAttributesChooser(driver, webDriverWait, listAttributesChooser);
     }
 
@@ -71,7 +74,7 @@ public class ListAttributesChooser {
     }
 
     public void clickSave() {
-        Button.createByIcon(driver, "OSSIcon fa fa-save", "save").click();
+        Button.createByLabel(driver, ATTRIBUTE_MANAGEMENT_ID, SAVE_LABEL).click();
     }
 
     public void selectTwoColumnsLayout() {
