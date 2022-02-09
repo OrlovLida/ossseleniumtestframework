@@ -242,6 +242,12 @@ public class CommonList extends Widget {
         }
 
         public void callAction(String actionId) {
+            if (!rowElement.findElements(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId))).isEmpty()) {
+                WebElement button = rowElement.findElement(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId)));
+                Actions action = new Actions(driver);
+                action.moveToElement(button).click().perform();
+                return;
+            }
             DelayUtils.waitForElementToLoad(wait, rowElement);
             ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, rowElement);
             InlineMenu.create(rowElement, driver, wait).callAction(actionId);
