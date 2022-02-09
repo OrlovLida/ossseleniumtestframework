@@ -23,6 +23,7 @@ public class ToolbarWidget {
     private static final String SHARE_PANEL_ICON_XPATH = ".//*[@data-testid='ButtonShareView']";
     private static final String SHARE_PANEL_XPATH = ".//div[@data-testid='popup_container']";
     private static final String VIEW_TITLE_XPATH = ".//div[contains(@class, 'header-title')]";
+    private static final String CLOSE_SHARE_PANEL_ICON_ID = "Share_view_popup-close_button";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement toolbar;
@@ -81,7 +82,7 @@ public class ToolbarWidget {
 
     public void closeSharePanel() {
         if (isOpen(SHARE_PANEL_XPATH)) {
-            Button.createByIcon(driver, "fa fa-close", "closePrompt").click();
+            Button.createById(driver, CLOSE_SHARE_PANEL_ICON_ID).click();
         }
     }
 

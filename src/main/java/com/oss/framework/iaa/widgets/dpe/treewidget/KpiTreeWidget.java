@@ -11,8 +11,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.oss.framework.components.inputs.Button;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -32,7 +30,8 @@ public class KpiTreeWidget extends Widget {
     }
 
     public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String widgetId) {
-        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
+        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + widgetId
+                + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
         DelayUtils.waitByXPath(wait, xPath);
         return new KpiTreeWidget(driver, wait, widgetId);
     }
@@ -43,7 +42,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     public void selectExpandedObjects(List<String> objectNames) {
-        for (String objectName : objectNames) {
+        for (String objectName: objectNames) {
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             selectNode(objectName);
         }
@@ -83,12 +82,12 @@ public class KpiTreeWidget extends Widget {
 
     public void clickNodeOptions(String nodeName) {
         String nodeXpath = "div[@title ='" + nodeName + "']//*";
-        Button.createByXpath(DIMENSION_OPTIONS_BUTTON_ID, nodeXpath, CSSUtils.TEST_ID, driver).click();
+        driver.findElement(By.xpath("//" + nodeXpath + "[@" + CSSUtils.TEST_ID + "='" + DIMENSION_OPTIONS_BUTTON_ID + "']")).click();
         log.debug("Clicking dimension options on node: {}", nodeName);
     }
 
     private void expandTree(List<String> nodeNames) {
-        for (String nodeName : nodeNames) {
+        for (String nodeName: nodeNames) {
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             expandNode(nodeName);
         }
@@ -102,7 +101,8 @@ public class KpiTreeWidget extends Widget {
     }
 
     private WebElement findNodeElementByXPath(String objectName) {
-        return this.webElement.findElement(By.xpath("//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']"));
+        return this.webElement.findElement(By
+                .xpath("//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']"));
     }
 
     private void selectNode(String objectName) {
