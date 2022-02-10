@@ -1,8 +1,6 @@
 package com.oss.framework.components.contextactions;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -12,129 +10,128 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class OldActionsContainer implements ActionsInterface {
-    
+
     public static final String KEBAB_GROUP_ID = "frameworkCustomEllipsis";
     private static final String WINDOW_TOOLBAR_XPATH = "//div[contains(@class, 'windowToolbar')]";
     private static final String CONTEXT_WINDOW_TOOLBAR_XPATH = "." + WINDOW_TOOLBAR_XPATH;
     private static final String MORE_GROUP_DATA_GROUP_ID = "frameworkCustomMore";
-    private static final String GROUP_BY_DATA_GROUP_ID_XPATH = ".//li[@data-group-id='%s']//button";
-    private static final String ACTION_BY_LABEL_XPATH =
-            ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')] | .//button[text()='%s']";
+    private static final String GROUP_BY_DATA_GROUP_ID_PATTERN = ".//li[@data-group-id='%s']//button | .//li[@data-group-id='%s']//i";
+    private static final String GROUP_XPATH = String.format(GROUP_BY_DATA_GROUP_ID_PATTERN, MORE_GROUP_DATA_GROUP_ID, MORE_GROUP_DATA_GROUP_ID);
+    private static final String ACTION_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')] | .//button[text()='%s']";
     private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for the old actions container";
     private static final String KEBAB_BUTTON_XPATH = "//li[@data-group-id='frameworkCustomEllipsis']";
-    private static final String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH =
-            ".//a[@" + CSSUtils.TEST_ID + "='%s'] | .//*[@id='%s'] | .//*[@data-widget-id='%s']";
-    private static final String DROPDOWN_XPATH = "//a[@class='dropdown']//div[text()='%s']";
-    
+    private static final String ACTION_BY_ID_PATTERN = ".//a[@" + CSSUtils.TEST_ID + "='%s'] | .//*[@id='%s'] | .//*[@data-widget-id='%s']";
+    private static final String DROPDOWN_PATTERN = "//a[@class='dropdown']//div[text()='%s']";
+
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement toolbar;
-    
+
     private OldActionsContainer(WebDriver driver, WebDriverWait wait, WebElement toolbar) {
         this.driver = driver;
         this.wait = wait;
         this.toolbar = toolbar;
     }
-    
+
     public static OldActionsContainer createFromParent(WebDriver driver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitForNestedElements(wait, parent, WINDOW_TOOLBAR_XPATH);
-        if (isElementPresent(parent, By.xpath(CONTEXT_WINDOW_TOOLBAR_XPATH))) {
-            WebElement toolbar = parent.findElement(By.xpath(CONTEXT_WINDOW_TOOLBAR_XPATH));
-            return new OldActionsContainer(driver, wait, toolbar);
-        } else {
-            WebElement toolbar = parent.findElement(By.xpath("./../.." + WINDOW_TOOLBAR_XPATH));
-            return new OldActionsContainer(driver, wait, toolbar);
-        }
+        return new OldActionsContainer(driver, wait, getToolbar(parent));
     }
-    
+
     public static OldActionsContainer createById(WebDriver driver, WebDriverWait wait, String actionContainerId) {
         DelayUtils.waitBy(wait, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + actionContainerId + "']"));
         WebElement toolbar = driver.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + actionContainerId + "']"));
         return new OldActionsContainer(driver, wait, toolbar);
     }
-    
-    private static boolean isElementPresent(WebElement webElement, By by) {
-        try {
-            webElement.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-    
-    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
-        Actions actions = new Actions(webDriver);
-        actions.moveToElement(webElement).click(webElement).build().perform();
-    }
-    
+
     @Override
     public void callActionByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, this.toolbar,
-                String.format(ACTION_BY_LABEL_XPATH, label, label, label));
-        clickOnWebElement(driver, wait, this.toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_XPATH, label, label, label))));
+        DelayUtils.waitForNestedElements(wait, this.toolbar, String.format(ACTION_BY_LABEL_PATTERN, label, label, label));
+        clickOnWebElement(this.toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_PATTERN, label, label, label))));
     }
-    
+
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
     }
-    
+
     @Override
     public void callActionById(String id) {
         DelayUtils.waitForVisibility(wait, toolbar);
-        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, id, id, id);
+        String actionXpath = String.format(ACTION_BY_ID_PATTERN, id, id, id);
         DelayUtils.waitForPageToLoad(driver, wait);
         if (!isElementPresent(toolbar, By.xpath(actionXpath))) {
-            clickActionByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, MORE_GROUP_DATA_GROUP_ID));
+            clickWithRetry(this.toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(actionXpath));
         }
         clickActionByXpath(actionXpath);
     }
-    
+
     @Override
     public void callActionById(String groupId, String actionId) {
         if (KEBAB_GROUP_ID.equals(groupId)) {
             callActionFromKebab(actionId);
             return;
         }
-        String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId);
-        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionId, actionId, actionId);
+        String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_PATTERN, groupId, groupId);
+        String actionXpath = String.format(ACTION_BY_ID_PATTERN, actionId, actionId, actionId);
         DelayUtils.waitForNestedElements(wait, toolbar, groupXpath);
-        clickOnWebElement(driver, wait, toolbar.findElement(By.xpath(groupXpath)));
-        clickOnWebElement(driver, wait, driver.findElement(By.xpath(actionXpath)));
+        clickWithRetry(toolbar.findElement(By.xpath(groupXpath)), By.xpath(actionXpath));
+        clickOnWebElement(driver.findElement(By.xpath(actionXpath)));
     }
-    
-    public void callActionById(String groupId, String innerGroupLabel, String actionDataAttributeName) {
+
+    public void callActionById(String groupId, String innerGroupLabel, String actionId) {
         DelayUtils.waitForVisibility(wait, toolbar);
-        String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_XPATH, groupId);
-        String actionXpath = String.format(ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH, actionDataAttributeName, actionDataAttributeName,
-                actionDataAttributeName);
+        String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_PATTERN, groupId, groupId);
+        String actionXpath = String.format(ACTION_BY_ID_PATTERN, actionId, actionId, actionId);
         if (isElementPresent(toolbar, By.xpath(groupXpath))) {
-            clickActionByXpath(groupXpath);
+            clickWithRetry(this.toolbar.findElement(By.xpath(groupXpath)), By.xpath(actionXpath));
         } else {
-            clickActionByXpath(String.format(GROUP_BY_DATA_GROUP_ID_XPATH, MORE_GROUP_DATA_GROUP_ID));
-            moveToInnerActionByXpath(String.format(DROPDOWN_XPATH, innerGroupLabel));
+            clickWithRetry(this.toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(String.format(DROPDOWN_PATTERN, innerGroupLabel)));
+            moveToInnerActionByXpath(String.format(DROPDOWN_PATTERN, innerGroupLabel));
         }
         clickActionByXpath(actionXpath);
     }
-    
+
     private void callActionFromKebab(String actionId) {
-        clickOnWebElement(driver, wait, this.toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH)));
+        clickWithRetry(this.toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH)), By.className(DropdownList.PORTAL_CLASS));
         DropdownList.create(driver, wait).selectOptionById(actionId);
     }
-    
+
     private void moveToInnerActionByXpath(String innerActionXpath) {
         DelayUtils.waitForNestedElements(wait, toolbar, innerActionXpath);
         Actions action = new Actions(driver);
         WebElement foundedElement = wait.until(ExpectedConditions.elementToBeClickable(toolbar.findElement(By.xpath(innerActionXpath))));
         action.moveToElement(foundedElement).perform();
     }
-    
+
     private void clickActionByXpath(String xpath) {
         DelayUtils.waitForNestedElements(wait, toolbar, xpath);
-        clickOnWebElement(driver, wait, this.toolbar.findElement(By.xpath(xpath)));
+        clickOnWebElement(this.toolbar.findElement(By.xpath(xpath)));
+    }
+
+    private void clickOnWebElement(WebElement webElement) {
+        webElementUtils().clickOnWebElement(webElement);
+    }
+
+    private void clickWithRetry(WebElement elementToClick, By elementToWait) {
+        webElementUtils().clickWithRetry(elementToClick, elementToWait);
+    }
+
+    private WebElementUtils webElementUtils() {
+        return WebElementUtils.create(driver, wait);
+    }
+
+    private static WebElement getToolbar(WebElement parent) {
+        if (isElementPresent(parent, By.xpath(CONTEXT_WINDOW_TOOLBAR_XPATH))) {
+            return parent.findElement(By.xpath(CONTEXT_WINDOW_TOOLBAR_XPATH));
+        }
+        return parent.findElement(By.xpath("./../.." + WINDOW_TOOLBAR_XPATH));
+    }
+
+    private static boolean isElementPresent(WebElement webElement, By by) {
+        return WebElementUtils.isElementPresent(webElement, by);
     }
 }

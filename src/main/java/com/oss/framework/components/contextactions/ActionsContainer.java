@@ -1,19 +1,19 @@
 package com.oss.framework.components.contextactions;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class ActionsContainer implements ActionsInterface {
+
     public static final String KEBAB_GROUP_ID = "frameworkCustomButtonsGroup";
     public static final String CREATE_GROUP_ID = "CREATE";
     public static final String EDIT_GROUP_ID = "EDIT";
@@ -22,6 +22,9 @@ public class ActionsContainer implements ActionsInterface {
     public static final String SHOW_ON_GROUP_ID = "NAVIGATION";
     private static final String MORE_GROUP_ID = "moreActions";
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer";
+    private static final String GROUP_PATTERN = ".//div[@id='%s'] | .//div[@id= '" + MORE_GROUP_ID + "']";
+    private static final String UNSUPPORTED_EXCEPTION = "Method not implemented for Actions Container.";
+    private static final String NO_ACTION_EXCEPTION = "No active Context Action.";
 
     private final WebElement webElement;
     private final WebDriver webDriver;
@@ -35,19 +38,12 @@ public class ActionsContainer implements ActionsInterface {
 
     public static ActionsContainer createFromParent(WebElement parentElement, WebDriver webDriver, WebDriverWait webDriverWait) {
         DelayUtils.waitBy(webDriverWait, By.className(CONTEXT_ACTIONS_CLASS));
-        List<WebElement> allContextAction = parentElement.findElements(By.className(CONTEXT_ACTIONS_CLASS));
-        WebElement activeContextActions = allContextAction.stream().filter(WebElement::isDisplayed).findFirst()
-                .orElseThrow(() -> new RuntimeException("No active Context Action"));
-        return new ActionsContainer(activeContextActions, webDriver, webDriverWait);
-    }
-
-    private static boolean isElementPresent(WebElement webElement, By by) {
-        return !webElement.findElements(by).isEmpty();
+        return new ActionsContainer(getActiveContextActions(parentElement), webDriver, webDriverWait);
     }
 
     @Override
     public void callActionByLabel(String label) {
-        throw new UnsupportedOperationException("Method not implemented for Actions Container");
+        throw new UnsupportedOperationException(UNSUPPORTED_EXCEPTION);
     }
 
     @Override
@@ -59,9 +55,9 @@ public class ActionsContainer implements ActionsInterface {
     @Override
     public void callActionById(String id) {
         if (isElementPresent(webElement, By.id(id))) {
-            clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(id)));
+            clickOnWebElement(this.webElement.findElement(By.id(id)));
         } else {
-            clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(MORE_GROUP_ID)));
+            clickWithRetry(this.webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
             DropdownList.create(webDriver, webDriverWait).selectOptionById(id);
         }
     }
@@ -73,22 +69,34 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void clickOnGroup(String groupId) {
-        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement,
-                ".//div[@id='" + groupId + "'] | .//div[@id= '" + MORE_GROUP_ID + "']");
+        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, String.format(GROUP_PATTERN, groupId));
         if (isElementPresent(webElement, By.id(groupId))) {
-            clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(groupId)));
+            clickWithRetry(this.webElement.findElement(By.id(groupId)), By.className(DropdownList.PORTAL_CLASS));
         } else {
-            clickOnWebElement(webDriver, webDriverWait, this.webElement.findElement(By.id(MORE_GROUP_ID)));
+            clickWithRetry(this.webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
             DropdownList.create(webDriver, webDriverWait).selectOptionById(groupId);
         }
     }
 
-    private void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        Actions actions = new Actions(webDriver);
-        actions.moveToElement(webElement).build().perform();
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
-        actions.click(webElement).build().perform();
+    private static WebElement getActiveContextActions(WebElement parentElement) {
+        List<WebElement> allContextAction = parentElement.findElements(By.className(CONTEXT_ACTIONS_CLASS));
+        return allContextAction.stream().filter(WebElement::isDisplayed).findFirst()
+                .orElseThrow(() -> new NoSuchElementException(NO_ACTION_EXCEPTION));
     }
 
+    private void clickOnWebElement(WebElement webElement) {
+        webElementUtils().clickOnWebElement(webElement);
+    }
+
+    private void clickWithRetry(WebElement elementToClick, By elementToWait) {
+        webElementUtils().clickWithRetry(elementToClick, elementToWait);
+    }
+
+    private WebElementUtils webElementUtils() {
+        return WebElementUtils.create(webDriver, webDriverWait);
+    }
+
+    private boolean isElementPresent(WebElement webElement, By by) {
+        return WebElementUtils.isElementPresent(webElement, by);
+    }
 }
