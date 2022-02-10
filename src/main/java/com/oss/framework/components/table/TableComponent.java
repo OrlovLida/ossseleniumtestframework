@@ -217,7 +217,7 @@ public class TableComponent {
                     .forEach(headers::add);
 
             lastElement = tempHeaders.get(tempHeaders.size() - 1);
-            scrollRightToHeader(lastElement);
+            scrollRightToVisibleHeader(lastElement);
 
             tempHeaders = getVisibleHeaders();
             tempElement = tempHeaders.get(tempHeaders.size() - 1);
@@ -248,7 +248,7 @@ public class TableComponent {
 
         while (!columnIds.contains(columnId) && !last.equals(temp)) {
             temp = last;
-            scrollRightToHeader(last);
+            scrollRightToVisibleHeader(last);
 
             visibleHeaders = getVisibleHeaders();
             last = visibleHeaders.get(visibleHeaders.size() - 1);
@@ -262,7 +262,7 @@ public class TableComponent {
         throw new RuntimeException("Column not found: " + columnId);
     }
 
-    private void scrollRightToHeader(Header header) {
+    private void scrollRightToVisibleHeader(Header header) {
         CustomScrolls scrolls = getCustomScrolls();
         BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getHorizontalScrollWidth());
         BigDecimal contentWidth = getContentWidth();
