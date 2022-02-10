@@ -35,6 +35,6 @@ public class NavigationIcon {
     }
 
     public void selectIcon(String iconId) {
-        icons.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + iconId + "']"));
+        icons.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + iconId + "']")).click();
     }
 }

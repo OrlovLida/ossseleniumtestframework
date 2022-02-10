@@ -18,10 +18,10 @@ public class OldActionsContainer implements ActionsInterface {
     public static final String KEBAB_GROUP_ID = "frameworkCustomEllipsis";
     private static final String WINDOW_TOOLBAR_XPATH = "//div[contains(@class, 'windowToolbar')]";
     private static final String CONTEXT_WINDOW_TOOLBAR_XPATH = "." + WINDOW_TOOLBAR_XPATH;
-    private static final String MAIN_WINDOW_TOOLBAR = "//div[@class='OssWindow']//div[@class='windowHeader']//div[@class='windowToolbar']";
     private static final String MORE_GROUP_DATA_GROUP_ID = "frameworkCustomMore";
     private static final String GROUP_BY_DATA_GROUP_ID_XPATH = ".//li[@data-group-id='%s']//button";
-    private static final String ACTION_BY_LABEL_XPATH = ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')] | .//button[text()='%s']";
+    private static final String ACTION_BY_LABEL_XPATH =
+            ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')] | .//button[text()='%s']";
     private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for the old actions container";
     private static final String KEBAB_BUTTON_XPATH = "//li[@data-group-id='frameworkCustomEllipsis']";
     private static final String ACTION_BY_DATA_ATTRIBUTE_NAME_OR_ID_XPATH =
@@ -50,7 +50,7 @@ public class OldActionsContainer implements ActionsInterface {
     }
     
     public static OldActionsContainer createById(WebDriver driver, WebDriverWait wait, String actionContainerId) {
-        DelayUtils.waitBy(wait,By.cssSelector("[" + CSSUtils.TEST_ID + "='" + actionContainerId + "']"));
+        DelayUtils.waitBy(wait, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + actionContainerId + "']"));
         WebElement toolbar = driver.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + actionContainerId + "']"));
         return new OldActionsContainer(driver, wait, toolbar);
     }
@@ -74,8 +74,8 @@ public class OldActionsContainer implements ActionsInterface {
     @Override
     public void callActionByLabel(String label) {
         DelayUtils.waitForNestedElements(wait, this.toolbar,
-                String.format(ACTION_BY_LABEL_XPATH, label, label));
-        clickOnWebElement(driver, wait, this.toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_XPATH, label, label))));
+                String.format(ACTION_BY_LABEL_XPATH, label, label, label));
+        clickOnWebElement(driver, wait, this.toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_XPATH, label, label, label))));
     }
     
     @Override

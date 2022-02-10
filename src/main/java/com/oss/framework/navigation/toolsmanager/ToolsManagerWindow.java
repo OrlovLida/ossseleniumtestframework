@@ -51,6 +51,14 @@ public class ToolsManagerWindow {
         return application.getApplicationsURL();
     }
 
+    public List<String> getCategoriesName(){
+       return getCategories().stream().map(Category::getName).collect(Collectors.toList());
+    }
+
+    public String getCategoryDescription(String categoryName){
+        return getCategoryByName(categoryName).getDescription();
+    }
+
     public void search(String name) {
         Input input = ComponentFactory.create(SEARCH_TEST_ID, Input.ComponentType.SEARCH_FIELD, driver, wait);
         input.setSingleStringValue(name);
