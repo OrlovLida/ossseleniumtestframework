@@ -277,8 +277,8 @@ public class TableComponent {
         offset = offset.subtract(currentOffset);
 
         //calculates number of px left to the end of scroll
-        int contentVisibleWidth = scrolls.getHorizontalBarWidth();
-        int diff = scrollWidth.toBigInteger().intValue() - contentVisibleWidth - currentOffset.intValue();
+        int barWidth = scrolls.getHorizontalBarWidth();
+        int diff = scrollWidth.toBigInteger().intValue() - barWidth - currentOffset.intValue();
 
         scrolls.scrollHorizontally(Math.min(offset.intValue(), diff));
     }
