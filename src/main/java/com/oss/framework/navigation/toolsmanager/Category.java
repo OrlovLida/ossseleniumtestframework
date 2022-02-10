@@ -112,7 +112,7 @@ class Category {
         return new DragAndDrop.DropElement(categoryElement);
     }
 
-    private String getName() {
+    String getName() {
         String categoryText = getCategoryText();
         return categoryText.substring(0, (categoryText.length() - getDescription().length() - 1));
     }
@@ -121,7 +121,7 @@ class Category {
         return categoryElement.findElement(By.cssSelector(CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS)).getText();
     }
 
-    private String getDescription() {
+    String getDescription() {
         return categoryElement.findElement(By.cssSelector(CATEGORIES_DESCRIPTION_CSS)).getText();
     }
 
