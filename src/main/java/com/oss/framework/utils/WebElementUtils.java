@@ -17,40 +17,28 @@ public class WebElementUtils {
     private static final String ELEMENT_NOT_PRESENT_INFO = "Element is not present.";
     private static final String RETRY_WARN = "Trying to click on element again.";
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-
-    private WebElementUtils(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
-    }
-
-    public static WebElementUtils create(WebDriver driver, WebDriverWait wait) {
-        return new WebElementUtils(driver, wait);
-    }
-
     public static boolean isElementPresent(WebElement webElement, By elementToWait) {
         return !webElement.findElements(elementToWait).isEmpty();
     }
 
-    public void clickWebElement(WebElement webElement) {
+    public static void clickWebElement(WebDriver driver, WebElement webElement) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).build().perform();
-        wait.until(ExpectedConditions.elementToBeClickable(webElement));
+        new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(webElement));
         actions.click(webElement).build().perform();
     }
 
-    public void clickWithRetry(WebElement elementToClick, By elementToWait) {
-        clickWebElement(elementToClick);
-        if (!isElementPresent(elementToWait)) {
+    public static void clickWithRetry(WebDriver driver, WebElement elementToClick, By elementToWait) {
+        clickWebElement(driver, elementToClick);
+        if (!isElementPresent(driver, elementToWait)) {
             LOGGER.warn(RETRY_WARN);
-            clickWebElement(elementToClick);
+            clickWebElement(driver, elementToClick);
         }
-        DelayUtils.waitForPresence(wait, elementToWait);
+        DelayUtils.waitForPresence(new WebDriverWait(driver, 10), elementToWait);
     }
 
-    public boolean isElementPresent(By elementToWait) {
+    public static boolean isElementPresent(WebDriver driver, By elementToWait) {
         try {
             DelayUtils.waitForPresence(new WebDriverWait(driver, 10), elementToWait);
             return true;

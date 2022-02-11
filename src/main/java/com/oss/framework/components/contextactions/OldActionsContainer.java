@@ -125,14 +125,10 @@ public class OldActionsContainer implements ActionsInterface {
     }
 
     private void clickWebElement(WebElement webElement) {
-        webElementUtils().clickWebElement(webElement);
+        WebElementUtils.clickWebElement(driver, webElement);
     }
 
     private void clickWithRetry(WebElement elementToClick, By elementToWait) {
-        webElementUtils().clickWithRetry(elementToClick, elementToWait);
-    }
-
-    private WebElementUtils webElementUtils() {
-        return WebElementUtils.create(driver, wait);
+        WebElementUtils.clickWithRetry(driver, elementToClick, elementToWait);
     }
 }

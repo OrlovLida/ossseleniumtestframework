@@ -85,15 +85,11 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void clickWebElement(WebElement webElement) {
-        webElementUtils().clickWebElement(webElement);
+        WebElementUtils.clickWebElement(webDriver, webElement);
     }
 
     private void clickWithRetry(WebElement elementToClick, By elementToWait) {
-        webElementUtils().clickWithRetry(elementToClick, elementToWait);
-    }
-
-    private WebElementUtils webElementUtils() {
-        return WebElementUtils.create(webDriver, webDriverWait);
+        WebElementUtils.clickWithRetry(webDriver, elementToClick, elementToWait);
     }
 
     private boolean isElementPresent(WebElement webElement, By by) {
