@@ -26,6 +26,10 @@ public class DelayUtils {
     public static final String INTERRUPTED_EXCEPTION = "Interrputed exception occured.";
     private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
 
+    private DelayUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void sleep() {
         sleep(1000);
     }

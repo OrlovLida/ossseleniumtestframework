@@ -14,7 +14,7 @@ import com.oss.framework.utils.DelayUtils;
 
 public class DropdownList {
 
-    private static final String PORTAL_CLASS = "portal";
+    public static final String PORTAL_CLASS = "portal";
     private static final String INPUT_XPATH = ".//div[@class='search-cont']//input";
     private static final String BY_ID_PATTERN = "//*[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
     private static final String BY_TEXT_PATTERN = ".//*[text()='%s']";
