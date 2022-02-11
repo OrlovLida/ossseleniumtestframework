@@ -41,6 +41,12 @@ public class ActionsContainer implements ActionsInterface {
         return new ActionsContainer(getActiveContextActions(parentElement), webDriver, webDriverWait);
     }
 
+    private static WebElement getActiveContextActions(WebElement parentElement) {
+        List<WebElement> allContextAction = parentElement.findElements(By.className(CONTEXT_ACTIONS_CLASS));
+        return allContextAction.stream().filter(WebElement::isDisplayed).findFirst()
+                .orElseThrow(() -> new NoSuchElementException(NO_ACTION_EXCEPTION));
+    }
+
     @Override
     public void callActionByLabel(String label) {
         throw new UnsupportedOperationException(UNSUPPORTED_EXCEPTION);
@@ -55,7 +61,7 @@ public class ActionsContainer implements ActionsInterface {
     @Override
     public void callActionById(String id) {
         if (isElementPresent(webElement, By.id(id))) {
-            clickOnWebElement(webElement.findElement(By.id(id)));
+            clickWebElement(webElement.findElement(By.id(id)));
         } else {
             clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
             DropdownList.create(webDriver, webDriverWait).selectOptionById(id);
@@ -78,14 +84,8 @@ public class ActionsContainer implements ActionsInterface {
         }
     }
 
-    private static WebElement getActiveContextActions(WebElement parentElement) {
-        List<WebElement> allContextAction = parentElement.findElements(By.className(CONTEXT_ACTIONS_CLASS));
-        return allContextAction.stream().filter(WebElement::isDisplayed).findFirst()
-                .orElseThrow(() -> new NoSuchElementException(NO_ACTION_EXCEPTION));
-    }
-
-    private void clickOnWebElement(WebElement webElement) {
-        webElementUtils().clickOnWebElement(webElement);
+    private void clickWebElement(WebElement webElement) {
+        webElementUtils().clickWebElement(webElement);
     }
 
     private void clickWithRetry(WebElement elementToClick, By elementToWait) {

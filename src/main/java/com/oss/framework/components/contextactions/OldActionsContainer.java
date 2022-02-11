@@ -47,10 +47,21 @@ public class OldActionsContainer implements ActionsInterface {
         return new OldActionsContainer(driver, wait, toolbar);
     }
 
+    private static WebElement getToolbar(WebElement parent) {
+        if (isElementPresent(parent, By.xpath(CONTEXT_WINDOW_TOOLBAR_XPATH))) {
+            return parent.findElement(By.xpath(CONTEXT_WINDOW_TOOLBAR_XPATH));
+        }
+        return parent.findElement(By.xpath("./../.." + WINDOW_TOOLBAR_XPATH));
+    }
+
+    private static boolean isElementPresent(WebElement webElement, By by) {
+        return WebElementUtils.isElementPresent(webElement, by);
+    }
+
     @Override
     public void callActionByLabel(String label) {
         DelayUtils.waitForNestedElements(wait, toolbar, String.format(ACTION_BY_LABEL_PATTERN, label, label, label));
-        clickOnWebElement(toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_PATTERN, label, label, label))));
+        clickWebElement(toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_PATTERN, label, label, label))));
     }
 
     @Override
@@ -79,7 +90,7 @@ public class OldActionsContainer implements ActionsInterface {
         String actionXpath = String.format(ACTION_BY_ID_PATTERN, actionId, actionId, actionId);
         DelayUtils.waitForNestedElements(wait, toolbar, groupXpath);
         clickWithRetry(toolbar.findElement(By.xpath(groupXpath)), By.xpath(actionXpath));
-        clickOnWebElement(driver.findElement(By.xpath(actionXpath)));
+        clickWebElement(driver.findElement(By.xpath(actionXpath)));
     }
 
     public void callActionById(String groupId, String innerGroupLabel, String actionId) {
@@ -110,11 +121,11 @@ public class OldActionsContainer implements ActionsInterface {
 
     private void clickActionByXpath(String xpath) {
         DelayUtils.waitForNestedElements(wait, toolbar, xpath);
-        clickOnWebElement(toolbar.findElement(By.xpath(xpath)));
+        clickWebElement(toolbar.findElement(By.xpath(xpath)));
     }
 
-    private void clickOnWebElement(WebElement webElement) {
-        webElementUtils().clickOnWebElement(webElement);
+    private void clickWebElement(WebElement webElement) {
+        webElementUtils().clickWebElement(webElement);
     }
 
     private void clickWithRetry(WebElement elementToClick, By elementToWait) {
@@ -123,16 +134,5 @@ public class OldActionsContainer implements ActionsInterface {
 
     private WebElementUtils webElementUtils() {
         return WebElementUtils.create(driver, wait);
-    }
-
-    private static WebElement getToolbar(WebElement parent) {
-        if (isElementPresent(parent, By.xpath(CONTEXT_WINDOW_TOOLBAR_XPATH))) {
-            return parent.findElement(By.xpath(CONTEXT_WINDOW_TOOLBAR_XPATH));
-        }
-        return parent.findElement(By.xpath("./../.." + WINDOW_TOOLBAR_XPATH));
-    }
-
-    private static boolean isElementPresent(WebElement webElement, By by) {
-        return WebElementUtils.isElementPresent(webElement, by);
     }
 }

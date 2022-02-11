@@ -29,7 +29,11 @@ public class WebElementUtils {
         return new WebElementUtils(driver, wait);
     }
 
-    public void clickOnWebElement(WebElement webElement) {
+    public static boolean isElementPresent(WebElement webElement, By elementToWait) {
+        return !webElement.findElements(elementToWait).isEmpty();
+    }
+
+    public void clickWebElement(WebElement webElement) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).build().perform();
@@ -38,10 +42,10 @@ public class WebElementUtils {
     }
 
     public void clickWithRetry(WebElement elementToClick, By elementToWait) {
-        clickOnWebElement(elementToClick);
+        clickWebElement(elementToClick);
         if (!isElementPresent(elementToWait)) {
             LOGGER.warn(RETRY_WARN);
-            clickOnWebElement(elementToClick);
+            clickWebElement(elementToClick);
         }
         DelayUtils.waitForPresence(wait, elementToWait);
     }
@@ -54,9 +58,5 @@ public class WebElementUtils {
             LOGGER.info(ELEMENT_NOT_PRESENT_INFO);
             return false;
         }
-    }
-
-    public static boolean isElementPresent(WebElement webElement, By elementToWait) {
-        return !webElement.findElements(elementToWait).isEmpty();
     }
 }
