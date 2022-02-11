@@ -193,7 +193,7 @@ public class OldTable extends Widget implements TableInterface {
 
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
+        getActionsInterface().callActionByLabel(groupLabel, actionLabel);
     }
 
     @Override
@@ -398,7 +398,7 @@ public class OldTable extends Widget implements TableInterface {
             ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, cell);
             Actions action = new Actions(driver);
             action.moveToElement(cell).build().perform();
-            if(isIconPresent(cell)) {
+            if (isIconPresent(cell)) {
                 return getIconTitles(index);
             }
             return cell.getText();
