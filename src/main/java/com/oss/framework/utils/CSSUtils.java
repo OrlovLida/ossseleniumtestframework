@@ -24,6 +24,10 @@ public class CSSUtils {
     private static Splitter attributeSplitter = Splitter.on(ATTRIBUTES_SEPARATOR);
     private static Splitter valueSplitter = Splitter.on(VALUE_SEPARATOR);
 
+    private CSSUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Map<String, String> getStyleAttribute(WebElement webElement) {
         Map<String, String> attributes = Maps.newHashMap();
         String style = webElement.getAttribute(STYLE_ATTRIBUTE);

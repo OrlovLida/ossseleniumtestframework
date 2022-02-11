@@ -17,6 +17,10 @@ public class WebElementUtils {
     private static final String ELEMENT_NOT_PRESENT_INFO = "Element is not present.";
     private static final String RETRY_WARN = "Trying to click on element again.";
 
+    private WebElementUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static boolean isElementPresent(WebElement webElement, By elementToWait) {
         return !webElement.findElements(elementToWait).isEmpty();
     }
