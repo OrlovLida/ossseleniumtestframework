@@ -55,9 +55,9 @@ public class ActionsContainer implements ActionsInterface {
     @Override
     public void callActionById(String id) {
         if (isElementPresent(webElement, By.id(id))) {
-            clickOnWebElement(this.webElement.findElement(By.id(id)));
+            clickOnWebElement(webElement.findElement(By.id(id)));
         } else {
-            clickWithRetry(this.webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
+            clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
             DropdownList.create(webDriver, webDriverWait).selectOptionById(id);
         }
     }
@@ -69,11 +69,11 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     private void clickOnGroup(String groupId) {
-        DelayUtils.waitForNestedElements(this.webDriverWait, this.webElement, String.format(GROUP_PATTERN, groupId));
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_PATTERN, groupId));
         if (isElementPresent(webElement, By.id(groupId))) {
-            clickWithRetry(this.webElement.findElement(By.id(groupId)), By.className(DropdownList.PORTAL_CLASS));
+            clickWithRetry(webElement.findElement(By.id(groupId)), By.className(DropdownList.PORTAL_CLASS));
         } else {
-            clickWithRetry(this.webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
+            clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
             DropdownList.create(webDriver, webDriverWait).selectOptionById(groupId);
         }
     }

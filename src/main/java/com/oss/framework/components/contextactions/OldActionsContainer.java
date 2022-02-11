@@ -49,8 +49,8 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String label) {
-        DelayUtils.waitForNestedElements(wait, this.toolbar, String.format(ACTION_BY_LABEL_PATTERN, label, label, label));
-        clickOnWebElement(this.toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_PATTERN, label, label, label))));
+        DelayUtils.waitForNestedElements(wait, toolbar, String.format(ACTION_BY_LABEL_PATTERN, label, label, label));
+        clickOnWebElement(toolbar.findElement(By.xpath(String.format(ACTION_BY_LABEL_PATTERN, label, label, label))));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class OldActionsContainer implements ActionsInterface {
         String actionXpath = String.format(ACTION_BY_ID_PATTERN, id, id, id);
         DelayUtils.waitForPageToLoad(driver, wait);
         if (!isElementPresent(toolbar, By.xpath(actionXpath))) {
-            clickWithRetry(this.toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(actionXpath));
+            clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(actionXpath));
         }
         clickActionByXpath(actionXpath);
     }
@@ -87,16 +87,17 @@ public class OldActionsContainer implements ActionsInterface {
         String groupXpath = String.format(GROUP_BY_DATA_GROUP_ID_PATTERN, groupId, groupId);
         String actionXpath = String.format(ACTION_BY_ID_PATTERN, actionId, actionId, actionId);
         if (isElementPresent(toolbar, By.xpath(groupXpath))) {
-            clickWithRetry(this.toolbar.findElement(By.xpath(groupXpath)), By.xpath(actionXpath));
+            clickWithRetry(toolbar.findElement(By.xpath(groupXpath)), By.xpath(actionXpath));
         } else {
-            clickWithRetry(this.toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(String.format(DROPDOWN_PATTERN, innerGroupLabel)));
-            moveToInnerActionByXpath(String.format(DROPDOWN_PATTERN, innerGroupLabel));
+            String dropdownXpath = String.format(DROPDOWN_PATTERN, innerGroupLabel);
+            clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(dropdownXpath));
+            moveToInnerActionByXpath(dropdownXpath);
         }
         clickActionByXpath(actionXpath);
     }
 
     private void callActionFromKebab(String actionId) {
-        clickWithRetry(this.toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH)), By.className(DropdownList.PORTAL_CLASS));
+        clickWithRetry(toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH)), By.className(DropdownList.PORTAL_CLASS));
         DropdownList.create(driver, wait).selectOptionById(actionId);
     }
 
@@ -109,7 +110,7 @@ public class OldActionsContainer implements ActionsInterface {
 
     private void clickActionByXpath(String xpath) {
         DelayUtils.waitForNestedElements(wait, toolbar, xpath);
-        clickOnWebElement(this.toolbar.findElement(By.xpath(xpath)));
+        clickOnWebElement(toolbar.findElement(By.xpath(xpath)));
     }
 
     private void clickOnWebElement(WebElement webElement) {
