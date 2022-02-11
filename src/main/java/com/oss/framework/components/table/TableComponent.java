@@ -140,7 +140,6 @@ public class TableComponent {
     }
 
     public String getCellValue(int row, String columnId) {
-        scrollRightToColumn(columnId);
         Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
         return cell.getText();
     }
@@ -207,7 +206,9 @@ public class TableComponent {
         scrollToFirstColumn();
 
         List<Header> headers = Lists.newArrayList();
-        List<Header> tempHeaders = getVisibleHeaders();
+        List<Header> tempHeaders = this.webElement.findElements(By.className(HEADER_CLASS)).stream()
+                .map(e -> Header.createFromWrapper(this.driver, this.webDriverWait, this.webElement, e))
+                .filter(header -> !header.getText().equals("")).collect(Collectors.toList());
 
         Header lastElement = null;
         Header tempElement = tempHeaders.get(tempHeaders.size() - 1);
@@ -217,9 +218,11 @@ public class TableComponent {
                     .forEach(headers::add);
 
             lastElement = tempHeaders.get(tempHeaders.size() - 1);
-            scrollRightToVisibleHeader(lastElement);
+            scrollRightToHeader(lastElement);
 
-            tempHeaders = getVisibleHeaders();
+            tempHeaders = this.webElement.findElements(By.className(HEADER_CLASS))
+                    .stream().map(e -> Header.createFromWrapper(this.driver, this.webDriverWait, this.webElement, e))
+                    .filter(header -> !header.getText().equals("")).collect(Collectors.toList());
             tempElement = tempHeaders.get(tempHeaders.size() - 1);
         }
 
@@ -232,55 +235,19 @@ public class TableComponent {
         return BigDecimal.valueOf(CSSUtils.getDecimalWidthValue(headersBody));
     }
 
-    private List<Header> getVisibleHeaders() {
-        return this.webElement.findElements(By.className(HEADER_CLASS)).stream()
-                .map(e -> Header.createFromWrapper(this.driver, this.webDriverWait, this.webElement, e))
-                .filter(header -> !header.getText().equals("")).collect(Collectors.toList());
-    }
-
-    private void scrollRightToColumn(String columnId) {
-        scrollToFirstColumn();
-
-        List<Header> visibleHeaders = getVisibleHeaders();
-        List<String> columnIds = visibleHeaders.stream().map(Header::getColumnId).collect(Collectors.toList());
-        Header last = visibleHeaders.get(visibleHeaders.size() - 1);
-        Header temp = null;
-
-        while (!columnIds.contains(columnId) && !last.equals(temp)) {
-            temp = last;
-            scrollRightToVisibleHeader(last);
-
-            visibleHeaders = getVisibleHeaders();
-            last = visibleHeaders.get(visibleHeaders.size() - 1);
-
-            columnIds = visibleHeaders.stream().map(Header::getColumnId).collect(Collectors.toList());
-            if(columnIds.contains(columnId)) {
-                return;
-            }
-        }
-
-        throw new RuntimeException("Column not found: " + columnId);
-    }
-
-    private void scrollRightToVisibleHeader(Header header) {
+    private void scrollRightToHeader(Header header) {
         CustomScrolls scrolls = getCustomScrolls();
         BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getHorizontalScrollWidth());
+        int contentVisibleWidth = scrolls.getHorizontalBarWidth();
+        int diff = scrollWidth.toBigInteger().intValue() - contentVisibleWidth;
+
         BigDecimal contentWidth = getContentWidth();
         BigDecimal cellLeft = BigDecimal.valueOf(header.getLeft());
+        BigDecimal ratio = contentWidth.divide(scrollWidth, 2, RoundingMode.FLOOR);
 
-        //calculates ration between header width and scrollBar width
-        BigDecimal ratio = scrollWidth.divide(contentWidth, 2, RoundingMode.FLOOR);
+        int offset = cellLeft.divide(ratio, 2, RoundingMode.FLOOR).toBigInteger().intValue();
 
-        //calculates number of px needed to scroll to the cell
-        BigDecimal offset = cellLeft.multiply(ratio);
-        BigDecimal currentOffset = scrolls.getTranslateXValue();
-        offset = offset.subtract(currentOffset);
-
-        //calculates number of px left to the end of scroll
-        int barWidth = scrolls.getHorizontalBarWidth();
-        int diff = scrollWidth.toBigInteger().intValue() - barWidth - currentOffset.intValue();
-
-        scrolls.scrollHorizontally(Math.min(offset.intValue(), diff));
+        scrolls.scrollHorizontally(Math.min(offset, diff));
     }
 
     private void scrollToFirstColumn() {
@@ -288,7 +255,7 @@ public class TableComponent {
         if (scrolls.getHorizontalBarWidth() == 0)
             return;
 
-        int translateX = scrolls.getTranslateXValue().intValue();
+        int translateX = scrolls.getTranslateXValue();
         if (translateX == 0)
             return;
 

@@ -1,6 +1,5 @@
 package com.oss.framework.components.scrolls;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -42,10 +41,10 @@ public class CustomScrolls {
         action.perform();
     }
 
-    public BigDecimal getTranslateXValue() {
+    public int getTranslateXValue() {
         String barStyle = getHorizontalBar().getAttribute("style");
         String translateX = barStyle.split("translateX\\(")[1];
-        return new BigDecimal(translateX.split("px")[0]);
+        return Integer.parseInt(translateX.split("px")[0]);
     }
 
     public void scrollVertically(int offset) {
