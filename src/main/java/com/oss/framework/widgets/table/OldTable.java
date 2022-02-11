@@ -38,8 +38,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final int REFRESH_INTERVAL = 2000;
     private static final String ROWS_COUNTER_SPANS_XPATH = ".//div[@class='rowsCounter']//span";
     private static final String TABLE_COMPONENT_XPATH = ".//div[contains(@class, 'OSSTableComponent')]";
-    private static final String COLUMNS_WITHOUT_CHECKBOX_XPATH =
-            ".//div[contains(@class,'OSSTableColumn') and not(contains(@class,'Col_SELECTION'))]";
+    private static final String COLUMNS_WITHOUT_CHECKBOX_XPATH = ".OSSTableColumn:not(.Col_SELECTION)";
     private static final String CONTEXT_ACTIONS_CONTAINER_XPATH = "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']";
     private static final String TABLE_IN_ACTIVE_TAB_XPATH =
             "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='AppComponentContainer']/div";
@@ -373,6 +372,7 @@ public class OldTable extends Widget implements TableInterface {
 
         private boolean isLabelPresent() {
             try {
+                moveToHeader();
                 return !columnElement.findElement(By.xpath(INPUT_XPATH)).getAttribute(LABEL_ATTRIBUTE).equals("");
             } catch (NoSuchElementException e) {
                 return !columnElement.getText().isEmpty();
