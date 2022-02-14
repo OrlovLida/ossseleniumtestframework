@@ -8,7 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import com.oss.framework.utils.CSSUtils;
 
 public class Button {
-    
+
     private final WebElement webElement;
     private final WebDriver webDriver;
 
@@ -21,12 +21,12 @@ public class Button {
         WebElement button = driver.findElement(By.xpath(".//*[text()='" + label + "']"));
         return new Button(driver, button);
     }
-    
+
     public static Button createByLabel(WebDriver driver, String componentId, String label) {
         WebElement component = driver.findElement(By.cssSelector("#" + componentId + ",[" + CSSUtils.TEST_ID + "='" + componentId + "']"));
         WebElement button = component.findElement(By.xpath(".//*[@title='" + label + "'] |  .//*[text()='" + label + "']"));
         return new Button(driver, button);
-        
+
     }
 
     public static Button createById(WebDriver driver, String buttonId) {

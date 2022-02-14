@@ -25,6 +25,7 @@ import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class OldTable extends Widget implements TableInterface {
@@ -76,12 +77,7 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private static boolean isElementPresent(WebElement window, By by) {
-        try {
-            window.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return WebElementUtils.isElementPresent(window, by);
     }
 
     @Override

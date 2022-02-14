@@ -51,11 +51,11 @@ public class ToolsManagerWindow {
         return application.getApplicationsURL();
     }
 
-    public List<String> getCategoriesName(){
-       return getCategories().stream().map(Category::getName).collect(Collectors.toList());
+    public List<String> getCategoriesName() {
+        return getCategories().stream().map(Category::getName).collect(Collectors.toList());
     }
 
-    public String getCategoryDescription(String categoryName){
+    public String getCategoryDescription(String categoryName) {
         return getCategoryByName(categoryName).getDescription();
     }
 
