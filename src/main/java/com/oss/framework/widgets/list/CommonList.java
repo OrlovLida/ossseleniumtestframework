@@ -1,6 +1,7 @@
 package com.oss.framework.widgets.list;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.categorylist.CategoryList;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.search.AdvancedSearch;
@@ -24,7 +26,6 @@ public class CommonList extends Widget {
     private static final String CATEGORY_LIST_XPATH = ".//li[@class='categoryListElement']";
     private static final String HEADERS_XPATH = ".//div[@class='header left']";
     private static final String LIST_ELEMENT_XPATH = ".//li[@class='listElement']";
-    private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
     private static final String NO_DATA_TEXT_XPATH = "//h3[contains(@class,'emptyResultsText')]";
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
@@ -57,13 +58,13 @@ public class CommonList extends Widget {
 
     public void expandAllCategories() {
         DelayUtils.waitForElementToLoad(webDriverWait, webElement);
-        List<Category> categories = getCategories();
-        categories.forEach(Category::expandCategory);
+        List<CategoryList> categories = getCategories();
+        categories.forEach(CategoryList::expandCategory);
     }
 
     public void collapseAllCategories() {
-        List<Category> categories = getCategories();
-        categories.forEach(Category::collapseCategory);
+        List<CategoryList> categories = getCategories();
+        categories.forEach(CategoryList::collapseCategory);
     }
 
     public void expandCategory(String name) {
@@ -78,15 +79,13 @@ public class CommonList extends Widget {
         return getCategories().size();
     }
 
-    public Category getCategory(String value) {
+    public CategoryList getCategory(String value) {
         return getCategories().stream().filter(category -> category.getValue().equals(value)).findFirst()
                 .orElseThrow(() -> new NoSuchElementException(PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION));
     }
 
-    public List<Category> getCategories() {
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, CATEGORY_LIST_XPATH);
-        List<WebElement> categories = webElement.findElements(By.xpath(CATEGORY_LIST_XPATH));
-        return categories.stream().map(category -> new Category(driver, webDriverWait, category)).collect(Collectors.toList());
+    public List<CategoryList> getCategories() {
+        return CategoryList.create(driver, webDriverWait, id);
     }
 
     public List<String> getRowHeaders() {
@@ -131,54 +130,6 @@ public class CommonList extends Widget {
 
     private AdvancedSearch getAdvanceSearch() {
         return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
-    }
-
-    public static class Category {
-
-        private static final String COLLAPSE_ICON_XPATH = ".//i[contains(@class,'chevron-up')]";
-        private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
-
-        private final WebDriver driver;
-        private final WebDriverWait wait;
-        private final WebElement categoryElement;
-
-        private Category(WebDriver driver, WebDriverWait wait, WebElement categoryElement) {
-            this.driver = driver;
-            this.wait = wait;
-            this.categoryElement = categoryElement;
-        }
-
-        public String getValue() {
-            return categoryElement.findElement(By.className(CATEGORY_NAME_XPATH)).getText();
-        }
-
-        public void callAction(String groupId, String actionId) {
-            InlineMenu.create(categoryElement, driver, wait).callAction(groupId, actionId);
-        }
-
-        public void callAction(String actionId) {
-            InlineMenu.create(categoryElement, driver, wait).callAction(actionId);
-        }
-
-        public void expandCategory() {
-            if (!isExpanded()) {
-                Actions actions = new Actions(driver);
-                actions.moveToElement(categoryElement.findElement(By.xpath(EXPAND_ICON_XPATH))).click().build().perform();
-            }
-            DelayUtils.waitForElementToLoad(wait, categoryElement);
-        }
-
-        public void collapseCategory() {
-            if (isExpanded()) {
-                Actions actions = new Actions(driver);
-                actions.moveToElement(categoryElement.findElement(By.xpath(COLLAPSE_ICON_XPATH))).click().build().perform();
-            }
-            DelayUtils.waitForElementToLoad(wait, categoryElement);
-        }
-
-        private boolean isExpanded() {
-            return !categoryElement.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
-        }
     }
 
     public static class Row {
