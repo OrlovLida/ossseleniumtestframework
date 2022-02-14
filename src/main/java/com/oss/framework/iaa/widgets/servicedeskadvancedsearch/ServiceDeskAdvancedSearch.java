@@ -18,7 +18,7 @@ public class ServiceDeskAdvancedSearch extends Widget {
     }
 
     public static ServiceDeskAdvancedSearch create(WebDriver driver, WebDriverWait webDriverWait, String windowId) {
-        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + windowId + "']/.//*[@class='appContent service-desk-advancedsearchwidget']";
+        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + windowId + "']/.//*[contains(@class,'service-desk-advancedsearchwidget')]";
 
         DelayUtils.waitByXPath(webDriverWait, xPath);
         WebElement webElement = driver.findElement(By.xpath(xPath));
