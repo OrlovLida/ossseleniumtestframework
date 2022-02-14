@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -23,6 +22,7 @@ import com.oss.framework.components.inputs.InlineForm;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 /**
@@ -174,10 +174,9 @@ public class EditableList extends Widget {
             }
             
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
                 Actions action = new Actions(driver);
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
-                    action.moveToElement(webElement).click(webElement).build().perform();
+                    WebElementUtils.clickWebElement(driver, webElement);
                     Input input = ComponentFactory.createFromParent(componentId, componentType, driver, wait, webElement);
                     input.setSingleStringValue(value);
                     return;
