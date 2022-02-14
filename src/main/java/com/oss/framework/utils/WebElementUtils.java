@@ -21,10 +21,6 @@ public class WebElementUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static boolean isElementPresent(WebElement webElement, By elementToWait) {
-        return !webElement.findElements(elementToWait).isEmpty();
-    }
-
     public static void clickWebElement(WebDriver driver, WebElement webElement) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
         Actions actions = new Actions(driver);
@@ -50,5 +46,9 @@ public class WebElementUtils {
             LOGGER.info(ELEMENT_NOT_PRESENT_INFO);
             return false;
         }
+    }
+
+    public static boolean isElementPresent(WebElement webElement, By elementToWait) {
+        return !webElement.findElements(elementToWait).isEmpty();
     }
 }

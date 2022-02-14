@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -42,7 +43,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     public void selectExpandedObjects(List<String> objectNames) {
-        for (String objectName: objectNames) {
+        for (String objectName : objectNames) {
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             selectNode(objectName);
         }
@@ -87,7 +88,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     private void expandTree(List<String> nodeNames) {
-        for (String nodeName: nodeNames) {
+        for (String nodeName : nodeNames) {
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
             expandNode(nodeName);
         }

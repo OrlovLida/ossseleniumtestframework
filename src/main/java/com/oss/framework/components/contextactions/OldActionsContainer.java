@@ -21,7 +21,6 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String GROUP_BY_DATA_GROUP_ID_PATTERN = ".//li[@data-group-id='%s']//button | .//li[@data-group-id='%s']//i";
     private static final String GROUP_XPATH = String.format(GROUP_BY_DATA_GROUP_ID_PATTERN, MORE_GROUP_DATA_GROUP_ID, MORE_GROUP_DATA_GROUP_ID);
     private static final String ACTION_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')] | .//i[contains(@aria-label,'%s')] | .//button[text()='%s']";
-    private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for the old actions container";
     private static final String KEBAB_BUTTON_XPATH = "//li[@data-group-id='frameworkCustomEllipsis']";
     private static final String ACTION_BY_ID_PATTERN = ".//a[@" + CSSUtils.TEST_ID + "='%s'] | .//*[@id='%s'] | .//*[@data-widget-id='%s']";
     private static final String DROPDOWN_PATTERN = "//a[@class='dropdown']//div[text()='%s']";
@@ -66,7 +65,10 @@ public class OldActionsContainer implements ActionsInterface {
 
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
+        String groupXpath = String.format(ACTION_BY_LABEL_PATTERN, groupLabel, groupLabel, groupLabel);
+        DelayUtils.waitForNestedElements(wait, toolbar, groupXpath);
+        clickWithRetry(toolbar.findElement(By.xpath(groupXpath)), By.className(DropdownList.PORTAL_CLASS));
+        DropdownList.create(driver, wait).selectOption(actionLabel);
     }
 
     @Override
@@ -76,6 +78,8 @@ public class OldActionsContainer implements ActionsInterface {
         DelayUtils.waitForPageToLoad(driver, wait);
         if (!isElementPresent(toolbar, By.xpath(actionXpath))) {
             clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(actionXpath));
+            clickWebElement(driver.findElement(By.xpath(actionXpath)));
+            return;
         }
         clickActionByXpath(actionXpath);
     }

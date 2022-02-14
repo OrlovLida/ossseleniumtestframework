@@ -18,6 +18,7 @@ import com.oss.framework.components.widgetchooser.WidgetChooser;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.WidgetFactory;
 
@@ -146,7 +147,7 @@ public class TabsWidget extends Widget implements TabsInterface {
     }
 
     private boolean isElementPresent(WebDriver driver, By by) {
-        return !driver.findElements(by).isEmpty();
+        return WebElementUtils.isElementPresent(driver, by);
     }
 
     private boolean isMorePresent() {
