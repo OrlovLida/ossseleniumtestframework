@@ -117,12 +117,12 @@ class Category {
         return categoryText.substring(0, (categoryText.length() - getDescription().length() - 1));
     }
 
-    private String getCategoryText() {
-        return categoryElement.findElement(By.cssSelector(CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS)).getText();
-    }
-
     String getDescription() {
         return categoryElement.findElement(By.cssSelector(CATEGORIES_DESCRIPTION_CSS)).getText();
+    }
+
+    private String getCategoryText() {
+        return categoryElement.findElement(By.cssSelector(CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS)).getText();
     }
 
     private void toggleCategory() {

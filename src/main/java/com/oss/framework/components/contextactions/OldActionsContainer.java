@@ -78,6 +78,8 @@ public class OldActionsContainer implements ActionsInterface {
         DelayUtils.waitForPageToLoad(driver, wait);
         if (!isElementPresent(toolbar, By.xpath(actionXpath))) {
             clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(actionXpath));
+            clickWebElement(driver.findElement(By.xpath(actionXpath)));
+            return;
         }
         clickActionByXpath(actionXpath);
     }

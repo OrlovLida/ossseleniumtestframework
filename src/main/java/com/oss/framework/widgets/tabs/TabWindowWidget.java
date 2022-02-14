@@ -12,6 +12,7 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 @Deprecated //not available in V2 views, change to TabsWidget
 public class TabWindowWidget implements TabsInterface {
@@ -87,7 +88,7 @@ public class TabWindowWidget implements TabsInterface {
     }
 
     private boolean isElementPresent(WebDriver driver, By by) {
-        return !driver.findElements(by).isEmpty();
+        return WebElementUtils.isElementPresent(driver, by);
     }
 
     private boolean isMorePresent() {

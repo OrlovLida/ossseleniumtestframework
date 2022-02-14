@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -18,6 +17,7 @@ import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class Wizard {
@@ -27,7 +27,6 @@ public class Wizard {
     private static final String NEXT_STEP_XPATH = ".//button[text()='Next Step']";
     private static final String ACCEPT_BUTTON_XPATH = ".//button[text()='Accept']";
     private static final String CANCEL_BUTTON_XPATH = ".//button[text()='Cancel']";
-    private static final String DELETE_BUTTON_XPATH = ".//a[text()='Delete']";
     private static final String OK_BUTTON_XPATH = ".//a[text()='OK']";
     private static final String UPDATE_BUTTON_XPATH = ".//a[text()='Update']";
     private static final String SAVE_BUTTON_XPATH = ".//a[text()='Save']";
@@ -59,12 +58,7 @@ public class Wizard {
     }
 
     private static boolean isElementPresent(WebElement webElement, By by) {
-        try {
-            webElement.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return WebElementUtils.isElementPresent(webElement, by);
     }
 
     public Input getComponent(String componentId, Input.ComponentType componentType) {
@@ -108,10 +102,6 @@ public class Wizard {
 
     public void clickOK() {
         clickButton(OK_BUTTON_XPATH);
-    }
-
-    public void clickDelete() {
-        clickButton(DELETE_BUTTON_XPATH);
     }
 
     public void clickButtonById(String actionId) {

@@ -25,6 +25,7 @@ import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class OldTable extends Widget implements TableInterface {
@@ -38,7 +39,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final int REFRESH_INTERVAL = 2000;
     private static final String ROWS_COUNTER_SPANS_XPATH = ".//div[@class='rowsCounter']//span";
     private static final String TABLE_COMPONENT_XPATH = ".//div[contains(@class, 'OSSTableComponent')]";
-    private static final String COLUMNS_WITHOUT_CHECKBOX_XPATH = ".OSSTableColumn:not(.Col_SELECTION)";
+    private static final String COLUMNS_WITHOUT_CHECKBOX_CSS = ".OSSTableColumn:not(.Col_SELECTION)";
     private static final String CONTEXT_ACTIONS_CONTAINER_XPATH = "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']";
     private static final String TABLE_IN_ACTIVE_TAB_XPATH =
             "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='AppComponentContainer']/div";
@@ -76,12 +77,7 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private static boolean isElementPresent(WebElement window, By by) {
-        try {
-            window.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return WebElementUtils.isElementPresent(window, by);
     }
 
     @Override
@@ -278,7 +274,7 @@ public class OldTable extends Widget implements TableInterface {
         Map<String, Column> columns = Maps.newHashMap();
         DelayUtils.waitForNestedElements(webDriverWait, webElement, TABLE_COMPONENT_XPATH);
         List<Column> columns2 =
-                webElement.findElements(By.xpath(COLUMNS_WITHOUT_CHECKBOX_XPATH))
+                webElement.findElements(By.cssSelector(COLUMNS_WITHOUT_CHECKBOX_CSS))
                         .stream().map(columnElement -> new Column(columnElement, webDriverWait, driver)).collect(Collectors.toList());
         for (Column column : Lists.reverse(columns2)) {
             if (column.isLabelPresent()) {

@@ -1,7 +1,6 @@
 package com.oss.framework.widgets.dockedpanel;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class DockedPanel implements DockedPanelInterface {
 
@@ -39,12 +39,7 @@ public class DockedPanel implements DockedPanelInterface {
     }
 
     private static boolean isElementPresent(WebDriver driver, By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return WebElementUtils.isElementPresent(driver, by);
     }
 
     @Override
