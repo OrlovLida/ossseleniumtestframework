@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class TextField extends Input {
 
@@ -34,8 +35,7 @@ public class TextField extends Input {
     public void setValueContains(Data value) {
         WebElement input = webElement.findElement(By.xpath(INPUT));
         input.clear();
-        Actions action = new Actions(driver);
-        action.moveToElement(input).click().build().perform(); //before click element is not reachable by keyboard and after the click element is refreshed
+        WebElementUtils.clickWebElement(driver, input);
         webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
     }
 

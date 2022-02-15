@@ -7,11 +7,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.advancedsearch.AdvancedSearchWidget;
 
 public class ObjectSearchField extends Input {
@@ -33,15 +33,13 @@ public class ObjectSearchField extends Input {
     }
 
     public void setValue(Data value, boolean isContains) {
-        Actions actions = new Actions(driver);
-
         if (!isSingleComponent()) {
-            actions.moveToElement(webElement).click().build().perform();
+            WebElementUtils.clickWebElement(driver, webElement);
             WebElement innerInput = driver.findElement(By.xpath(OSF_INNER_INPUT));
             innerInput.sendKeys(value.getStringValue());
             DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
             chooseFirstResult();
-            actions.moveToElement(webElement).click().build().perform();
+            WebElementUtils.clickWebElement(driver, webElement);
         } else {
             clear();
             DelayUtils.sleep(1000);
@@ -49,7 +47,6 @@ public class ObjectSearchField extends Input {
             DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
             chooseFirstResult();
         }
-
     }
 
     @Override

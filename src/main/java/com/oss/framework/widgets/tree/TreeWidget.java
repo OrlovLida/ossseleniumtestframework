@@ -9,8 +9,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class TreeWidget extends Widget {
@@ -101,7 +100,7 @@ public class TreeWidget extends Widget {
 
     private List<TreeRow> getVisibleTreeRow() {
         List<TreeRow> treeRowList = this.webElement.findElements(By.className("TreeRow")).stream()
-                .map(webElement -> new TreeRow(webElement, webDriverWait, driver)).collect(Collectors.toList());
+                .map(webElement -> new TreeRow(webElement, driver)).collect(Collectors.toList());
         LOGGER.debug("Visible three rows number {}.", treeRowList.size());
         return treeRowList;
     }
@@ -114,7 +113,7 @@ public class TreeWidget extends Widget {
     private TreeRow createTreeRow(String treeRowXpath) {
         DelayUtils.waitForNestedElements(webDriverWait, webElement, treeRowXpath);
         WebElement treeRowElement = this.webElement.findElement(By.xpath(treeRowXpath));
-        return new TreeRow(treeRowElement, webDriverWait, driver);
+        return new TreeRow(treeRowElement, driver);
     }
 
     private static class TreeRow {
@@ -124,26 +123,21 @@ public class TreeWidget extends Widget {
         private static final String CLASS = "class";
 
         private final WebElement webElement;
-        private final WebDriverWait webDriverWait;
         private final WebDriver driver;
 
-        private TreeRow(WebElement webElement, WebDriverWait webDriverWait, WebDriver driver) {
+        private TreeRow(WebElement webElement, WebDriver driver) {
             this.webElement = webElement;
-            this.webDriverWait = webDriverWait;
             this.driver = driver;
         }
 
-        private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
+        private static void clickOnWebElement(WebDriver webDriver, WebElement webElement) {
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-            Actions actions = new Actions(webDriver);
-            actions.moveToElement(webElement).build().perform();
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
-            actions.click(webElement).build().perform();
+            WebElementUtils.clickWebElement(webDriver, webElement);
         }
 
         private void expandTreeRow() {
             WebElement expandIcos = this.webElement.findElement(By.xpath(EXPAND_TREE_ROW));
-            clickOnWebElement(driver, webDriverWait, expandIcos);
+            clickOnWebElement(driver, expandIcos);
         }
 
         private boolean isExpanded() {
@@ -156,7 +150,7 @@ public class TreeWidget extends Widget {
         }
 
         private void click() {
-            clickOnWebElement(driver, webDriverWait, webElement);
+            clickOnWebElement(driver, webElement);
         }
     }
 }

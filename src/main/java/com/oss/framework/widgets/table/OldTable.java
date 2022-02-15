@@ -296,9 +296,8 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private WebElement getColumnManager() {
-        Actions actions = new Actions(driver);
         WebElement columnsSettingsIcon = webElement.findElement(By.className(TABLE_COLUMNS_SETTINGS_ICON_CLASS));
-        actions.moveToElement(columnsSettingsIcon).click().build().perform();
+        WebElementUtils.clickWebElement(driver, columnsSettingsIcon);
         DelayUtils.waitBy(webDriverWait, By.className(STICKY_COLUMNS_SETTINGS_CLASS));
         return driver.findElement(By.className(STICKY_COLUMNS_SETTINGS_CLASS));
     }
@@ -506,10 +505,9 @@ public class OldTable extends Widget implements TableInterface {
         }
 
         private void enabledColumnByLabel(String attributeLabel) {
-            Actions actions = new Actions(driver);
             WebElement node = getNode(attributeLabel);
             if (!isSelected(node)) {
-                actions.moveToElement(node.findElement(By.xpath(LABEL_XPATH))).click().perform();
+                WebElementUtils.clickWebElement(driver, node.findElement(By.xpath(LABEL_XPATH)));
             }
         }
 

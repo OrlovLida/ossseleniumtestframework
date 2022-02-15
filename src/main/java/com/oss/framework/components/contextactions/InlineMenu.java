@@ -5,10 +5,10 @@ import java.util.Arrays;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.WebElementUtils;
 
 public class InlineMenu {
 
@@ -40,8 +40,7 @@ public class InlineMenu {
 
     private void expandKebabMenu() {
         WebElement inlineKebab = webElement.findElement(By.id(GROUP_BUTTON_ID));
-        Actions actions = new Actions(driver);
-        actions.moveToElement(inlineKebab).click(inlineKebab).build().perform();
+        WebElementUtils.clickWebElement(driver, inlineKebab);
     }
 
 }
