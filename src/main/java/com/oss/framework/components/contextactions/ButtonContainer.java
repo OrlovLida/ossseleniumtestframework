@@ -10,12 +10,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 /**
  * @author Gabriela Kasza
@@ -48,11 +47,9 @@ public class ButtonContainer implements ActionsInterface {
         return new ButtonContainer(driver, wait, parentElement);
     }
 
-    private static void clickOnWebElement(WebDriver webDriver, WebDriverWait webDriverWait, WebElement webElement) {
+    private static void clickOnWebElement(WebDriver webDriver, WebElement webElement) {
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(webElement));
-        Actions actions = new Actions(webDriver);
-        actions.moveToElement(webElement).click(webElement).build().perform();
+        WebElementUtils.clickWebElement(webDriver, webElement);
     }
 
     @Override
@@ -60,7 +57,7 @@ public class ButtonContainer implements ActionsInterface {
         String buttonXpath = String.format(BUTTON_BY_LABEL_PATTERN, label, label, label);
         DelayUtils.waitForNestedElements(wait, buttons, buttonXpath);
         WebElement button = buttons.findElement(By.xpath(buttonXpath));
-        clickOnWebElement(driver, wait, button);
+        clickOnWebElement(driver, button);
     }
 
     @Override
@@ -72,7 +69,7 @@ public class ButtonContainer implements ActionsInterface {
     public void callActionById(String id) {
         String buttonXpath = String.format(BUTTON_BY_ID_PATTERN, id, id, id);
         DelayUtils.waitForNestedElements(wait, buttons, buttonXpath);
-        clickOnWebElement(driver, wait, buttons.findElement(By.xpath(buttonXpath)));
+        clickOnWebElement(driver, buttons.findElement(By.xpath(buttonXpath)));
     }
 
     @Override
@@ -85,6 +82,6 @@ public class ButtonContainer implements ActionsInterface {
         String groupXpath = String.format(GROUP_PATTERN, groupLabel, groupLabel);
         DelayUtils.waitForNestedElements(wait, buttons, groupXpath);
         WebElement button = buttons.findElement(By.xpath(groupXpath));
-        clickOnWebElement(driver, wait, button);
+        clickOnWebElement(driver, button);
     }
 }

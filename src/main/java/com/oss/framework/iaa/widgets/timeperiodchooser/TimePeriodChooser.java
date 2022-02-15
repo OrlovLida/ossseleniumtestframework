@@ -3,11 +3,11 @@ package com.oss.framework.iaa.widgets.timeperiodchooser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class TimePeriodChooser extends Widget {
@@ -30,12 +30,8 @@ public class TimePeriodChooser extends Widget {
     }
 
     public void chooseOption(TimePeriodChooserOption option) {
-
         WebElement calendar = webElement.findElement(By.xpath(".//i[contains(@class,'OSSIcon fa fa-calendar')]"));
-
-        Actions actions = new Actions(driver);
-        actions.moveToElement(calendar).click().build().perform();
-
+        WebElementUtils.clickWebElement(driver, calendar);
         switch (option) {
             case LAST: {
                 webElement.findElement(By.xpath(createChooseOptionXPath("LAST_2"))).click();

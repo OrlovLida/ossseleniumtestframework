@@ -14,6 +14,7 @@ import com.oss.framework.components.data.Data;
 import com.oss.framework.components.tooltip.Tooltip;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public abstract class Input {
 
@@ -59,8 +60,7 @@ public abstract class Input {
     }
 
     public final void click() {
-        Actions action = new Actions(driver);
-        action.moveToElement(webElement).click().build().perform();
+        WebElementUtils.clickWebElement(driver, webElement);
         DelayUtils.sleep();
     }
 
