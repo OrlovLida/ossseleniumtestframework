@@ -17,6 +17,7 @@ import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class TreeComponent {
 
@@ -166,7 +167,7 @@ public class TreeComponent {
                 action.click(expandNextLevelArrow).perform();
                 WebElement button =
                         nodeElement.findElement(By.xpath("//a[contains(@" + CSSUtils.TEST_ID + ",'" + EXPAND_NEXT_LEVEL_BUTTON + "')]"));
-                action.moveToElement(button).click().perform();
+                WebElementUtils.clickWebElement(driver, button);
                 DelayUtils.waitForElementDisappear(webDriverWait, nodeElement.findElement(By.xpath(SPIN_XPATH)));
             } else
                 throw new NoSuchElementException("Expand Next Level is not available for Node " + getLabel());

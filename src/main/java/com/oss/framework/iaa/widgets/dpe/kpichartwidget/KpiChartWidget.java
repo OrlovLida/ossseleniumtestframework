@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class KpiChartWidget extends Widget {
@@ -214,8 +215,7 @@ public class KpiChartWidget extends Widget {
     }
 
     private void clickElement(WebElement webElement) {
-        Actions action = new Actions(driver);
-        action.moveToElement(webElement).click().build().perform();
+        WebElementUtils.clickWebElement(driver, webElement);
         log.debug(MOVE_MOUSE_OVER + "point");
     }
 

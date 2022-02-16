@@ -7,10 +7,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.WebElementUtils;
 
 public class Coordinates extends Input {
 
@@ -62,15 +62,12 @@ public class Coordinates extends Input {
 
     @Override
     public void setValue(Data value) {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(webElement).click().build().perform();
-
+        WebElementUtils.clickWebElement(driver, webElement);
         if (value.getStringValues().get(0).equals("N")) {
             labelN.click();
         } else if (value.getStringValues().get(0).equals("S")) {
             labelS.click();
         }
-
         clear();
         inputDegrees.sendKeys(value.getStringValues().get(1));
         inputMinutes.sendKeys(value.getStringValues().get(2));

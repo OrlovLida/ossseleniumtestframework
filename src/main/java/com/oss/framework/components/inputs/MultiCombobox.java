@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class MultiCombobox extends Input {
 
@@ -48,8 +49,7 @@ public class MultiCombobox extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(webElement).click().build().perform();
+        WebElementUtils.clickWebElement(driver, webElement);
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         if (isSearchPresent()) {
             searchItem(value.getStringValue(), true);
@@ -67,8 +67,7 @@ public class MultiCombobox extends Input {
 
     @Override
     public void setValue(Data value) {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(webElement).click().build().perform();
+        WebElementUtils.clickWebElement(driver, webElement);
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         if (isSearchPresent()) {
             searchItem(value.getStringValue(), false);

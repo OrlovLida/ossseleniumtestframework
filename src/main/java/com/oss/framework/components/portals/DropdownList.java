@@ -6,11 +6,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class DropdownList {
 
@@ -44,18 +44,16 @@ public class DropdownList {
 
     public void selectOptionContains(String optionLabel) {
         DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, optionLabel))));
-        Actions action = new Actions(driver);
         WebElement foundedElement =
                 dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, optionLabel)));
-        action.moveToElement(foundedElement).click().perform();
+        WebElementUtils.clickWebElement(driver, foundedElement);
     }
 
     public void selectOptionById(String optionId) {
-        Actions action = new Actions(driver);
         DelayUtils.waitByXPath(wait, String.format(BY_ID_PATTERN, optionId, optionId));
         WebElement foundedElement = dropdownListElement
                 .findElement(By.xpath(String.format(BY_ID_PATTERN, optionId, optionId)));
-        action.moveToElement(foundedElement).click().perform();
+        WebElementUtils.clickWebElement(driver, foundedElement);
     }
 
     public void selectOptions(List<String> optionsId) {
@@ -68,16 +66,14 @@ public class DropdownList {
 
     public void search(String value) {
         clear();
-        Actions action = new Actions(driver);
         WebElement input = dropdownListElement.findElement(By.xpath(INPUT_XPATH));
-        action.moveToElement(input).click().build().perform();
+        WebElementUtils.clickWebElement(driver, input);
         input.sendKeys(value);
     }
 
     public void clear() {
-        Actions action = new Actions(driver);
         WebElement input = dropdownListElement.findElement(By.xpath(INPUT_XPATH));
-        action.moveToElement(input).click().build().perform();
+        WebElementUtils.clickWebElement(driver, input);
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }

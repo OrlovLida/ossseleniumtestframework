@@ -36,7 +36,7 @@ public class EditableList extends Widget {
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
     private static final String EMPTY_RESULTS_XPATH =
             "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
-    private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
+private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
     private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
     }
@@ -66,7 +66,7 @@ public class EditableList extends Widget {
 
     public Row getRowByValue(String columnId, String value) {
         List<Row> allRows = getVisibleRows();
-        for (Row row: allRows) {
+        for (Row row : allRows) {
             Row.Cell cell = row.getCell(columnId);
             String getValue = cell.getText();
             if (getValue.equals(value)) {
@@ -80,7 +80,7 @@ public class EditableList extends Widget {
         DelayUtils.waitByXPath(webDriverWait, XPATH_ROWS_OF_LIST);
         List<WebElement> listElements = webElement.findElements(By.xpath(XPATH_ROWS_OF_LIST));
         List<Row> rows = new ArrayList<>();
-        for (WebElement listElement: listElements) {
+        for (WebElement listElement : listElements) {
             rows.add(new Row(driver, webDriverWait, listElement));
         }
         return rows;
@@ -102,7 +102,6 @@ public class EditableList extends Widget {
     private List<CategoryList> getCategories() {
         return CategoryList.create(driver, webDriverWait, id);
     }
-
     public static class Row {
         private static final String ROW_CHECKBOX_XPATH = ".//div[contains(@class,'checkbox')]";
         private static final String CELL_PATTERN = ".//div[@" + CSSUtils.TEST_ID + "='%s']";
@@ -160,8 +159,7 @@ public class EditableList extends Widget {
             WebElement placeholdersAndActions = webElement.findElement(By.xpath(PLACEHOLDERS_XPATH));
             WebElement icon = placeholdersAndActions.findElement(By.xpath(String.format(ARIA_LABEL_PATTERN, ariaLabel)));
             DelayUtils.waitForClickability(wait, icon);
-            Actions action = new Actions(driver);
-            action.moveToElement(icon).click().build().perform();
+            WebElementUtils.clickWebElement(driver, icon);
         }
 
         private boolean isCheckboxPresent() {
@@ -203,8 +201,7 @@ public class EditableList extends Widget {
             }
 
             public void clearValue(String componentId, Input.ComponentType componentType) {
-                Actions action = new Actions(driver);
-                action.moveToElement(webElement).click().build().perform();
+                WebElementUtils.clickWebElement(driver, webElement);
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
                     Input input = ComponentFactory.create(componentId, componentType, driver, wait);
                     input.clear();

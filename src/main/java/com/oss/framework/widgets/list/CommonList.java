@@ -9,7 +9,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.categorylist.CategoryList;
@@ -18,6 +17,7 @@ import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class CommonList extends Widget {
@@ -170,8 +170,7 @@ public class CommonList extends Widget {
 
         public void setFavorite() {
             if (!isFavorite()) {
-                Actions action = new Actions(driver);
-                action.moveToElement(rowElement.findElement(By.xpath(STAR_BUTTON_XPATH))).click().build().perform();
+                WebElementUtils.clickWebElement(driver, rowElement.findElement(By.xpath(STAR_BUTTON_XPATH)));
             }
         }
 
@@ -188,8 +187,7 @@ public class CommonList extends Widget {
             WebElement placeholdersAndActions = rowElement.findElement(By.xpath(PLACE_HOLDERS_XPATH));
             WebElement icon = placeholdersAndActions.findElement(By.xpath(String.format(ICON_BY_ARIA_LABEL_PATTERN, ariaLabel)));
             DelayUtils.waitForClickability(wait, icon);
-            Actions action = new Actions(driver);
-            action.moveToElement(icon).click().build().perform();
+            WebElementUtils.clickWebElement(driver, icon);
         }
 
         public void callAction(String actionId) {
@@ -197,8 +195,7 @@ public class CommonList extends Widget {
             ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, rowElement);
             if (!rowElement.findElements(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId))).isEmpty()) {
                 WebElement button = rowElement.findElement(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId)));
-                Actions action = new Actions(driver);
-                action.moveToElement(button).click().perform();
+                WebElementUtils.clickWebElement(driver, button);
                 return;
             }
             InlineMenu.create(rowElement, driver, wait).callAction(actionId);
@@ -207,8 +204,7 @@ public class CommonList extends Widget {
         public void clickLink(String linkText) {
             DelayUtils.waitForElementToLoad(wait, rowElement);
             WebElement link = rowElement.findElement(By.xpath(String.format(LINK_PATTERN, linkText)));
-            Actions action = new Actions(driver);
-            action.moveToElement(link).click().build().perform();
+            WebElementUtils.clickWebElement(driver, link);
         }
 
         public void selectRow() {
