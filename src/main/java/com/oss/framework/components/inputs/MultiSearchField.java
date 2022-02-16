@@ -16,6 +16,7 @@ import com.oss.framework.utils.WebElementUtils;
 
 public class MultiSearchField extends Input {
     private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
+    private static final String SEARCH_ICON_CSS = "[aria-label='SEARCH']";
 
     private MultiSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -48,6 +49,7 @@ public class MultiSearchField extends Input {
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         dropdownList.selectOptionContains(value.getStringValue());
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_ICON_CSS)));
     }
 
     @Override
@@ -62,6 +64,7 @@ public class MultiSearchField extends Input {
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         dropdownList.selectOption(value.getStringValue());
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_ICON_CSS)));
     }
 
     @Override
