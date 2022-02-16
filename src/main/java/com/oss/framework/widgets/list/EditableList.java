@@ -16,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.categorylist.CategoryList;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.InlineForm;
@@ -35,7 +36,7 @@ public class EditableList extends Widget {
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
     private static final String EMPTY_RESULTS_XPATH =
             "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
-
+private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
     private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
     }
@@ -90,6 +91,17 @@ public class EditableList extends Widget {
         return !noData.isEmpty();
     }
 
+    public void expandCategory(String categoryName) {
+        CategoryList category = getCategories().stream()
+                .filter(categoryList -> categoryList.getValue().equals(categoryName))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryName));
+        category.expandCategory();
+    }
+
+    private List<CategoryList> getCategories() {
+        return CategoryList.create(driver, webDriverWait, id);
+    }
     public static class Row {
         private static final String ROW_CHECKBOX_XPATH = ".//div[contains(@class,'checkbox')]";
         private static final String CELL_PATTERN = ".//div[@" + CSSUtils.TEST_ID + "='%s']";

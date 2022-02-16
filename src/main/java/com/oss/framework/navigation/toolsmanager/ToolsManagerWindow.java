@@ -51,8 +51,12 @@ public class ToolsManagerWindow {
         return application.getApplicationsURL();
     }
 
-    public List<String> getCategoriesName() {
-        return getCategories().stream().map(Category::getName).collect(Collectors.toList());
+    public List<String> getApplicationNames(String categoryName) {
+       return getCategoryByName(categoryName).getApplications().stream().map(Application::getApplicationName).collect(Collectors.toList());
+    }
+
+    public List<String> getCategoriesName(){
+       return getCategories().stream().map(Category::getName).collect(Collectors.toList());
     }
 
     public String getCategoryDescription(String categoryName) {
