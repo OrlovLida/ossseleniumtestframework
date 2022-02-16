@@ -125,16 +125,16 @@ public class TreeWidgetV2 extends Widget {
         getSelectionBarComponent().hideSelectionBar();
     }
 
-    public void clickUnselectAllInSelectionBar() {
-        getSelectionBarComponent().clickUnselectAllButton();
+    public void unselectAllNodes() {
+        getSelectionBarComponent().unselectAll();
     }
 
-    public void clickShowOnlySelectedInSelectionBar() {
-        getSelectionBarComponent().clickShowOnlySelectedButton();
+    public void showSelectedNodes() {
+        getSelectionBarComponent().showSelected();
     }
 
-    public void clickShowAllInSelectionBar() {
-        getSelectionBarComponent().clickShowAllButton();
+    public void showAllInNodes() {
+        getSelectionBarComponent().showAll();
     }
 
     public String getSelectedObjectCount() {
