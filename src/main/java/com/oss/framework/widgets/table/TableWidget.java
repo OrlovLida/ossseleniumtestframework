@@ -279,16 +279,16 @@ public class TableWidget extends Widget implements TableInterface {
         getSelectionBarComponent().hideSelectionBar();
     }
 
-    public void clickUnselectAllInSelectionBar() {
-        getSelectionBarComponent().clickUnselectAllButton();
+    public void unselectAllRows() {
+        getSelectionBarComponent().unselectAll();
     }
 
-    public void clickShowOnlySelectedInSelectionBar() {
-        getSelectionBarComponent().clickShowOnlySelectedButton();
+    public void showOnlySelectedRows() {
+        getSelectionBarComponent().showSelected();
     }
 
-    public void clickShowAllInSelectionBar() {
-        getSelectionBarComponent().clickShowAllButton();
+    public void showAllRows() {
+        getSelectionBarComponent().showAll();
     }
 
     public String getSelectedObjectCount() {
