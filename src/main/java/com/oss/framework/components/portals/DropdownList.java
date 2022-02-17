@@ -17,8 +17,8 @@ public class DropdownList {
     public static final String PORTAL_CLASS = "portal";
     private static final String INPUT_XPATH = ".//div[@class='search-cont']//input";
     private static final String BY_ID_PATTERN = ".portal [" + CSSUtils.TEST_ID + "='%s'],.portal #%s";
-    private static final String BY_TEXT_PATTERN = "div[@class='portal']//*[text()='%s']";
-    private static final String BY_TEXT_CONTAINS_PATTERN = "div[@class='portal']//*[contains(text(), '%s')]";
+    private static final String BY_TEXT_PATTERN = "//div[@class='portal']//*[text()='%s']";
+    private static final String BY_TEXT_CONTAINS_PATTERN = "//div[@class='portal']//*[contains(text(), '%s')]";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
