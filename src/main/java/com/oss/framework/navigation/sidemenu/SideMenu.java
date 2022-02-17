@@ -28,8 +28,11 @@ public class SideMenu {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SideMenu.class);
     private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menuLevel']//div[@data-testid='%s']";
-    private static final String SIDE_MENU_CLASS = ".//div[@class='sideMenu'] | .//div[@class='sideMenu alpha-mode']";
-    private static final String SIDE_MENU_HOME = ".//div[@class='sideMenu alpha-mode']//div[@data-testid='Home']";
+    private static final String SIDE_MENU_XPATH = ".//div[@class='sideMenu'] | .//div[@class='sideMenu alpha-mode']";
+    private static final String SIDE_MENU_HOME_XPATH = ".//div[@class='sideMenu alpha-mode']//div[@data-testid='Home']";
+    private static final String HOVER_MODE_XPATH = "//nav[@id='ossSideMenu' and contains(@class, 'hover-mode')]";
+    private static final String SIDE_MENU_BUTTON_CSS = "button.menuButton.alpha-mode";
+    private static final String OPEN_SIDE_MENU_CSS = ".alpha-mode.open";
     private static final String CLASS = "class";
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -45,6 +48,7 @@ public class SideMenu {
 
     public void callActionByLabel(String testid, String... paths) {
         DelayUtils.waitForLoadBars(wait, getSideMenu());
+        turnOffHoverMode();
         moveToTopOfSideMenu();
         for (String path : paths) {
             callAction(path);
@@ -55,8 +59,8 @@ public class SideMenu {
     }
 
     private WebElement getSideMenu() {
-        DelayUtils.waitByXPath(wait, SIDE_MENU_CLASS);
-        return driver.findElement(By.xpath(SIDE_MENU_CLASS));
+        DelayUtils.waitByXPath(wait, SIDE_MENU_XPATH);
+        return driver.findElement(By.xpath(SIDE_MENU_XPATH));
     }
 
     private void callAction(String testid) {
@@ -112,8 +116,8 @@ public class SideMenu {
             moveOnTheSideMenu(Keys.HOME);
         }
         LOGGER.info("Moving to the top of side menu.");
-        action.moveToElement(driver.findElement(By.xpath(SIDE_MENU_HOME))).build().perform();
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(SIDE_MENU_HOME)));
+        action.moveToElement(driver.findElement(By.xpath(SIDE_MENU_HOME_XPATH))).build().perform();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(SIDE_MENU_HOME_XPATH)));
     }
 
     private void moveOnTheSideMenu(Keys key) {
@@ -125,7 +129,7 @@ public class SideMenu {
     }
 
     private boolean isHomePresent() {
-        return isElementPresent(By.xpath(SIDE_MENU_HOME));
+        return isElementPresent(By.xpath(SIDE_MENU_HOME_XPATH));
     }
 
     private boolean isElementPresent(By by) {
@@ -156,5 +160,17 @@ public class SideMenu {
             wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, "isExpanded"));
         }
         LOGGER.info("{} expanded.", path);
+    }
+
+    private boolean isHoverModeOn() {
+        return WebElementUtils.isElementPresent(driver, By.xpath(HOVER_MODE_XPATH));
+    }
+
+    private void turnOffHoverMode() {
+        if (isHoverModeOn()) {
+            LOGGER.info("Turning off hover mode in side menu.");
+            WebElement menuButton = driver.findElement(By.cssSelector(SIDE_MENU_BUTTON_CSS));
+            WebElementUtils.clickWithRetry(driver, menuButton, By.cssSelector(OPEN_SIDE_MENU_CSS));
+        }
     }
 }
