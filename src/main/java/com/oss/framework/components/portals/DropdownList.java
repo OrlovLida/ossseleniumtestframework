@@ -16,9 +16,9 @@ public class DropdownList {
 
     public static final String PORTAL_CLASS = "portal";
     private static final String INPUT_XPATH = ".//div[@class='search-cont']//input";
-    private static final String BY_ID_PATTERN = "//*[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s']";
-    private static final String BY_TEXT_PATTERN = ".//*[text()='%s']";
-    private static final String BY_TEXT_CONTAINS_PATTERN = ".//*[contains(text(), '%s')]";
+    private static final String BY_ID_PATTERN = ".portal [" + CSSUtils.TEST_ID + "='%s'],.portal #%s";
+    private static final String BY_TEXT_PATTERN = "//div[@class='portal']//*[text()='%s']";
+    private static final String BY_TEXT_CONTAINS_PATTERN = "//div[@class='portal']//*[contains(text(), '%s')]";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -38,21 +38,20 @@ public class DropdownList {
     public void selectOption(String optionLabel) {
         DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, optionLabel))));
         WebElement foundedElement =
-                dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, optionLabel)));
+                driver.findElement(By.xpath(String.format(BY_TEXT_PATTERN, optionLabel)));
         foundedElement.click();
     }
 
     public void selectOptionContains(String optionLabel) {
         DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, optionLabel))));
         WebElement foundedElement =
-                dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, optionLabel)));
+                driver.findElement(By.xpath(String.format(BY_TEXT_CONTAINS_PATTERN, optionLabel)));
         WebElementUtils.clickWebElement(driver, foundedElement);
     }
 
     public void selectOptionById(String optionId) {
-        DelayUtils.waitByXPath(wait, String.format(BY_ID_PATTERN, optionId, optionId));
-        WebElement foundedElement = dropdownListElement
-                .findElement(By.xpath(String.format(BY_ID_PATTERN, optionId, optionId)));
+        DelayUtils.waitBy(wait, By.cssSelector(String.format(BY_ID_PATTERN, optionId, optionId)));
+        WebElement foundedElement = driver.findElement(By.cssSelector(String.format(BY_ID_PATTERN, optionId, optionId)));
         WebElementUtils.clickWebElement(driver, foundedElement);
     }
 
