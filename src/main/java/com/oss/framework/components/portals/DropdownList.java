@@ -32,6 +32,7 @@ public class DropdownList {
 
     public static DropdownList create(WebDriver driver, WebDriverWait webDriverWait) {
         WebElement dropdownList = driver.findElement(By.className(PORTAL_CLASS));
+        DelayUtils.waitForElementToLoad(webDriverWait, dropdownList);
         return new DropdownList(driver, webDriverWait, dropdownList);
     }
 
