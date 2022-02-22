@@ -72,7 +72,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     public void selectFirstSearchResult() {
-        WebElement firstResult = getToolbar().findElement(By.xpath(".//*[starts-with(@class, 'resultsPopup')]/ol/li[1]"));
+        WebElement firstResult = getToolbar().findElement(By.xpath("//*[starts-with(@class, 'resultsPopup')]/ol/li[1]"));
         Actions action = new Actions(driver);
         action.moveToElement(firstResult)
                 .click(firstResult)
