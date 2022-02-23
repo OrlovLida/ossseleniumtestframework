@@ -23,7 +23,7 @@ import com.oss.framework.utils.DragAndDrop;
 /**
  * @author Gabriela Zaranek
  */
-class Category {
+public class Category {
     private static final String CATEGORIES_NAME_CLASS = "categories__bar__content__name";
     private static final String CANNOT_FIND_CATEGORY_WITH_PROVIDED_NAME_EXCEPTION = "Cannot find category with provided name";
     private static final String CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS = "div.categories__bar__content__name";
@@ -80,7 +80,7 @@ class Category {
         }
     }
 
-    void expandCategory() {
+    public void expandCategory() {
         if (!isCategoryExpanded()) {
             toggleCategory();
         }
