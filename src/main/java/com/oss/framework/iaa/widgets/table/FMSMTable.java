@@ -1,15 +1,15 @@
 package com.oss.framework.iaa.widgets.table;
 
-import java.util.List;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 /**
  * @author Bartosz Nowak
@@ -42,7 +42,11 @@ public class FMSMTable extends Widget {
         return cell.getValue();
     }
 
-    private static class Cell {
+    public Cell getCell(int row, String columnId) {
+        return Cell.create(webElement, row, columnId);
+    }
+
+    public static class Cell {
         private static final String OSS_ICON_CLASS = "OSSIcon";
         private static final String OSS_ICON_CLASS_XPATH = "//i[contains(@class, '" + OSS_ICON_CLASS + "')]";
         private static final String OSS_ICON_VALUE = "title";
@@ -60,7 +64,7 @@ public class FMSMTable extends Widget {
             return new Cell(cells.get(index));
         }
 
-        private String getValue() {
+        public String getValue() {
             if (isIconPresent()) {
                 return getAttributeValue();
             } else {
@@ -74,6 +78,16 @@ public class FMSMTable extends Widget {
 
         private String getAttributeValue() {
             return cellElement.findElement(By.xpath(OSS_ICON_VALUE_XPATH)).getAttribute(OSS_ICON_VALUE);
+        }
+
+        public void waitForExpectedValue(WebDriverWait wait, String value){
+            if (isIconPresent()) {
+                DelayUtils.sleep(2000);
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//span[@title='" + value + "']")));
+            } else {
+                DelayUtils.sleep(2000);
+                wait.until(ExpectedConditions.textToBePresentInElement(cellElement,value));
+            }
         }
     }
 }

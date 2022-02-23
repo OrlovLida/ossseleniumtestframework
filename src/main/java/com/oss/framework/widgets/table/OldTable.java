@@ -22,6 +22,7 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.components.inputs.Input.ComponentType;
+import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
@@ -259,6 +260,10 @@ public class OldTable extends Widget implements TableInterface {
         predefinedFilter.selectPredefinedFilter();
     }
 
+    public void fullTextSearch(String text) {
+        getAdvancedSearch().fullTextSearch(text);
+    }
+
     private Column getColumn(String columnLabel) {
         Map<String, Column> columns = createColumnsFilters();
         if (columns.containsKey(columnLabel)) {
@@ -300,6 +305,10 @@ public class OldTable extends Widget implements TableInterface {
         WebElementUtils.clickWebElement(driver, columnsSettingsIcon);
         DelayUtils.waitBy(webDriverWait, By.className(STICKY_COLUMNS_SETTINGS_CLASS));
         return driver.findElement(By.className(STICKY_COLUMNS_SETTINGS_CLASS));
+    }
+
+    private AdvancedSearch getAdvancedSearch() {
+        return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
     }
 
     private static class Column {

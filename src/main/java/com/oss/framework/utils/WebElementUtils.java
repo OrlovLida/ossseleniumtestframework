@@ -38,9 +38,9 @@ public class WebElementUtils {
         DelayUtils.waitForPresence(new WebDriverWait(driver, 10), elementToWait);
     }
 
-    public static boolean isElementPresent(WebDriver driver, By elementToWait) {
+    public static boolean isElementPresent(WebDriver driver, By by) {
         try {
-            DelayUtils.waitForPresence(new WebDriverWait(driver, 10), elementToWait);
+            DelayUtils.waitForPresence(new WebDriverWait(driver, 10), by);
             return true;
         } catch (TimeoutException e) {
             LOGGER.info(ELEMENT_NOT_PRESENT_INFO);
@@ -48,7 +48,7 @@ public class WebElementUtils {
         }
     }
 
-    public static boolean isElementPresent(WebElement webElement, By elementToWait) {
-        return !webElement.findElements(elementToWait).isEmpty();
+    public static boolean isElementPresent(WebElement webElement, By by) {
+        return !webElement.findElements(by).isEmpty();
     }
 }
