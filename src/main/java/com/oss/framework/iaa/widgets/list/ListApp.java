@@ -1,8 +1,7 @@
 package com.oss.framework.iaa.widgets.list;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,8 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListApp {
 
@@ -41,7 +40,7 @@ public class ListApp {
 
     public List<String> getValue() {
         List<String> values = getRows()
-                .stream().map(row -> row.findElement(By.xpath(".//div[contains(@class, 'text-default')]")))
+                .stream().map(row -> row.findElement(By.xpath(".//div[contains(@class, 'textFieldCont')]")))
                 .map(WebElement::getText).collect(Collectors.toList());
         log.debug("Getting all values from app list");
         return values;
