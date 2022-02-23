@@ -15,6 +15,7 @@ public class SelectionBarComponent {
     private static final String UNSELECT_ALL_BUTTON_CSS = "[" + CSSUtils.TEST_ID + "=unselect-all-button]";
     private static final String VISIBLE_SELECTION_BAR_CSS = ".selection-bar";
     private static final String TOGGLE_BUTTON_CSS = "[" + CSSUtils.TEST_ID + "=selection-bar-toggler-button]";
+    private static final String SHOW_ONLY_SELECTED_BUTTON_ACTIVE_XPATH = "//*[@ " + CSSUtils.TEST_ID + "='show-selected-only-button' and text() = 'Show Selected']";
 
     private final WebDriverWait wait;
     private final WebElement widget;
@@ -74,6 +75,6 @@ public class SelectionBarComponent {
     }
 
     private boolean isShowSelectedPresent() {
-        return !widget.findElements(By.cssSelector(SHOW_ONLY_SELECTED_BUTTON_CSS)).isEmpty();
+        return !widget.findElements(By.xpath(SHOW_ONLY_SELECTED_BUTTON_ACTIVE_XPATH)).isEmpty();
     }
 }
