@@ -62,9 +62,14 @@ public class Application {
     }
     
     String getApplicationsURL() {
-        return applicationBox
-                .findElement(By.xpath(APPLICATION_LINK_XPATH))
-                .getAttribute("href");
+        try {
+            return applicationBox
+                    .findElement(By.xpath(APPLICATION_LINK_XPATH))
+                    .getAttribute("href");
+        } catch (Exception e) {
+            return null;
+        }
+        
     }
     
     public String getApplicationName() {
