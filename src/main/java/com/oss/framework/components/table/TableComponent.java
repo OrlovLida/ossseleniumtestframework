@@ -69,7 +69,6 @@ public class TableComponent {
         row.clickRow();
     }
 
-
     public void selectAll() {
         Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).click();
     }
@@ -195,8 +194,6 @@ public class TableComponent {
         }
         return paginationComponent;
     }
-
-
 
     private CustomScrolls getCustomScrolls() {
         return CustomScrolls.create(driver, webDriverWait, webElement);
@@ -571,13 +568,11 @@ public class TableComponent {
 
         public void clickRow() {
             Actions actions = new Actions(driver);
-            WebElement randomCell =
-                    this.tableComponent.findElements(By.cssSelector("[data-row='" + this.index + "']" + ":not(.table-component__cell__checkbox)"))
-                            .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
+            WebElement randomCell = this.tableComponent.findElements(By.cssSelector("[data-row='" + this.index + "']" + ":not(.table-component__cell__checkbox)"))
+                    .stream().findAny()
+                    .orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
             actions.moveToElement(randomCell).click(randomCell).build().perform();
         }
-
-
 
         public void selectRow() {
             if (!isSelected()) {

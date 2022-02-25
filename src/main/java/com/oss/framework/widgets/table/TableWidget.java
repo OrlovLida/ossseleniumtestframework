@@ -41,12 +41,10 @@ public class TableWidget extends Widget implements TableInterface {
     public void selectRow(int row) {
         getTableComponent().selectRow(row);
     }
-    //@Override
+
     public void clickRow(int row) {
         getTableComponent().clickRow(row);
     }
-
-
 
     @Override
     public int getColumnSize(int columnIndex) {
@@ -300,7 +298,6 @@ public class TableWidget extends Widget implements TableInterface {
     public String getSelectedObjectCount() {
         return getSelectionBarComponent().getSelectedObjectsCount();
     }
-
 
     public AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
