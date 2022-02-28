@@ -64,6 +64,11 @@ public class TableComponent {
         row.selectRow();
     }
 
+    public void clickRow(int index) {
+        Row row = getRow(index);
+        row.clickRow();
+    }
+
     public void selectAll() {
         Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).click();
     }
@@ -563,27 +568,33 @@ public class TableComponent {
 
         public void clickRow() {
             Actions actions = new Actions(driver);
-            WebElement randomCell =
-                    this.tableComponent.findElements(By.xpath(".//div[@data-row='" + this.index + "']"))
-                            .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
+            WebElement randomCell = this.tableComponent.findElements(By.cssSelector("[data-row='" + this.index + "']" + ":not(.table-component__cell__checkbox)"))
+                    .stream().findAny()
+                    .orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
             actions.moveToElement(randomCell).click(randomCell).build().perform();
         }
 
         public void selectRow() {
             if (!isSelected()) {
-                Cell cell;
-                if (Cell.hasCheckboxCell(this.tableComponent, index)) {
-                    cell = Cell.createCheckboxCell(driver, this.tableComponent, index);
-                } else {
-                    cell = Cell.createRandomCell(driver, this.tableComponent, index);
-                }
+                Cell cell = getCell();
                 cell.click();
             }
         }
 
+        private Cell getCell() {
+            Cell cell;
+            if (Cell.hasCheckboxCell(this.tableComponent, index)) {
+                cell = Cell.createCheckboxCell(driver, this.tableComponent, index);
+            } else {
+                cell = Cell.createRandomCell(driver, this.tableComponent, index);
+            }
+            return cell;
+        }
+
         public void unselectRow() {
             if (isSelected()) {
-                clickRow();
+                Cell cell = getCell();
+                cell.click();
             }
         }
 
@@ -594,6 +605,7 @@ public class TableComponent {
             InlineMenu menu = InlineMenu.create(tableComponent, driver, webDriverWait);
             menu.callAction(groupId, actionId);
         }
+
     }
 
 }
