@@ -34,7 +34,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private static final String CLOSE_MESSAGE_CONTAINER_BUTTON = ".//i[@aria-label='Close']";
     private static final String PATH_TO_SHOW_MESSAGES = ".//i[@aria-label='Show/Hide messages' and contains(@class, 'down')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_CONTAINER = "//div[contains(@class, 'systemMessagesContainer')]";
-    private static final String PATH_TO_SYSTEM_MESSAGE_ITEM = "//div[contains(@class,'systemMessageItem')]";
+    private static final String MESSAGE_XPATH = ".//p | .//a";
+    private static final String SYSTEM_MESSAGE_ITEM_CLASS = "systemMessageItem";
     private static final String DANGER_MESSAGE_TYPE_CLASS = "danger";
     private static final String SUCCESS_MESSAGE_TYPE_CLASS = "success";
     private static final String WARNING_MESSAGE_TYPE_CLASS = "warning";
@@ -61,8 +62,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
     @Override
     public List<Message> getMessages() {
         log.info("Starting getting messages");
-        DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
-        List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
+        DelayUtils.waitForPresence(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
+        List<WebElement> messageItems = messageContainer.findElements(By.className(SYSTEM_MESSAGE_ITEM_CLASS));
         log.info("Found {} system messages", messageItems.size());
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
@@ -83,13 +84,13 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void clickMessageLink() {
-        DelayUtils.waitForNestedElements(wait, messageContainer, PATH_TO_SYSTEM_MESSAGE_ITEM);
+        DelayUtils.waitForPresence(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
         messageContainer.findElement(By.xpath(".//a[contains(@href, '#')]")).click();
     }
 
     @Override
     public void waitForMessageDisappear() {
-        DelayUtils.waitForElementDisappear(wait, driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM)));
+        DelayUtils.waitForElementDisappear(wait, driver.findElement(By.className(SYSTEM_MESSAGE_ITEM_CLASS)));
     }
 
     @Override
@@ -108,7 +109,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
         log.info("Checking errors");
         DelayUtils.waitForPageToLoad(driver, wait);
         expandSystemMessagesContainer();
-        List<WebElement> messageItems = messageContainer.findElements(By.xpath(PATH_TO_SYSTEM_MESSAGE_ITEM));
+        List<WebElement> messageItems = messageContainer.findElements(By.className(SYSTEM_MESSAGE_ITEM_CLASS));
         List<Message> messages = messageItems.stream().map(this::toMessage).collect(Collectors.toList()).stream()
                 .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER)).collect(Collectors.toList());
         log.info("Found {} error messages", messages.size());
@@ -144,7 +145,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     private Message toMessage(WebElement messageItem) {
-        String text = messageItem.findElement(By.xpath(".//p | .//a")).getText();
+        DelayUtils.waitForNestedElements(wait, messageItem, MESSAGE_XPATH);
+        String text = messageItem.findElement(By.xpath(MESSAGE_XPATH)).getText();
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);
         return new Message(text, mapToMassageType(allClasses));
     }
