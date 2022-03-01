@@ -25,6 +25,7 @@ public class DelayUtils {
     public static final String OSS_APP_XPATH = "//div[@id='ossApp']";
     public static final String INTERRUPTED_EXCEPTION = "Interrputed exception occured.";
     private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
+    private static final String SKELETON_PRELOADER_2_CLASS = "skeletonPreloader";
 
     private DelayUtils() {
         throw new IllegalStateException("Utility class");
@@ -151,6 +152,7 @@ public class DelayUtils {
         List<WebElement> loadBars = driver.findElements(By.xpath(LOAD_BARS_XPATH));
         List<WebElement> barsLoader = driver.findElements(By.xpath(BARS_LOADERS_XPATH));
         List<WebElement> skeletonPreloader = driver.findElements(By.xpath(SKELETON_PRELOADERS_XPATH));
+        List<WebElement> skeletonPreloader2 = driver.findElements(By.className(SKELETON_PRELOADER_2_CLASS));
         List<WebElement> actionInProgress = driver.findElements(By.xpath(ACTION_IN_PROGRESS_XPATH));
         List<WebElement> newList = new ArrayList<>(faSpins);
         newList.addAll(spinners);
@@ -158,6 +160,7 @@ public class DelayUtils {
         newList.addAll(barsLoader);
         newList.addAll(skeletonPreloader);
         newList.addAll(actionInProgress);
+        newList.addAll(skeletonPreloader2);
         return newList;
     }
 
