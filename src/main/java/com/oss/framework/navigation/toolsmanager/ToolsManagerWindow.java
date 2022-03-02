@@ -19,8 +19,7 @@ public class ToolsManagerWindow {
     
     private static final String ADD_CATEGORY_BUTTON_CLASS = "views-manager__bar__add-category";
     private static final String SEARCH_TEST_ID = "search";
-    private static final String TOOLS_MANAGER_XPATH = "//div[contains(@class, 'views-manager')]";
-    private static final String VIEWS_MANAGER_CLASS = "views-manager";
+    private static final String VIEWS_MANAGER_CLASS = "tools-manager";
     private static final String CANNOT_LOCATE_TOOLS_MANAGER_WINDOW_EXCEPTION = "Cannot locate Tools Manager Window";
     private static final String CANNOT_FIND_APPLICATION_WITH_NAME_EXCEPTION = "Cannot find Application with name: ";
     private static final String CANNOT_FIND_SUBCATEGORY_WITH_NAME_EXCEPTION = "Cannot find Subcategory with name: ";
@@ -39,7 +38,7 @@ public class ToolsManagerWindow {
     
     public static ToolsManagerWindow create(WebDriver driver, WebDriverWait wait) {
         try {
-            DelayUtils.waitBy(wait, By.xpath(TOOLS_MANAGER_XPATH));
+            DelayUtils.waitBy(wait, By.className(VIEWS_MANAGER_CLASS));
             WebElement toolsManager = driver.findElement(By.className(VIEWS_MANAGER_CLASS));
             return new ToolsManagerWindow(driver, wait, toolsManager);
         } catch (Exception exception) {
