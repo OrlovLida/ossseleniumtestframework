@@ -95,9 +95,10 @@ public class Subcategory {
         return new DragAndDrop.DraggableElement(dragButton);
     }
     
-    public void markAsFavorite() {
-        if (!isFavorite())
+    public void setFavorite() {
+        if (!isFavorite()) {
             WebElementUtils.clickWebElement(driver, getStar());
+        }
     }
     
     public boolean isFavorite() {
@@ -105,7 +106,6 @@ public class Subcategory {
     }
     
     public String getBadge() {
-        
         return subcategoryElement.findElement(By.cssSelector(BADGE_CSS)).getText();
         
     }

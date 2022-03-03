@@ -3,6 +3,7 @@ package com.oss.framework.navigation.toolsmanager;
 import static com.oss.framework.utils.DragAndDrop.dragAndDrop;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -17,8 +18,9 @@ import com.oss.framework.utils.DelayUtils;
 
 public class ToolsManagerWindow {
     
-    private static final String ADD_CATEGORY_BUTTON_CLASS = "views-manager__bar__add-category";
+    private static final String ADD_CATEGORY_BUTTON_CLASS = "tools-manager__bar__add-category";
     private static final String SEARCH_TEST_ID = "search";
+    private static final String VIEWS_MANAGER_CSS = ".tools-manager .categories";
     private static final String VIEWS_MANAGER_CLASS = "tools-manager";
     private static final String CANNOT_LOCATE_TOOLS_MANAGER_WINDOW_EXCEPTION = "Cannot locate Tools Manager Window";
     private static final String CANNOT_FIND_APPLICATION_WITH_NAME_EXCEPTION = "Cannot find Application with name: ";
@@ -38,7 +40,7 @@ public class ToolsManagerWindow {
     
     public static ToolsManagerWindow create(WebDriver driver, WebDriverWait wait) {
         try {
-            DelayUtils.waitBy(wait, By.className(VIEWS_MANAGER_CLASS));
+            DelayUtils.waitBy(wait, By.cssSelector(VIEWS_MANAGER_CSS));
             WebElement toolsManager = driver.findElement(By.className(VIEWS_MANAGER_CLASS));
             return new ToolsManagerWindow(driver, wait, toolsManager);
         } catch (Exception exception) {
@@ -46,7 +48,7 @@ public class ToolsManagerWindow {
         }
     }
     
-    public String getApplicationURL(String applicationName) {
+    public Optional<String> getApplicationURL(String applicationName) {
         Application application = Application.createApplicationByName(driver, wait, toolsManager, applicationName);
         return application.getApplicationsURL();
     }

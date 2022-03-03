@@ -6,6 +6,8 @@
  */
 package com.oss.framework.navigation.toolsmanager;
 
+import java.util.Optional;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -20,7 +22,7 @@ import com.oss.framework.utils.WebElementUtils;
  * @author Gabriela Zaranek
  */
 public class Application {
-    private static final String APPLICATION_LINK_XPATH = ".//a[@class='category-box__content__link']";
+    private static final String APPLICATION_LINK_CSS = ".category-box__content__link";
     private static final String APPLICATIONS_IN_SUBCATEGORY_CSS = "div.category-box";
     private static final String APPLICATION_LINK_CLASS = "category-box__content__link";
     private static final String CANNOT_FIND_APPLICATION_BOX_WITH_PROVIDED_NAME_EXCEPTION =
@@ -61,15 +63,14 @@ public class Application {
         InlineMenu.create(applicationBox, driver, wait).callAction(actionId);
     }
     
-    String getApplicationsURL() {
-        try {
-            return applicationBox
-                    .findElement(By.xpath(APPLICATION_LINK_XPATH))
-                    .getAttribute("href");
-        } catch (Exception e) {
-            return null;
-        }
-        
+    Optional<String> getApplicationsURL() {
+        boolean isLinkPresent = !applicationBox.findElements(By.cssSelector(APPLICATION_LINK_CSS)).isEmpty();
+        if (isLinkPresent) {
+            return Optional.ofNullable(applicationBox
+                    .findElement(By.cssSelector(APPLICATION_LINK_CSS))
+                    .getAttribute("href"));
+        } else
+            return Optional.empty();
     }
     
     public String getApplicationName() {
@@ -89,7 +90,7 @@ public class Application {
         return getStar().getAttribute("aria-label").equals("FAVOURITE");
     }
     
-    public void markAsFavorite() {
+    public void setFavorite() {
         if (!isFavorite()) {
             WebElementUtils.clickWebElement(driver, getStar());
         }
