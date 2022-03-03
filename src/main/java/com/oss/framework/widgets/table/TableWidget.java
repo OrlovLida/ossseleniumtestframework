@@ -42,6 +42,10 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().selectRow(row);
     }
 
+    public void clickRow(int row) {
+        getTableComponent().clickRow(row);
+    }
+
     @Override
     public int getColumnSize(int columnIndex) {
         return getTableComponent().getColumnSizeByPosition(columnIndex);
