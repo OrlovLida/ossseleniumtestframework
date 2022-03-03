@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.data.Data;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 /**
  * @author Gabriela Zaranek
@@ -80,12 +81,10 @@ public class SearchBox extends Input {
                 .click()
                 .sendKeys(Keys.ENTER)
                 .perform();
-        
     }
     
     private boolean isDropdownPresent() {
-        DelayUtils.sleep(3000);
-        return !driver.findElements(By.cssSelector(DROPDOWN_CSS)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.cssSelector(DROPDOWN_CSS));
     }
     
     private DropdownList getDropdown() {
