@@ -51,13 +51,19 @@ public class SelectionBarComponent {
     }
 
     public void showSelected() {
-        if (isActive() && isShowSelectedPresent()) {
+        if (!isActive()) {
+            openSelectionBar();
+        }
+        if (isShowSelectedPresent()) {
             widget.findElement(By.cssSelector(SHOW_ONLY_SELECTED_BUTTON_CSS)).click();
         }
     }
 
     public void showAll() {
-        if (isActive() && !isShowSelectedPresent()) {
+        if (!isActive()) {
+            openSelectionBar();
+        }
+        if (!isShowSelectedPresent()) {
             widget.findElement(By.cssSelector(SHOW_ONLY_SELECTED_BUTTON_CSS)).click();
         }
     }
