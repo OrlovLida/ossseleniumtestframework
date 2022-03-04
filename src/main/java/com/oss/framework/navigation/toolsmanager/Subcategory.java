@@ -54,13 +54,10 @@ public class Subcategory {
         return new Subcategory(subcategory, driver, wait);
     }
     
-    public String getSubcategoryName() {
+    String getSubcategoryName() {
         String subcategoryFullText = subcategoryElement.findElement(By.cssSelector(SUBCATEGORIES_NAME_CSS)).getAttribute("textContent");
-        if (isBadgePresent()) {
-            String badge = getBadge();
-            return subcategoryFullText.split(badge)[0];
-        } else
-            return subcategoryFullText;
+        String badge = getBadge();
+        return subcategoryFullText.split(badge)[0];
     }
     
     public void callAction(String actionId) {
@@ -95,7 +92,7 @@ public class Subcategory {
         return new DragAndDrop.DraggableElement(dragButton);
     }
     
-    public void setFavorite() {
+    public void markFavorite() {
         if (!isFavorite()) {
             WebElementUtils.clickWebElement(driver, getStar());
         }
@@ -123,7 +120,4 @@ public class Subcategory {
         return expandedText.equals("Less");
     }
     
-    private boolean isBadgePresent() {
-        return !subcategoryElement.findElements(By.cssSelector(BADGE_CSS)).isEmpty();
-    }
 }

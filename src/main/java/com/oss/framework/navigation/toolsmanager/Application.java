@@ -6,6 +6,7 @@
  */
 package com.oss.framework.navigation.toolsmanager;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.openqa.selenium.By;
@@ -29,7 +30,10 @@ public class Application {
             "Cannot find Application Box with provided name";
     private static final String DRAG_BUTTON_XPATH = "../../../div[contains(@class,'draggableBox')]//div[@class='btn-drag tile-drag']";
     private static final String APPLICATION_BOX_CSS = "div.category-box__content";
-    
+    private static final String FAVOURITE = "FAVOURITE";
+    private static final String OSSICON_CSS = ".OSSIcon";
+    private static final String ARIA_LABEL = "aria-label";
+
     private WebDriver driver;
     private WebDriverWait wait;
     private WebElement applicationBox;
@@ -64,11 +68,9 @@ public class Application {
     }
     
     Optional<String> getApplicationsURL() {
-        boolean isLinkPresent = !applicationBox.findElements(By.cssSelector(APPLICATION_LINK_CSS)).isEmpty();
-        if (isLinkPresent) {
-            return Optional.ofNullable(applicationBox
-                    .findElement(By.cssSelector(APPLICATION_LINK_CSS))
-                    .getAttribute("href"));
+        List<WebElement> links = applicationBox.findElements(By.cssSelector(APPLICATION_LINK_CSS));
+        if (!links.isEmpty()) {
+            return Optional.of(links.get(0).getAttribute("href"));
         } else
             return Optional.empty();
     }
@@ -87,17 +89,17 @@ public class Application {
     }
     
     public boolean isFavorite() {
-        return getStar().getAttribute("aria-label").equals("FAVOURITE");
+        return getStar().getAttribute(ARIA_LABEL).equals(FAVOURITE);
     }
     
-    public void setFavorite() {
+    public void markFavorite() {
         if (!isFavorite()) {
             WebElementUtils.clickWebElement(driver, getStar());
         }
     }
     
     private WebElement getStar() {
-        return applicationBox.findElement(By.cssSelector(".OSSIcon"));
+        return applicationBox.findElement(By.cssSelector(OSSICON_CSS));
     }
     
 }
