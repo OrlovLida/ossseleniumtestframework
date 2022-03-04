@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.WebElementUtils;
 
-public class InlineMenu {
+public class InlineMenu implements InlineMenuInterface {
 
     private static final String GROUP_BUTTON_ID = "frameworkObjectButtonsGroup";
 
@@ -28,14 +28,28 @@ public class InlineMenu {
         return new InlineMenu(webElement, driver, wait);
     }
 
+    @Override
     public void callAction(String actionId) {
         expandKebabMenu();
         DropdownList.create(driver, wait).selectOptionById(actionId);
     }
 
+    @Override
     public void callAction(String groupId, String actionId) {
         expandKebabMenu();
         DropdownList.create(driver, wait).selectOptions(Arrays.asList(groupId, actionId));
+    }
+
+    @Override
+    public void callActionByLabel(String actionLabel) {
+        expandKebabMenu();
+        DropdownList.create(driver, wait).selectOption(actionLabel);
+    }
+
+    @Override
+    public void callActionByLabel(String groupLabel, String actionLabel) {
+        expandKebabMenu();
+        DropdownList.create(driver, wait).selectOptionsByLabels(Arrays.asList(groupLabel, actionLabel));
     }
 
     private void expandKebabMenu() {
