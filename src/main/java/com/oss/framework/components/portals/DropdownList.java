@@ -60,6 +60,10 @@ public class DropdownList {
         optionsId.forEach(this::selectOptionById);
     }
 
+    public void selectOptionsByLabels(List<String> optionsLabels) {
+        optionsLabels.forEach(this::selectOption);
+    }
+
     public void selectOptionsContains(List<String> options) {
         options.forEach(this::selectOptionContains);
     }
