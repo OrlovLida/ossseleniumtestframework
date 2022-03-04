@@ -221,15 +221,15 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clearFilter(filterName);
     }
 
-    public void markFilterAsFavByLabel(String label) {
+    public void setFavoriteFilter(String label) {
         openAdvancedSearch();
-        getAdvancedSearch().markFilterAsFavByLabel(label);
+        getAdvancedSearch().setFavoriteFilter(label);
         getAdvancedSearch().clickCancel();
     }
 
     public void chooseSavedFiltersByLabel(String label) {
         openAdvancedSearch();
-        getAdvancedSearch().chooseSavedFilterByLabel(label);
+        getAdvancedSearch().selectSavedFilterByLabel(label);
         getAdvancedSearch().clickApply();
     }
 

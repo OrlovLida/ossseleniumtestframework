@@ -97,8 +97,8 @@ public class AdvancedSearch {
         return getSearchPanel();
     }
 
-    public void markFilterAsFavByLabel(String label) {
-        openFiltersSettings().markFilterAsFavByLabel(label);
+    public void setFavoriteFilter(String label) {
+        openFiltersSettings().setFavoriteFilter(label);
     }
 
     public void selectAttributes(List<String> attributeIds) {
@@ -109,8 +109,8 @@ public class AdvancedSearch {
         openFiltersSettings().unselectAttributes(attributeIds);
     }
 
-    public void chooseSavedFilterByLabel(String label) {
-        openFiltersSettings().chooseFilterByLabel(label);
+    public void selectSavedFilterByLabel(String label) {
+        openFiltersSettings().selectFilterByLabel(label);
     }
 
     public void saveAsNewFilter(String name) {
