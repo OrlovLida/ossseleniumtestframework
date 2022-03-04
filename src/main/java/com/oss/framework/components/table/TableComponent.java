@@ -190,7 +190,7 @@ public class TableComponent {
     public PaginationComponent getPaginationComponent() {
         if (paginationComponent == null) {
             WebElement parent = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
-            paginationComponent = PaginationComponent.createFromParent(this.driver, this.webDriverWait, parent);
+            paginationComponent = PaginationComponent.createFromParent(parent);
         }
         return paginationComponent;
     }

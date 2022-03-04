@@ -42,7 +42,7 @@ public class DateTimeRange extends Input {
         return "//div[@class='DayPicker-Day btn '][contains(.,'" + day + "')]";
     }
 
-    public static String createPathDate(Calendar date) {
+    private static String createPathDate(Calendar date) {
         return "//div[@aria-label='" + date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) + ", " + date.get(Calendar.DAY_OF_MONTH) + " " + date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) + " " + date.get(Calendar.YEAR) + "']";
     }
 

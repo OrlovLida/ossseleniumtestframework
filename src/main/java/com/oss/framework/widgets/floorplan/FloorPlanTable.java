@@ -29,7 +29,7 @@ public class FloorPlanTable {
         return new FloorPlanTable(driver, wait, id);
     }
 
-    public int getRowNr(String rowName) {
+    public int getRowNumber(String rowName) {
         List<WebElement> rows = getTableRows();
         for (WebElement row : rows) {
             WebElement cell = row.findElement(By.xpath(CELL_PATH));
@@ -40,9 +40,9 @@ public class FloorPlanTable {
         throw new NoSuchElementException("Cannot find a row with the provided value");
     }
 
-    public void checkNthRowAndNthColumn(int rowNr, int columnNr) {
-        String cellInRow = String.format(CELL_IN_ROW_PATTERN, columnNr);
-        WebElement cell = getTableRows().get(rowNr).findElement(By.xpath(cellInRow));
+    public void selectRow(int rowNumber, int columnNumber) {
+        String cellInRow = String.format(CELL_IN_ROW_PATTERN, columnNumber);
+        WebElement cell = getTableRows().get(rowNumber).findElement(By.xpath(cellInRow));
         if (cell.isDisplayed() && !cell.isSelected()) {
             cell.click();
         }

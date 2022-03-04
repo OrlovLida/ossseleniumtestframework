@@ -1,5 +1,7 @@
 package com.oss.framework.widgets.list;
 
+import java.util.NoSuchElementException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,46 +13,67 @@ import com.oss.framework.utils.DelayUtils;
 public class ListGroup {
     private static final String LIST_GROUP_CLASS = "list-group";
     private static final String ITEM_LIST_CLASS = "list-group-item";
-    private static final String SELECTED_ITEM_CLASS = ITEM_LIST_CLASS + " active";
     private final WebDriver driver;
-    private final WebDriverWait wait;
-
-    private ListGroup(WebDriver driver, WebDriverWait wait) {
+    
+    private ListGroup(WebDriver driver) {
         this.driver = driver;
-        this.wait = wait;
     }
-
+    
     public static ListGroup create(WebDriver driver, WebDriverWait wait) {
-        return new ListGroup(driver, wait);
+        DelayUtils.waitBy(wait, By.className(LIST_GROUP_CLASS));
+        return new ListGroup(driver);
     }
-
-    public void selectItemByName(String itemName) {
-        if (notSelected(itemName)) {
-            Actions action = new Actions(driver);
-            action.moveToElement(getItem(itemName)).click();
+    
+    public void selectItem(String itemName) {
+        Item item = getItem(itemName);
+        if (!item.isSelected()) {
+            item.click();
         }
     }
-
-    public void clickOnIcon(String itemName) {
-        Actions action = new Actions(driver);
-        action.moveToElement(getIconForItem(itemName)).pause(500).build().perform();
-        action.moveToElement(getIconForItem(itemName)).click().perform();
+    
+    public void callAction(String itemName, String actionLabel) {
+        getItem(itemName).callAction(actionLabel);
     }
-
-    private boolean notSelected(String itemName) {
-        return getListGroup().findElements(By.xpath("//*[@class='" + SELECTED_ITEM_CLASS + "']//*[text() = '" + itemName + "']")).isEmpty();
+    
+    private Item getItem(String itemName) {
+        return Item.create(driver, itemName);
     }
+    
+    private static class Item {
+        
+        private static final String ACTIVE = "active";
+        private static final String CLASS = "class";
+        private static final String CANNOT_ITEM_WITH_NAME_EXCEPTION = "Cannot item with name:";
+        private WebDriver driver;
+        private WebElement itemElement;
+        
+        private Item(WebDriver driver, WebElement item) {
+            
+            this.driver = driver;
+            this.itemElement = item;
+        }
+        
+        private static Item create(WebDriver driver, String itemName) {
+            WebElement itemList = driver.findElements(By.className(ITEM_LIST_CLASS)).stream()
+                    .filter(item -> item.getText().equals(itemName))
+                    .findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_ITEM_WITH_NAME_EXCEPTION + itemName));
 
-    private WebElement getListGroup() {
-        DelayUtils.waitByXPath(wait, "//*[@class = '" + LIST_GROUP_CLASS + "']");
-        return driver.findElement(By.className(LIST_GROUP_CLASS));
-    }
-
-    private WebElement getItem(String itemName) {
-        return getListGroup().findElement(By.xpath("//*[contains (@class, '" + ITEM_LIST_CLASS + "')]//*[text() = '" + itemName + "']"));
-    }
-
-    private WebElement getIconForItem(String itemName) {
-        return getItem(itemName).findElement(By.xpath(".//..//span[@class='icon-button']"));
+            return new Item(driver, itemList);
+        }
+        
+        private void callAction(String actionLabel) {
+            Actions action = new Actions(driver);
+            WebElement icon = itemElement.findElement(By.cssSelector(".icon-button[title='" + actionLabel + "']"));
+            action.moveToElement(itemElement).pause(500).moveToElement(icon).click().build().perform();
+        }
+        
+        private boolean isSelected() {
+            return itemElement.getAttribute(CLASS).contains(ACTIVE);
+            
+        }
+        
+        private void click() {
+            itemElement.click();
+        }
     }
 }

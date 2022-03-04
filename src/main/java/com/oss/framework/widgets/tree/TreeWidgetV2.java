@@ -114,7 +114,7 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public PaginationComponent getPagination() {
-        return PaginationComponent.createFromParent(driver, webDriverWait, webElement);
+        return PaginationComponent.createFromParent(webElement);
     }
 
     public void openSelectionBar() {
