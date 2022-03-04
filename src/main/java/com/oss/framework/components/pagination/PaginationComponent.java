@@ -43,27 +43,27 @@ public class PaginationComponent {
     }
 
     public boolean isNextPageButtonPresent() {
-        return isButtonPresent(getNextPage());
+        return isButtonPresent(getNextPageButton());
     }
 
     public boolean isPreviousPageButtonPresent() {
-        return isButtonPresent(getPrevPage());
+        return isButtonPresent(getPrevPageButton());
     }
 
     public boolean isFirstPageButtonPresent() {
-        return isButtonPresent(getFirstPage());
+        return isButtonPresent(getFirstPageButton());
     }
 
     public void goOnNextPage() {
-        getNextPage().click();
+        getNextPageButton().click();
     }
 
     public void goOnPrevPage() {
-        getPrevPage().click();
+        getPrevPageButton().click();
     }
 
     public void goOnFirstPage() {
-        getFirstPage().click();
+        getFirstPageButton().click();
     }
 
     public int getTotalCount() {
@@ -103,15 +103,15 @@ public class PaginationComponent {
         return !element.getAttribute(cssAttribute).contains(classDisabled);
     }
 
-    private WebElement getNextPage() {
+    private WebElement getNextPageButton() {
         return this.paginationComponentElement.findElement(By.cssSelector(NEXT_PAGE_SELECTOR));
     }
 
-    private WebElement getPrevPage() {
+    private WebElement getPrevPageButton() {
         return this.paginationComponentElement.findElement(By.cssSelector(PREV_PAGE_SELECTOR));
     }
 
-    private WebElement getFirstPage() {
+    private WebElement getFirstPageButton() {
         return this.paginationComponentElement.findElement(By.cssSelector(FIRST_PAGE_SELECTOR));
     }
 
