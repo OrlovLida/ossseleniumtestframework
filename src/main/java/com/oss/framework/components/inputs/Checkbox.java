@@ -9,6 +9,8 @@ import com.oss.framework.components.data.Data;
 
 public class Checkbox extends Input {
 
+    private static final String CHECKBOX_CSS = ".checkbox-cont,.oss-checkbox-content";
+
     private Checkbox(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         super(driver, webDriverWait, componentId);
     }
@@ -49,7 +51,7 @@ public class Checkbox extends Input {
     private void setCheckBoxValue(Data value) {
         Boolean valueToSet = Boolean.valueOf(value.getStringValue());
         if (!valueToSet.equals(isChecked())) {
-            this.webElement.findElement(By.className("checkbox-cont")).click();
+            this.webElement.findElement(By.cssSelector(CHECKBOX_CSS)).click();
         }
     }
 
