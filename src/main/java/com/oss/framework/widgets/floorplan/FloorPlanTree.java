@@ -54,10 +54,10 @@ public class FloorPlanTree {
 
     }
 
-    public String getTreeTableCellValue(String nodeName, int columnNr) {
+    public String geCellValue(String nodeName, int columnNumber) {
         String cell = String.format(CELL_PATTERN, nodeName);
         List<WebElement> valueCells = driver.findElements(By.xpath(cell));
-        return valueCells.get(columnNr).getText();
+        return valueCells.get(columnNumber).getText();
     }
 
     private void contextClick(WebElement webElement) {

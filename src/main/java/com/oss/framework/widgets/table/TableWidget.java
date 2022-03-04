@@ -221,9 +221,9 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clearFilter(filterName);
     }
 
-    public void setFavoriteFilter(String label) {
+    public void markFavoriteFilter(String label) {
         openAdvancedSearch();
-        getAdvancedSearch().setFavoriteFilter(label);
+        getAdvancedSearch().markFavoriteFilter(label);
         getAdvancedSearch().clickCancel();
     }
 

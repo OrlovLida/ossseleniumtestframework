@@ -49,9 +49,9 @@ public class FiltersSettings {
         return new FiltersSettings(driver, wait);
     }
 
-    void setFavoriteFilter(String filterLabel) {
+    void markFavoriteFilter(String filterLabel) {
         SavedFilter theFilter = getFilterByLabel(filterLabel);
-        theFilter.setFavorite();
+        theFilter.markFavorite();
     }
 
     List<SavedFilter> getFiltersList() {
@@ -179,7 +179,7 @@ public class FiltersSettings {
                     .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_FILTER_WITH_NAME_EXCEPTION + filterName));
         }
 
-        private void setFavorite() {
+        private void markFavorite() {
             Actions action = new Actions(driver);
             if (!isFavorite()) {
                 action.click(getStar()).pause(1000).build().perform();

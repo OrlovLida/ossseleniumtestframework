@@ -97,8 +97,8 @@ public class AdvancedSearch {
         return getSearchPanel();
     }
 
-    public void setFavoriteFilter(String label) {
-        openFiltersSettings().setFavoriteFilter(label);
+    public void markFavoriteFilter(String label) {
+        openFiltersSettings().markFavoriteFilter(label);
     }
 
     public void selectAttributes(List<String> attributeIds) {

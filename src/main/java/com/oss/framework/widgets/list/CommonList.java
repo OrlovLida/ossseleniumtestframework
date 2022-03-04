@@ -166,7 +166,7 @@ public class CommonList extends Widget {
             return !rowElement.findElements(By.xpath(FAVOURITE_BUTTON_XPATH)).isEmpty();
         }
 
-        public void setFavorite() {
+        public void markFavorite() {
             if (!isFavorite()) {
                 WebElementUtils.clickWebElement(driver, rowElement.findElement(By.xpath(STAR_BUTTON_XPATH)));
             }
