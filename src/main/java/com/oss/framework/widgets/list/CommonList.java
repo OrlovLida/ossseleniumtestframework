@@ -1,32 +1,35 @@
 package com.oss.framework.widgets.list;
 
-import com.oss.framework.components.categorylist.CategoryList;
-import com.oss.framework.components.contextactions.ActionsContainer;
-import com.oss.framework.components.contextactions.InlineMenu;
-import com.oss.framework.components.search.AdvancedSearch;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
-import com.oss.framework.widgets.Widget;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import com.oss.framework.components.categorylist.CategoryList;
+import com.oss.framework.components.contextactions.ActionsContainer;
+import com.oss.framework.components.contextactions.InlineMenu;
+import com.oss.framework.components.contextactions.InlineMenuInterface;
+import com.oss.framework.components.contextactions.OldInlineMenu;
+import com.oss.framework.components.search.AdvancedSearch;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
+import com.oss.framework.widgets.Widget;
 
 public class CommonList extends Widget {
 
     private static final String COMMON_LIST_CLASS = "CommonListApp";
-    private static final String CATEGORY_LIST_XPATH = ".//li[@class='categoryListElement']";
     private static final String HEADERS_XPATH = ".//div[@class='header left']";
     private static final String LIST_ELEMENT_XPATH = ".//li[@class='listElement']";
     private static final String NO_DATA_TEXT_XPATH = ".//h3[contains(@class,'emptyResultsText')]";
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
+    private static final String INLINE_MENU_XPATH = ".//div[@class='contextButtonMenu'] | .//div[@id='frameworkObjectButtonsGroup']";
 
     private CommonList(WebDriver driver, WebDriverWait webDriverWait, String commonListAppId) {
         super(driver, webDriverWait, commonListAppId);
@@ -166,7 +169,7 @@ public class CommonList extends Widget {
             return !rowElement.findElements(By.xpath(FAVOURITE_BUTTON_XPATH)).isEmpty();
         }
 
-        public void setFavorite() {
+        public void markFavorite() {
             if (!isFavorite()) {
                 WebElementUtils.clickWebElement(driver, rowElement.findElement(By.xpath(STAR_BUTTON_XPATH)));
             }
@@ -177,7 +180,15 @@ public class CommonList extends Widget {
         }
 
         public void callAction(String groupId, String actionId) {
-            InlineMenu.create(rowElement, driver, wait).callAction(groupId, actionId);
+            getInlineMenu().callAction(groupId, actionId);
+        }
+
+        public void callActionByLabel(String actionLabel) {
+            getInlineMenu().callActionByLabel(actionLabel);
+        }
+
+        public void callActionByLabel(String groupLabel, String actionLabel) {
+            getInlineMenu().callActionByLabel(groupLabel, actionLabel);
         }
 
         public void callActionIcon(String ariaLabel) {
@@ -194,9 +205,9 @@ public class CommonList extends Widget {
             if (!rowElement.findElements(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId))).isEmpty()) {
                 WebElement button = rowElement.findElement(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId)));
                 WebElementUtils.clickWebElement(driver, button);
-                return;
+            } else {
+                getInlineMenu().callAction(actionId);
             }
-            InlineMenu.create(rowElement, driver, wait).callAction(actionId);
         }
 
         public void clickLink(String linkText) {
@@ -210,6 +221,16 @@ public class CommonList extends Widget {
                 rowElement.click();
             }
         }
-    }
 
+        private InlineMenuInterface getInlineMenu() {
+            DelayUtils.waitForPageToLoad(driver, wait);
+            DelayUtils.waitForNestedElements(wait, rowElement, INLINE_MENU_XPATH);
+            boolean isOldInlineMenu = !driver.findElements(By.className("contextButtonMenu")).isEmpty();
+            if (isOldInlineMenu) {
+                return OldInlineMenu.create(rowElement, driver, wait);
+            } else {
+                return InlineMenu.create(rowElement, driver, wait);
+            }
+        }
+    }
 }
