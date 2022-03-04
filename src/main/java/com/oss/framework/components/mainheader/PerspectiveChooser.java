@@ -6,16 +6,12 @@
  */
 package com.oss.framework.components.mainheader;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.inputs.Input;
-import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.wizard.Wizard;
-
-import static com.oss.framework.wizard.Wizard.createWizard;
 
 /**
  * @author Gabriela Kasza
@@ -27,13 +23,18 @@ public class PerspectiveChooser {
     private static final String WITH_REMOVE = "With removed";
     private static final String WITHOUT_REMOVED = "Without removed";
     private static final String CURRENT_TASK = "Current task";
+    private static final String PLAN_CONTEXT_WIZARD_ID = "plaPlanChooserView_prompt-card";
+    private static final String EXISTING_PROJECTS_INPUT_ID = "searchBoxId";
+    private static final String SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID = "plaPlanChooserView_planChooserFormButtons-1";
+    private static final String PLAN_CONTEXT_RADIOBUTTON_ID = "radioGroupId";
+    private static final String DATE = "Date";
+    private static final String DATE_INPUT_ID = "dateFieldId";
     private WebDriver driver;
     private WebDriverWait wait;
 
     private PerspectiveChooser(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-
     }
 
     public static PerspectiveChooser create(WebDriver driver, WebDriverWait wait) {
@@ -42,33 +43,28 @@ public class PerspectiveChooser {
 
     public void setLivePerspective() {
         setPerspective(LIVE);
-        wait.until(url -> driver.getCurrentUrl().contains("LIVE"));
+        wait.until(url -> driver.getCurrentUrl().contains(LIVE.toUpperCase()));
     }
 
     public void setNetworkPerspective() {
         setPerspective(NETWORK);
-        wait.until(url -> driver.getCurrentUrl().contains("NETWORK"));
-
+        wait.until(url -> driver.getCurrentUrl().contains(NETWORK.toUpperCase()));
     }
 
     public void setPlanPerspective(String processCodeOrName) {
         setPerspective(PLAN);
-        Wizard planChooser = Wizard.createWizard(driver, wait);
-        Input input = planChooser.getComponent("searchBoxId", Input.ComponentType.SEARCH_FIELD);
-        input.setSingleStringValue(processCodeOrName);
-        planChooser.clickButtonById("plaPlanChooserView_planChooserFormButtons-1");
-
-        wait.until(url -> driver.getCurrentUrl().contains("PLAN"));
+        Wizard planChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
+        planChooser.setComponentValue(EXISTING_PROJECTS_INPUT_ID, processCodeOrName, Input.ComponentType.SEARCH_FIELD);
+        planChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
+        wait.until(url -> driver.getCurrentUrl().contains(PLAN.toUpperCase()));
     }
 
     public void setPlanDatePerspective(String date) {
         setPerspective(PLAN);
-        Wizard dataChooser = createWizard(driver, wait);
-        Input radioButtons = dataChooser.getComponent("radioGroupId", Input.ComponentType.RADIO_BUTTON);
-        radioButtons.setSingleStringValue("Date");
-        Input selectDate = dataChooser.getComponent("dateFieldId", Input.ComponentType.DATE);
-        selectDate.setSingleStringValue(date);
-        dataChooser.clickButtonById("plaPlanChooserView_planChooserFormButtons-1");
+        Wizard dataChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
+        dataChooser.setComponentValue(PLAN_CONTEXT_RADIOBUTTON_ID, DATE, Input.ComponentType.RADIO_BUTTON);
+        dataChooser.setComponentValue(DATE_INPUT_ID, date, Input.ComponentType.RADIO_BUTTON);
+        dataChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
         wait.until(url -> driver.getCurrentUrl().contains(date));
     }
 
@@ -90,10 +86,7 @@ public class PerspectiveChooser {
     private void setPerspective(String perspective) {
         ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
         toolbar.openQueryContextContainer();
-        DelayUtils.waitByXPath(wait, "//div[contains(@class,'query-context__dropdown')]");
-        WebElement element = driver.findElement(By.className("query-context__dropdown"));
-        DelayUtils.waitForNestedElements(wait, element, ".//a[text()='" + perspective + "']");
-        WebElement context = element.findElement(By.xpath(".//a[text()='" + perspective + "']"));
-        context.click();
+        DropdownList dropdownList = DropdownList.create(driver, wait);
+        dropdownList.selectOption(perspective);
     }
 }
