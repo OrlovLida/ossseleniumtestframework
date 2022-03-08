@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.table;
 
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -224,6 +225,16 @@ public class OldTable extends Widget implements TableInterface {
         column.clear();
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         return column;
+    }
+
+    public void clearAllColumnValues() {
+        Map<String, Column> columns = createColumnsFilters();
+        List<Column> columns2 = Lists.newArrayList(columns.values());
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        for (Column column : columns2) {
+            column.clear();
+            DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        }
     }
 
     public int countRows(String anyLabelInTable) {
