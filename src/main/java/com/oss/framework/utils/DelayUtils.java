@@ -56,6 +56,10 @@ public class DelayUtils {
         wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(parent, By.xpath(xPath)));
     }
 
+    public static void waitForNestedElements(WebDriverWait wait, WebElement parent, By by) {
+        wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(parent, by));
+    }
+
     public static void waitForNestedElements(WebDriverWait wait, String parentXpath, String xPath) {
         wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(By.xpath(parentXpath), By.xpath(xPath)));
     }
