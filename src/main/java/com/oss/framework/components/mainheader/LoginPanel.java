@@ -23,6 +23,7 @@ import com.oss.framework.utils.DelayUtils;
  */
 public class LoginPanel {
     private static final String LANGUAGE_CHOOSER = "language-chooser";
+    private static final String USER_GROUP_CHOOSER = "user_group_chooser";
     private static final String LOGIN_BUTTON_ID = "logout-button";
     private static final String ALPHA_MODE_SWITCHER = "alpha-mode-switcher";
     private WebDriver driver;
@@ -46,6 +47,19 @@ public class LoginPanel {
             input.setSingleStringValue(language);
             ConfirmationBoxInterface prompt = ConfirmationBox.create(driver, wait);
             prompt.clickButtonByLabel("OK");
+            DelayUtils.waitForPageToLoad(driver, wait);
+        } else {
+            toolbar.closeLoginPanel();
+        }
+    }
+
+    public void chooseGroupContext(String groupName) {
+        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
+        toolbar.openLoginPanel();
+        Input input = ComponentFactory.create(USER_GROUP_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
+        String currentGroup = input.getStringValue();
+        if (!currentGroup.equals(groupName)) {
+            input.setSingleStringValue(groupName);
             DelayUtils.waitForPageToLoad(driver, wait);
         } else {
             toolbar.closeLoginPanel();
