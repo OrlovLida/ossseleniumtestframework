@@ -12,6 +12,17 @@ import java.util.List;
 public class Table2DComponent {
     private static final String TABLE_2D_WIDGET_XPATH = "//div[@class='Table2DWidget']";
     private static final String TABLE_2D_COLUMN_XPATH = ".//div[@class='Table2DColumn center']";
+    private static final String WIDGET_TITLE = ".//p[@class='title']";
+    private static final String TABLE_COMPONENT_CLASS = "Table2DComponent";
+    private static final String CELL_XPATH = ".//div[contains(@class,'Cell')]";
+    private static final String ROW_HEADER_XPATH = ".//div[@class='Table2DColumn left']//div[contains(@class, 'Header')]";
+    private static final String COLUMN_HEADER_XPATH = ".//div[@class='Table2DColumn center']//div[contains(@class, 'Header')]";
+    private static final String CLEAR_FILTER_XPATH = ".//div[@class='Header filter-clear']";
+    private static final String SELECTED_CELL_CLASS = "Cell selected";
+    private static final String ROW_XPATH = "//ancestor::div[contains(@class,'Table2DColumn left')]";
+    private static final String COLUMN_XPATH = ".//ancestor::div[contains(@class,'Table2DColumn center')]";
+    private static final String HEADER_XPATH = ".//div[@class='Header']";
+    private static final String HEADER_CLASS = "Header";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -26,9 +37,9 @@ public class Table2DComponent {
     public static Table2DComponent create(WebDriver driver, WebDriverWait wait, String widgetName) {
         DelayUtils.waitBy(wait, By.xpath(TABLE_2D_WIDGET_XPATH));
         WebElement tableWidget = driver.findElements(By.xpath(TABLE_2D_WIDGET_XPATH)).stream()
-                .filter(widget -> widget.findElement(By.xpath(".//p[@class='title']")).getText().equals(widgetName)).findFirst()
+                .filter(widget -> widget.findElement(By.xpath(WIDGET_TITLE)).getText().equals(widgetName)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Cannot find Widget with name " + widgetName));
-        WebElement table2DComponent = tableWidget.findElement(By.className("Table2DComponent"));
+        WebElement table2DComponent = tableWidget.findElement(By.className(TABLE_COMPONENT_CLASS));
         return new Table2DComponent(driver, wait, table2DComponent);
     }
 
@@ -52,7 +63,7 @@ public class Table2DComponent {
         List<WebElement> columns = tableComponent.findElements(By.xpath(TABLE_2D_COLUMN_XPATH));
         for (WebElement column : columns) {
             int index = 0;
-            List<WebElement> columnCells = column.findElements(By.xpath(".//div[contains(@class,'Cell')]"));
+            List<WebElement> columnCells = column.findElements(By.xpath(CELL_XPATH));
             for (WebElement element : columnCells) {
                 Cell2D cell = new Cell2D(element, index++);
                 allCells.add(cell);
@@ -63,7 +74,7 @@ public class Table2DComponent {
 
     public void selectRow(String rowName) {
         DelayUtils.waitBy(wait, By.xpath(TABLE_2D_COLUMN_XPATH));
-        List<WebElement> rows = tableComponent.findElements(By.xpath(".//div[@class='Table2DColumn left']//div[contains(@class, 'Header')]"));
+        List<WebElement> rows = tableComponent.findElements(By.xpath(ROW_HEADER_XPATH));
         WebElement chosenRow = rows.stream().filter(row -> row.getText().equals(rowName)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Cannot find row with provided attributes"));
         chosenRow.click();
@@ -71,7 +82,7 @@ public class Table2DComponent {
 
     public void selectColumn(String columnName) {
         DelayUtils.waitBy(wait, By.xpath(TABLE_2D_COLUMN_XPATH));
-        List<WebElement> columns = tableComponent.findElements(By.xpath(".//div[@class='Table2DColumn center']//div[contains(@class, 'Header')]"));
+        List<WebElement> columns = tableComponent.findElements(By.xpath(COLUMN_HEADER_XPATH));
         WebElement chosenColumn = columns.stream().filter(column -> column.getText().equals(columnName)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Cannot find column with provided attributes"));
         chosenColumn.click();
@@ -91,7 +102,7 @@ public class Table2DComponent {
 
     public void clearFilter() {
         DelayUtils.waitBy(wait, By.xpath(TABLE_2D_COLUMN_XPATH));
-        WebElement clearFilter = tableComponent.findElement(By.xpath(".//div[@class='Header filter-clear']"));
+        WebElement clearFilter = tableComponent.findElement(By.xpath(CLEAR_FILTER_XPATH));
         clearFilter.click();
     }
 
@@ -121,17 +132,17 @@ public class Table2DComponent {
         }
 
         public boolean isSelected() {
-            return !cell.findElements(By.className("Cell selected")).isEmpty();
+            return !cell.findElements(By.className(SELECTED_CELL_CLASS)).isEmpty();
         }
 
         public String getRowName() {
-            WebElement row = cell.findElement(By.xpath("//ancestor::div[contains(@class,'Table2DColumn left')]"));
-            return row.findElements(By.xpath(".//div[@class='Header']")).get(indexLeftHeader).getText();
+            WebElement row = cell.findElement(By.xpath(ROW_XPATH));
+            return row.findElements(By.xpath(HEADER_XPATH)).get(indexLeftHeader).getText();
         }
 
         public String getColumnName() {
-            WebElement column = cell.findElement(By.xpath(".//ancestor::div[contains(@class,'Table2DColumn center')]"));
-            return column.findElement(By.className("Header")).getText();
+            WebElement column = cell.findElement(By.xpath(COLUMN_XPATH));
+            return column.findElement(By.className(HEADER_CLASS)).getText();
         }
     }
 }

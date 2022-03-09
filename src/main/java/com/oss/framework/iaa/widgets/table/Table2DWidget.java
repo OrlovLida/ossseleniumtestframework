@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Table2DWidget {
     private static final String TABLE_2D_WIDGET_XPATH = "//div[@class='Table2DWidget']";
+    private static final String TABLE_2D_TITLE_XPATH = ".//p[@class='title']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -21,7 +22,7 @@ public class Table2DWidget {
     public static Table2DWidget create(WebDriver driver, WebDriverWait wait, String tableName) {
         DelayUtils.waitBy(wait, By.xpath(TABLE_2D_WIDGET_XPATH));
         WebElement webElement = driver.findElements(By.xpath(TABLE_2D_WIDGET_XPATH)).stream()
-                .filter(table -> table.findElement(By.xpath(".//p[@class='title']")).getText().equals(tableName)).findFirst()
+                .filter(table -> table.findElement(By.xpath(TABLE_2D_TITLE_XPATH)).getText().equals(tableName)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Table with provided name doesn't exist"));
         return new Table2DWidget(driver, wait, tableName, webElement);
     }
