@@ -37,14 +37,16 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String TABS_PATTERN = "//div[@" + CSSUtils.TEST_ID + "= '%s']";
     private static final String TAB_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')] | .//div[@class='tab-label'][contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = ".//a[@id='%s']";
+    private static final String REMOVE_TAB_CSS = "Widget>button";
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
     }
 
-    public static TabsWidget createById(WebDriver driver, WebDriverWait wait, String id) {
-        Widget.waitForWidgetById(wait, id);
-        return new TabsWidget(driver, wait, id);
+    public static TabsWidget createById(WebDriver driver, WebDriverWait wait, String tabsWidgetId) {
+        Widget.waitForWidget(wait, TABS_WIDGET_CLASS);
+        Widget.waitForWidgetById(wait, tabsWidgetId);
+        return new TabsWidget(driver, wait, tabsWidgetId);
     }
 
     public Widget getWidget(String widgetId, WidgetType widgetType) {
@@ -67,6 +69,11 @@ public class TabsWidget extends Widget implements TabsInterface {
         tabToSelect.click();
     }
 
+    public void removeTabByLabel(String tabLabel) {
+        DelayUtils.waitByXPath(webDriverWait, TABS_CONTAINER_XPATH);
+        driver.findElement(By.cssSelector("a#" + tabLabel + REMOVE_TAB_CSS)).click();
+    }
+
     @Override
     public void selectTabById(String id) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
@@ -83,6 +90,14 @@ public class TabsWidget extends Widget implements TabsInterface {
     @Override
     public void callActionByLabel(String groupLabel, String label) {
         getActionsInterface().callActionByLabel(groupLabel, label);
+    }
+
+    public ActionsContainer getContextActions() {
+        return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
+    }
+
+    public void callAction(String groupId, String actionId) {
+        getContextActions().callActionById(groupId, actionId);
     }
 
     @Override
