@@ -149,6 +149,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private Message toMessage(WebElement messageItem) {
         DelayUtils.waitForPresence(wait, By.xpath(MESSAGE_FULL_XPATH));
         List<WebElement> messagesList = messageItem.findElements(By.xpath(MESSAGE_XPATH));
+        log.debug("Message list contains {} message items.", messagesList.size());
         WebElement message = messagesList.stream().findFirst().orElseThrow(() -> new java.util.NoSuchElementException(NO_MESSAGE_TEXT_EXCEPTION));
         String text = message.getText();
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);
