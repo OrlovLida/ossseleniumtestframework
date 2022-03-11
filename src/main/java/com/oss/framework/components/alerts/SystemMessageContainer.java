@@ -112,6 +112,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
         DelayUtils.waitForPageToLoad(driver, wait);
         expandSystemMessagesContainer();
         List<WebElement> messageItems = messageContainer.findElements(By.className(SYSTEM_MESSAGE_ITEM_CLASS));
+        log.info("Found {} system messages", messageItems.size());
         List<Message> messages = messageItems.stream().map(this::toMessage).collect(Collectors.toList()).stream()
                 .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER)).collect(Collectors.toList());
         log.info("Found {} error messages", messages.size());
