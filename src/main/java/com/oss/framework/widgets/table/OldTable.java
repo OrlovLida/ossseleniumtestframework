@@ -1,6 +1,5 @@
 package com.oss.framework.widgets.table;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,14 +34,14 @@ public class OldTable extends Widget implements TableInterface {
     private static final Logger log = LoggerFactory.getLogger(OldTable.class);
     private static final String TABLE_COLUMN_CLASS = "OSSTableColumn";
     private static final String PAGINATION_CLASS = "OSSPagination";
-    private static final String ACTIONS_CONTAINER_CLASS = "actionsContainer";
+    private static final String ACTIONS_CONTAINER_CSS = ".actionsContainer";
     private static final String TABLE_COLUMNS_SETTINGS_ICON_CLASS = "OSSTableColumnsSettingsIcon";
     private static final String STICKY_COLUMNS_SETTINGS_CLASS = "OSSStickyColumnsSettings";
     private static final int REFRESH_INTERVAL = 2000;
     private static final String ROWS_COUNTER_SPANS_XPATH = ".//div[@class='rowsCounter']//span";
     private static final String TABLE_COMPONENT_XPATH = ".//div[contains(@class, 'OSSTableComponent')]";
     private static final String COLUMNS_WITHOUT_CHECKBOX_CSS = ".OSSTableColumn:not(.Col_SELECTION)";
-    private static final String CONTEXT_ACTIONS_CONTAINER_XPATH = "//div[contains(@class, 'windowToolbar')] | //*[@class='actionsContainer']";
+    private static final String CONTEXT_ACTIONS_CONTAINER_CSS = ".windowToolbar," + ACTIONS_CONTAINER_CSS;
     private static final String TABLE_IN_ACTIVE_TAB_XPATH =
             "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='AppComponentContainer']/div";
     private static final String ANCESTOR_XPATH = ".//ancestor::div[contains(@class,'card-shadow')]";
@@ -302,8 +301,8 @@ public class OldTable extends Widget implements TableInterface {
 
     private ActionsInterface getActionsInterface() {
         WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
-        DelayUtils.waitForNestedElements(webDriverWait, window, CONTEXT_ACTIONS_CONTAINER_XPATH);
-        boolean isNewActionContainer = isElementPresent(window, By.className(ACTIONS_CONTAINER_CLASS));
+        DelayUtils.waitForNestedElements(webDriverWait, window, By.cssSelector(CONTEXT_ACTIONS_CONTAINER_CSS));
+        boolean isNewActionContainer = isElementPresent(window, By.cssSelector(ACTIONS_CONTAINER_CSS));
         if (isNewActionContainer) {
             return ActionsContainer.createFromParent(window, driver, webDriverWait);
         } else {

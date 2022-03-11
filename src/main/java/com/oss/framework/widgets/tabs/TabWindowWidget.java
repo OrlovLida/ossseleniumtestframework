@@ -20,8 +20,8 @@ public class TabWindowWidget implements TabsInterface {
     private static final String DROPDOWN_TAB_XPATH = ".//div[@class= 'dropdown']";
     private static final String OSS_WINDOW_TAB_XPATH = "//div[@class='OssWindow tabWindow']";
     private static final String ALL_TABS_XPATH = "//div[@class='tabs']";
-    private static final String ACTIONS_CONTAINER_XPATH = "//*[@class='actionsContainer']";
-    private static final String CONTEXT_ACTIONS_XPATH = "//div[contains(@class, 'windowToolbar')] | " + ACTIONS_CONTAINER_XPATH;
+    private static final String ACTIONS_CONTAINER_CSS = ".actionsContainer";
+    private static final String CONTEXT_ACTIONS_CSS = ".windowToolbar,.actionsContainer";
     private static final String TAB_BY_LABEL_PATTERN = ".//button[@class='oss-tab']//div[contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = "//button[@aria-controls='%s']";
 
@@ -78,8 +78,8 @@ public class TabWindowWidget implements TabsInterface {
 
     private ActionsInterface getActionsInterface() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        DelayUtils.waitForNestedElements(wait, this.tabs, CONTEXT_ACTIONS_XPATH);
-        boolean isNewActionContainer = isElementPresent(driver, By.xpath(ACTIONS_CONTAINER_XPATH));
+        DelayUtils.waitForNestedElements(wait, this.tabs, By.cssSelector(CONTEXT_ACTIONS_CSS));
+        boolean isNewActionContainer = isElementPresent(driver, By.cssSelector(ACTIONS_CONTAINER_CSS));
         if (isNewActionContainer) {
             return ActionsContainer.createFromParent(this.tabs, driver, wait);
         } else {
