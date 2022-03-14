@@ -46,11 +46,11 @@ public class WidgetChooser {
     }
 
     private WebElement getWidgetByLabel(String widgetLabel) {
-        return widgetChooser.findElement(By.xpath(" //p[text()='" + widgetLabel + "']"));
+        return widgetChooser.findElement(By.xpath(" .//p[text()='" + widgetLabel + "']"));
     }
 
     private WebElement getWidgetType(String widgetType) {
-        return widgetChooser.findElement(By.xpath(" //p[text()=' " + widgetType + "']"));
+        return widgetChooser.findElement(By.xpath(" .//p[text()=' " + widgetType + "']"));
     }
 
 }

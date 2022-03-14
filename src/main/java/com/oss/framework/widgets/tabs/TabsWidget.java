@@ -44,7 +44,6 @@ public class TabsWidget extends Widget implements TabsInterface {
     }
 
     public static TabsWidget createById(WebDriver driver, WebDriverWait wait, String tabsWidgetId) {
-        Widget.waitForWidget(wait, TABS_WIDGET_CLASS);
         Widget.waitForWidgetById(wait, tabsWidgetId);
         return new TabsWidget(driver, wait, tabsWidgetId);
     }
@@ -90,14 +89,6 @@ public class TabsWidget extends Widget implements TabsInterface {
     @Override
     public void callActionByLabel(String groupLabel, String label) {
         getActionsInterface().callActionByLabel(groupLabel, label);
-    }
-
-    public ActionsContainer getContextActions() {
-        return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
-    }
-
-    public void callAction(String groupId, String actionId) {
-        getContextActions().callActionById(groupId, actionId);
     }
 
     @Override
