@@ -112,6 +112,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
         DelayUtils.waitForPageToLoad(driver, wait);
         expandSystemMessagesContainer();
         List<WebElement> messageItems = messageContainer.findElements(By.className(SYSTEM_MESSAGE_ITEM_CLASS));
+        log.info("Found {} system messages", messageItems.size());
         List<Message> messages = messageItems.stream().map(this::toMessage).collect(Collectors.toList()).stream()
                 .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER)).collect(Collectors.toList());
         log.info("Found {} error messages", messages.size());
@@ -149,6 +150,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private Message toMessage(WebElement messageItem) {
         DelayUtils.waitForPresence(wait, By.xpath(MESSAGE_FULL_XPATH));
         List<WebElement> messagesList = messageItem.findElements(By.xpath(MESSAGE_XPATH));
+        log.debug("Message list contains {} message items.", messagesList.size());
         WebElement message = messagesList.stream().findFirst().orElseThrow(() -> new java.util.NoSuchElementException(NO_MESSAGE_TEXT_EXCEPTION));
         String text = message.getText();
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);

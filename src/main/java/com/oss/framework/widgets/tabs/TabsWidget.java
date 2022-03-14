@@ -31,9 +31,9 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String DROPDOWN_TAB_XPATH = ".//div[@class= 'dropdown-tab']";
     private static final String TABS_CONTAINER_XPATH = ".//div[contains(@class,'tabsContainerTabs')]";
     private static final String DRAGGABLE_ELEMENT_XPATH = ".//div[@class = 'btn-drag']";
-    private static final String ACTIONS_CONTAINER_XPATH = "//*[@class='actionsContainer']";
-    private static final String OLD_ACTIONS_CONTAINER_XPATH = "//div[contains(@class, 'windowToolbar')]";
-    private static final String CONTEXT_ACTIONS_XPATH = OLD_ACTIONS_CONTAINER_XPATH + " | " + ACTIONS_CONTAINER_XPATH;
+    private static final String ACTIONS_CONTAINER_CSS = ".actionsContainer";
+    private static final String WINDOW_TOOLBAR_CSS = ".windowToolbar";
+    private static final String CONTEXT_ACTIONS_CSS = WINDOW_TOOLBAR_CSS + "," + ACTIONS_CONTAINER_CSS;
     private static final String TABS_PATTERN = "//div[@" + CSSUtils.TEST_ID + "= '%s']";
     private static final String TAB_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')] | .//div[@class='tab-label'][contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = ".//a[@id='%s']";
@@ -149,9 +149,9 @@ public class TabsWidget extends Widget implements TabsInterface {
 
     private ActionsInterface getActionsInterface() {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), CONTEXT_ACTIONS_XPATH);
-        boolean isNewActionContainer = isElementPresent(driver, By.xpath(String.format(TABS_PATTERN, id) + ACTIONS_CONTAINER_XPATH));
-        boolean isOldActionContainer = isElementPresent(driver, By.xpath(String.format(TABS_PATTERN, id) + OLD_ACTIONS_CONTAINER_XPATH));
+        DelayUtils.waitForNestedElements(webDriverWait, createTabs(), By.cssSelector(CONTEXT_ACTIONS_CSS));
+        boolean isNewActionContainer = isElementPresent(driver, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + id + "'] " + ACTIONS_CONTAINER_CSS));
+        boolean isOldActionContainer = isElementPresent(driver, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + id + "'] " + WINDOW_TOOLBAR_CSS));
         if (isNewActionContainer) {
             return ActionsContainer.createFromParent(createTabs(), driver, webDriverWait);
         } else if (isOldActionContainer)
