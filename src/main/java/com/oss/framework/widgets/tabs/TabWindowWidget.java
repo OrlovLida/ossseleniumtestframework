@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
+import com.oss.framework.iaa.widgets.list.MessageListWidget;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
@@ -24,6 +25,7 @@ public class TabWindowWidget implements TabsInterface {
     private static final String CONTEXT_ACTIONS_CSS = ".windowToolbar,.actionsContainer";
     private static final String TAB_BY_LABEL_PATTERN = ".//button[@class='oss-tab']//div[contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = "//button[@aria-controls='%s']";
+    private static final String ACTIVE_TAB_CONTENT_XPATH = "//div[@data-testid='%s']//div[@class='flexRow first last']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -74,6 +76,21 @@ public class TabWindowWidget implements TabsInterface {
     @Override
     public void callActionById(String id) {
         getActionsInterface().callActionById(id);
+    }
+
+    @Override
+    public MessageListWidget getMessageListWidget(String tabWindowId) {
+        WebElement parent = getActiveTabContent(tabWindowId)
+                .stream()
+                .filter(e -> !(e.findElements(By.xpath(".//div[contains(@class, 'messagelistwidget')]")).isEmpty()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No Message List Widget on Tab"));
+
+        return MessageListWidget.createFromParent(parent, driver, wait);
+    }
+
+    private List<WebElement> getActiveTabContent(String tabWindowId) {
+        return driver.findElements(By.xpath(String.format(ACTIVE_TAB_CONTENT_XPATH, tabWindowId)));
     }
 
     private ActionsInterface getActionsInterface() {

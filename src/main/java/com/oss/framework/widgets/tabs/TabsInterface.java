@@ -6,6 +6,8 @@
  */
 package com.oss.framework.widgets.tabs;
 
+import com.oss.framework.iaa.widgets.list.MessageListWidget;
+
 /**
  * @author Gabriela Kasza
  */
@@ -22,5 +24,7 @@ public interface TabsInterface {
     void callActionById(String groupLabel, String id);
 
     void callActionById(String id);
+
+    MessageListWidget getMessageListWidget(String cardContainerId);
 
 }

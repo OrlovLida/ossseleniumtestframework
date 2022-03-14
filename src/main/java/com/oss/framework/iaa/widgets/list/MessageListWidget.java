@@ -19,8 +19,8 @@ public class MessageListWidget {
 
     private static final Logger log = LoggerFactory.getLogger(MessageListWidget.class);
 
-    private static final String LIST_MESSAGE_ITEMS_XPATH = "//div[contains(@class, 'im-message-list__message im-message-list__message')]";
-    private static final String MESSAGE_LIST_WIDGET_XPATH = "//div[contains(@class, 'info-management-messagelistwidget')]";
+    private static final String LIST_MESSAGE_ITEMS_XPATH = ".//div[contains(@class, 'im-message-list__message im-message-list__message')]";
+    private static final String MESSAGE_LIST_WIDGET_XPATH = ".//div[contains(@class, 'messagelistwidget')]";
     private static final String DISABLED_BUTTON = ".//a[contains(@class, 'btn-md disabled') and contains(text(), '%s')]";
     private static final String BUTTONS_XPATH = ".//a[contains(@class, 'btn-md') and contains(text(), '%s')]";
     private static final String CHECKBOX_XPATH = ".//div[contains(@class, 'checkbox')]//label[contains(text(), '%s')]";
@@ -38,6 +38,13 @@ public class MessageListWidget {
     public static MessageListWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, MESSAGE_LIST_WIDGET_XPATH);
         WebElement messageListWidget = driver.findElement(By.xpath(MESSAGE_LIST_WIDGET_XPATH));
+
+        return new MessageListWidget(driver, wait, messageListWidget);
+    }
+
+    public static MessageListWidget createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait) {
+        DelayUtils.waitByElement(wait, parent);
+        WebElement messageListWidget = parent.findElement(By.xpath(MESSAGE_LIST_WIDGET_XPATH));
 
         return new MessageListWidget(driver, wait, messageListWidget);
     }
@@ -78,7 +85,7 @@ public class MessageListWidget {
         private static final String KEBAB_XPATH = ".//a[contains(@class, 'btn-xs')]/i[@class='OSSIcon ossfont-kebab-menu']";
         private static final String BADGE_XPATH = ".//span[contains(@class, 'badge')]";
         private static final String MESSAGE_TEXT_XPATH = ".//div[@class='OSSRichText']";
-        private static final String COMMENT_INFO_ROW_XPATH = "//div[@class='im-message-list__message--comment__header__info__row']";
+        private static final String COMMENT_INFO_ROW_XPATH = ".//div[@class='im-message-list__message--comment__header__info__row']";
         private final WebElement messageElement;
         private final WebDriver driver;
         private final WebDriverWait wait;

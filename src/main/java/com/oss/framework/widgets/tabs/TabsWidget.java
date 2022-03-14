@@ -15,6 +15,7 @@ import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.components.widgetchooser.WidgetChooser;
+import com.oss.framework.iaa.widgets.list.MessageListWidget;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
@@ -37,6 +38,7 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String TABS_PATTERN = "//div[@" + CSSUtils.TEST_ID + "= '%s']";
     private static final String TAB_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')] | .//div[@class='tab-label'][contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = ".//a[@id='%s']";
+    private static final String ACTIVE_TAB_CONTENT = ".//div[@data-testid='%s']//div[contains(@class,'tabsContainerSingleContent active')]";
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
@@ -173,6 +175,15 @@ public class TabsWidget extends Widget implements TabsInterface {
                 String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel));
         return createTabs().findElement(By
                 .xpath(String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel) + "/.."));
+    }
+
+    @Override
+    public MessageListWidget getMessageListWidget(String cardContainerId) {
+        return MessageListWidget.createFromParent(getActiveTabContent(cardContainerId), driver, webDriverWait);
+    }
+
+    private WebElement getActiveTabContent(String cardContainerId) {
+        return driver.findElement(By.xpath(String.format(ACTIVE_TAB_CONTENT, cardContainerId)));
     }
 
     private WebElement getTabToSelect(String xPathForTab) {
