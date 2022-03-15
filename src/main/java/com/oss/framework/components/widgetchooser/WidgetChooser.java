@@ -3,54 +3,53 @@ package com.oss.framework.components.widgetchooser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class WidgetChooser {
 
-    private static final String X_PATH_ID = "//div[@class='add-widget']";
-    public static final String CSS_BUTTON_ADD = " .oss-button__inner--primary";
+    private static final String ID_ADD_WIDGET_XPATH = "//div[@class='add-widget']";
+    private static final String BUTTON_ADD_CSS = " .oss-button__inner--primary";
+    private static final String CANCEL_BUTTON_XPATH = "./a[contains(@class,'btn-flat')]";
+    private static final String TEXT_TYPE = ".//p[text()=' %s']";
+    private static final String TEXT_LABEL = ".//p[text()='%s']";
     private final WebDriver driver;
-    private final WebDriverWait webDriverWait;
-    private final WebElement widgetChooser;
+    private final WebElement widgetChooserElement;
 
-    private WidgetChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement widgetChooser) {
+    private WidgetChooser(WebDriver driver, WebElement widgetChooser) {
         this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.widgetChooser = widgetChooser;
+        this.widgetChooserElement = widgetChooser;
     }
 
     public static WidgetChooser create(WebDriver driver, WebDriverWait webDriverWait) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        DelayUtils.waitByXPath(webDriverWait, X_PATH_ID);
-        WebElement widgetChooser = driver.findElement(By.xpath(X_PATH_ID));
-        return new WidgetChooser(driver, webDriverWait, widgetChooser);
+        DelayUtils.waitByXPath(webDriverWait, ID_ADD_WIDGET_XPATH);
+        WebElement widgetChooser = driver.findElement(By.xpath(ID_ADD_WIDGET_XPATH));
+        return new WidgetChooser(driver, widgetChooser);
     }
 
     public void clickAdd() {
-        this.widgetChooser.findElement(By.cssSelector(CSS_BUTTON_ADD)).click();
+        this.widgetChooserElement.findElement(By.cssSelector(BUTTON_ADD_CSS)).click();
     }
 
     public void clickCancel() {
-        this.widgetChooser.findElement(By.xpath("./a[contains(@class,'btn-flat')]")).click();
+        this.widgetChooserElement.findElement(By.xpath(CANCEL_BUTTON_XPATH)).click();
     }
 
-    public WidgetChooser toggleWidgetByTypeAndLabel(String widgetType, String widgetLabel) {
+    public void addWidget(String widgetType, String widgetLabel) {
         getWidgetType(widgetType).click();
-        Actions action = new Actions(driver);
-        action.moveToElement(getWidgetByLabel(widgetLabel)).perform();
-        getWidgetByLabel(widgetLabel).click();
-        return this;
+        WebElementUtils.clickWebElement(driver, getWidgetByLabel(widgetLabel));
+        clickAdd();
     }
 
     private WebElement getWidgetByLabel(String widgetLabel) {
-        return widgetChooser.findElement(By.xpath(" .//p[text()='" + widgetLabel + "']"));
+        return widgetChooserElement.findElement(By.xpath(String.format(TEXT_LABEL, widgetLabel)));
     }
 
     private WebElement getWidgetType(String widgetType) {
-        return widgetChooser.findElement(By.xpath(" .//p[text()=' " + widgetType + "']"));
+        return widgetChooserElement.findElement(By.xpath(String.format(TEXT_TYPE, widgetType)));
     }
 
 }
