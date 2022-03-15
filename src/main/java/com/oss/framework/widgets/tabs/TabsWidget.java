@@ -15,6 +15,7 @@ import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.components.widgetchooser.WidgetChooser;
+import com.oss.framework.iaa.widgets.list.MessageListWidget;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
@@ -35,17 +36,17 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String WINDOW_TOOLBAR_CSS = ".windowToolbar";
     private static final String CONTEXT_ACTIONS_CSS = WINDOW_TOOLBAR_CSS + "," + ACTIONS_CONTAINER_CSS;
     private static final String TABS_PATTERN = "//div[@" + CSSUtils.TEST_ID + "= '%s']";
-    private static final String TAB_BY_LABEL_PATTERN = ".//*[contains(text(),'%s')] | .//*[@class='tab-label'][contains(text(),'%s')]";
+    private static final String TAB_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')] | .//div[@class='tab-label'][contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = ".//a[@id='%s']";
-    private static final String REMOVE_TAB_XPATH = ".//*[@title='Remove tab']";
+    private static final String ACTIVE_TAB_CONTENT = ".//div[@data-testid='%s']//div[contains(@class,'tabsContainerSingleContent active')]";
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
     }
 
-    public static TabsWidget createById(WebDriver driver, WebDriverWait wait, String tabsWidgetId) {
-        Widget.waitForWidgetById(wait, tabsWidgetId);
-        return new TabsWidget(driver, wait, tabsWidgetId);
+    public static TabsWidget createById(WebDriver driver, WebDriverWait wait, String id) {
+        Widget.waitForWidgetById(wait, id);
+        return new TabsWidget(driver, wait, id);
     }
 
     public Widget getWidget(String widgetId, WidgetType widgetType) {
@@ -63,23 +64,15 @@ public class TabsWidget extends Widget implements TabsInterface {
     @Override
     public void selectTabByLabel(String tabLabel) {
         DelayUtils.waitByXPath(webDriverWait, TABS_CONTAINER_XPATH);
-        WebElement tabToSelect = getTab(String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel));
+        WebElement tabToSelect = getTabToSelect(String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel));
         webDriverWait.until(ExpectedConditions.elementToBeClickable(tabToSelect));
         tabToSelect.click();
-    }
-
-    public void removeTab(String tabLabel) {
-        DelayUtils.waitByXPath(webDriverWait, TABS_CONTAINER_XPATH);
-        WebElement tabToRemove = getTab(String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel));
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(tabToRemove));
-        tabToRemove.findElement(By.xpath(REMOVE_TAB_XPATH)).click();
-
     }
 
     @Override
     public void selectTabById(String id) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        WebElement tabToSelect = getTab(String.format(TAB_BY_ID_PATTERN, id));
+        WebElement tabToSelect = getTabToSelect(String.format(TAB_BY_ID_PATTERN, id));
         webDriverWait.until(ExpectedConditions.elementToBeClickable(tabToSelect));
         tabToSelect.click();
     }
@@ -184,15 +177,24 @@ public class TabsWidget extends Widget implements TabsInterface {
                 .xpath(String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel) + "/.."));
     }
 
-    private WebElement getTab(String xPathForTab) {
+    @Override
+    public MessageListWidget getMessageListWidget(String cardContainerId) {
+        return MessageListWidget.createFromParent(getActiveTabContent(cardContainerId), driver, webDriverWait);
+    }
+
+    private WebElement getActiveTabContent(String cardContainerId) {
+        return driver.findElement(By.xpath(String.format(ACTIVE_TAB_CONTENT, cardContainerId)));
+    }
+
+    private WebElement getTabToSelect(String xPathForTab) {
         if (isMorePresent()) {
             WebElement moreTab = createTabs().findElement(By.xpath(DROPDOWN_TAB_XPATH));
             webDriverWait.until(ExpectedConditions.elementToBeClickable(moreTab));
             moreTab.click();
             DelayUtils.waitByXPath(webDriverWait, xPathForTab);
-            return driver.findElement(By.xpath(xPathForTab + "//ancestor::a"));
+            return driver.findElement(By.xpath(xPathForTab));
         } else {
-            return createTabs().findElement(By.xpath(xPathForTab + "//ancestor::a"));
+            return createTabs().findElement(By.xpath(xPathForTab));
         }
     }
 }
