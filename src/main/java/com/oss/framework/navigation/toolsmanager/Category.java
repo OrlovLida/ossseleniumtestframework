@@ -74,7 +74,7 @@ public class Category {
                 .collect(Collectors.toList());
     }
     
-    void collapseCategory() {
+    public void collapseCategory() {
         if (isCategoryExpanded()) {
             toggleCategory();
         }
@@ -114,7 +114,7 @@ public class Category {
     
     String getName() {
         String categoryText = getCategoryText();
-        return categoryText.substring(0, (categoryText.length() - getDescription().length() - 1));
+        return categoryText.substring(0, (categoryText.length() - getDescription().length()));
     }
     
     String getDescription() {
@@ -122,7 +122,7 @@ public class Category {
     }
     
     private String getCategoryText() {
-        return categoryElement.findElement(By.cssSelector(CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS)).getText();
+        return categoryElement.findElement(By.cssSelector(CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS)).getAttribute("textContent");
     }
     
     private void toggleCategory() {

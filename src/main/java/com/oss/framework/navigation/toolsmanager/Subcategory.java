@@ -26,12 +26,12 @@ public class Subcategory {
     private static final String SUBCATEGORIES_NAME_CSS = "div.subcategories__name";
     private static final String SUBCATEGORIES_CONTENT_SEE_ALL_CSS = "div.subcategories__content__see-all--text";
     private static final String DRAG_BUTTON_CSS = ".btn-drag";
-    private static final String ANCESTOR_SUBCATEGORIES_XPATH = ".//ancestor::div[@class='subcategories']";
     private static final String APPLICATIONS_IN_SUBCATEGORY_CSS = "div.category-box";
-    private static final String STAR_CSS = ".OSSIcon";
+    private static final String STAR_CSS = ".subcategories__name__favourite .OSSIcon";
     private static final String FAVOURITE = "FAVOURITE";
     private static final String ARIA_LABEL = "aria-label";
     private static final String BADGE_CSS = ".subcategories__name__counter";
+    private static final String SUBCATEGORIES_CONTENT_CSS = ".subcategories__content,.subcategories--empty";
     private WebElement subcategoryElement;
     private WebDriver driver;
     private WebDriverWait wait;
@@ -50,7 +50,7 @@ public class Subcategory {
     
     static Subcategory createSubcategory(WebDriver driver, WebDriverWait wait, WebElement subcategory) {
         Actions actions = new Actions(driver);
-        actions.moveToElement(subcategory).build().perform();
+        actions.moveToElement(subcategory.findElement(By.cssSelector(SUBCATEGORIES_NAME_CSS))).build().perform();
         return new Subcategory(subcategory, driver, wait);
     }
     
@@ -83,12 +83,11 @@ public class Subcategory {
     }
     
     DragAndDrop.DropElement getDropElement() {
-        return new DragAndDrop.DropElement(subcategoryElement);
+        return new DragAndDrop.DropElement(subcategoryElement.findElement(By.cssSelector(SUBCATEGORIES_CONTENT_CSS)));
     }
     
     DragAndDrop.DraggableElement getDragElement() {
-        WebElement subcategory = subcategoryElement.findElement(By.xpath(ANCESTOR_SUBCATEGORIES_XPATH));
-        WebElement dragButton = subcategory.findElement(By.cssSelector(DRAG_BUTTON_CSS));
+        WebElement dragButton = subcategoryElement.findElement(By.cssSelector(DRAG_BUTTON_CSS));
         return new DragAndDrop.DraggableElement(dragButton);
     }
     
