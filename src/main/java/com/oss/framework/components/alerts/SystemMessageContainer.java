@@ -34,13 +34,16 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private static final String CLOSE_MESSAGE_CONTAINER_BUTTON = ".//i[@aria-label='Close']";
     private static final String PATH_TO_SHOW_MESSAGES = ".//i[@aria-label='Show/Hide messages' and contains(@class, 'down')]";
     private static final String PATH_TO_SYSTEM_MESSAGE_CONTAINER = "//div[contains(@class, 'systemMessagesContainer')]";
+    private static final String MESSAGE_FULL_XPATH = "//div[contains(@class, 'systemMessagesContainer')]//p | //div[contains(@class, 'systemMessagesContainer')]//a";
     private static final String MESSAGE_XPATH = ".//p | .//a";
+    private static final String SYSTEM_MESSAGE_ITEM_CSS = "div.systemMessageItem";
     private static final String SYSTEM_MESSAGE_ITEM_CLASS = "systemMessageItem";
     private static final String DANGER_MESSAGE_TYPE_CLASS = "danger";
     private static final String SUCCESS_MESSAGE_TYPE_CLASS = "success";
     private static final String WARNING_MESSAGE_TYPE_CLASS = "warning";
     private static final String INFO_MESSAGE_TYPE_CLASS = "info";
-    private static final String CANNOT_MAP_TO_MESSAGE_EXCEPTION = "Cannot map to message type";
+    private static final String CANNOT_MAP_TO_MESSAGE_EXCEPTION = "Cannot map to message type.";
+    private static final String NO_MESSAGE_TEXT_EXCEPTION = "Cannot get text from system message.";
     private WebDriver driver;
     private WebDriverWait wait;
     private WebElement messageContainer;
@@ -63,7 +66,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
     public List<Message> getMessages() {
         log.info("Starting getting messages");
         DelayUtils.waitForPresence(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
-        List<WebElement> messageItems = messageContainer.findElements(By.className(SYSTEM_MESSAGE_ITEM_CLASS));
+        expandSystemMessagesContainer();
+        List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
         log.info("Found {} system messages", messageItems.size());
         return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
     }
@@ -84,7 +88,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public void clickMessageLink() {
-        DelayUtils.waitForPresence(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
+        DelayUtils.waitForPresence(wait, By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
         messageContainer.findElement(By.xpath(".//a[contains(@href, '#')]")).click();
     }
 
@@ -109,7 +113,8 @@ public class SystemMessageContainer implements SystemMessageInterface {
         log.info("Checking errors");
         DelayUtils.waitForPageToLoad(driver, wait);
         expandSystemMessagesContainer();
-        List<WebElement> messageItems = messageContainer.findElements(By.className(SYSTEM_MESSAGE_ITEM_CLASS));
+        List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
+        log.info("Found {} system messages", messageItems.size());
         List<Message> messages = messageItems.stream().map(this::toMessage).collect(Collectors.toList()).stream()
                 .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER)).collect(Collectors.toList());
         log.info("Found {} error messages", messages.size());
@@ -121,6 +126,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
             log.debug("Clicking show button in system message");
             Actions builder = new Actions(driver);
             builder.click(messageContainer.findElement(By.xpath(PATH_TO_SHOW_MESSAGES))).build().perform();
+            DelayUtils.waitForPresence(wait, By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
         }
     }
 
@@ -145,8 +151,11 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     private Message toMessage(WebElement messageItem) {
-        DelayUtils.waitForNestedElements(wait, messageItem, MESSAGE_XPATH);
-        String text = messageItem.findElement(By.xpath(MESSAGE_XPATH)).getText();
+        DelayUtils.waitForPresence(wait, By.xpath(MESSAGE_FULL_XPATH));
+        List<WebElement> messagesList = messageItem.findElements(By.xpath(MESSAGE_XPATH));
+        log.debug("Message list contains {} message items.", messagesList.size());
+        WebElement message = messagesList.stream().findFirst().orElseThrow(() -> new java.util.NoSuchElementException(NO_MESSAGE_TEXT_EXCEPTION));
+        String text = message.getText();
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);
         return new Message(text, mapToMassageType(allClasses));
     }

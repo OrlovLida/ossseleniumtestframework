@@ -1,22 +1,21 @@
 package com.oss.framework.components.inputs;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.oss.framework.components.data.Data;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.data.Data;
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MultiSearchField extends Input {
     private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
-    private static final String SEARCH_ICON_CSS = "[aria-label='SEARCH']";
+    private static final String INPUT_LABEL_CSS = ".md-input-label-text";
 
     private MultiSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -49,7 +48,7 @@ public class MultiSearchField extends Input {
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         dropdownList.selectOptionContains(value.getStringValue());
-        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_ICON_CSS)));
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(INPUT_LABEL_CSS)));
     }
 
     @Override
@@ -64,7 +63,7 @@ public class MultiSearchField extends Input {
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         dropdownList.selectOption(value.getStringValue());
-        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_ICON_CSS)));
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(INPUT_LABEL_CSS)));
     }
 
     @Override
