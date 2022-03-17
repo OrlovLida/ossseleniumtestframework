@@ -41,16 +41,10 @@ public class Subcategory {
         this.driver = driver;
         this.wait = wait;
     }
-    
-    static Subcategory createSubcategoryByName(WebDriver driver, WebDriverWait wait, WebElement category, String subcategoryName) {
-        WebElement subcategory =
-                category.findElement(By.xpath(".//*[@class='subcategories__name' and contains(text(),'" + subcategoryName + "')]"));
-        return new Subcategory(subcategory, driver, wait);
-    }
-    
+
     static Subcategory createSubcategory(WebDriver driver, WebDriverWait wait, WebElement subcategory) {
         Actions actions = new Actions(driver);
-        actions.moveToElement(subcategory.findElement(By.cssSelector(SUBCATEGORIES_NAME_CSS))).build().perform();
+        actions.moveToElement(subcategory.findElement(By.cssSelector(SUBCATEGORIES_CONTENT_CSS))).build().perform();
         return new Subcategory(subcategory, driver, wait);
     }
     
