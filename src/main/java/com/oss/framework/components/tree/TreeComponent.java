@@ -15,6 +15,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.prompts.Popup;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -118,7 +119,8 @@ public class TreeComponent {
         
         private static final String FILTERS_BUTTON_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='filters-panel-button']";
         private static final String ADVANCED_SEARCH_PANEL_ID = "advanced-search_panel";
-        
+        private static final String POPUP_CONTAINER_CSS = ".popupContainer";
+
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
@@ -160,7 +162,7 @@ public class TreeComponent {
             }
         }
         
-        public void expandNextLevel() {
+        public Optional<Popup> expandNextLevel() {
             if (isExpandNextLevelPresent()) {
                 Actions action = new Actions(driver);
                 action.moveToElement(nodeElement).perform();
@@ -169,10 +171,14 @@ public class TreeComponent {
                 WebElement button =
                         nodeElement.findElement(By.xpath("//a[contains(@" + CSSUtils.TEST_ID + ",'" + EXPAND_NEXT_LEVEL_BUTTON + "')]"));
                 WebElementUtils.clickWebElement(driver, button);
+                List<WebElement> popups = driver.findElements(By.cssSelector(POPUP_CONTAINER_CSS));
+                if (!popups.isEmpty()){
+                   return Optional.of(Popup.create(driver,webDriverWait));
+                }
                 DelayUtils.waitForElementDisappear(webDriverWait, nodeElement.findElement(By.xpath(SPIN_XPATH)));
+                return Optional.empty();
             } else
                 throw new NoSuchElementException("Expand Next Level is not available for Node " + getLabel());
-            
         }
         
         public void collapseNode() {
