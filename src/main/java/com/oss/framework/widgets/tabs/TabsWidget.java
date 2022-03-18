@@ -40,7 +40,7 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String TAB_BY_ID_PATTERN = ".//a[@id='%s']";
     private static final String ACTIVE_TAB_CONTENT = ".//div[@data-testid='%s']//div[contains(@class,'tabsContainerSingleContent active')]";
     private static final String REMOVE_TAB_XPATH = ".//*[@title='Remove tab']";
-    private static final String ANCESTOR_XPATH = "//ancestor::a";
+    private static final String ANCESTOR_PATTERN = "(%s)//ancestor::a";
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
@@ -202,9 +202,9 @@ public class TabsWidget extends Widget implements TabsInterface {
             webDriverWait.until(ExpectedConditions.elementToBeClickable(moreTab));
             moreTab.click();
             DelayUtils.waitByXPath(webDriverWait, xPathForTab);
-            return driver.findElement(By.xpath(xPathForTab + ANCESTOR_XPATH));
+            return driver.findElement(By.xpath(String.format(ANCESTOR_PATTERN, xPathForTab)));
         } else {
-            return createTabs().findElement(By.xpath(xPathForTab + ANCESTOR_XPATH));
+            return createTabs().findElement(By.xpath(String.format(ANCESTOR_PATTERN, xPathForTab)));
         }
     }
 }
