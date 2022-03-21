@@ -28,7 +28,7 @@ public class Category {
     private static final String CANNOT_FIND_CATEGORY_WITH_PROVIDED_NAME_EXCEPTION = "Cannot find category with provided name";
     private static final String CATEGORIES_CONTENT_NAME_DESCRIPTION_CSS = "div.categories__bar__content__name";
     private static final String CATEGORIES_DESCRIPTION_CSS = "div.categories__bar__content__description";
-    private static final String CATEGORIES_BUTTON_EXPANDER_CSS = "categories__buttons__rollout";
+    private static final String CATEGORIES_BUTTON_EXPANDER_CSS = ".categories__buttons__rollout i";
     private static final String CHEVRON_UP_ICON_CLASS = "fa-chevron-up";
     private static final String SUBCATEGORIES_CSS = "//div[@class='subcategories__name']//ancestor::div[@class='subcategories']";
     private static final String DRAG_BUTTON_XPATH = ".//ancestor::div[contains(@class,'draggableBox')]//div[@class='btn-drag']";
@@ -126,7 +126,7 @@ public class Category {
     }
     
     private void toggleCategory() {
-        WebElement expanderIcon = categoryElement.findElement(By.className(CATEGORIES_BUTTON_EXPANDER_CSS));
+        WebElement expanderIcon = categoryElement.findElement(By.cssSelector(CATEGORIES_BUTTON_EXPANDER_CSS));
         Actions actions = new Actions(driver);
         actions.moveToElement(categoryElement).click(expanderIcon).build().perform();
     }
