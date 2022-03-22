@@ -34,12 +34,16 @@ public class Table2DWidget {
         this.tableName = tableName;
     }
 
-    private Table2DComponent getTable2DComponent (){
-        return Table2DComponent.create(driver,wait,tableName);
+    private Table2DComponent getTable2DComponent() {
+        return Table2DComponent.create(driver, wait, tableName);
     }
 
     public String getCellValue(String leftHeader, String columnName) {
         return getTable2DComponent().getCellValue(leftHeader, columnName);
+    }
+
+    public int getValuesOfSelectedCells() {
+        return getTable2DComponent().getValuesOfSelectedCells();
     }
 
     public void selectCell(String leftHeader, String columnName) {

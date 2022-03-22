@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Table2DComponent {
     private static final String TABLE_2D_WIDGET_XPATH = "//div[@class='Table2DWidget']";
@@ -18,7 +19,7 @@ public class Table2DComponent {
     private static final String ROW_HEADER_XPATH = ".//div[@class='Table2DColumn left']//div[contains(@class, 'Header')]";
     private static final String COLUMN_HEADER_XPATH = ".//div[@class='Table2DColumn center']//div[contains(@class, 'Header')]";
     private static final String CLEAR_FILTER_XPATH = ".//div[@class='Header filter-clear']";
-    private static final String SELECTED_CELL_CLASS = "Cell selected";
+    private static final String SELECTED_CELL_XPATH = ".//div[contains(@class, 'selected')]";
     private static final String ROW_XPATH = "//ancestor::div[contains(@class,'Table2DColumn left')]";
     private static final String COLUMN_XPATH = ".//ancestor::div[contains(@class,'Table2DColumn center')]";
     private static final String HEADER_XPATH = ".//div[@class='Header']";
@@ -91,9 +92,12 @@ public class Table2DComponent {
     public List<Cell2D> getSelectedCells() {
         DelayUtils.waitBy(wait, By.xpath(TABLE_2D_COLUMN_XPATH));
         List<Cell2D> allSelectedCells = Lists.newArrayList();
-        List<Cell2D> allCells = getCells();
-        for (Cell2D cell : allCells) {
-            if (cell.isSelected()) {
+        List<WebElement> columns = tableComponent.findElements(By.xpath(TABLE_2D_COLUMN_XPATH));
+        for (WebElement column : columns) {
+            int index = 0;
+            List<WebElement> columnCells = column.findElements(By.xpath(SELECTED_CELL_XPATH));
+            for (WebElement element : columnCells) {
+                Cell2D cell = new Cell2D(element, index++);
                 allSelectedCells.add(cell);
             }
         }
@@ -104,6 +108,12 @@ public class Table2DComponent {
         DelayUtils.waitBy(wait, By.xpath(TABLE_2D_COLUMN_XPATH));
         WebElement clearFilter = tableComponent.findElement(By.xpath(CLEAR_FILTER_XPATH));
         clearFilter.click();
+    }
+
+    public int getValuesOfSelectedCells() {
+        List<Cell2D> selectedCells = getSelectedCells();
+        DelayUtils.waitForPageToLoad(driver, wait);
+        return selectedCells.stream().map(c -> Integer.parseInt(c.getValue())).collect(Collectors.summingInt(Integer::intValue));
     }
 
     public static class Cell2D {
@@ -132,7 +142,7 @@ public class Table2DComponent {
         }
 
         public boolean isSelected() {
-            return !cell.findElements(By.className(SELECTED_CELL_CLASS)).isEmpty();
+            return !cell.findElements(By.className(SELECTED_CELL_XPATH)).isEmpty();
         }
 
         public String getRowName() {
