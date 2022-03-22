@@ -18,7 +18,7 @@ public class Table2DComponent {
     private static final String ROW_HEADER_XPATH = ".//div[@class='Table2DColumn left']//div[contains(@class, 'Header')]";
     private static final String COLUMN_HEADER_XPATH = ".//div[@class='Table2DColumn center']//div[contains(@class, 'Header')]";
     private static final String CLEAR_FILTER_XPATH = ".//div[@class='Header filter-clear']";
-    private static final String SELECTED_CELL_CLASS = "Cell selected";
+    private static final String SELECTED_CELL_CLASS = "selected";
     private static final String ROW_XPATH = "//ancestor::div[contains(@class,'Table2DColumn left')]";
     private static final String COLUMN_XPATH = ".//ancestor::div[contains(@class,'Table2DColumn center')]";
     private static final String HEADER_XPATH = ".//div[@class='Header']";
@@ -91,9 +91,12 @@ public class Table2DComponent {
     public List<Cell2D> getSelectedCells() {
         DelayUtils.waitBy(wait, By.xpath(TABLE_2D_COLUMN_XPATH));
         List<Cell2D> allSelectedCells = Lists.newArrayList();
-        List<Cell2D> allCells = getCells();
-        for (Cell2D cell : allCells) {
-            if (cell.isSelected()) {
+        List<WebElement> columns = tableComponent.findElements(By.xpath(TABLE_2D_COLUMN_XPATH));
+        for (WebElement column : columns) {
+            int index = 0;
+            List<WebElement> columnCells = column.findElements(By.className(SELECTED_CELL_CLASS));
+            for (WebElement element : columnCells) {
+                Cell2D cell = new Cell2D(element, index++);
                 allSelectedCells.add(cell);
             }
         }
