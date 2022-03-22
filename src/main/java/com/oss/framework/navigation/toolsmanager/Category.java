@@ -13,12 +13,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 
 /**
  * @author Gabriela Zaranek
@@ -127,7 +127,6 @@ public class Category {
     
     private void toggleCategory() {
         WebElement expanderIcon = categoryElement.findElement(By.cssSelector(CATEGORIES_BUTTON_EXPANDER_CSS));
-        Actions actions = new Actions(driver);
-        actions.moveToElement(categoryElement).click(expanderIcon).build().perform();
+        WebElementUtils.clickWebElement(driver, expanderIcon);
     }
 }
