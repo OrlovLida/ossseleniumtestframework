@@ -42,10 +42,6 @@ public class Table2DWidget {
         return getTable2DComponent().getCellValue(leftHeader, columnName);
     }
 
-    public int getValuesOfSelectedCells() {
-        return getTable2DComponent().getValuesOfSelectedCells();
-    }
-
     public void selectCell(String leftHeader, String columnName) {
         getTable2DComponent().selectCell(leftHeader, columnName);
     }
