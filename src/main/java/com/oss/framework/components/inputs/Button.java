@@ -3,9 +3,9 @@ package com.oss.framework.components.inputs;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class Button {
 
@@ -36,7 +36,6 @@ public class Button {
     }
 
     public void click() {
-        Actions action = new Actions(webDriver);
-        action.moveToElement(this.webElement).click(this.webElement).build().perform();
+        WebElementUtils.clickWebElement(webDriver, webElement);
     }
 }
