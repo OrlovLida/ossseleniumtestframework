@@ -25,7 +25,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String PROPERTY_NAME_PATH = ".//div[@class='propertyPanelRow-label']";
     private static final String PROPERTY_VALUE_PATH =
             ".//div[@class='propertyPanelRow-value']";
-    private static final String DRAGGABLE_ELEMENT_XPATH = ".//*[contains(@class, 'btn-drag')]";
+    private static final String DRAGGABLE_ELEMENT_CSS = ".btn-drag";
 
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id, WebElement propertyPanel) {
         super(driver, wait, id, propertyPanel);
@@ -52,14 +52,6 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
             propertyId.add(element.getAttribute("id"));
         }
         return propertyId;
-    }
-
-    public boolean isPropertyDisplayed(String propertyLabel) {
-        for (String label : getPropertyLabels()) {
-            if (label.equals(propertyLabel))
-                return true;
-        }
-        return false;
     }
 
     public void changePropertyOrder(String id, int position) {
@@ -109,7 +101,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private DragAndDrop.DraggableElement getDraggableElement(String id) {
-        WebElement source = getPropertyById(id).findElement(By.xpath(DRAGGABLE_ELEMENT_XPATH));
+        WebElement source = getPropertyById(id).findElement(By.cssSelector(DRAGGABLE_ELEMENT_CSS));
         return new DragAndDrop.DraggableElement(source);
     }
 
