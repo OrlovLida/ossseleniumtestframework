@@ -54,7 +54,7 @@ public class PerspectiveChooser {
     public void setPlanPerspective(String processCodeOrName) {
         setPerspective(PLAN);
         Wizard planChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
-        planChooser.setComponentValue(EXISTING_PROJECTS_INPUT_ID, processCodeOrName, Input.ComponentType.SEARCH_FIELD);
+        planChooser.getComponent(EXISTING_PROJECTS_INPUT_ID, Input.ComponentType.SEARCH_FIELD).setSingleStringValueContains(processCodeOrName);
         planChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
         wait.until(url -> driver.getCurrentUrl().contains(PLAN.toUpperCase()));
     }
