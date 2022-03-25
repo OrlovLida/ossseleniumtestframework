@@ -119,6 +119,12 @@ public class TreeComponent {
         
         private static final String FILTERS_BUTTON_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='filters-panel-button']";
         private static final String ADVANCED_SEARCH_PANEL_ID = "advanced-search_panel";
+        private static final String DECORATOR_ICON_CSS = ".icon-wrapper";
+        private static final String GREEN = "color: rgb(0, 166, 102);";
+        private static final String PURPLE = "color: rgb(150, 54, 139);";
+        private static final String RED = "color: rgb(199, 19, 69);";
+        private static final String CANNOT_MAP_TO_COLOR_EXCEPTION = "Cannot map to color";
+
         private static final String POPUP_CONTAINER_CSS = ".popupContainer";
 
         private final WebDriver driver;
@@ -228,6 +234,30 @@ public class TreeComponent {
             DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className("OSSIcon"));
         }
         
+        public int countDecorators() {
+            return nodeElement.findElements(By.cssSelector(DECORATOR_ICON_CSS)).size();
+        }
+
+        public DecoratorStatus getDecoratorStatus() {
+            if (countDecorators() != 0) {
+                String style = nodeElement.findElement(By.cssSelector(DECORATOR_ICON_CSS)).getAttribute("style");
+                switch (style) {
+                case GREEN: {
+                    return DecoratorStatus.GREEN;
+                }
+                case PURPLE: {
+                    return DecoratorStatus.PURPLE;
+                }
+                case RED: {
+                    return DecoratorStatus.RED;
+                }
+                default:
+                }
+                throw new IllegalArgumentException(CANNOT_MAP_TO_COLOR_EXCEPTION);
+            }
+            return DecoratorStatus.NONE;
+        }
+
         boolean isExpandNextLevelPresent() {
             return !nodeElement.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
         }
@@ -244,5 +274,10 @@ public class TreeComponent {
         private boolean isFilterButtonPresent() {
             return !nodeElement.findElements(By.xpath(FILTERS_BUTTON_XPATH)).isEmpty();
         }
+
+        public enum DecoratorStatus {
+            GREEN, PURPLE, RED, NONE
+        }
+
     }
 }
