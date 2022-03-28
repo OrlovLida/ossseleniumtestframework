@@ -38,7 +38,7 @@ public class TableComponent {
     private static final String TABLE_COMPONENT_CLASS = "table-component";
     private static final String DATA_ROW = "data-row";
     private static final String DATA_COL = "data-col";
-
+    
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement webElement;
@@ -92,11 +92,11 @@ public class TableComponent {
         Optional<Cell> cell = cells.stream().filter(c -> c.getText().equals(value)).findFirst();
         return cell.map(Cell::getIndex);
     }
-
-    public Row getRow(String value, String columnId){
+    
+    public Row getRow(String value, String columnId) {
         Optional<Integer> rowIndex = getRowIndex(value, columnId);
-        if (rowIndex.isPresent()){
-           return getRow(rowIndex.get());
+        if (rowIndex.isPresent()) {
+            return getRow(rowIndex.get());
         }
         throw new IllegalStateException("Cannot find Row with provided value and columnId");
     }
@@ -640,7 +640,7 @@ public class TableComponent {
         public void expandRow() {
             getFirstCell().expandCell();
         }
-
+        
         public void collapseRow() {
             getFirstCell().collapseCell();
         }

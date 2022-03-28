@@ -44,11 +44,10 @@ public class TreeTableWidget extends Widget {
     }
     
     public void collapseNode(String value, String columnId) {
-        getTable().getRow(value,columnId).collapseRow();
-        
+        getTable().getRow(value, columnId).collapseRow();
     }
-
-    public void collapseNode(int index){
+    
+    public void collapseNode(int index) {
         getTable().getRow(index).collapseRow();
     }
     
