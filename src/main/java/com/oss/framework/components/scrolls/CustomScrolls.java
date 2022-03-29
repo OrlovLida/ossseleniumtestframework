@@ -1,5 +1,6 @@
 package com.oss.framework.components.scrolls;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -14,19 +15,17 @@ public class CustomScrolls {
     private static final String SCROLLS_XPATH = ".//div[contains(@class, 'custom-scrollbars')]";
 
     private final WebElement scrolls;
-    private final WebDriverWait wait;
     private final WebDriver driver;
 
-    private CustomScrolls(WebDriver driver, WebDriverWait wait, WebElement scrolls) {
+    private CustomScrolls(WebDriver driver, WebElement scrolls) {
         this.driver = driver;
-        this.wait = wait;
         this.scrolls = scrolls;
     }
 
     public static CustomScrolls create(WebDriver driver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitForNestedElements(wait, parent, SCROLLS_XPATH);
         WebElement scrolls = parent.findElement(By.xpath(SCROLLS_XPATH));
-        return new CustomScrolls(driver, wait, scrolls);
+        return new CustomScrolls(driver, scrolls);
     }
 
     public int getHorizontalBarWidth() {
@@ -43,8 +42,11 @@ public class CustomScrolls {
 
     public int getTranslateXValue() {
         String barStyle = getHorizontalBar().getAttribute("style");
-        String translateX = barStyle.split("translateX\\(")[1];
-        return Integer.parseInt(translateX.split("px")[0]);
+        if (barStyle.contains("translateX")) {
+            String translateX = barStyle.split("translateX\\(")[1];
+            return BigDecimal.valueOf(Double.parseDouble(translateX.split("px")[0])).toBigInteger().intValue();
+        }
+        return 0;
     }
 
     public void scrollVertically(int offset) {
