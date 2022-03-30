@@ -14,6 +14,7 @@ import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class SearchPanel {
     private static final String ADVANCED_SEARCH_PANEL_CLASS = "advanced-search_panel";
@@ -91,7 +92,8 @@ public class SearchPanel {
     }
 
     private void callSaveFilterAction(String actionId) {
-        this.webElement.findElement(By.xpath(SAVE_BUTTONS_DROPDOWN_PATH)).click();
+        WebElement saveButton = this.webElement.findElement(By.xpath(SAVE_BUTTONS_DROPDOWN_PATH));
+        WebElementUtils.clickWebElement(driver, saveButton);
         driver.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + actionId + "']")).click();
     }
 
