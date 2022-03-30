@@ -3,10 +3,10 @@ package com.oss.framework.components.table;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -27,6 +27,7 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.DragAndDrop.DraggableElement;
 import com.oss.framework.utils.DragAndDrop.DropElement;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.table.TableRow;
 
 public class TableComponent {
@@ -34,6 +35,10 @@ public class TableComponent {
     private static final String EMPTY_DATA_ROW_XPATH = ".//div[contains(@class, 'empty_data_row')]";
     private static final String HEADER_CLASS = "table-component__header";
     private static final String TABLE_COMPONENT_CLASS = "table-component";
+    private static final String DATA_ROW = "data-row";
+    private static final String DATA_COL = "data-col";
+    private static final String NOT_CELL_CHECKBOX_CSS = ":not(.table-component__cell__checkbox)";
+    private static final String CELL_ROW_PATTERN = "[" + DATA_ROW + "='%s']";
 
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
@@ -82,13 +87,28 @@ public class TableComponent {
         return !webElement.findElements(By.xpath(EMPTY_DATA_ROW_XPATH)).isEmpty();
     }
 
+    public Optional<Integer> getRowIndex(String value, String columnId) {
+        List<Cell> cells = webElement.findElements(By.cssSelector(".table-component__cell[data-col='" + columnId + "']")).stream()
+                .map(cell -> Cell.createCell(driver, cell)).collect(Collectors.toList());
+        Optional<Cell> cell = cells.stream().filter(c -> c.getText().equals(value)).findFirst();
+        return cell.map(Cell::getIndex);
+    }
+
+    public Row getRow(String value, String columnId) {
+        Optional<Integer> rowIndex = getRowIndex(value, columnId);
+        if (rowIndex.isPresent()) {
+            return getRow(rowIndex.get());
+        }
+        throw new IllegalStateException("Cannot find Row with provided value and columnId");
+    }
+
     public List<TableRow> getVisibleRows() {
         String firstColumn = getColumnIds().stream().findFirst().orElse("");
         String xpath = ".//div[@data-col='" + firstColumn + "']";
         List<Integer> rowIds = this.webElement
                 .findElements(By.xpath(xpath))
-                .stream().filter(e -> e.getAttribute("data-col").equals(firstColumn)).filter(e -> e.getAttribute("data-row") != null)
-                .map(e -> e.getAttribute("data-row"))
+                .stream().filter(e -> e.getAttribute(DATA_COL).equals(firstColumn)).filter(e -> e.getAttribute(DATA_ROW) != null)
+                .map(e -> e.getAttribute(DATA_ROW))
                 .map(Integer::parseInt).sorted().collect(Collectors.toList());
 
         return rowIds.stream().map(index -> new Row(this.driver, this.webDriverWait, this.webElement, index)).collect(Collectors.toList());
@@ -203,7 +223,7 @@ public class TableComponent {
         return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" + "']"));
     }
 
-    private Row getRow(int index) {
+    public Row getRow(int index) {
         return new Row(driver, webDriverWait, webElement, index);
     }
 
@@ -244,7 +264,8 @@ public class TableComponent {
         CustomScrolls scrolls = getCustomScrolls();
         BigDecimal scrollWidth = BigDecimal.valueOf(scrolls.getHorizontalScrollWidth());
         int contentVisibleWidth = scrolls.getHorizontalBarWidth();
-        int diff = scrollWidth.toBigInteger().intValue() - contentVisibleWidth;
+        int translateXValue = scrolls.getTranslateXValue();
+        int diff = (scrollWidth.toBigInteger().intValue() - contentVisibleWidth) - translateXValue;
 
         BigDecimal contentWidth = getContentWidth();
         BigDecimal cellLeft = BigDecimal.valueOf(header.getLeft());
@@ -268,8 +289,8 @@ public class TableComponent {
     }
 
     public static class Header {
-        private static final String RESIZE_XPATH = ".//div[@" + CSSUtils.TEST_ID + "='col-%s-resizer']";
-        private static final String SETTINGS_XPATH = ".//div[@" + CSSUtils.TEST_ID + "='col-%s-settings']";
+        private static final String RESIZE_XPATH = "[" + CSSUtils.TEST_ID + "='col-%s-resizer']";
+        private static final String SETTINGS_XPATH = "[" + CSSUtils.TEST_ID + "='col-%s-settings']";
 
         private final WebElement tableComponent;
         private final String columnId;
@@ -293,8 +314,8 @@ public class TableComponent {
         }
 
         private static Header createFromWrapper(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent,
-                                                WebElement wrapper) {
-            String columnId = CSSUtils.getAttributeValue("data-col", wrapper);
+                WebElement wrapper) {
+            String columnId = CSSUtils.getAttributeValue(DATA_COL, wrapper);
             String label = wrapper.getText();
             return new Header(driver, webDriverWait, tableComponent, columnId, label);
         }
@@ -304,7 +325,7 @@ public class TableComponent {
         }
 
         public void resize(int offset) {
-            WebElement resize = getHeader(tableComponent, columnId).findElement(By.xpath(getResizeXpath()));
+            WebElement resize = getHeader(tableComponent, columnId).findElement(By.cssSelector(getResizeCss()));
             Actions action = new Actions(this.driver);
             action.dragAndDropBy(resize, offset, 0).perform();
         }
@@ -334,7 +355,7 @@ public class TableComponent {
         }
 
         public HeaderSettings openSettings() {
-            getHeader(tableComponent, columnId).findElement(By.xpath(getSettingsXpath())).click();
+            getHeader(tableComponent, columnId).findElement(By.cssSelector(getSettingsCss())).click();
             return getHeaderSettings();
         }
 
@@ -364,16 +385,16 @@ public class TableComponent {
             return Objects.equal(columnId, header.columnId);
         }
 
-        private String getResizeXpath() {
+        private String getResizeCss() {
             return String.format(RESIZE_XPATH, columnId);
         }
 
-        private String getSettingsXpath() {
+        private String getSettingsCss() {
             return String.format(SETTINGS_XPATH, columnId);
         }
     }
 
-    public static class HeaderSettings {
+    private static class HeaderSettings {
         private static final String COLUMN_PANEL_SETTINGS_XPATH = "//div[@class='column-panel-settings']";
         private static final String TABS_BUTTON_CLASS = "tabs-button";
         private static final String ADMINISTRATION = "Administration";
@@ -440,6 +461,12 @@ public class TableComponent {
     public static class Cell {
         private static final String SELECTED_CLASS = "table-component__cell--selected";
         private static final String CHECKBOX_COLUMN_ID = "checkbox";
+        private static final String TREE_NODE_EXPAND_CSS = ".tree-node-expand";
+        private static final String CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION = "Cell doesn't have expand icon";
+        private static final String CELL_PATTERN = "[" + DATA_ROW + "='%s'][" + DATA_COL + "='%s']";
+        private static final String PLUS_ICON_CSS = ".OSSIcon";
+        private static final String ARIA_LABEL_ATTRIBUTE = "aria-label";
+        private static final String MINUS = "MINUS";
 
         private final WebDriver driver;
         private final WebElement cellElement;
@@ -454,14 +481,14 @@ public class TableComponent {
         }
 
         private static boolean hasCheckboxCell(WebElement tableComponent, int index) {
-            return tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "' and @data-col='" + CHECKBOX_COLUMN_ID + "']"))
+            return tableComponent
+                    .findElements(By.cssSelector(String.format(CELL_PATTERN, index, CHECKBOX_COLUMN_ID)))
                     .stream().findAny().isPresent();
         }
 
-        private static Cell createFromWrapper(WebDriver driver, WebElement wrapper) {
-            WebElement cell = wrapper.findElement(By.xpath("./div"));
-            int index = CSSUtils.getIntegerValue("data-row", cell);
-            String columnId = cell.getCssValue("data-col");
+        private static Cell createCell(WebDriver driver, WebElement cell) {
+            int index = Integer.parseInt(cell.getAttribute(DATA_ROW));
+            String columnId = cell.getCssValue(DATA_COL);
             return new Cell(driver, cell, index, columnId);
         }
 
@@ -470,7 +497,7 @@ public class TableComponent {
         }
 
         private static Cell createFromParent(WebDriver driver, WebElement tableComponent, int index, String columnId) {
-            WebElement cell = tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "' and @data-col='" + columnId + "']"))
+            WebElement cell = tableComponent.findElements(By.cssSelector(String.format(CELL_PATTERN, index, columnId)))
                     .stream().findFirst()
                     .orElseThrow(() -> new RuntimeException("Cant find cell: rowId " + index + " columnId: " + columnId));
             return new Cell(driver, cell, index, columnId);
@@ -478,9 +505,9 @@ public class TableComponent {
 
         private static Cell createRandomCell(WebDriver driver, WebElement tableComponent, int index) {
             WebElement randomCell =
-                    tableComponent.findElements(By.xpath(".//div[@data-row='" + index + "']"))
+                    tableComponent.findElements(By.cssSelector(String.format(CELL_ROW_PATTERN, index)))
                             .stream().findAny().orElseThrow(() -> new RuntimeException("Cant find row " + index));
-            String columnId = CSSUtils.getAttributeValue("data-col", randomCell);
+            String columnId = CSSUtils.getAttributeValue(DATA_COL, randomCell);
             return new Cell(driver, randomCell, index, columnId);
         }
 
@@ -506,9 +533,12 @@ public class TableComponent {
             return cellElement.getAttribute("textContent");
         }
 
+        private int getIndex() {
+            return this.index;
+        }
+
         public void click() {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cellElement);
-            cellElement.click();
+            WebElementUtils.clickWebElement(driver, cellElement);
         }
 
         @Override
@@ -524,6 +554,38 @@ public class TableComponent {
                 return false;
             Cell cell1 = (Cell) o;
             return Objects.equal(index, cell1.index) && Objects.equal(columnId, cell1.columnId);
+        }
+
+        private void expandCell() {
+            if (!isCellExpanded()) {
+                toggleCell();
+            } else
+                throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
+        }
+
+        private void collapseCell() {
+            if (isCellExpanded()) {
+                toggleCell();
+            } else
+                throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
+        }
+
+        private void toggleCell() {
+            WebElement expandIcon = cellElement.findElement(By.cssSelector(TREE_NODE_EXPAND_CSS));
+            WebElementUtils.clickWebElement(driver, expandIcon);
+            DelayUtils.waitForVisibility(new WebDriverWait(driver, 10),
+                    expandIcon.findElement(By.cssSelector("[" + ARIA_LABEL_ATTRIBUTE + "='" + MINUS + "']")));
+        }
+
+        private boolean isExpandPresent() {
+            return !cellElement.findElements(By.cssSelector(TREE_NODE_EXPAND_CSS)).isEmpty();
+        }
+
+        private boolean isCellExpanded() {
+            if (isExpandPresent()) {
+                return cellElement.findElement(By.cssSelector(PLUS_ICON_CSS)).getAttribute(ARIA_LABEL_ATTRIBUTE).equals(MINUS);
+            }
+            throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
         }
 
         private boolean isSelected() {
@@ -568,7 +630,8 @@ public class TableComponent {
 
         public void clickRow() {
             Actions actions = new Actions(driver);
-            WebElement randomCell = this.tableComponent.findElements(By.cssSelector("[data-row='" + this.index + "']" + ":not(.table-component__cell__checkbox)"))
+            WebElement randomCell = this.tableComponent
+                    .findElements(By.cssSelector(String.format(CELL_ROW_PATTERN, index) + NOT_CELL_CHECKBOX_CSS))
                     .stream().findAny()
                     .orElseThrow(() -> new RuntimeException("Cant find row " + this.index));
             actions.moveToElement(randomCell).click(randomCell).build().perform();
@@ -579,6 +642,21 @@ public class TableComponent {
                 Cell cell = getCell();
                 cell.click();
             }
+        }
+
+        public void expandRow() {
+            getFirstCell().expandCell();
+        }
+
+        public void collapseRow() {
+            getFirstCell().collapseCell();
+        }
+
+        private Cell getFirstCell() {
+            List<Cell> cells = tableComponent.findElements(By.cssSelector(String.format(CELL_ROW_PATTERN, index) + NOT_CELL_CHECKBOX_CSS)).stream()
+                    .map(cell -> Cell.createCell(driver, cell))
+                    .collect(Collectors.toList());
+            return cells.get(0);
         }
 
         private Cell getCell() {
