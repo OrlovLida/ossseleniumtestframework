@@ -6,24 +6,31 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class KpiTreeWidget extends Widget {
 
-    public static final String SELECT_NODE = "Selecting node: ";
     private static final Logger log = LoggerFactory.getLogger(KpiTreeWidget.class);
-    private static final String WINDOW_XPATH = ".//ancestor::*[@class='card-shadow']";
-    private static final String CARD_SHADOW_XPATH = "//*[@class='card-shadow']";
-    private static final String TOOLBAR_INPUT_ID = "search-toolbar-input";
-    private static final String DIMENSION_OPTIONS_BUTTON_ID = "dimension-options-button";
+
+    private static final String KPI_TREE_WIDGET_XPATH = "//div[@" + CSSUtils.TEST_ID + "='%s']//div[@class='TreeTable']";
+    private static final String SELECT_NODE = "Selecting node: ";
+    private static final String WINDOW_XPATH = ".//ancestor::*[contains(@class, 'card-shadow')]";
+    private static final String CARD_SHADOW_XPATH = "//*[contains(@class, 'card-shadow')]";
+    private static final String TOOLBAR_INPUT_XPATH = ".//input[@" + CSSUtils.TEST_ID + "='search-toolbar-input']";
+    private static final String SEARCH_TOOLBAR_ICON_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-button']";
+    private static final String CLOSE_SEARCH_TOOLBAR_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-clean-button']";
+    private static final String FIRST_SEARCH_RESULT_XPATH = "//*[starts-with(@class, 'resultsPopup')]/ol/li[1]";
+    private static final String NODE_NAME_XPATH = "//div[@title ='%s']";
+    private static final String NODE_OPTIONS_XPATH = NODE_NAME_XPATH + "//*[@" + CSSUtils.TEST_ID + "='dimension-options-button']";
+    private static final String EXPAND_NODE_ICON_XPATH = NODE_NAME_XPATH +
+            "//ancestor::div[@class='customComponent']//a[@href='#'and @class='fa expandIcon fa-caret-right']";
     private static final String EXPAND_NODE = "Expanding node: ";
 
     public KpiTreeWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
@@ -31,9 +38,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     public static KpiTreeWidget create(WebDriver driver, WebDriverWait wait, String widgetId) {
-        String xPath = "//div[@" + CSSUtils.TEST_ID + "='" + widgetId
-                + "']//div[@class='card-shadow']//div[@class='windowContent']//div[@class='custom-scrollbars']//div//div//div[@class='appContent pmsqm-dimension']";
-        DelayUtils.waitByXPath(wait, xPath);
+        DelayUtils.waitByXPath(wait, String.format(KPI_TREE_WIDGET_XPATH, widgetId));
         return new KpiTreeWidget(driver, wait, widgetId);
     }
 
@@ -55,35 +60,26 @@ public class KpiTreeWidget extends Widget {
 
     public void searchInToolbarPanel(String value) {
         clickSearchIcon();
-        WebElement input = getToolbar().findElement(By.xpath(".//input[@" + CSSUtils.TEST_ID + "='" + TOOLBAR_INPUT_ID + "']"));
+        WebElement input = getToolbar().findElement(By.xpath(TOOLBAR_INPUT_XPATH));
         input.sendKeys(value);
         clickSearchIcon();
         log.debug("Searching for: {}", value);
     }
 
     public void closeSearchToolbar() {
-        WebElement closeButton = getToolbar().findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-clean-button']"));
-        Actions action = new Actions(driver);
-        action.moveToElement(closeButton)
-                .click(closeButton)
-                .build()
-                .perform();
+        WebElement closeButton = getToolbar().findElement(By.xpath(CLOSE_SEARCH_TOOLBAR_XPATH));
+        WebElementUtils.clickWebElement(driver, closeButton);
         log.debug("Clicking close search button");
     }
 
     public void selectFirstSearchResult() {
-        WebElement firstResult = getToolbar().findElement(By.xpath("//*[starts-with(@class, 'resultsPopup')]/ol/li[1]"));
-        Actions action = new Actions(driver);
-        action.moveToElement(firstResult)
-                .click(firstResult)
-                .build()
-                .perform();
+        WebElement firstResult = getToolbar().findElement(By.xpath(FIRST_SEARCH_RESULT_XPATH));
+        WebElementUtils.clickWebElement(driver, firstResult);
         log.debug("Clicking on first result in the list");
     }
 
     public void clickNodeOptions(String nodeName) {
-        String nodeXpath = "div[@title ='" + nodeName + "']//*";
-        driver.findElement(By.xpath("//" + nodeXpath + "[@" + CSSUtils.TEST_ID + "='" + DIMENSION_OPTIONS_BUTTON_ID + "']")).click();
+        getToolbar().findElement(By.xpath(String.format(NODE_OPTIONS_XPATH, nodeName))).click();
         log.debug("Clicking dimension options on node: {}", nodeName);
     }
 
@@ -103,7 +99,7 @@ public class KpiTreeWidget extends Widget {
 
     private WebElement findNodeElementByXPath(String objectName) {
         return this.webElement.findElement(By
-                .xpath("//*[contains(text(),'" + objectName + "')]/../../../../..//a[@href='#'and @class='fa expandIcon fa-caret-right']"));
+                .xpath(String.format(EXPAND_NODE_ICON_XPATH, objectName)));
     }
 
     private void selectNode(String objectName) {
@@ -116,7 +112,7 @@ public class KpiTreeWidget extends Widget {
     }
 
     private WebElement getNode(String objectName) {
-        return webElement.findElement(By.xpath("//div[@title='" + objectName + "']"))
+        return webElement.findElement(By.xpath(String.format(NODE_NAME_XPATH, objectName)))
                 .findElement(By.xpath("following-sibling::*"));
     }
 
@@ -127,17 +123,12 @@ public class KpiTreeWidget extends Widget {
     private WebElement getToolbar() {
         DelayUtils.waitByXPath(webDriverWait, CARD_SHADOW_XPATH);
         WebElement window = webElement.findElement(By.xpath(WINDOW_XPATH));
-        return window.findElement(By.className("windowHeader"));
+        return window.findElement(By.className("card-header"));
     }
 
     private void clickSearchIcon() {
-        WebElement searchButton = getToolbar().findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-button']"));
-        Actions action = new Actions(driver);
-
-        action.moveToElement(webDriverWait.until(ExpectedConditions.elementToBeClickable(searchButton)))
-                .click(searchButton)
-                .build()
-                .perform();
+        WebElement searchButton = getToolbar().findElement(By.xpath(SEARCH_TOOLBAR_ICON_XPATH));
+        WebElementUtils.clickWebElement(driver, searchButton);
         log.debug("Clicking search button");
     }
 }
