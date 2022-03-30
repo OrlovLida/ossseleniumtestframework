@@ -15,6 +15,7 @@ import com.oss.framework.utils.WebElementUtils;
 public class ActionsContainer implements ActionsInterface {
 
     public static final String KEBAB_GROUP_ID = "frameworkCustomButtonsGroup";
+    public static final String KEBAB_OBJECT_GROUP_ID= "frameworkObjectButtonsGroup";
     public static final String CREATE_GROUP_ID = "CREATE";
     public static final String EDIT_GROUP_ID = "EDIT";
     public static final String ASSIGN_GROUP_ID = "ASSIGN";
