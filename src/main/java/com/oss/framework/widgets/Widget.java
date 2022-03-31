@@ -11,7 +11,7 @@ import com.oss.framework.utils.DelayUtils;
 
 public abstract class Widget {
 
-    private static final String WEB_ELEMENT_PATTERN = "[" + CSSUtils.TEST_ID + "='%s']";
+    private static final String WEB_ELEMENT_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
 
     protected final WebDriver driver;
     protected final WebElement webElement;

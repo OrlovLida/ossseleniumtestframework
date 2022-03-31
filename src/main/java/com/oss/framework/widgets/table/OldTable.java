@@ -56,7 +56,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String CONTAINS_TEXT_PATTERN = "//*[contains(text(),'%s')]";
     private static final String FIND_BY_PARTIAL_NAME_AND_INDEX_PATTERN =
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
-    private static final String TABLE_PATTERN = "[" + CSSUtils.TEST_ID + "='%s']";
+    private static final String TABLE_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String TEXT_ICON_CLASS = "OSSRichTextIcon";
     
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId) {
@@ -501,22 +501,22 @@ public class OldTable extends Widget implements TableInterface {
         }
         
     }
-    
+
     private static class AttributeChooser {
         private static final String LABEL_XPATH = ".//label";
         private static final String ACCEPT_XPATH = ".//button[text()='Accept']";
         private static final String CHECKED_XPATH = ".//input[@checked]";
         private static final String FORM_ELEMENT_XPATH = ".//div[@class='form-element']";
         private static final String CANT_FIND_NODE_EXCEPTION_PATTERN = "Cant find node %s";
-        
-        private WebDriver driver;
-        private WebElement columnManager;
-        
+
+        private final WebDriver driver;
+        private final WebElement columnManager;
+
         private AttributeChooser(WebDriver driver, WebElement columnManager) {
             this.driver = driver;
             this.columnManager = columnManager;
         }
-        
+
         private void disableColumnByLabel(String attributeLabel) {
             WebElement node = getNode(attributeLabel);
             if (isSelected(node)) {
