@@ -65,11 +65,11 @@
     <distributionManagement>
         <repository>
             <id>comarch.release</id>
-            <url>http://oss-repo-master.krakow.comarch/nexus/content/repositories/release/</url>
+            <url>https://oss-repo-master.krakow.comarch/nexus/content/repositories/release/</url>
         </repository>
         <snapshotRepository>
             <id>comarch.snapshot</id>
-            <url>http://oss-repo-master.krakow.comarch/nexus/content/repositories/snapshot/</url>
+            <url>https://oss-repo-master.krakow.comarch/nexus/content/repositories/snapshot/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
