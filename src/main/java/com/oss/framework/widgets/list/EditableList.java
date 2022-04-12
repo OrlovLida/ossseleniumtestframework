@@ -33,7 +33,7 @@ public class EditableList extends Widget {
 
     private static final String LIST_WIDGET_CLASS = "ExtendedList";
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
-    private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'editableListElement')]";
+    private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'list_row--editable')]";
     private static final String EMPTY_RESULTS_XPATH =
             "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
 private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
