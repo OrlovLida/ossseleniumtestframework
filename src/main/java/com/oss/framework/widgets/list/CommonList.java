@@ -25,7 +25,7 @@ public class CommonList extends Widget {
 
     private static final String COMMON_LIST_CLASS = "CommonListApp";
     private static final String HEADERS_XPATH = ".//div[@class='header left']";
-    private static final String LIST_ELEMENT_XPATH = ".//li[contains(@" + CSSUtils.TEST_ID + ", 'list-item')]";
+    private static final String LIST_ELEMENT_XPATH = ".//li[contains(@class, 'list_row') and not(contains(@class, 'headers'))]";
     private static final String NO_DATA_TEXT_XPATH = ".//h3[contains(@class,'emptyResultsText')]";
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
