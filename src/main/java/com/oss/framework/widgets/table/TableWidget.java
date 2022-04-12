@@ -82,7 +82,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     public void selectRowByAttributeValue(String attributeId, String value) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+        getTableComponent().getRow(value, attributeId).selectRow();
     }
 
     @Override
