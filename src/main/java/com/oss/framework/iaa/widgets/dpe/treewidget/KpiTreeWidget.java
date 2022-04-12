@@ -30,7 +30,8 @@ public class KpiTreeWidget extends Widget {
     private static final String NODE_NAME_XPATH = "//div[@title ='%s']";
     private static final String NODE_OPTIONS_XPATH = NODE_NAME_XPATH + "//*[@" + CSSUtils.TEST_ID + "='dimension-options-button']";
     private static final String EXPAND_NODE_ICON_XPATH = NODE_NAME_XPATH +
-            "//ancestor::div[@class='customComponent']//a[@href='#'and @class='fa expandIcon fa-caret-right']";
+            "//ancestor::div[contains(@class, 'customComponent')]//a[@href='#'and @class='fa expandIcon fa-caret-right']";
+    private static final String NODE_COMPONENT_XPATH = ".//ancestor::div[@class='NodeComponent']";
     private static final String EXPAND_NODE = "Expanding node: ";
 
     public KpiTreeWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
@@ -113,7 +114,7 @@ public class KpiTreeWidget extends Widget {
 
     private WebElement getNode(String objectName) {
         return webElement.findElement(By.xpath(String.format(NODE_NAME_XPATH, objectName)))
-                .findElement(By.xpath("following-sibling::*"));
+                .findElement(By.xpath(NODE_COMPONENT_XPATH));
     }
 
     private void scrollToNode(WebElement node) {
