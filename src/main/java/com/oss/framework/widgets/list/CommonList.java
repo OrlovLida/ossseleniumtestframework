@@ -25,7 +25,7 @@ public class CommonList extends Widget {
 
     private static final String COMMON_LIST_CLASS = "CommonListApp";
     private static final String HEADERS_XPATH = ".//div[@class='header left']";
-    private static final String LIST_ELEMENT_XPATH = ".//li[@class='listElement']";
+    private static final String LIST_ELEMENT_XPATH = ".//li[contains(@class, 'list_row') and not(contains(@class, 'headers'))]";
     private static final String NO_DATA_TEXT_XPATH = ".//h3[contains(@class,'emptyResultsText')]";
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
@@ -135,7 +135,7 @@ public class CommonList extends Widget {
 
     public static class Row {
         private static final String CHECK_CHECKBOX_XPATH = ".//i[contains(@class,'check')]";
-        private static final String COLUMN_DATA_CLASS = "columnData";
+        private static final String COLUMN_DATA_CLASS = "list__cell_content";
         private static final String SELECTED_ROW_CLASS = "rowSelected";
         private static final String FAVOURITE_BUTTON_XPATH = ".//button[@class='favouriteButton favourite']";
         private static final String STAR_BUTTON_XPATH = ".//button[contains(@class, 'favourite')]";
