@@ -52,7 +52,6 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
         WebElement button = wait.until(ExpectedConditions
                 .elementToBeClickable(this.prompt.findElement(By.xpath(String.format(BUTTON_BY_TEXT_PATTERN, label, label)))));
         button.click();
-        wait.until(ExpectedConditions.invisibilityOf(button));
     }
 
     @Override
@@ -61,7 +60,6 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
         WebElement button = wait.until(ExpectedConditions
                 .elementToBeClickable(this.prompt.findElement(By.cssSelector(String.format(BUTTON_CSS, id)))));
         button.click();
-        wait.until(ExpectedConditions.invisibilityOf(button));
     }
 
     @Override
