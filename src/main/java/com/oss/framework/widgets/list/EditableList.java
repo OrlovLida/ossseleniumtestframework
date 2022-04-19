@@ -169,7 +169,7 @@ private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find catego
         public static class Cell {
             private static final String TEXT_XPATH = ".//div[@class='text-wrapper' or 'textContainer']";
             private static final String SAVE_BUTTON = "Save";
-            private static final String EDIT_ICON_CSS = ".OSSIcon[aria-label='EDIT']";
+            private static final String EDIT_XPATH = ".//ancestor::div[contains(@class, 'list__cell--editable')]//i[@aria-label='EDIT']";
             private final WebDriver driver;
             private final WebDriverWait wait;
             private final WebElement webElement;
@@ -192,7 +192,7 @@ private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find catego
                     input.setSingleStringValue(value);
                     return;
                 }
-                action.moveToElement(webElement).click(webElement.findElement(By.cssSelector(EDIT_ICON_CSS))).build().perform();
+                action.moveToElement(webElement).click(webElement.findElement(By.xpath(EDIT_XPATH))).build().perform();
                 InlineForm inlineForm = InlineForm.create(driver, wait);
                 Input component = inlineForm.getComponent(componentId, componentType);
                 DelayUtils.sleep(500);
