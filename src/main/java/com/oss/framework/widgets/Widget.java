@@ -33,7 +33,7 @@ public abstract class Widget {
     }
 
     public static void waitForWidget(WebDriverWait wait, String widgetClass) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(widgetClass)));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className(widgetClass)));
     }
 
     public static void waitForWidgetById(WebDriverWait wait, String widgetId) {
