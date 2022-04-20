@@ -18,14 +18,6 @@ public abstract class Widget {
     protected final WebDriverWait webDriverWait;
     protected final String id;
 
-    @Deprecated //OSSWEB-16424
-    public Widget(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
-        this.driver = driver;
-        this.webElement = driver.findElement(By.xpath("//div[contains(@class, '" + widgetClass + "')]"));
-        this.webDriverWait = webDriverWait;
-        this.id = null;
-    }
-
     protected Widget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         this.driver = driver;
         this.webElement = driver.findElement(By.cssSelector(String.format(WEB_ELEMENT_PATTERN, widgetId)));
