@@ -25,14 +25,14 @@ public class CommonHierarchyApp extends Widget {
     private static final String ELEMENT_TO_CLICK_PATTERN = "//span[text()='%s']";
     private static final String SEARCH_RESULT_XPATH = "(//div[@class='CommonHierarchyApp']//span[text()='%s'])";
 
-    @Deprecated //OSSWEB-16424
-    private CommonHierarchyApp(WebDriver driver, String widgetClass, WebDriverWait webDriverWait) {
-        super(driver, widgetClass, webDriverWait);
+    private CommonHierarchyApp(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
+        super(driver, webDriverWait, widgetId);
     }
 
-    @Deprecated //OSSWEB-16424
-    public static CommonHierarchyApp createByClass(WebDriver driver, WebDriverWait webDriverWait) {
-        return new CommonHierarchyApp(driver, COMPONENT_CLASS_NAME, webDriverWait);
+    public static CommonHierarchyApp create(WebDriver driver, WebDriverWait wait, String widgetId) {
+        waitForWidget(wait, COMPONENT_CLASS_NAME);
+        waitForWidgetById(wait, widgetId);
+        return new CommonHierarchyApp(driver, wait, widgetId);
     }
 
     /**
