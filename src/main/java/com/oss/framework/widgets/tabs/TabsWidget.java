@@ -41,6 +41,7 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String ACTIVE_TAB_CONTENT = ".//div[@data-testid='%s']//div[contains(@class,'tabsContainerSingleContent active')]";
     private static final String REMOVE_TAB_XPATH = ".//*[@title='Remove tab']";
     private static final String ANCESTOR_PATTERN = "(%s)//ancestor::a";
+    private static final String BUTTON_PATTERN = ".//button[text()='%s']";
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
@@ -105,6 +106,11 @@ public class TabsWidget extends Widget implements TabsInterface {
     @Override
     public void callActionById(String id) {
         getActionsInterface().callActionById(id);
+    }
+
+    @Override
+    public boolean isButtonPresent(String text) {
+        return isElementPresent(driver, By.xpath(String.format(BUTTON_PATTERN, text)));
     }
 
     public void changeTabsOrder(String tabLabel, int position) {
