@@ -26,6 +26,7 @@ public class TabWindowWidget implements TabsInterface {
     private static final String TAB_BY_LABEL_PATTERN = ".//button[@class='oss-tab']//div[contains(text(),'%s')]";
     private static final String TAB_BY_ID_PATTERN = "//button[@aria-controls='%s']";
     private static final String ACTIVE_TAB_CONTENT_XPATH = "//div[@data-testid='%s']//div[@class='flexRow first last']";
+    private static final String BUTTON_PATTERN = ".//button[text()='%s']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -87,6 +88,11 @@ public class TabWindowWidget implements TabsInterface {
                 .orElseThrow(() -> new RuntimeException("No Message List Widget on Tab"));
 
         return MessageListWidget.createFromParent(parent, driver, wait);
+    }
+
+    @Override
+    public boolean isButtonPresent(String text) {
+        return isElementPresent(driver, By.xpath(String.format(BUTTON_PATTERN, text)));
     }
 
     private List<WebElement> getActiveTabContent(String tabWindowId) {

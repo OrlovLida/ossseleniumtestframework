@@ -25,6 +25,8 @@ public interface TabsInterface {
 
     void callActionById(String id);
 
+    boolean isButtonPresent(String text);
+
     MessageListWidget getMessageListWidget(String cardContainerId);
 
 }
