@@ -84,6 +84,18 @@ public class Wizard {
         clickButton(ACCEPT_BUTTON_XPATH);
     }
 
+    public void clickAcceptOldWizard() {
+        DelayUtils.waitForNestedElements(wait, webElement, ACCEPT_BUTTON_XPATH);
+        WebElement button = webElement.findElement(By.xpath(ACCEPT_BUTTON_XPATH));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(button).build().perform();
+        wait.until(ExpectedConditions.elementToBeClickable(button));
+        actions.moveToElement(button).clickAndHold(button).perform();
+        DelayUtils.sleep();
+        actions.release().perform();
+    }
+
     public void clickCancel() {
         clickButton(CANCEL_BUTTON_XPATH);
     }
