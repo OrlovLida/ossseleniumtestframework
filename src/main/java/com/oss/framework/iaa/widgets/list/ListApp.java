@@ -1,7 +1,8 @@
 package com.oss.framework.iaa.widgets.list;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,8 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 
 public class ListApp {
 
@@ -20,6 +21,10 @@ public class ListApp {
     private final WebDriverWait wait;
     private final WebElement listAppElement;
 
+    private static final String APP_LIST_PATTERN = "[" + CSSUtils.TEST_ID + "='%s'] .appList";
+    private static final String ROW_IN_ACTIVE_TAB_CSS = ".active .row";
+    private static final String TEXT_FIELD_CSS = ".textFieldCont";
+
     private ListApp(WebDriver driver, WebDriverWait wait, WebElement listAppElement) {
         this.driver = driver;
         this.wait = wait;
@@ -27,27 +32,25 @@ public class ListApp {
     }
 
     public static ListApp createFromParent(WebDriver driver, WebDriverWait wait, String windowId) {
-        DelayUtils.waitBy(wait, By.xpath(".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]//div[contains(@class, 'appList')]"));
-        WebElement listApp = driver.findElement(By.xpath(".//div[contains(@" + CSSUtils.TEST_ID + ", '" + windowId + "')]//div[contains(@class, 'appList')]"));
-        return new ListApp(driver, wait, listApp);
-    }
-
-    public static ListApp createById(WebDriver driver, WebDriverWait wait, String listAppId) {
-        DelayUtils.waitBy(wait, By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + listAppId + "')]"));
-        WebElement listApp = driver.findElement(By.xpath("//div[contains(@" + CSSUtils.TEST_ID + ", '" + listAppId + "')]"));
+        DelayUtils.waitBy(wait, By.cssSelector(String.format(APP_LIST_PATTERN, windowId)));
+        WebElement listApp = driver.findElement(By.cssSelector(String.format(APP_LIST_PATTERN, windowId)));
         return new ListApp(driver, wait, listApp);
     }
 
     public List<String> getValue() {
         List<String> values = getRows()
-                .stream().map(row -> row.findElement(By.xpath(".//div[contains(@class, 'textFieldCont')]")))
+                .stream().map(row -> row.findElement(By.cssSelector(TEXT_FIELD_CSS)))
                 .map(WebElement::getText).collect(Collectors.toList());
         log.debug("Getting all values from app list");
         return values;
     }
 
+    public String getValueFromField(String textFieldId) {
+        return listAppElement.findElement(By.cssSelector(String.format("[" + CSSUtils.TEST_ID + "='%s']", textFieldId))).getText();
+    }
+
     private List<WebElement> getRows() {
-        DelayUtils.waitForNestedElements(wait, listAppElement, ".//div[contains(@class, 'first last')]");
-        return listAppElement.findElements(By.xpath(".//div[contains(@class, 'first last')]"));
+        DelayUtils.waitForNestedElements(wait, listAppElement, By.cssSelector(ROW_IN_ACTIVE_TAB_CSS));
+        return listAppElement.findElements(By.cssSelector(ROW_IN_ACTIVE_TAB_CSS));
     }
 }
