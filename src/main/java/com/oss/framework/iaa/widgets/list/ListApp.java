@@ -37,7 +37,7 @@ public class ListApp {
         return new ListApp(driver, wait, listApp);
     }
 
-    public List<String> getValue() {
+    public List<String> getValues() {
         log.debug("Getting all values from app list");
         return getActiveTabContent()
                 .stream().map(textField -> textField.findElement(By.cssSelector(TEXT_FIELD_CSS)))
