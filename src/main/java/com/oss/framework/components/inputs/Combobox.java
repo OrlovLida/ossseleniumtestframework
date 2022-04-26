@@ -41,7 +41,9 @@ public class Combobox extends Input {
     @Override
     public void setValueContains(Data value) {
         webElement.click();
-        webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
+        if (this.getValue() == null) {
+            webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
+        }
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
     }
