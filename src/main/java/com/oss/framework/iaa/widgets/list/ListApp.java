@@ -22,7 +22,7 @@ public class ListApp {
     private final WebElement listAppElement;
 
     private static final String APP_LIST_PATTERN = "[" + CSSUtils.TEST_ID + "='%s'] .appList";
-    private static final String ROW_IN_ACTIVE_TAB_CSS = ".active .row";
+    private static final String ACTIVE_TAB_CONTENT_CSS = ".active .view-v2-widget";
     private static final String TEXT_FIELD_CSS = ".textFieldCont";
 
     private ListApp(WebDriver driver, WebDriverWait wait, WebElement listAppElement) {
@@ -37,20 +37,19 @@ public class ListApp {
         return new ListApp(driver, wait, listApp);
     }
 
-    public List<String> getValue() {
-        List<String> values = getRows()
-                .stream().map(row -> row.findElement(By.cssSelector(TEXT_FIELD_CSS)))
-                .map(WebElement::getText).collect(Collectors.toList());
+    public List<String> getValues() {
         log.debug("Getting all values from app list");
-        return values;
+        return getActiveTabContent()
+                .stream().map(textField -> textField.findElement(By.cssSelector(TEXT_FIELD_CSS)))
+                .map(WebElement::getText).collect(Collectors.toList());
     }
 
     public String getValueFromField(String textFieldId) {
         return listAppElement.findElement(By.cssSelector(String.format("[" + CSSUtils.TEST_ID + "='%s']", textFieldId))).getText();
     }
 
-    private List<WebElement> getRows() {
-        DelayUtils.waitForNestedElements(wait, listAppElement, By.cssSelector(ROW_IN_ACTIVE_TAB_CSS));
-        return listAppElement.findElements(By.cssSelector(ROW_IN_ACTIVE_TAB_CSS));
+    private List<WebElement> getActiveTabContent() {
+        DelayUtils.waitForNestedElements(wait, listAppElement, By.cssSelector(ACTIVE_TAB_CONTENT_CSS));
+        return listAppElement.findElements(By.cssSelector(ACTIVE_TAB_CONTENT_CSS));
     }
 }
