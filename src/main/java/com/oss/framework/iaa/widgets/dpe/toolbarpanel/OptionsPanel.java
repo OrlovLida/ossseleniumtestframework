@@ -13,6 +13,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oss.framework.components.data.Data;
+import com.oss.framework.components.inputs.ComponentFactory;
+import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
@@ -29,7 +32,6 @@ public class OptionsPanel {
     private static final String Y_AXIS_SETTINGS_PATH = "//*[@data-testid = 'y-axis-options-button']";
     private static final String Y_AXIS_SETTINGS_INPUT_PATH = "//label[contains(@for,'%s')]";
     private static final String MISCELLANEOUS_OPTIONS_PATH = "//*[@data-testid = 'miscellaneous-options-common-form']";
-    private static final String OPTIONS_INPUT_ID = "//*[@data-testid = '%s']";
     private static final String COMPARE_WITH_OTHER_PERIOD_OPTIONS_PATH = "//*[@data-testid = 'compare-with-period-common-form']";
     private static final String AGGREGATION_METHODS_SELECT_XPATH = "//*[@data-testid = 'aggregation-method-select']";
 
@@ -185,15 +187,15 @@ public class OptionsPanel {
 
         switch (miscellaneousOption) {
             case LAST_SAMPLE_TIME: {
-                optionsPanelElement.findElement(By.xpath(createXPathByDataTestId("ShowLastSampleChanged"))).click();
+                setSwitcherOn("ShowLastSampleChanged");
                 break;
             }
             case DATA_COMPLETENESS: {
-                optionsPanelElement.findElement(By.xpath(createXPathByDataTestId("CompletenessChanged"))).click();
+                setSwitcherOn("CompletenessChanged");
                 break;
             }
             case SHOW_TIME_ZONE: {
-                optionsPanelElement.findElement(By.xpath(createXPathByDataTestId("ShowTimeZone"))).click();
+                setSwitcherOn("ShowTimeZone");
                 break;
             }
         }
@@ -202,8 +204,13 @@ public class OptionsPanel {
 
     public void setOtherPeriodOption() {
         moveOverElement(COMPARE_WITH_OTHER_PERIOD_OPTIONS_PATH);
-        optionsPanelElement.findElement(By.xpath(createXPathByDataTestId("OtherPeriodEnabled"))).click();
+        setSwitcherOn("OtherPeriodEnabled");
         log.debug("Setting compare with other period option");
+    }
+
+    private void setSwitcherOn(String switcherId) {
+        ComponentFactory.create(switcherId, Input.ComponentType.SWITCHER, driver, wait)
+                .setValue(Data.createSingleData("true"));
     }
 
     private void moveOverElement(String elementPath) {
@@ -244,10 +251,6 @@ public class OptionsPanel {
 
     private String createChooseYAxisOptionXPath(String option) {
         return String.format(Y_AXIS_SETTINGS_INPUT_PATH, option);
-    }
-
-    private String createXPathByDataTestId(String option) {
-        return String.format(OPTIONS_INPUT_ID, option);
     }
 
     public enum TimePeriodChooserOption {
