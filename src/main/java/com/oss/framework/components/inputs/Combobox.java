@@ -3,6 +3,7 @@ package com.oss.framework.components.inputs;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.oss.framework.utils.WebElementUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -19,7 +20,6 @@ public class Combobox extends Input {
     private static final String INPUT_XPATH = ".//input";
     private static final String LABEL_XPATH = ".//label";
     private static final String COMBOBOX_INPUT_XPATH = ".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]";
-    private static final String COMBOBOX_CLOSE_XPATH = ".//i[@aria-label ='CLOSE']";
     private static final String LIST_ITEM_XPATH = "//div[@class='list-item'] | //div[@class='combo-box__list-item']";
 
     private Combobox(WebDriver driver, WebDriverWait wait, String componentId) {
@@ -40,7 +40,7 @@ public class Combobox extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        webElement.click();
+        clear();
         webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
@@ -80,9 +80,10 @@ public class Combobox extends Input {
 
     @Override
     public void clear() {
-        DelayUtils.waitForSpinners(webDriverWait, webElement);
-        List<WebElement> closeButtons = this.webElement.findElements(By.xpath(COMBOBOX_CLOSE_XPATH));
-        closeButtons.forEach(WebElement::click);
+        WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
+        WebElementUtils.clickWebElement(driver, input);
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
     }
 
     @Override
