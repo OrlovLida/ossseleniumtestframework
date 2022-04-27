@@ -445,6 +445,7 @@ public class OldTable extends Widget implements TableInterface {
             Actions action = new Actions(driver);
             action.moveToElement(input).build().perform();
             input.sendKeys(value);
+            input = columnElement.findElement(By.xpath(INPUT_XPATH));
             input.sendKeys(Keys.ENTER);
         }
         

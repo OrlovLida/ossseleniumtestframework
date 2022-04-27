@@ -104,6 +104,10 @@ public class ToolbarWidget {
         return toolbar.findElement(By.xpath(VIEW_TITLE_XPATH)).getText();
     }
 
+    public String getQueryContext() {
+        return toolbar.findElement(By.xpath(QUERY_CONTEXT_BUTTON_XPATH)).getText();
+    }
+
     private boolean isOpen(String panelXpath) {
         return !driver.findElements(By.xpath(panelXpath)).isEmpty();
     }
