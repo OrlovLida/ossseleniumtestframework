@@ -153,9 +153,7 @@ public class Wizard {
 
     public int countNumberOfSteps() {
         if (isStepsPresent()) {
-            DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(WIZARD_STEPS_CSS));
-            List<WebElement> steps = webElement.findElements(By.cssSelector(WIZARD_STEPS_CSS));
-            return steps.size();
+            return getWizardSteps().size();
         }
         return 1;
     }
