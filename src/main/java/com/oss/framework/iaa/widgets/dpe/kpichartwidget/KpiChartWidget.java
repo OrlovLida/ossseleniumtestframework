@@ -108,7 +108,7 @@ public class KpiChartWidget extends Widget {
     }
 
     public int countVisibleDataCompleteness() {
-        int visibleDataCompleteness = getLegendContainingTxt("%]").size();
+        int visibleDataCompleteness = getLegendContainsText("%]").size();
         log.debug("Visible data completeness in legend count: {}", visibleDataCompleteness);
         return visibleDataCompleteness;
     }
@@ -117,11 +117,11 @@ public class KpiChartWidget extends Widget {
         return !this.webElement.findElements(By.xpath(TIME_ZONE_DISPLAYED_PATH)).isEmpty();
     }
 
-    public boolean isLegendWithTextPresent(String partialText) {
-        return !getLegendContainingTxt(partialText).isEmpty();
+    public boolean isLegendPresent(String partialText) {
+        return WebElementUtils.isElementPresent(driver, By.xpath(String.format(LEGEND_WITH_TXT_XPATH, partialText)));
     }
 
-    private List<WebElement> getLegendContainingTxt(String text) {
+    private List<WebElement> getLegendContainsText(String text) {
         return this.webElement.findElements(By.xpath(String.format(LEGEND_WITH_TXT_XPATH, text)));
     }
 
