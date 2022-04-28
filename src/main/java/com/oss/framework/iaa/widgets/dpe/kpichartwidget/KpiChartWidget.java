@@ -114,7 +114,7 @@ public class KpiChartWidget extends Widget {
     }
 
     public boolean isTimeZonePresent() {
-        return !this.webElement.findElements(By.xpath(TIME_ZONE_DISPLAYED_PATH)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.xpath(TIME_ZONE_DISPLAYED_PATH));
     }
 
     public boolean isLegendPresent(String partialText) {
