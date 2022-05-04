@@ -78,9 +78,9 @@ public class ButtonContainer implements ActionsInterface {
         callActionById(actionId);
     }
 
-    public boolean isElementPresentById(String id) {
+    public boolean isElementPresent(String id) {
         String buttonXpath = String.format(BUTTON_BY_ID_PATTERN, id, id, id);
-        return !buttons.findElements(By.xpath(buttonXpath)).isEmpty();
+        return WebElementUtils.isElementPresent(buttons, By.xpath(buttonXpath));
     }
 
     private void clickGroup(String groupLabel) {
