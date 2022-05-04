@@ -78,6 +78,11 @@ public class ButtonContainer implements ActionsInterface {
         callActionById(actionId);
     }
 
+    public boolean isElementPresent(String id) {
+        String buttonXpath = String.format(BUTTON_BY_ID_PATTERN, id, id, id);
+        return WebElementUtils.isElementPresent(buttons, By.xpath(buttonXpath));
+    }
+
     private void clickGroup(String groupLabel) {
         String groupXpath = String.format(GROUP_PATTERN, groupLabel, groupLabel);
         DelayUtils.waitForNestedElements(wait, buttons, groupXpath);
