@@ -400,7 +400,7 @@ public class OldTable extends Widget implements TableInterface {
         private void clickCell(String value) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
-            WebElement element = cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst().orElseThrow(() -> new RuntimeException(CANNOT_FIND_CELL_EXCEPTION));
+            WebElement element = cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
             Actions action = new Actions(driver);
             action.click(element).perform();
         }
