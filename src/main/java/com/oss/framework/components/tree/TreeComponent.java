@@ -2,10 +2,12 @@ package com.oss.framework.components.tree;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -16,6 +18,7 @@ import com.google.common.collect.Lists;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.prompts.Popup;
+import com.oss.framework.components.scrolls.CustomScrolls;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -80,33 +83,66 @@ public class TreeComponent {
         return getNodeByPath(pathElements, true);
     }
     
-    public Optional<Node> findNodeByPath(String path) {
+    private Optional<Node> findNodeByPath(String path) {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(path));
         return getNodeByPath(pathElements, false);
-        
     }
     
     private Optional<Node> getNodeByPath(List<String> pathElements, boolean isLabel) {
+        scrollToFirstNode();
         StringBuilder currentPath = new StringBuilder();
         Optional<Node> node = Optional.empty();
         for (int i = 0; i < pathElements.size(); i++) {
             currentPath.append(pathElements.get(i));
             String tempPath = currentPath.toString();
             List<Node> nodes = getVisibleNodes();
+            node = getNode(isLabel, tempPath, nodes);
             
-            if (isLabel) {
-                node = nodes.stream().filter(n -> n.getPathLabel().equals(tempPath))
-                        .findFirst();
-            } else {
-                node = nodes.stream().filter(n -> n.getPath().equals(tempPath))
-                        .findFirst();
-            }
             if (i != pathElements.size() - 1) {
+                if (!node.isPresent()) {
+                    Node lastNode = nodes.get(nodes.size() - 1);
+                    Node tempNode = null;
+                    while (!node.isPresent() && !lastNode.equals(tempNode)) {
+                        lastNode.moveToNode();
+                        nodes = getVisibleNodes();
+                        node = getNode(isLabel, tempPath, nodes);
+                        tempNode = lastNode;
+                        lastNode = nodes.get(nodes.size() - 1);
+                    }
+                }
                 node.ifPresent(Node::expandNode);
                 currentPath.append(".");
             }
         }
         return node;
+    }
+    
+    private Optional<Node> getNode(boolean isLabel, String tempPath, List<Node> nodes) {
+        Optional<Node> node;
+        if (isLabel) {
+            node = nodes.stream().filter(n -> n.getPathLabel().equals(tempPath))
+                    .findFirst();
+        } else {
+            node = nodes.stream().filter(n -> n.getPath().equals(tempPath))
+                    .findFirst();
+        }
+        return node;
+    }
+    
+    private void scrollToFirstNode() {
+        CustomScrolls scrolls = getCustomScrolls();
+        if (scrolls.getVerticalBarHeight() == 0)
+            return;
+        
+        int translateY = scrolls.getTranslateYValue();
+        if (translateY == 0)
+            return;
+        
+        scrolls.scrollVertically(-translateY);
+    }
+    
+    private CustomScrolls getCustomScrolls() {
+        return CustomScrolls.create(driver, webDriverWait, treeComponentElement);
     }
     
     private String getNodeClassPath() {
@@ -124,21 +160,24 @@ public class TreeComponent {
         private static final String PURPLE = "color: rgb(150, 54, 139);";
         private static final String RED = "color: rgb(199, 19, 69);";
         private static final String CANNOT_MAP_TO_COLOR_EXCEPTION = "Cannot map to color";
-
+        
         private static final String POPUP_CONTAINER_CSS = ".popupContainer";
-
+        private static final String TREE_NODE_BADGE_CSS = ".tree-node-badge";
+        
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
+        private final String nodeId;
         
         private Node(WebDriver driver, WebDriverWait webDriverWait, WebElement node) {
             this.driver = driver;
             this.webDriverWait = webDriverWait;
             this.nodeElement = node;
+            this.nodeId = CSSUtils.getAttributeValue(DATA_GUID_ATTR, nodeElement);
         }
         
         public String getPath() {
-            return CSSUtils.getAttributeValue(DATA_GUID_ATTR, nodeElement);
+            return nodeId;
         }
         
         String getPathLabel() {
@@ -153,7 +192,7 @@ public class TreeComponent {
         public void toggleNode() {
             Actions action = new Actions(driver);
             action.moveToElement(nodeElement).perform();
-            
+            moveToNode();
             WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
             input.click();
         }
@@ -161,6 +200,7 @@ public class TreeComponent {
         public void expandNode() {
             if (!isExpanded()) {
                 Actions action = new Actions(driver);
+                moveToNode();
                 action.moveToElement(nodeElement).perform();
                 WebElement button = nodeElement.findElement(By.xpath(EXPANDER_BUTTON_XPATH));
                 button.click();
@@ -178,8 +218,8 @@ public class TreeComponent {
                         nodeElement.findElement(By.xpath("//a[contains(@" + CSSUtils.TEST_ID + ",'" + EXPAND_NEXT_LEVEL_BUTTON + "')]"));
                 WebElementUtils.clickWebElement(driver, button);
                 List<WebElement> popups = driver.findElements(By.cssSelector(POPUP_CONTAINER_CSS));
-                if (!popups.isEmpty()){
-                   return Optional.of(Popup.create(driver,webDriverWait));
+                if (!popups.isEmpty()) {
+                    return Optional.of(Popup.create(driver, webDriverWait));
                 }
                 DelayUtils.waitForElementDisappear(webDriverWait, nodeElement.findElement(By.xpath(SPIN_XPATH)));
                 return Optional.empty();
@@ -237,7 +277,7 @@ public class TreeComponent {
         public int countDecorators() {
             return nodeElement.findElements(By.cssSelector(DECORATOR_ICON_CSS)).size();
         }
-
+        
         public DecoratorStatus getDecoratorStatus() {
             if (countDecorators() != 0) {
                 String style = nodeElement.findElement(By.cssSelector(DECORATOR_ICON_CSS)).getAttribute("style");
@@ -274,10 +314,29 @@ public class TreeComponent {
         private boolean isFilterButtonPresent() {
             return !nodeElement.findElements(By.xpath(FILTERS_BUTTON_XPATH)).isEmpty();
         }
-
+        
+        private void moveToNode() {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nodeElement);
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            Node node = (Node) o;
+            return Objects.equals(nodeId, node.nodeId);
+        }
+        
+        @Override
+        public int hashCode() {
+            return Objects.hash(nodeId);
+        }
+        
         public enum DecoratorStatus {
             GREEN, PURPLE, RED, NONE
         }
-
+        
     }
 }
