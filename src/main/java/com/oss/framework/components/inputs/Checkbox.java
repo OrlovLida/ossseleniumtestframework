@@ -56,8 +56,7 @@ public class Checkbox extends Input {
     }
 
     private boolean isChecked() {
-        String checked = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
-        return checked.equals("true");
+        return this.webElement.findElement(By.xpath(".//input")).isSelected();
     }
 }
 
