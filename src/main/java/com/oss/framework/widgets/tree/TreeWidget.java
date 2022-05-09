@@ -98,6 +98,12 @@ public class TreeWidget extends Widget {
         input.sendKeys(Keys.ENTER);
     }
 
+    public boolean checkIfRowExists(String text) {
+        return getVisibleTreeRow()
+                .stream()
+                .anyMatch(treeRow -> treeRow.getLabel().contains(text));
+    }
+
     private List<TreeRow> getVisibleTreeRow() {
         List<TreeRow> treeRowList = this.webElement.findElements(By.className("TreeRow")).stream()
                 .map(webElement -> new TreeRow(webElement, driver)).collect(Collectors.toList());
