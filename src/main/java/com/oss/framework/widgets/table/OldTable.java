@@ -332,6 +332,7 @@ public class OldTable extends Widget implements TableInterface {
         private static final String RICH_TEXT_XPATH = ".//div[contains(@class, 'OSSRichText')]";
         private static final String CELL_XPATH = ".//div[contains(@class, 'Cell')]";
         private static final String CANNOT_FIND_ROW_EXCEPTION = "Cannot find a row with the provided value.";
+        private static final String CANNOT_FIND_CELL_EXCEPTION = "Cannot find a cell with the provided value.";
 
         private final WebElement columnElement;
         private final WebDriverWait wait;
@@ -399,15 +400,9 @@ public class OldTable extends Widget implements TableInterface {
         private void clickCell(String value) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
-            for (WebElement cell : cells) {
-                DelayUtils.waitForNestedElements(wait, cell, RICH_TEXT_XPATH);
-                WebElement richText = cell.findElement(By.xpath(RICH_TEXT_XPATH));
-                if (richText.getText().equals(value)) {
-                    Actions action = new Actions(driver);
-                    action.click(cell).perform();
-                    break;
-                }
-            }
+            WebElement element = cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
+            Actions action = new Actions(driver);
+            action.click(element).perform();
         }
 
         private String getValueCell(int index) {

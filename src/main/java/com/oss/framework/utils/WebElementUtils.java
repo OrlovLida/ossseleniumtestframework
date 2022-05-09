@@ -22,7 +22,9 @@ public class WebElementUtils {
     }
 
     public static void clickWebElement(WebDriver driver, WebElement webElement) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+        if (!webElement.isDisplayed()) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+        }
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).build().perform();
         new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(webElement));
