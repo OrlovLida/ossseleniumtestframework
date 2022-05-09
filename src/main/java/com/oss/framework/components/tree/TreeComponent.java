@@ -100,15 +100,7 @@ public class TreeComponent {
             
             if (i != pathElements.size() - 1) {
                 if (!node.isPresent()) {
-                    Node lastNode = nodes.get(nodes.size() - 1);
-                    Node tempNode = null;
-                    while (!node.isPresent() && !lastNode.equals(tempNode)) {
-                        lastNode.moveToNode();
-                        nodes = getVisibleNodes();
-                        node = getNode(isLabel, tempPath, nodes);
-                        tempNode = lastNode;
-                        lastNode = nodes.get(nodes.size() - 1);
-                    }
+                    node = scrollToNode(isLabel, node, tempPath);
                 }
                 node.ifPresent(Node::expandNode);
                 currentPath.append(".");
@@ -116,7 +108,21 @@ public class TreeComponent {
         }
         return node;
     }
-    
+
+    private Optional<Node> scrollToNode(boolean isLabel, Optional<Node> node, String tempPath) {
+        List<Node> nodes = getVisibleNodes();
+        Node lastNode = nodes.get(nodes.size() - 1);
+        Node tempNode = null;
+        while (!node.isPresent() && !lastNode.equals(tempNode)) {
+            lastNode.moveToNode();
+            nodes = getVisibleNodes();
+            node = getNode(isLabel, tempPath, nodes);
+            tempNode = lastNode;
+            lastNode = nodes.get(nodes.size() - 1);
+        }
+        return node;
+    }
+
     private Optional<Node> getNode(boolean isLabel, String tempPath, List<Node> nodes) {
         Optional<Node> node;
         if (isLabel) {
@@ -160,10 +166,8 @@ public class TreeComponent {
         private static final String PURPLE = "color: rgb(150, 54, 139);";
         private static final String RED = "color: rgb(199, 19, 69);";
         private static final String CANNOT_MAP_TO_COLOR_EXCEPTION = "Cannot map to color";
-        
         private static final String POPUP_CONTAINER_CSS = ".popupContainer";
-        private static final String TREE_NODE_BADGE_CSS = ".tree-node-badge";
-        
+
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
@@ -297,7 +301,7 @@ public class TreeComponent {
             }
             return DecoratorStatus.NONE;
         }
-
+        
         boolean isExpandNextLevelPresent() {
             return !nodeElement.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
         }
@@ -316,7 +320,9 @@ public class TreeComponent {
         }
         
         private void moveToNode() {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nodeElement);
+            if (!nodeElement.isDisplayed()) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nodeElement);
+            }
         }
         
         @Override
