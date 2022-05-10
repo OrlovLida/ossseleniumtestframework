@@ -22,12 +22,9 @@ public class WebElementUtils {
     }
 
     public static void clickWebElement(WebDriver driver, WebElement webElement) {
-        if (!webElement.isDisplayed()) {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        }
-        Actions actions = new Actions(driver);
-        actions.moveToElement(webElement).build().perform();
+        moveToElement(driver, webElement);
         new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(webElement));
+        Actions actions = new Actions(driver);
         actions.click(webElement).build().perform();
     }
 
@@ -52,5 +49,13 @@ public class WebElementUtils {
 
     public static boolean isElementPresent(WebElement webElement, By by) {
         return !webElement.findElements(by).isEmpty();
+    }
+
+    public static void moveToElement(WebDriver driver, WebElement webElement) {
+        if (!webElement.isDisplayed()) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+        }
+        Actions actions = new Actions(driver);
+        actions.moveToElement(webElement).build().perform();
     }
 }

@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -48,6 +47,8 @@ public class OldTable extends Widget implements TableInterface {
     private static final String NO_DATA_XPATH = ".//h3[contains(@class,'noDataWithColumns')]";
     private static final String BUTTON_XPATH = ".//button";
     private static final String AVAILABLE_COLUMNS_LOG = "Available columns:";
+    private static final String NUMBER_OF_COLUMNS_LOG_PATTERN = "Number of columns: %s";
+    private static final String NUMBER_OF_COLUMNS_WITH_LABEL_LOG_PATTERN = "Number of columns with label: %s";
     private static final String CANNOT_GET_COUNT_WARN = "Problem with getting table object count. Value is not a number.";
     private static final String NOT_SUPPORTED_TYPE_EXCEPTION = "Old table widget supports TEXT_FIELD only.";
     private static final String NOT_IMPLEMENTED_EXCEPTION = "Not implemented method in OldTable";
@@ -291,11 +292,15 @@ public class OldTable extends Widget implements TableInterface {
         List<Column> columns2 =
                 webElement.findElements(By.cssSelector(COLUMNS_WITHOUT_CHECKBOX_CSS))
                         .stream().map(columnElement -> new Column(columnElement, webDriverWait, driver)).collect(Collectors.toList());
-        for (Column column : Lists.reverse(columns2)) {
+        String columsNumberLog = String.format(NUMBER_OF_COLUMNS_LOG_PATTERN, columns2.size());
+        log.debug(columsNumberLog);
+        for (Column column : columns2) {
             if (column.isLabelPresent()) {
                 columns.put(column.getLabel(), column);
             }
         }
+        String columsWithLabelsNumberLog = String.format(NUMBER_OF_COLUMNS_WITH_LABEL_LOG_PATTERN, columns.size());
+        log.debug(columsWithLabelsNumberLog);
         return columns;
     }
 
@@ -324,7 +329,6 @@ public class OldTable extends Widget implements TableInterface {
     private static class Column {
         private static final String FLEX_CLASS = "flex";
         private static final String LABEL_ATTRIBUTE = "label";
-        private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
         private static final String CELL_ROW_XPATH = ".//div[contains(@class, 'Cell Row')]";
         private static final String HREF_XPATH = "//a[contains(@href, '#/')]";
         private static final String INPUT_XPATH = ".//input";
@@ -357,8 +361,9 @@ public class OldTable extends Widget implements TableInterface {
 
         public void clickCell(int index) {
             WebElement cell = getCellByIndex(index);
+            WebElementUtils.moveToElement(driver, cell);
             Actions action = new Actions(driver);
-            action.moveToElement(cell).click(cell).perform();
+            action.click(cell).perform();
         }
 
         private String getCellText(WebElement cell) {
@@ -379,7 +384,7 @@ public class OldTable extends Widget implements TableInterface {
 
         private WebElement moveToHeader() {
             WebElement header = columnElement.findElement(By.xpath(HEADER_XPATH));
-            ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, header);
+            WebElementUtils.moveToElement(driver, header);
             return header;
         }
 
@@ -407,9 +412,7 @@ public class OldTable extends Widget implements TableInterface {
 
         private String getValueCell(int index) {
             WebElement cell = getCellByIndex(index);
-            ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, cell);
-            Actions action = new Actions(driver);
-            action.moveToElement(cell).build().perform();
+            WebElementUtils.moveToElement(driver, cell);
             if (isIconPresent(cell)) {
                 return getIconTitles(index);
             }
