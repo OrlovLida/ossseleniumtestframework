@@ -204,6 +204,8 @@ public class AdvancedSearch {
         tags.forEach(log::info);
         for (String tag : tags) {
             String[] parts = tag.split(TAGS_SEPARATOR);
+            log.info("Part 1 of splitted tag: {}", parts[0]);
+            log.info("Part 2 of splitted tag: {}", parts[1]);
             values.put(parts[0], parts[1]);
         }
         return values;
