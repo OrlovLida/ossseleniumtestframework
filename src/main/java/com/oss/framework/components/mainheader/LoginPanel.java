@@ -123,7 +123,6 @@ public class LoginPanel {
         }
     }
 
-
     public LoginPanel open() {
         ToolbarWidget.create(driver, wait).openLoginPanel();
         DelayUtils.waitByXPath(wait, "//button[contains (@" + CSSUtils.TEST_ID + ", " + LOGIN_BUTTON_ID + ")]");
