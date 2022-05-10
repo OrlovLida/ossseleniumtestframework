@@ -100,7 +100,6 @@ public class LoginPanel {
 
     public void enableAutoTimeZone() {
         setAutoTimeZone("true");
-
     }
 
     private void setAutoTimeZone(String value) {
@@ -133,14 +132,12 @@ public class LoginPanel {
         ToolbarWidget.create(driver, wait).closeLoginPanel();
     }
 
-
     public void switchToAlphaMode() {
         ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
         toolbar.openLoginPanel();
         Input input = ComponentFactory.create(ALPHA_MODE_SWITCHER, ComponentType.SWITCHER, driver, wait);
         input.setSingleStringValue("true");
         DelayUtils.waitForPageToLoad(driver, wait);
-
     }
 
     public void logOut() {
