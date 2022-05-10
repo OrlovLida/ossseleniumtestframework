@@ -49,8 +49,7 @@ public class LoginPanel {
     }
 
     public void chooseLanguage(String language) {
-        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
-        toolbar.openLoginPanel();
+        open();
         Input input = ComponentFactory.create(LANGUAGE_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
         String currentLanguage = input.getStringValue();
         if (!currentLanguage.equals(language)) {
@@ -59,74 +58,68 @@ public class LoginPanel {
             prompt.clickButtonByLabel(OK_BUTTON);
             DelayUtils.waitForPageToLoad(driver, wait);
         } else {
-            toolbar.closeLoginPanel();
+            close();
         }
     }
 
     public void chooseGroupContext(String groupName) {
-        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
-        toolbar.openLoginPanel();
+        open();
         Input input = ComponentFactory.create(USER_GROUP_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
         String currentGroup = input.getStringValue();
         if (!currentGroup.equals(groupName)) {
             input.setSingleStringValue(groupName);
             DelayUtils.waitForPageToLoad(driver, wait);
         } else {
-            toolbar.closeLoginPanel();
+            close();
         }
     }
 
     public void chooseDataFormat(String dataFormat) {
-        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
-        toolbar.openLoginPanel();
+        open();
         Input input = ComponentFactory.create(DATE_FORMAT_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
         String currentDataFormat = input.getStringValue();
         DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern(dataFormat);
         String nowDataInSelectedFormat = dtf1.format(ZonedDateTime.now());
         if (!currentDataFormat.equals(nowDataInSelectedFormat)) {
             input.setSingleStringValue(nowDataInSelectedFormat);
-            Popup prompt = Popup.create(driver, wait);
-            prompt.clickButtonByLabel(CHANGE_BUTTON);
-            DelayUtils.waitForPageToLoad(driver, wait);
+            popupAccept();
         } else {
-            toolbar.closeLoginPanel();
+            close();
         }
     }
 
-    public void disableAutoTimeZone() {
-        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
-        toolbar.openLoginPanel();
-        Input input = ComponentFactory.create(USING_SYSTEM_ZONE_SWITCHER, ComponentType.SWITCHER, driver, wait);
-        input.setValue(Data.createSingleData("false"));
+    private void popupAccept() {
         Popup prompt = Popup.create(driver, wait);
         prompt.clickButtonByLabel(CHANGE_BUTTON);
         DelayUtils.waitForPageToLoad(driver, wait);
+    }
 
+    public void disableAutoTimeZone() {
+        setAutoTimeZone("false");
     }
 
     public void enableAutoTimeZone() {
-        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
-        toolbar.openLoginPanel();
-        Input input = ComponentFactory.create(USING_SYSTEM_ZONE_SWITCHER, ComponentType.SWITCHER, driver, wait);
-        input.setValue(Data.createSingleData("true"));
-        Popup prompt = Popup.create(driver, wait);
-        prompt.clickButtonByLabel(CHANGE_BUTTON);
-        DelayUtils.waitForPageToLoad(driver, wait);
+        setAutoTimeZone("true");
 
     }
 
-    public void chooseTimeZone(String timeZone) {
+    private void setAutoTimeZone(String value) {
         ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
         toolbar.openLoginPanel();
+        Input input = ComponentFactory.create(USING_SYSTEM_ZONE_SWITCHER, ComponentType.SWITCHER, driver, wait);
+        input.setValue(Data.createSingleData(value));
+        popupAccept();
+    }
+
+    public void chooseTimeZone(String timeZone) {
+        open();
         Input input = ComponentFactory.create(TIME_ZONE_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
         String currentTimeZone = input.getStringValue();
         if (!currentTimeZone.equals(timeZone)) {
             input.setSingleStringValueContains(timeZone);
-            Popup prompt = Popup.create(driver, wait);
-            prompt.clickButtonByLabel(CHANGE_BUTTON);
-            DelayUtils.waitForPageToLoad(driver, wait);
+            popupAccept();
         } else {
-            toolbar.closeLoginPanel();
+            close();
         }
     }
 
@@ -136,6 +129,11 @@ public class LoginPanel {
         DelayUtils.waitByXPath(wait, "//button[contains (@" + CSSUtils.TEST_ID + ", " + LOGIN_BUTTON_ID + ")]");
         return this;
     }
+
+    private void close() {
+        ToolbarWidget.create(driver, wait).closeLoginPanel();
+    }
+
 
     public void switchToAlphaMode() {
         ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
