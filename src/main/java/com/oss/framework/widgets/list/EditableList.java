@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.categorylist.CategoryList;
@@ -36,7 +35,8 @@ public class EditableList extends Widget {
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'list_row--editable')]";
     private static final String EMPTY_RESULTS_XPATH =
             "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
-private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
+    private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
+
     private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
     }
@@ -102,6 +102,7 @@ private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find catego
     private List<CategoryList> getCategories() {
         return CategoryList.create(driver, webDriverWait, id);
     }
+
     public static class Row {
         private static final String ROW_CHECKBOX_XPATH = ".//div[contains(@class,'checkbox')]";
         private static final String CELL_PATTERN = ".//div[@" + CSSUtils.TEST_ID + "='%s']";
@@ -185,14 +186,13 @@ private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find catego
             }
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
-                Actions action = new Actions(driver);
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
                     WebElementUtils.clickWebElement(driver, webElement);
                     Input input = ComponentFactory.createFromParent(componentId, componentType, driver, wait, webElement);
                     input.setSingleStringValue(value);
                     return;
                 }
-                action.moveToElement(webElement).click(webElement.findElement(By.xpath(EDIT_XPATH))).build().perform();
+                WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
                 InlineForm inlineForm = InlineForm.create(driver, wait);
                 Input component = inlineForm.getComponent(componentId, componentType);
                 DelayUtils.sleep(500);
