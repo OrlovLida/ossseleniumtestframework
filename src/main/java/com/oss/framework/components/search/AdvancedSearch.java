@@ -9,6 +9,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -20,6 +22,7 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class AdvancedSearch {
+    private static final Logger log = LoggerFactory.getLogger(AdvancedSearch.class);
     public static final String SEARCH_COMPONENT_CLASS = "advanced-search_search";
     private static final String QUICK_FILTERS_ID = "quick_filters";
     private static final String TAGS_CLASS = "tagsWidgetDisplay";
@@ -198,6 +201,7 @@ public class AdvancedSearch {
 
     private Multimap<String, String> parseTags(List<String> tags) {
         Multimap<String, String> values = HashMultimap.create();
+        tags.forEach(log::info);
         for (String tag : tags) {
             String[] parts = tag.split(TAGS_SEPARATOR);
             values.put(parts[0], parts[1]);
