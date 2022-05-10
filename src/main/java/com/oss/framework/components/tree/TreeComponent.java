@@ -39,6 +39,7 @@ public class TreeComponent {
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
     
     private static final int LEFT_MARGIN_IN_PX = 24;
+    private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
@@ -108,7 +109,7 @@ public class TreeComponent {
         }
         return node;
     }
-
+    
     private Optional<Node> scrollToNode(boolean isLabel, Optional<Node> node, String tempPath) {
         List<Node> nodes = getVisibleNodes();
         Node lastNode = nodes.get(nodes.size() - 1);
@@ -122,7 +123,7 @@ public class TreeComponent {
         }
         return node;
     }
-
+    
     private Optional<Node> getNode(boolean isLabel, String tempPath, List<Node> nodes) {
         Optional<Node> node;
         if (isLabel) {
@@ -136,6 +137,8 @@ public class TreeComponent {
     }
     
     private void scrollToFirstNode() {
+        if (!isScrollPresent())
+            return;
         CustomScrolls scrolls = getCustomScrolls();
         if (scrolls.getVerticalBarHeight() == 0)
             return;
@@ -145,6 +148,10 @@ public class TreeComponent {
             return;
         
         scrolls.scrollVertically(-translateY);
+    }
+    
+    private boolean isScrollPresent() {
+        return !treeComponentElement.findElements(By.cssSelector(CUSTOM_SCROLLBARS_CSS)).isEmpty();
     }
     
     private CustomScrolls getCustomScrolls() {
@@ -167,7 +174,7 @@ public class TreeComponent {
         private static final String RED = "color: rgb(199, 19, 69);";
         private static final String CANNOT_MAP_TO_COLOR_EXCEPTION = "Cannot map to color";
         private static final String POPUP_CONTAINER_CSS = ".popupContainer";
-
+        
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
@@ -196,7 +203,6 @@ public class TreeComponent {
         public void toggleNode() {
             Actions action = new Actions(driver);
             action.moveToElement(nodeElement).perform();
-            moveToNode();
             WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
             input.click();
         }
@@ -204,10 +210,9 @@ public class TreeComponent {
         public void expandNode() {
             if (!isExpanded()) {
                 Actions action = new Actions(driver);
-                moveToNode();
                 action.moveToElement(nodeElement).perform();
                 WebElement button = nodeElement.findElement(By.xpath(EXPANDER_BUTTON_XPATH));
-                button.click();
+                action.moveToElement(button).click(button).build().perform();
                 DelayUtils.waitForPageToLoad(driver, webDriverWait);
             }
         }
@@ -320,9 +325,7 @@ public class TreeComponent {
         }
         
         private void moveToNode() {
-            if (!nodeElement.isDisplayed()) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nodeElement);
-            }
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nodeElement);
         }
         
         @Override
