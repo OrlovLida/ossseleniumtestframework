@@ -22,11 +22,10 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class AdvancedSearch {
-    private static final Logger log = LoggerFactory.getLogger(AdvancedSearch.class);
     public static final String SEARCH_COMPONENT_CLASS = "advanced-search_search";
     private static final String QUICK_FILTERS_ID = "quick_filters";
     private static final String TAGS_CLASS = "tagsWidgetDisplay";
-    private static final String TAGS_ITEMS = ".//span[@class='md-input-value']";
+    private static final String TAGS_ITEMS = ".md-input-value";
     private static final String ADVANCED_SEARCH_PANEL_CLASS = "advanced-search_panel";
     private static final String FILTERS_SETTINGS_XPATH = "//div[contains(@class,'filters-settings')]";
     private static final String FILTERS_SETTINGS_CLASS = "filters-settings";
@@ -159,7 +158,7 @@ public class AdvancedSearch {
     }
 
     public int getTagsNumber() {
-        return this.webElement.findElements(By.xpath(TAGS_ITEMS)).size();
+        return this.webElement.findElements(By.cssSelector(TAGS_ITEMS)).size();
     }
 
     private WebElement getFullTextSearch() {
@@ -201,11 +200,8 @@ public class AdvancedSearch {
 
     private Multimap<String, String> parseTags(List<String> tags) {
         Multimap<String, String> values = HashMultimap.create();
-        tags.forEach(log::info);
         for (String tag : tags) {
             String[] parts = tag.split(TAGS_SEPARATOR);
-            log.info("Part 1 of splitted tag: {}", parts[0]);
-            log.info("Part 2 of splitted tag: {}", parts[1]);
             values.put(parts[0], parts[1]);
         }
         return values;
@@ -245,7 +241,7 @@ public class AdvancedSearch {
         }
 
         private List<WebElement> getTagsWebElement() {
-            return this.webElement.findElements(By.xpath(TAGS_ITEMS));
+            return this.webElement.findElements(By.cssSelector(TAGS_ITEMS));
         }
 
         private List<String> getTags() {
