@@ -37,9 +37,8 @@ public class TreeComponent {
     private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
-    
-    private static final int LEFT_MARGIN_IN_PX = 24;
     private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
+
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
@@ -62,7 +61,6 @@ public class TreeComponent {
     
     public void toggleNodeByPath(String path) {
         getNodeByPath(path).toggleNode();
-        
     }
     
     public Node getNodeByPath(String path) {
@@ -201,6 +199,7 @@ public class TreeComponent {
         }
         
         public void toggleNode() {
+            moveToNode();
             Actions action = new Actions(driver);
             action.moveToElement(nodeElement).perform();
             WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
@@ -209,6 +208,7 @@ public class TreeComponent {
         
         public void expandNode() {
             if (!isExpanded()) {
+                moveToNode();
                 Actions action = new Actions(driver);
                 action.moveToElement(nodeElement).perform();
                 WebElement button = nodeElement.findElement(By.xpath(EXPANDER_BUTTON_XPATH));
@@ -325,7 +325,7 @@ public class TreeComponent {
         }
         
         private void moveToNode() {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nodeElement);
+           WebElementUtils.moveToElement(driver, nodeElement);
         }
         
         @Override
