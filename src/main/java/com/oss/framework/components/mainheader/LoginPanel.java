@@ -20,7 +20,7 @@ import com.oss.framework.components.prompts.ConfirmationBoxInterface;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -74,12 +74,13 @@ public class LoginPanel {
         }
     }
 
-    public void chooseDataFormat(String dataFormat) {
+    public void chooseDataFormat(String presentDateFormat, String targetDateFormat) {
         open();
         Input input = ComponentFactory.create(DATE_FORMAT_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
         String currentDataFormat = input.getStringValue();
-        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern(dataFormat);
-        String nowDataInSelectedFormat = dtf1.format(ZonedDateTime.now());
+        DateTimeFormatter presentFormat = DateTimeFormatter.ofPattern(presentDateFormat);
+        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern(targetDateFormat);
+        String nowDataInSelectedFormat = dtf1.format(LocalDateTime.parse(currentDataFormat, presentFormat));
         if (!currentDataFormat.equals(nowDataInSelectedFormat)) {
             input.setSingleStringValue(nowDataInSelectedFormat);
             popupAccept();
