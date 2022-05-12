@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Splitter;
@@ -249,9 +248,7 @@ public class TreeComponent {
         }
         
         public void callAction(String groupId, String actionId) {
-            Actions actions = new Actions(driver);
-            actions.moveToElement(nodeElement).build().perform();
-            
+            WebElementUtils.moveToElement(driver, nodeElement);
             InlineMenu menu = InlineMenu.create(nodeElement, driver, webDriverWait);
             menu.callAction(groupId, actionId);
         }
