@@ -7,10 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Splitter;
@@ -37,9 +35,8 @@ public class TreeComponent {
     private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
-    
-    private static final int LEFT_MARGIN_IN_PX = 24;
     private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
+    
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
@@ -62,7 +59,6 @@ public class TreeComponent {
     
     public void toggleNodeByPath(String path) {
         getNodeByPath(path).toggleNode();
-        
     }
     
     public Node getNodeByPath(String path) {
@@ -201,28 +197,25 @@ public class TreeComponent {
         }
         
         public void toggleNode() {
-            Actions action = new Actions(driver);
-            action.moveToElement(nodeElement).perform();
+            moveToNode();
             WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
             input.click();
         }
         
         public void expandNode() {
             if (!isExpanded()) {
-                Actions action = new Actions(driver);
-                action.moveToElement(nodeElement).perform();
+                moveToNode();
                 WebElement button = nodeElement.findElement(By.xpath(EXPANDER_BUTTON_XPATH));
-                action.moveToElement(button).click(button).build().perform();
+                WebElementUtils.clickWebElement(driver, button);
                 DelayUtils.waitForPageToLoad(driver, webDriverWait);
             }
         }
         
         public Optional<Popup> expandNextLevel() {
             if (isExpandNextLevelPresent()) {
-                Actions action = new Actions(driver);
-                action.moveToElement(nodeElement).perform();
+                moveToNode();
                 WebElement expandNextLevelArrow = nodeElement.findElement(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH));
-                action.click(expandNextLevelArrow).perform();
+                WebElementUtils.clickWebElement(driver, expandNextLevelArrow);
                 WebElement button =
                         nodeElement.findElement(By.xpath("//a[contains(@" + CSSUtils.TEST_ID + ",'" + EXPAND_NEXT_LEVEL_BUTTON + "')]"));
                 WebElementUtils.clickWebElement(driver, button);
@@ -238,8 +231,7 @@ public class TreeComponent {
         
         public void collapseNode() {
             if (isExpanded()) {
-                Actions action = new Actions(driver);
-                action.moveToElement(nodeElement).perform();
+                moveToNode();
                 WebElement button = nodeElement.findElement(By.xpath(COLLAPSER_BUTTON_XPATH));
                 button.click();
                 DelayUtils.waitForPageToLoad(driver, webDriverWait);
@@ -256,17 +248,13 @@ public class TreeComponent {
         }
         
         public void callAction(String groupId, String actionId) {
-            Actions actions = new Actions(driver);
-            actions.moveToElement(nodeElement).build().perform();
-            
+            WebElementUtils.moveToElement(driver, nodeElement);
             InlineMenu menu = InlineMenu.create(nodeElement, driver, webDriverWait);
             menu.callAction(groupId, actionId);
         }
         
         public void callAction(String actionId) {
-            Actions actions = new Actions(driver);
-            actions.moveToElement(nodeElement).build().perform();
-            
+            moveToNode();
             InlineMenu menu = InlineMenu.create(nodeElement, driver, webDriverWait);
             menu.callAction(actionId);
         }
@@ -313,9 +301,8 @@ public class TreeComponent {
         
         private void clickFilter() {
             if (isFilterButtonPresent()) {
-                Actions actions = new Actions(driver);
                 WebElement filterButton = nodeElement.findElement(By.xpath(FILTERS_BUTTON_XPATH));
-                actions.moveToElement(filterButton).click(filterButton).build().perform();
+                WebElementUtils.clickWebElement(driver, filterButton);
             } else
                 throw new NoSuchElementException("Filter Node is not available for Node " + getLabel());
         }
@@ -325,7 +312,7 @@ public class TreeComponent {
         }
         
         private void moveToNode() {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nodeElement);
+            WebElementUtils.moveToElement(driver, nodeElement);
         }
         
         @Override
