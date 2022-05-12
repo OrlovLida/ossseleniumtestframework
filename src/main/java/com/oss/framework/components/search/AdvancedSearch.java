@@ -9,6 +9,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -23,7 +25,7 @@ public class AdvancedSearch {
     public static final String SEARCH_COMPONENT_CLASS = "advanced-search_search";
     private static final String QUICK_FILTERS_ID = "quick_filters";
     private static final String TAGS_CLASS = "tagsWidgetDisplay";
-    private static final String TAGS_ITEMS = ".//span[@class='md-input-value']";
+    private static final String TAGS_ITEMS = ".md-input-value";
     private static final String ADVANCED_SEARCH_PANEL_CLASS = "advanced-search_panel";
     private static final String FILTERS_SETTINGS_XPATH = "//div[contains(@class,'filters-settings')]";
     private static final String FILTERS_SETTINGS_CLASS = "filters-settings";
@@ -156,7 +158,7 @@ public class AdvancedSearch {
     }
 
     public int getTagsNumber() {
-        return this.webElement.findElements(By.xpath(TAGS_ITEMS)).size();
+        return this.webElement.findElements(By.cssSelector(TAGS_ITEMS)).size();
     }
 
     private WebElement getFullTextSearch() {
@@ -239,7 +241,7 @@ public class AdvancedSearch {
         }
 
         private List<WebElement> getTagsWebElement() {
-            return this.webElement.findElements(By.xpath(TAGS_ITEMS));
+            return this.webElement.findElements(By.cssSelector(TAGS_ITEMS));
         }
 
         private List<String> getTags() {
