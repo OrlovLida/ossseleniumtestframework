@@ -59,6 +59,7 @@ public class OldTable extends Widget implements TableInterface {
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
     private static final String TABLE_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String TEXT_ICON_CLASS = "OSSRichTextIcon";
+    private AdvancedSearch advancedSearch;
 
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId) {
         super(driver, wait, widgetId);
@@ -158,8 +159,9 @@ public class OldTable extends Widget implements TableInterface {
 
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
-    }
+        openAdvancedSearch();
+        setFilterContains(attributeId, componentType, value);
+        confirmFilter();    }
 
     @Override
     public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
@@ -322,8 +324,23 @@ public class OldTable extends Widget implements TableInterface {
         return driver.findElement(By.className(STICKY_COLUMNS_SETTINGS_CLASS));
     }
 
+    private void openAdvancedSearch() {
+        getAdvancedSearch().openSearchPanel();
+    }
+
+    private void confirmFilter() {
+        getAdvancedSearch().clickApply();
+    }
+
+    private void setFilterContains(String componentId, ComponentType componentType, String value) {
+        getAdvancedSearch().setFilter(componentId, componentType, value);
+    }
+
     private AdvancedSearch getAdvancedSearch() {
-        return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
+        if (advancedSearch == null) {
+            advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
+        }
+        return advancedSearch;
     }
 
     private static class Column {
