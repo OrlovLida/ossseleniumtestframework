@@ -74,19 +74,13 @@ public class LoginPanel {
         }
     }
 
-    public void chooseDataFormat(String presentDateFormat, String targetDateFormat) {
+    public void chooseDataFormat(DateTimeFormatter inputDateFormat, DateTimeFormatter outputDateFormat) {
         open();
         Input input = ComponentFactory.create(DATE_FORMAT_CHOOSER, Input.ComponentType.COMBOBOX, driver, wait);
-        String currentDataFormat = input.getStringValue();
-        DateTimeFormatter presentFormat = DateTimeFormatter.ofPattern(presentDateFormat);
-        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern(targetDateFormat);
-        String nowDataInSelectedFormat = dtf1.format(LocalDateTime.parse(currentDataFormat, presentFormat));
-        if (!currentDataFormat.equals(nowDataInSelectedFormat)) {
-            input.setSingleStringValue(nowDataInSelectedFormat);
-            popupAccept();
-        } else {
-            close();
-        }
+        String currentDate = input.getStringValue();
+        String nowDataInSelectedFormat = outputDateFormat.format(LocalDateTime.parse(currentDate, inputDateFormat));
+        input.setSingleStringValue(nowDataInSelectedFormat);
+        popupAccept();
     }
 
     private void popupAccept() {
