@@ -80,10 +80,10 @@ public class LoginPanel {
         String currentDate = input.getStringValue();
         String nowDataInSelectedFormat = outputDateFormat.format(LocalDateTime.parse(currentDate, inputDateFormat));
         input.setSingleStringValue(nowDataInSelectedFormat);
-        popupAccept();
+        acceptPopup();
     }
 
-    private void popupAccept() {
+    private void acceptPopup() {
         Popup prompt = Popup.create(driver, wait);
         prompt.clickButtonByLabel(CHANGE_BUTTON);
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -102,7 +102,7 @@ public class LoginPanel {
         toolbar.openLoginPanel();
         Input input = ComponentFactory.create(USING_SYSTEM_ZONE_SWITCHER, ComponentType.SWITCHER, driver, wait);
         input.setValue(Data.createSingleData(value));
-        popupAccept();
+        acceptPopup();
     }
 
     public void chooseTimeZone(String timeZone) {
@@ -111,7 +111,7 @@ public class LoginPanel {
         String currentTimeZone = input.getStringValue();
         if (!currentTimeZone.equals(timeZone)) {
             input.setSingleStringValueContains(timeZone);
-            popupAccept();
+            acceptPopup();
         } else {
             close();
         }
