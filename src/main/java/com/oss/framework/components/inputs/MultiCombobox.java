@@ -49,7 +49,7 @@ public class MultiCombobox extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        WebElementUtils.clickWebElement(driver, webElement);
+        WebElementUtils.clickWithRetry(driver, webElement, By.xpath(createDropdownList()));
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         if (isSearchPresent()) {
             searchItem(value.getStringValue(), true);
@@ -67,7 +67,7 @@ public class MultiCombobox extends Input {
 
     @Override
     public void setValue(Data value) {
-        WebElementUtils.clickWebElement(driver, webElement);
+        WebElementUtils.clickWithRetry(driver, webElement, By.xpath(createDropdownList()));
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         if (isSearchPresent()) {
             searchItem(value.getStringValue(), false);
