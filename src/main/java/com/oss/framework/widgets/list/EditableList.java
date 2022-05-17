@@ -201,12 +201,13 @@ public class EditableList extends Widget {
             }
 
             public void clearValue(String componentId, Input.ComponentType componentType) {
-                WebElementUtils.clickWebElement(driver, webElement);
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
                     Input input = ComponentFactory.create(componentId, componentType, driver, wait);
                     input.clear();
                     return;
                 }
+                WebElementUtils.moveToElement(driver, webElement);
+                WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
                 InlineForm inlineForm = InlineForm.create(driver, wait);
                 Input component = inlineForm.getComponent(componentId, componentType);
                 component.clear();
