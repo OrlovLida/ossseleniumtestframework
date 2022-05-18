@@ -52,6 +52,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String CANNOT_GET_COUNT_WARN = "Problem with getting table object count. Value is not a number.";
     private static final String NOT_SUPPORTED_TYPE_EXCEPTION = "Old table widget supports TEXT_FIELD only.";
     private static final String NOT_IMPLEMENTED_EXCEPTION = "Not implemented method in OldTable";
+    private static final String NO_AVAILABLE_ROWS = "There are no available rows";
     private static final String CANNOT_FIND_COLUMN_EXCEPTION_PATTERN = "Cannot find a column with label = %s";
     private static final String PAGE_OPTION_PATTERN = ".//li[text()='%s']";
     private static final String CONTAINS_TEXT_PATTERN = "//*[contains(text(),'%s')]";
@@ -60,6 +61,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String TABLE_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String TEXT_ICON_CLASS = "OSSRichTextIcon";
     private AdvancedSearch advancedSearch;
+    private Map<String, Column> columns;
 
     private OldTable(WebDriver driver, WebDriverWait wait, String widgetId) {
         super(driver, wait, widgetId);
@@ -85,8 +87,10 @@ public class OldTable extends Widget implements TableInterface {
 
     @Override
     public void selectRow(int row) {
-        Map<String, Column> columns = createColumnsFilters();
-        Lists.newArrayList(columns.values()).get(0).clickCell(row);
+        webElement.findElements(By.cssSelector(COLUMNS_WITHOUT_CHECKBOX_CSS))
+                .stream().map(columnElement -> new Column(columnElement, webDriverWait, driver))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(NO_AVAILABLE_ROWS)).clickCell(row);
     }
 
     @Override
@@ -161,7 +165,8 @@ public class OldTable extends Widget implements TableInterface {
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
         setFilterContains(attributeId, componentType, value);
-        confirmFilter();    }
+        confirmFilter();
+    }
 
     @Override
     public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
@@ -230,8 +235,7 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     public void clearAllColumnValues() {
-        Map<String, Column> columns = createColumnsFilters();
-        List<Column> columns2 = Lists.newArrayList(columns.values());
+        List<Column> columns2 = Lists.newArrayList(getColumns().values());
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         for (Column column : columns2) {
             column.clear();
@@ -278,18 +282,18 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private Column getColumn(String columnLabel) {
-        Map<String, Column> columns = createColumnsFilters();
-        if (columns.containsKey(columnLabel)) {
-            return columns.get(columnLabel);
+        Map<String, Column> columnsMap = getColumns();
+        if (columnsMap.containsKey(columnLabel)) {
+            return columnsMap.get(columnLabel);
         } else {
             log.debug(AVAILABLE_COLUMNS_LOG);
-            columns.forEach((key, value) -> log.debug(key));
+            columnsMap.forEach((key, value) -> log.debug(key));
             throw new NoSuchElementException(String.format(CANNOT_FIND_COLUMN_EXCEPTION_PATTERN, columnLabel));
         }
     }
 
     private Map<String, Column> createColumnsFilters() {
-        Map<String, Column> columns = Maps.newHashMap();
+        Map<String, Column> columnMap = Maps.newHashMap();
         DelayUtils.waitForNestedElements(webDriverWait, webElement, TABLE_COMPONENT_XPATH);
         List<Column> columns2 =
                 webElement.findElements(By.cssSelector(COLUMNS_WITHOUT_CHECKBOX_CSS))
@@ -298,11 +302,18 @@ public class OldTable extends Widget implements TableInterface {
         log.debug(columsNumberLog);
         for (Column column : columns2) {
             if (column.isLabelPresent()) {
-                columns.put(column.getLabel(), column);
+                columnMap.put(column.getLabel(), column);
             }
         }
-        String columsWithLabelsNumberLog = String.format(NUMBER_OF_COLUMNS_WITH_LABEL_LOG_PATTERN, columns.size());
+        String columsWithLabelsNumberLog = String.format(NUMBER_OF_COLUMNS_WITH_LABEL_LOG_PATTERN, columnMap.size());
         log.debug(columsWithLabelsNumberLog);
+        return columnMap;
+    }
+
+    private Map<String, Column> getColumns() {
+        if (columns == null) {
+            columns = createColumnsFilters();
+        }
         return columns;
     }
 
