@@ -350,7 +350,7 @@ public class OldTable extends Widget implements TableInterface {
         private static final String HREF_XPATH = "//a[contains(@href, '#/')]";
         private static final String INPUT_XPATH = ".//input";
         private static final String HEADER_XPATH = ".//div[contains(@class, 'Header')]";
-        private static final String RICH_TEXT_XPATH = ".//div[contains(@class, 'OSSRichText')]";
+        private static final String RICH_TEXT_XPATH = ".//div[contains(@class, 'OSSRichText')]/span";
         private static final String CELL_XPATH = ".//div[contains(@class, 'Cell')]";
         private static final String CANNOT_FIND_ROW_EXCEPTION = "Cannot find a row with the provided value.";
         private static final String CANNOT_FIND_CELL_EXCEPTION = "Cannot find a cell with the provided value.";
@@ -433,7 +433,7 @@ public class OldTable extends Widget implements TableInterface {
             if (isIconPresent(cell)) {
                 return getIconTitles(index);
             }
-            return cell.getText();
+            return getCellText(cell);
         }
 
         private boolean isIconPresent(WebElement cell) {
