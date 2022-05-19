@@ -16,6 +16,9 @@ import com.oss.framework.widgets.Widget;
 public class TimePeriodChooser extends Widget {
 
     private static final String CALENDAR_XPATH = ".//i[contains(@class,'OSSIcon fa fa-calendar')]";
+    private static final String LAST_OPTION_LABEL = "Last";
+    private static final String RANGE_OPTION_LABEL = "Range";
+    private static final String PERIOD_OPTION_LABEL = "Pariod";
     private static final String DAYS_ID = "days-number-field";
     private static final String HOURS_ID = "hours-number-field";
     private static final String MINUTES_ID = "minutes-number-field";
@@ -41,15 +44,15 @@ public class TimePeriodChooser extends Widget {
         WebElementUtils.clickWebElement(driver, calendar);
         switch (option) {
             case LAST: {
-                DropdownList.create(driver, webDriverWait).selectOption("Last");
+                DropdownList.create(driver, webDriverWait).selectOption(LAST_OPTION_LABEL);
                 break;
             }
             case RANGE: {
-                DropdownList.create(driver, webDriverWait).selectOption("Range");
+                DropdownList.create(driver, webDriverWait).selectOption(RANGE_OPTION_LABEL);
                 break;
             }
             case PERIOD: {
-                DropdownList.create(driver, webDriverWait).selectOption("Period");
+                DropdownList.create(driver, webDriverWait).selectOption(PERIOD_OPTION_LABEL);
                 break;
             }
         }
