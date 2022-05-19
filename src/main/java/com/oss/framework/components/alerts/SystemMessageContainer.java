@@ -43,7 +43,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private static final String INFO_MESSAGE_TYPE_CLASS = "info";
     private static final String CANNOT_MAP_TO_MESSAGE_EXCEPTION = "Cannot map to message type.";
     private static final String NO_MESSAGE_TEXT_EXCEPTION = "Cannot get text from system message.";
-    private static final String TYPE_CONTAINER_CSS = ".typeContainer";
+    private static final String TEXT_CONTAINER_CSS = ".textContainer";
     private WebDriver driver;
     private WebDriverWait wait;
     private WebElement messageContainer;
@@ -153,7 +153,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
     
     private Message toMessage(WebElement messageItem) {
-        DelayUtils.waitForPresence(wait, By.cssSelector(TYPE_CONTAINER_CSS));
+        DelayUtils.waitForPresence(wait, By.cssSelector(TEXT_CONTAINER_CSS));
         List<WebElement> messagesList = messageItem.findElements(By.xpath(MESSAGE_XPATH));
         List<String> allClasses = CSSUtils.getAllClasses(messageItem);
         if (!messagesList.isEmpty()) {
@@ -163,7 +163,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
             String text = message.getText();
             return new Message(text, mapToMassageType(allClasses));
         }
-        String text = messageItem.findElement(By.cssSelector(TYPE_CONTAINER_CSS)).getText();
+        String text = messageItem.findElement(By.cssSelector(TEXT_CONTAINER_CSS)).getText();
         return new Message(text, mapToMassageType(allClasses));
     }
     
