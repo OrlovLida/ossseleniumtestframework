@@ -5,6 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.inputs.ComponentFactory;
+import com.oss.framework.components.inputs.Input;
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
@@ -12,12 +15,16 @@ import com.oss.framework.widgets.Widget;
 
 public class TimePeriodChooser extends Widget {
 
-    private final String componentId;
+    private static final String CALENDAR_XPATH = ".//i[contains(@class,'OSSIcon fa fa-calendar')]";
+    private static final String DAYS_ID = "days-number-field";
+    private static final String HOURS_ID = "hours-number-field";
+    private static final String MINUTES_ID = "minutes-number-field";
+    private static final String FROM_ID = "start-date";
+    private static final String TO_ID = "end-date";
+    private static final String CLOSE_ICON_CSS = ".ossfont-close";
 
     private TimePeriodChooser(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement webElement) {
         super(driver, webDriverWait, widgetId, webElement);
-
-        this.componentId = widgetId;
     }
 
     public static TimePeriodChooser create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
@@ -30,46 +37,45 @@ public class TimePeriodChooser extends Widget {
     }
 
     public void chooseOption(TimePeriodChooserOption option) {
-        WebElement calendar = webElement.findElement(By.xpath(".//i[contains(@class,'OSSIcon fa fa-calendar')]"));
+        WebElement calendar = webElement.findElement(By.xpath(CALENDAR_XPATH));
         WebElementUtils.clickWebElement(driver, calendar);
         switch (option) {
             case LAST: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("LAST_2"))).click();
+                DropdownList.create(driver, webDriverWait).selectOption("Last");
                 break;
             }
             case RANGE: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("RANGE_1"))).click();
+                DropdownList.create(driver, webDriverWait).selectOption("Range");
                 break;
             }
             case PERIOD: {
-                webElement.findElement(By.xpath(createChooseOptionXPath("PERIOD_0"))).click();
+                DropdownList.create(driver, webDriverWait).selectOption("Period");
                 break;
             }
         }
     }
 
     public void setLastPeriod(Integer days, Integer hours, Integer minutes) {
-        WebElement daysInput = webElement.findElement(By.xpath("//input[@label='Days']"));
-        daysInput.sendKeys(days.toString());
+        setTextField(DAYS_ID, days.toString());
+        setTextField(HOURS_ID, hours.toString());
+        setTextField(MINUTES_ID, minutes.toString());
+    }
 
-        WebElement hoursInput = webElement.findElement(By.xpath("//input[@label='Hours']"));
-        hoursInput.sendKeys(hours.toString());
-
-        WebElement minutesInput = webElement.findElement(By.xpath("//input[@label='Minutes']"));
-        minutesInput.sendKeys(minutes.toString());
+    public void setRangePeriod(String fromDate, String toDate) {
+        setTextField(FROM_ID, fromDate);
+        setTextField(TO_ID, toDate);
     }
 
     public void clickClearValue() {
-        webElement.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']//i[contains(@class,'OSSIcon ossfont-close')]")).click();
-    }
-
-    private String createChooseOptionXPath(String option) {
-
-        return "//div[contains(@class,'main-options common-options')]//label[@for='time-period-options_" + option + "']";
+        webElement.findElement(By.cssSelector(CLOSE_ICON_CSS)).click();
     }
 
     public enum TimePeriodChooserOption {
         PERIOD, RANGE, LAST
     }
 
+    private void setTextField(String componentId, String value) {
+        ComponentFactory.create(componentId, Input.ComponentType.TEXT_FIELD, driver, webDriverWait)
+                .setSingleStringValue(value);
+    }
 }
