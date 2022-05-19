@@ -11,7 +11,7 @@ import com.oss.framework.utils.WebElementUtils;
 
 public class CommentTextField extends Input {
 
-    private static final String TEXT_FIELD_XPATH = "//div[@class='TextField clearfix']";
+    private static final String TEXT_FIELD_XPATH = ".//ancestor::div[@class='TextField clearfix']";
     private static final String ACCEPT_BUTTON_CSS = ".fa-check";
 
     CommentTextField(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
@@ -47,7 +47,7 @@ public class CommentTextField extends Input {
     }
 
     private WebElement textField() {
-        return driver.findElement(By.xpath(TEXT_FIELD_XPATH));
+        return webElement.findElement(By.xpath(TEXT_FIELD_XPATH));
     }
 
     private void acceptInputValue() {
