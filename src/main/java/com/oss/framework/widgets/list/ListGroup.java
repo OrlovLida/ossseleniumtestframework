@@ -38,7 +38,7 @@ public class ListGroup {
     }
 
     public List<String> getItemsName(){
-        return driver.findElements(By.className(ITEM_LIST_CLASS)).stream().map(item-> new Item(driver, item)).map(Item::getValue).collect(Collectors.toList());
+        return driver.findElements(By.className(ITEM_LIST_CLASS)).stream().map(item-> Item.create(driver, item)).map(Item::getValue).collect(Collectors.toList());
     }
     
     private Item getItem(String itemName) {
