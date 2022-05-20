@@ -40,6 +40,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String ROWS_COUNTER_SPANS_XPATH = ".//div[@class='rowsCounter']//span";
     private static final String TABLE_COMPONENT_XPATH = ".//div[contains(@class, 'OSSTableComponent')]";
     private static final String COLUMNS_WITHOUT_CHECKBOX_CSS = ".OSSTableColumn:not(.Col_SELECTION)";
+    private static final String HREF_CSS = "[href]";
     private static final String CONTEXT_ACTIONS_CONTAINER_CSS = ".windowToolbar," + ACTIONS_CONTAINER_CSS;
     private static final String TABLE_IN_ACTIVE_TAB_XPATH =
             "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='AppComponentContainer']/div";
@@ -60,6 +61,7 @@ public class OldTable extends Widget implements TableInterface {
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
     private static final String TABLE_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String TEXT_ICON_CLASS = "OSSRichTextIcon";
+
     private AdvancedSearch advancedSearch;
     private Map<String, Column> columns;
 
@@ -88,7 +90,9 @@ public class OldTable extends Widget implements TableInterface {
     @Override
     public void selectRow(int row) {
         webElement.findElements(By.cssSelector(COLUMNS_WITHOUT_CHECKBOX_CSS))
-                .stream().map(columnElement -> new Column(columnElement, webDriverWait, driver))
+                .stream()
+                .filter(webElement -> webElement.findElements(By.cssSelector(HREF_CSS)).isEmpty())
+                .map(columnElement -> new Column(columnElement, webDriverWait, driver))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException(NO_AVAILABLE_ROWS)).clickCell(row);
     }
