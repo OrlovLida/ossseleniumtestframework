@@ -239,7 +239,7 @@ public class OldTable extends Widget implements TableInterface {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         List<Column> columns2 = Lists.newArrayList(getColumns().values());
         for (Column column : columns2) {
-            if (column.isColumnWithSearch()) {
+            if (column.isColumnWithSearchPresent()) {
                 column.clear();
                 DelayUtils.waitForPageToLoad(driver, webDriverWait);
             }
@@ -433,7 +433,7 @@ public class OldTable extends Widget implements TableInterface {
             }
         }
 
-        private boolean isColumnWithSearch() {
+        private boolean isColumnWithSearchPresent() {
             moveToHeader();
             return !columnElement.findElements(By.cssSelector(SEARCH_SELECTOR)).isEmpty();
         }
