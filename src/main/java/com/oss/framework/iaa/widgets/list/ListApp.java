@@ -45,7 +45,7 @@ public class ListApp {
     }
 
     public String getValueFromField(String textFieldId) {
-        return listAppElement.findElement(By.cssSelector(String.format("[" + CSSUtils.TEST_ID + "='%s']", textFieldId))).getText();
+        return listAppElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, textFieldId))).getText();
     }
 
     private List<WebElement> getActiveTabContent() {
