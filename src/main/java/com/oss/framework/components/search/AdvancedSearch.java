@@ -9,8 +9,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -26,13 +24,12 @@ public class AdvancedSearch {
     private static final String QUICK_FILTERS_ID = "quick_filters";
     private static final String TAGS_CLASS = "tagsWidgetDisplay";
     private static final String TAGS_ITEMS = ".md-input-value";
-    private static final String ADVANCED_SEARCH_PANEL_CLASS = "advanced-search_panel";
     private static final String FILTERS_SETTINGS_XPATH = "//div[contains(@class,'filters-settings')]";
     private static final String FILTERS_SETTINGS_CLASS = "filters-settings";
     private static final String SEARCH_PANEL_OPEN_BUTTON = ".//button[@class='button-filters-panel']";
-    private static final String FILTER_BOX_PATH = "//*[@class='filters-box']";
     private static final String TAG_CLOSE_BUTTON_PATH = ".//span[@class='md-input-close']";
     private static final String TAGS_SEPARATOR = ": ";
+    private static final String ADVANCED_SEARCH_XPATH = "//*[@class='advanced-search_panel'] | //*[@class='filters-box']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -57,8 +54,8 @@ public class AdvancedSearch {
     }
 
     public static AdvancedSearch createById(WebDriver driver, WebDriverWait wait, String id) {
-        DelayUtils.waitByXPath(wait, "//*[@" + CSSUtils.TEST_ID + "='" + id + "']");
-        WebElement webElement = driver.findElement(By.xpath("//*[@" + CSSUtils.TEST_ID + "='" + id + "']"));
+        DelayUtils.waitBy(wait, By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, id)));
+        WebElement webElement = driver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, id)));
         return new AdvancedSearch(driver, wait, webElement);
     }
 
@@ -220,7 +217,9 @@ public class AdvancedSearch {
     }
 
     private SearchPanel getSearchPanel() {
-        DelayUtils.waitBy(this.wait, By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] |" + FILTER_BOX_PATH));
+        DelayUtils.waitBy(this.wait, By.xpath(ADVANCED_SEARCH_XPATH));
+        WebElement searchPanel = driver.findElement(By.xpath(ADVANCED_SEARCH_XPATH));
+        DelayUtils.waitForSpinners(wait, searchPanel);
         return SearchPanel.create(this.driver, this.wait);
     }
 
@@ -229,7 +228,7 @@ public class AdvancedSearch {
     }
 
     private boolean isSearchPanelOpen() {
-        return !webElement.findElements(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"))
+        return !webElement.findElements(By.xpath(ADVANCED_SEARCH_XPATH))
                 .isEmpty();
     }
 
