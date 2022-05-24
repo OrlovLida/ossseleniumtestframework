@@ -108,8 +108,9 @@ public class OldActionsContainer implements ActionsInterface {
         DelayUtils.waitForVisibility(wait, toolbar);
         DelayUtils.waitForPageToLoad(driver, wait);
         if (!isElementPresent(toolbar, By.xpath(actionXpath))) {
-            clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(actionXpath));
-            clickWebElement(driver.findElement(By.xpath(actionXpath)));
+            clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.className(DropdownList.PORTAL_CLASS));
+            WebElement dropdown = driver.findElement(By.className(DropdownList.PORTAL_CLASS));
+            clickWebElement(dropdown.findElement(By.xpath(actionXpath)));
             return;
         }
         clickActionByXpath(actionXpath);
