@@ -9,37 +9,40 @@ import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.DelayUtils;
 
 public class ComponentFactory {
-    
+
     public static Input create(String componentId, ComponentType componentType, WebDriver webDriver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
-        
+
         switch (componentType) {
-        case CHECKBOX: {
-            return Checkbox.create(webDriver, wait, componentId);
-        }
-        case COMBOBOX: {
-            return Combobox.create(webDriver, wait, componentId);
-        }
-        case COORDINATES: {
-            return Coordinates.create(webDriver, wait, componentId);
-        }
-        case DATE: {
-            return Date.create(webDriver, wait, componentId);
-        }
-        case DATE_TIME: {
-            return DateTime.create(webDriver, wait, componentId);
-        }
-        case DATE_TIME_RANGE: {
-            return DateTimeRange.create(webDriver, wait, componentId);
-        }
-        case MULTI_COMBOBOX: {
-            return MultiCombobox.create(webDriver, wait, componentId);
-        }
-        case MULTI_SEARCH_FIELD: {
-            return MultiSearchField.create(webDriver, wait, componentId);
-        }
-        case OBJECT_SEARCH_FIELD: {
-            return ObjectSearchField.create(webDriver, wait, componentId);
+            case CHECKBOX: {
+                return Checkbox.create(webDriver, wait, componentId);
+            }
+            case COMBOBOX: {
+                return Combobox.create(webDriver, wait, componentId);
+            }
+            case COMMENT_TEXT_FIELD: {
+                return CommentTextField.create(webDriver, wait, componentId);
+            }
+            case COORDINATES: {
+                return Coordinates.create(webDriver, wait, componentId);
+            }
+            case DATE: {
+                return Date.create(webDriver, wait, componentId);
+            }
+            case DATE_TIME: {
+                return DateTime.create(webDriver, wait, componentId);
+            }
+            case DATE_TIME_RANGE: {
+                return DateTimeRange.create(webDriver, wait, componentId);
+            }
+            case MULTI_COMBOBOX: {
+                return MultiCombobox.create(webDriver, wait, componentId);
+            }
+            case MULTI_SEARCH_FIELD: {
+                return MultiSearchField.create(webDriver, wait, componentId);
+            }
+            case OBJECT_SEARCH_FIELD: {
+                return ObjectSearchField.create(webDriver, wait, componentId);
         }
         case NUMBER_FIELD: {
             return NumberField.create(webDriver, wait, componentId);
@@ -84,11 +87,11 @@ public class ComponentFactory {
             throw new NoSuchElementException("Not supported component type: " + componentType);
         }
     }
-    
+
     public static Input createFromParent(String componentId, ComponentType componentType, WebDriver webDriver, WebDriverWait wait,
             WebElement parent) {
         DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
-        
+
         switch (componentType) {
         case CHECKBOX: {
             return Checkbox.createFromParent(parent, webDriver, wait, componentId);

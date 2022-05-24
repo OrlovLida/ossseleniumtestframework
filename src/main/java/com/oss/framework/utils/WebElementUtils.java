@@ -6,6 +6,7 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -22,10 +23,9 @@ public class WebElementUtils {
     }
 
     public static void clickWebElement(WebDriver driver, WebElement webElement) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
-        Actions actions = new Actions(driver);
-        actions.moveToElement(webElement).build().perform();
+        moveToElement(driver, webElement);
         new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(webElement));
+        Actions actions = new Actions(driver);
         actions.click(webElement).build().perform();
     }
 
@@ -50,5 +50,33 @@ public class WebElementUtils {
 
     public static boolean isElementPresent(WebElement webElement, By by) {
         return !webElement.findElements(by).isEmpty();
+    }
+
+    public static void moveToElement(WebDriver driver, WebElement webElement) {
+        if (!isDisplayedInViewport(webElement)) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });", webElement);
+            DelayUtils.sleep();
+        }
+        Actions actions = new Actions(driver);
+        actions.moveToElement(webElement).build().perform();
+    }
+
+    public static boolean isDisplayedInViewport(WebElement element) {
+        WebDriver driver = ((RemoteWebElement) element).getWrappedDriver();
+        return (Boolean) ((JavascriptExecutor) driver).executeScript(
+                "var elem = arguments[0],                        " +
+                        "  box = elem.getBoundingClientRect(),      " +
+                        "  cx = box.left + box.width -1,            " +
+                        "  cy = box.top + box.height -1,            " +
+                        "  e = document.elementFromPoint(cx, cy);   " +
+                        "  dx = box.left,                           " +
+                        "  dy = box.top,                            " +
+                        "  f = document.elementFromPoint(dx, dy);   " +
+                        "for (; e; e = e.parentElement) {           " +
+                        "  if (e === elem && f === elem)            " +
+                        "    return true;                           " +
+                        "}                                          " +
+                        "return false;                              "
+                , element);
     }
 }

@@ -179,6 +179,11 @@ public class CommonList extends Widget {
             return !rowElement.findElements(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId))).isEmpty();
         }
 
+        public boolean isActionIconPresentByLabel(String ariaLabel) {
+            WebElement placeholdersAndActions = rowElement.findElement(By.xpath(PLACE_HOLDERS_XPATH));
+            return !placeholdersAndActions.findElements(By.xpath(String.format(ICON_BY_ARIA_LABEL_PATTERN, ariaLabel))).isEmpty();
+        }
+
         public void callAction(String groupId, String actionId) {
             getInlineMenu().callAction(groupId, actionId);
         }

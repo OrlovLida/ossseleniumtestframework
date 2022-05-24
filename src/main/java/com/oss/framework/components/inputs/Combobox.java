@@ -1,8 +1,5 @@
 package com.oss.framework.components.inputs;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -10,17 +7,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
-import com.oss.framework.components.data.Data.DataWrapper;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class Combobox extends Input {
 
     private static final String INPUT_XPATH = ".//input";
     private static final String LABEL_XPATH = ".//label";
     private static final String COMBOBOX_INPUT_XPATH = ".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]";
-    private static final String COMBOBOX_CLOSE_XPATH = ".//i[@aria-label ='CLOSE']";
-    private static final String LIST_ITEM_XPATH = "//div[@class='list-item'] | //div[@class='combo-box__list-item']";
+    private static final String CLEAR_BUTTON_SELECTOR = "[aria-label='CLOSE']";
 
     private Combobox(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -40,8 +36,10 @@ public class Combobox extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        webElement.click();
+        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, INPUT_XPATH);
+        clear();
         webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
     }
@@ -55,39 +53,33 @@ public class Combobox extends Input {
 
     @Override
     public void setValue(Data value) {
-        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, "//input");
-        DataWrapper wrapper = value.getWrapper();
-        WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
+        DelayUtils.waitForNestedElements(this.webDriverWait, webElement, INPUT_XPATH);
         clear();
-        input.sendKeys(wrapper.getReadableValue());
-        if (wrapper.isFindFirst()) {
-            DelayUtils.waitForSpinners(webDriverWait, webElement);
-            input.sendKeys(Keys.DOWN);
-            input.sendKeys(Keys.RETURN);
-            return;
-        }
-
-        DelayUtils.waitByXPath(webDriverWait, "//div[contains(@class,'list-item')]//*[text()='" + wrapper.getReadableValue() + "']");
-        List<WebElement> results = driver.findElements(By.xpath(LIST_ITEM_XPATH));
-        for (WebElement element : results) {
-            if (wrapper.getReadableValue().equals(element.getText())) {
-                element.click();
-                return;
-            }
-        }
-        throw new NoSuchElementException("Cant find element: " + wrapper.getReadableValue());
+        webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
+        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
+        dropdownList.selectOption(value.getStringValue());
     }
 
     @Override
     public void clear() {
-        DelayUtils.waitForSpinners(webDriverWait, webElement);
-        List<WebElement> closeButtons = this.webElement.findElements(By.xpath(COMBOBOX_CLOSE_XPATH));
-        closeButtons.forEach(WebElement::click);
+        if (isClearIconPresent()) {
+            webElement.findElement(By.cssSelector(CLEAR_BUTTON_SELECTOR)).click();
+        } else {
+            WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
+            WebElementUtils.clickWebElement(driver, input);
+            input.sendKeys(Keys.CONTROL + "a");
+            input.sendKeys(Keys.DELETE);
+        }
     }
 
     @Override
     public String getLabel() {
         WebElement label = webElement.findElement(By.xpath(LABEL_XPATH));
         return label.getText();
+    }
+
+    private boolean isClearIconPresent() {
+        return !webElement.findElements(By.cssSelector(CLEAR_BUTTON_SELECTOR)).isEmpty();
     }
 }

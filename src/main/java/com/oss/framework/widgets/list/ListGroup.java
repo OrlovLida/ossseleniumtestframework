@@ -1,6 +1,8 @@
 package com.oss.framework.widgets.list;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -34,6 +36,10 @@ public class ListGroup {
     public void callAction(String itemName, String actionLabel) {
         getItem(itemName).callAction(actionLabel);
     }
+
+    public List<String> getItemsName(){
+        return driver.findElements(By.className(ITEM_LIST_CLASS)).stream().map(item-> Item.create(driver, item)).map(Item::getValue).collect(Collectors.toList());
+    }
     
     private Item getItem(String itemName) {
         return Item.create(driver, itemName);
@@ -60,16 +66,23 @@ public class ListGroup {
 
             return new Item(driver, itemList);
         }
+
+        private static Item create(WebDriver driver, WebElement itemElement){
+            return new Item(driver, itemElement);
+        }
         
         private void callAction(String actionLabel) {
             Actions action = new Actions(driver);
             WebElement icon = itemElement.findElement(By.cssSelector(".icon-button[title='" + actionLabel + "']"));
             action.moveToElement(itemElement).pause(500).moveToElement(icon).click().build().perform();
         }
+
+        private String getValue(){
+            return itemElement.getText();
+        }
         
         private boolean isSelected() {
             return itemElement.getAttribute(CLASS).contains(ACTIVE);
-            
         }
         
         private void click() {

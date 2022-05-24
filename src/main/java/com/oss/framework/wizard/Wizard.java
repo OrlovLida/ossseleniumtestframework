@@ -33,7 +33,8 @@ public class Wizard {
     private static final String PROCEED_BUTTON_XPATH = ".//a[text()='Proceed']";
     private static final String BY_TEXT_PATTERN = "//*[text()='%s']";
     private static final String BY_DATA_TEST_ID_PATTERN = "//*[@" + CSSUtils.TEST_ID + "='%s']";
-    private static final String WIZARD_STEPS_XPATH = ".//div[@class='simple-progress-bar-step-label']";
+    private static final String WIZARD_STEPS_CSS = ".simple-progress-bar-step";
+    private static final String ACTIVE_STEP_CSS = ".simple-progress-bar-step--active";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
@@ -152,9 +153,7 @@ public class Wizard {
 
     public int countNumberOfSteps() {
         if (isStepsPresent()) {
-            DelayUtils.waitForNestedElements(wait, webElement, WIZARD_STEPS_XPATH);
-            List<WebElement> steps = webElement.findElements(By.xpath(WIZARD_STEPS_XPATH));
-            return steps.size();
+            return getWizardSteps().size();
         }
         return 1;
     }
@@ -176,6 +175,26 @@ public class Wizard {
     private boolean isStepsPresent() {
         List<WebElement> steps = this.webElement.findElements(By.xpath("//div[@class='simple-progress-bar']"));
         return !steps.isEmpty();
+    }
+
+    private List<WebElement> getWizardSteps() {
+        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(WIZARD_STEPS_CSS));
+        return this.webElement.findElements(By.cssSelector(WIZARD_STEPS_CSS));
+    }
+
+    private WebElement getCurrentStep() {
+        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(WIZARD_STEPS_CSS));
+        return this.webElement.findElement(By.cssSelector(ACTIVE_STEP_CSS));
+    }
+
+    public String getCurrentStepTitle() {
+        return getCurrentStep().getText();
+    }
+
+    public boolean isNextStepPresent() {
+        List<WebElement> steps = getWizardSteps();
+        WebElement currentStep = getCurrentStep();
+        return (steps.size() > steps.indexOf(currentStep) + 1);
     }
 
     public boolean isElementPresentById(String id) {

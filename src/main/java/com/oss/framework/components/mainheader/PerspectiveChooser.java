@@ -89,4 +89,9 @@ public class PerspectiveChooser {
         DropdownList dropdownList = DropdownList.create(driver, wait);
         dropdownList.selectOption(perspective);
     }
+
+    public String getCurrentPerspective() {
+        ToolbarWidget toolbar = ToolbarWidget.create(driver, wait);
+        return toolbar.getQueryContext();
+    }
 }

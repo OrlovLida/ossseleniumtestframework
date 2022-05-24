@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
@@ -26,7 +27,6 @@ public class KpiTreeWidget extends Widget {
     private static final String TOOLBAR_INPUT_XPATH = ".//input[@" + CSSUtils.TEST_ID + "='search-toolbar-input']";
     private static final String SEARCH_TOOLBAR_ICON_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-button']";
     private static final String CLOSE_SEARCH_TOOLBAR_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='search-toolbar-clean-button']";
-    private static final String FIRST_SEARCH_RESULT_XPATH = "//*[starts-with(@class, 'resultsPopup')]/ol/li[1]";
     private static final String NODE_NAME_XPATH = "//div[@title ='%s']";
     private static final String NODE_OPTIONS_XPATH = NODE_NAME_XPATH + "//*[@" + CSSUtils.TEST_ID + "='dimension-options-button']";
     private static final String EXPAND_NODE_ICON_XPATH = NODE_NAME_XPATH +
@@ -61,8 +61,7 @@ public class KpiTreeWidget extends Widget {
 
     public void searchInToolbarPanel(String value) {
         clickSearchIcon();
-        WebElement input = getToolbar().findElement(By.xpath(TOOLBAR_INPUT_XPATH));
-        input.sendKeys(value);
+        fillSearchField(value);
         clickSearchIcon();
         log.debug("Searching for: {}", value);
     }
@@ -73,10 +72,9 @@ public class KpiTreeWidget extends Widget {
         log.debug("Clicking close search button");
     }
 
-    public void selectFirstSearchResult() {
-        WebElement firstResult = getToolbar().findElement(By.xpath(FIRST_SEARCH_RESULT_XPATH));
-        WebElementUtils.clickWebElement(driver, firstResult);
-        log.debug("Clicking on first result in the list");
+    public void selectResult(String value) {
+        DropdownList.create(driver, webDriverWait).selectOptionContains(value);
+        log.debug("Selecting result from the list");
     }
 
     public void clickNodeOptions(String nodeName) {
@@ -131,5 +129,11 @@ public class KpiTreeWidget extends Widget {
         WebElement searchButton = getToolbar().findElement(By.xpath(SEARCH_TOOLBAR_ICON_XPATH));
         WebElementUtils.clickWebElement(driver, searchButton);
         log.debug("Clicking search button");
+    }
+
+    private void fillSearchField(String value) {
+        WebElement input = getToolbar().findElement(By.xpath(TOOLBAR_INPUT_XPATH));
+        input.sendKeys(value);
+        log.debug("Filling search input with value: {}", value);
     }
 }

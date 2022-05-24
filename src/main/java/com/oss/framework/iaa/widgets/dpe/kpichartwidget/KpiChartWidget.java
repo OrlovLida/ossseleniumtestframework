@@ -24,7 +24,7 @@ public class KpiChartWidget extends Widget {
 
     private static final String CHART_COLUMN_PATH = ".//*[name()='g' and (@role='listitem')]";
     private static final String LINE_CHART_TYPE_XPATH = ".//*[@data-series-type='line']";
-    private static final String PARTIAL_CHART_ID = ".//*[starts-with(@" + CSSUtils.TEST_ID + ", 'amchart-series')]";
+    private static final String PARTIAL_CHART_ID = ".//*[starts-with(@" + CSSUtils.TEST_ID + ", 'amchart-series') and not(contains(@" + CSSUtils.TEST_ID + ", 'shadow'))]";
 
     private static final String PIE_CHART_PATH = ".//*[contains(@class, 'amcharts-PieChart-group')]";
     private static final String TOP_N_NAVIGATION_BAR_PATH = ".//*[@class='amcharts-Container amcharts-Component amcharts-NavigationBar']";
@@ -33,16 +33,12 @@ public class KpiChartWidget extends Widget {
     private static final String HIDDEN_Y_AXIS_PATH = "//*[@display = 'none' and contains (@class,'amcharts-v')]";
     private static final String VISIBLE_Y_AXIS_PATH = "//*[not (contains(@display, 'none')) and contains (@class,'amcharts-v')]";
     private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='last-sample-time' and not(contains(@display, 'none'))]";
-    private static final String DATA_COMPLETENESS_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-legend-selected']//*[contains(text(), '%')]";
     private static final String TIME_ZONE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='timezone' and not(contains(@display, 'none'))]";
-    private static final String OTHER_PERIOD_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-legend-other-period']";
-    private static final String VISIBLE_INDICATORS_TREE_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Indicators' and not(contains(@style, 'display: none'))]";
-    private static final String VISIBLE_DIMENSIONS_TREE_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Dimensions' and not(contains(@style, 'display: none'))]";
-    private static final String VISIBLE_DATA_VIEW_PATH = "//div[@class='windowList']/div[@" + CSSUtils.TEST_ID + "='_Data_View' and not(contains(@style, 'display: none'))]";
     private static final String ZOOM_OUT_BUTTON_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-zoomout-button']";
     private static final String ZOOM_OUT_HIDDEN_BUTTON_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-zoomout-button' and @visibility='hidden']";
     private static final String MOVE_MOUSE_OVER = "Moving mouse over: ";
     private static final String ELEMENT_PRESENT_AND_VISIBLE = "Element is present and visible: ";
+    private static final String LEGEND_WITH_TXT_XPATH = ".//div[@class='legendWrapper']//*[contains(text(), '%s')]";
 
     private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
         super(driver, webDriverWait, widgetId, widget);
@@ -112,19 +108,21 @@ public class KpiChartWidget extends Widget {
     }
 
     public int countVisibleDataCompleteness() {
-        int visibleDataCompleteness = this.webElement.findElements(By.xpath(DATA_COMPLETENESS_DISPLAYED_PATH)).size();
+        int visibleDataCompleteness = getLegendContainsText("%]").size();
         log.debug("Visible data completeness in legend count: {}", visibleDataCompleteness);
         return visibleDataCompleteness;
     }
 
     public boolean isTimeZonePresent() {
-        return !this.webElement.findElements(By.xpath(TIME_ZONE_DISPLAYED_PATH)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.xpath(TIME_ZONE_DISPLAYED_PATH));
     }
 
-    public int countVisibleOtherPeriod() {
-        int visibleOtherPeriod = this.webElement.findElements(By.xpath(OTHER_PERIOD_DISPLAYED_PATH)).size();
-        log.debug("Visible other period in legend count: {}", visibleOtherPeriod);
-        return visibleOtherPeriod;
+    public boolean isLegendPresent(String partialText) {
+        return WebElementUtils.isElementPresent(driver, By.xpath(String.format(LEGEND_WITH_TXT_XPATH, partialText)));
+    }
+
+    private List<WebElement> getLegendContainsText(String text) {
+        return this.webElement.findElements(By.xpath(String.format(LEGEND_WITH_TXT_XPATH, text)));
     }
 
     public String getDataSeriesLineWidth() {
@@ -154,24 +152,6 @@ public class KpiChartWidget extends Widget {
         WebElement legend = findElementByXpath(LEGEND_PATH);
         clickElementWithOffset(legend, 0, -5);
         log.debug("Clicking first data series on legend");
-    }
-
-    public boolean isDataViewPanelPresent() {
-        int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DATA_VIEW_PATH)).size();
-        log.debug("Data View panel is visible: {}", visibleDataViewPanel);
-        return visibleDataViewPanel == 1;
-    }
-
-    public boolean isIndicatorsTreePresent() {
-        int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_INDICATORS_TREE_PATH)).size();
-        log.debug("Indicators tree is visible: {}", visibleDataViewPanel);
-        return visibleDataViewPanel == 1;
-    }
-
-    public boolean isDimensionsTreePresent() {
-        int visibleDataViewPanel = this.webElement.findElements(By.xpath(VISIBLE_DIMENSIONS_TREE_PATH)).size();
-        log.debug("Dimension tree is visible: {}", visibleDataViewPanel);
-        return visibleDataViewPanel == 1;
     }
 
     public boolean isTopNBarChartIsPresent(String barChartId) {

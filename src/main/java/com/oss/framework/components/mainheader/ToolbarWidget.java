@@ -21,7 +21,7 @@ public class ToolbarWidget {
             ".//div[@class='icon-dropdown-action-list query-context__dropdown']";
     private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='oss-input__input-content']";
     private static final String SHARE_PANEL_ICON_XPATH = ".//*[@data-testid='ButtonShareView']";
-    private static final String SHARE_PANEL_XPATH = ".//div[@data-testid='popup_container']";
+    private static final String SHARE_PANEL_XPATH = ".//div[@data-testid='Share_view_popup']";
     private static final String VIEW_TITLE_XPATH = ".//div[contains(@class, 'header-title')]";
     private static final String CLOSE_SHARE_PANEL_ICON_ID = "Share_view_popup-close_button";
     private final WebDriver driver;
@@ -102,6 +102,10 @@ public class ToolbarWidget {
 
     public String getViewTitle() {
         return toolbar.findElement(By.xpath(VIEW_TITLE_XPATH)).getText();
+    }
+
+    public String getQueryContext() {
+        return toolbar.findElement(By.xpath(QUERY_CONTEXT_BUTTON_XPATH)).getText();
     }
 
     private boolean isOpen(String panelXpath) {

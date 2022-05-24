@@ -20,6 +20,7 @@ public class CSSUtils {
     public static final String LEFT_ATTRIBUTE = "left";
     public static final String TEST_ID = "data-testid";
     public static final String DATA_WIDGET_ID = "data-widget-id";
+    public static final String WEB_ELEMENT_PATTERN = "[" + CSSUtils.TEST_ID + "='%s']";
 
     private static Splitter attributeSplitter = Splitter.on(ATTRIBUTES_SEPARATOR);
     private static Splitter valueSplitter = Splitter.on(VALUE_SEPARATOR);
