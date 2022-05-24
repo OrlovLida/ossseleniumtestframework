@@ -215,7 +215,7 @@ public class EditableList extends Widget {
             }
 
             public boolean isAttributeEditable() {
-                return webElement.getAttribute("class").contains("editable");
+                return webElement.findElement(By.xpath(".//parent::div")).getAttribute("class").contains("editable");
             }
         }
     }
