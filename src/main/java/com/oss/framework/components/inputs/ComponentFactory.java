@@ -173,7 +173,7 @@ public class ComponentFactory {
         return createFromParent(componentId, componentType, webDriver, wait, parent);
     }
 
-    public static ComponentType getComponentType(String componentId, WebDriver webDriver) {
+    private static ComponentType getComponentType(String componentId, WebDriver webDriver) {
         WebElement webElement = webDriver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, componentId)));
         return ComponentType.valueOf(webElement.getAttribute("data-input-type"));
     }
