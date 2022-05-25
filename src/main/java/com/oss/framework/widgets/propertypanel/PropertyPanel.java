@@ -80,10 +80,9 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         attributesChooser.clickApply();
     }
 
-    public void setAttributesConfiguration(String configurationName) {
+    public void openChooseConfigurationWizard() {
         webElement.findElement(By.className(PROPERTIES_FILTER_PANEL_CLASS)).click();
         openActionSettings("chooseConfiguration");
-        //TODO
     }
 
     @Override
