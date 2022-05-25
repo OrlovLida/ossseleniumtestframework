@@ -60,6 +60,11 @@ public class EditableList extends Widget {
         row.setValue(value, columnId, componentId, componentType);
     }
 
+    public void setValue(int rowIndex, String value, String columnId, String componentId) {
+        Row row = getRow(rowIndex);
+        row.setValue(value, columnId, componentId);
+    }
+
     public Row getRow(int row) {
         return getVisibleRows().get(row);
     }
@@ -143,8 +148,7 @@ public class EditableList extends Widget {
         }
 
         public void setValue(String value, String columnId, String componentId) {
-            Input.ComponentType componentType = ComponentFactory.getComponentType(componentId, driver);
-            setValue(value, columnId, componentId, componentType);
+            getCell(columnId).setValue(value, componentId);
         }
 
         public void clearValue(String columnId, String componentId, Input.ComponentType componentType) {
@@ -192,9 +196,7 @@ public class EditableList extends Widget {
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
-                    WebElementUtils.clickWebElement(driver, webElement);
-                    Input input = ComponentFactory.createFromParent(componentId, componentType, driver, wait, webElement);
-                    input.setSingleStringValue(value);
+                    setCheckboxValue(value, componentId);
                     return;
                 }
                 WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
@@ -203,6 +205,25 @@ public class EditableList extends Widget {
                 DelayUtils.sleep(500);
                 component.setSingleStringValue(value);
                 inlineForm.clickButtonByLabel(SAVE_BUTTON);
+            }
+
+            public void setValue(String value, String componentId) {
+                if (WebElementUtils.isElementPresent(webElement, By.xpath(EDIT_XPATH))) {
+                    WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
+                    InlineForm inlineForm = InlineForm.create(driver, wait);
+                    Input component = inlineForm.getComponent(componentId);
+                    DelayUtils.sleep(500);
+                    component.setSingleStringValue(value);
+                    inlineForm.clickButtonByLabel(SAVE_BUTTON);
+                    return;
+                }
+                setCheckboxValue(value, componentId);
+            }
+
+            private void setCheckboxValue(String value, String componentId) {
+                WebElementUtils.clickWebElement(driver, webElement);
+                Input input = ComponentFactory.createFromParent(componentId, Input.ComponentType.CHECKBOX, driver, wait, webElement);
+                input.setSingleStringValue(value);
             }
 
             public void clearValue(String componentId, Input.ComponentType componentType) {
