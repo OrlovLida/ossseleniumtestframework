@@ -171,6 +171,8 @@ public class EditableList extends Widget {
             private static final String TEXT_XPATH = ".//div[@class='text-wrapper' or 'textContainer']";
             private static final String SAVE_BUTTON = "Save";
             private static final String PARENT_XPATH_PATTERN = ".//parent::div";
+            private static final String CLASS_PATTERN = "class";
+            private static final String EDITABLE_PATTERN = "editable";
             private static final String EDIT_XPATH = ".//ancestor::div[contains(@class, 'list__cell--editable')]//i[@aria-label='EDIT']";
             private final WebDriver driver;
             private final WebDriverWait wait;
@@ -216,7 +218,7 @@ public class EditableList extends Widget {
             }
 
             public boolean isAttributeEditable() {
-                return webElement.findElement(By.xpath(PARENT_XPATH_PATTERN)).getAttribute("class").contains("editable");
+                return webElement.findElement(By.xpath(PARENT_XPATH_PATTERN)).getAttribute(CLASS_PATTERN).contains(EDITABLE_PATTERN);
             }
         }
     }
