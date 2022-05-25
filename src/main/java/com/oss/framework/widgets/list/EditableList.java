@@ -170,6 +170,9 @@ public class EditableList extends Widget {
         public static class Cell {
             private static final String TEXT_XPATH = ".//div[@class='text-wrapper' or 'textContainer']";
             private static final String SAVE_BUTTON = "Save";
+            private static final String PARENT_XPATH = ".//parent::div";
+            private static final String CLASS_TAG_VALUE = "class";
+            private static final String EDITABLE_TAG_VALUE = "editable";
             private static final String EDIT_XPATH = ".//ancestor::div[contains(@class, 'list__cell--editable')]//i[@aria-label='EDIT']";
             private final WebDriver driver;
             private final WebDriverWait wait;
@@ -215,7 +218,7 @@ public class EditableList extends Widget {
             }
 
             public boolean isAttributeEditable() {
-                return webElement.getAttribute("class").contains("editable");
+                return webElement.findElement(By.xpath(PARENT_XPATH)).getAttribute(CLASS_TAG_VALUE).contains(EDITABLE_TAG_VALUE);
             }
         }
     }
