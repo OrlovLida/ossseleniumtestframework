@@ -66,9 +66,20 @@ public class Wizard {
         return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
 
+    public Input getComponent(String componentId) {
+        return ComponentFactory.create(componentId, this.driver, this.wait);
+    }
+
     public Input setComponentValue(String componentId, String value, Input.ComponentType componentType) {
         DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_DATA_TEST_ID_PATTERN, componentId));
         Input input = getComponent(componentId, componentType);
+        input.setSingleStringValue(value);
+        return input;
+    }
+
+    public Input setComponentValue(String componentId, String value) {
+        DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_DATA_TEST_ID_PATTERN, componentId));
+        Input input = getComponent(componentId);
         input.setSingleStringValue(value);
         return input;
     }
