@@ -142,6 +142,11 @@ public class EditableList extends Widget {
             getCell(columnId).setValue(value, componentId, componentType);
         }
 
+        public void setValue(String value, String columnId, String componentId) {
+            Input.ComponentType componentType = ComponentFactory.getComponentType(componentId, driver);
+            setValue(value, columnId, componentId, componentType);
+        }
+
         public void clearValue(String columnId, String componentId, Input.ComponentType componentType) {
             getCell(columnId).clearValue(componentId, componentType);
         }
