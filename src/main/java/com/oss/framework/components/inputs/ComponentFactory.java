@@ -12,6 +12,10 @@ import com.oss.framework.utils.DelayUtils;
 
 public class ComponentFactory {
 
+    private ComponentFactory() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Input create(String componentId, ComponentType componentType, WebDriver webDriver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
 
@@ -161,6 +165,12 @@ public class ComponentFactory {
         DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
         ComponentType componentType = getComponentType(componentId, webDriver);
         return create(componentId, componentType, webDriver, wait);
+    }
+
+    public static Input createFromParent(String componentId, WebDriver webDriver, WebDriverWait wait, WebElement parent) {
+        DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
+        ComponentType componentType = getComponentType(componentId, webDriver);
+        return createFromParent(componentId, componentType, webDriver, wait, parent);
     }
 
     private static ComponentType getComponentType(String componentId, WebDriver webDriver) {
