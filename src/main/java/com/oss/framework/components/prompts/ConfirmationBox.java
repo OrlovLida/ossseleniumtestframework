@@ -25,7 +25,7 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     public static final String YES = "Yes";
     private static final String BUTTON_BY_TEXT_PATTERN = ".//button[contains(text(),'%s')] | .//a[contains(text(),'%s')]";
     private static final String CONFIRMATION_BOX_CLASS = "ConfirmationBox";
-    private static final String WINDOW_CONTENT_XPATH = ".//div[contains(@class, 'windowContent')]";
+    private static final String CONFIRMATION_BOX_APP_XPATH = ".//div[contains(@class, 'common-confirmationboxapp')]";
     private static final String RICH_TEXT_XPATH = ".//div[contains(@class, 'OSSRichText')]";
 
     private final WebDriver driver;
@@ -63,8 +63,8 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
 
     @Override
     public String getMessage() {
-        DelayUtils.waitByXPath(wait, WINDOW_CONTENT_XPATH);
-        WebElement windowContent = driver.findElement(By.xpath(WINDOW_CONTENT_XPATH));
+        DelayUtils.waitByXPath(wait, CONFIRMATION_BOX_APP_XPATH);
+        WebElement windowContent = driver.findElement(By.xpath(CONFIRMATION_BOX_APP_XPATH));
         WebElement message = windowContent.findElement(By.xpath(RICH_TEXT_XPATH));
         return message.getText();
     }
