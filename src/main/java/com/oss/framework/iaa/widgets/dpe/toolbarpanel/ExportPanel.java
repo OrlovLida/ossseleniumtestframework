@@ -2,7 +2,6 @@ package com.oss.framework.iaa.widgets.dpe.toolbarpanel;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,18 +20,15 @@ public class ExportPanel {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final WebElement exportPanelElement;
 
-    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement exportPanelElement) {
+    private ExportPanel(WebDriver driver, WebDriverWait webDriverWait) {
         this.driver = driver;
         this.wait = webDriverWait;
-        this.exportPanelElement = exportPanelElement;
     }
 
     static ExportPanel create(WebDriver driver, WebDriverWait webDriverWait) {
-        WebElement webElement = driver.findElement(By.xpath(EXPORT_PANEL_XPATH));
-
-        return new ExportPanel(driver, webDriverWait, webElement);
+        DelayUtils.waitBy(webDriverWait, By.xpath(EXPORT_PANEL_XPATH));
+        return new ExportPanel(driver, webDriverWait);
     }
 
     public void exportKpiToFile(ExportType exportType) {
