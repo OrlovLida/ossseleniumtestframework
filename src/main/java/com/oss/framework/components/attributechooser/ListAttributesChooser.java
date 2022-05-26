@@ -25,12 +25,10 @@ public class ListAttributesChooser {
     private static final String ACTIVE_TWO_COLUMNS_LAYOUT_BUTTON_XPATH = ".//button[@class='is-columns-layout']";
     private static final String SAVE_LABEL = "Save (selected columns)";
     private final WebDriver driver;
-    private final WebDriverWait webDriverWait;
     private final WebElement listAttributesChooserElement;
 
-    private ListAttributesChooser(WebDriver driver, WebDriverWait webDriverWait, WebElement listAttributesChooserElement) {
+    private ListAttributesChooser(WebDriver driver, WebElement listAttributesChooserElement) {
         this.driver = driver;
-        this.webDriverWait = webDriverWait;
         this.listAttributesChooserElement = listAttributesChooserElement;
     }
 
@@ -38,7 +36,7 @@ public class ListAttributesChooser {
         DelayUtils.waitBy(webDriverWait, By.cssSelector(String.format(ATTRIBUTE_MANAGEMENT_PATTERN, ATTRIBUTE_MANAGEMENT_ID)));
         WebElement listAttributesChooser =
                 driver.findElement(By.cssSelector(String.format(ATTRIBUTE_MANAGEMENT_PATTERN, ATTRIBUTE_MANAGEMENT_ID)));
-        return new ListAttributesChooser(driver, webDriverWait, listAttributesChooser);
+        return new ListAttributesChooser(driver, listAttributesChooser);
     }
 
     public void enableAttributeById(String attributeId) {
