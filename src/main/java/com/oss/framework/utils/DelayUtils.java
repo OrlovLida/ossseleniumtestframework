@@ -81,7 +81,7 @@ public class DelayUtils {
     }
 
     public static void waitForElementDisappear(WebDriverWait wait, WebElement webElement) {
-        wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.invisibilityOf(webElement));
+        wait.ignoring(StaleElementReferenceException.class, TimeoutException.class).until(ExpectedConditions.invisibilityOf(webElement));
     }
 
     public static void waitForVisibility(WebDriverWait wait, List<WebElement> webElements) {
