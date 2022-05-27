@@ -114,7 +114,6 @@ public class TableComponent {
         return rowIds.stream().map(index -> new Row(this.driver, this.webDriverWait, this.webElement, index)).collect(Collectors.toList());
     }
 
-
     public void scrollHorizontally(int offset) {
         CustomScrolls customScrolls = getCustomScrolls();
         customScrolls.scrollHorizontally(offset);
@@ -315,7 +314,7 @@ public class TableComponent {
         }
 
         private static Header createFromWrapper(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent,
-                WebElement wrapper) {
+                                                WebElement wrapper) {
             String columnId = CSSUtils.getAttributeValue(DATA_COL, wrapper);
             String label = wrapper.getText();
             return new Header(driver, webDriverWait, tableComponent, columnId, label);
@@ -654,7 +653,7 @@ public class TableComponent {
             getFirstCell().collapseCell();
         }
 
-        public boolean isRowExpanded(){
+        public boolean isRowExpanded() {
             return getFirstCell().isCellExpanded();
         }
 
