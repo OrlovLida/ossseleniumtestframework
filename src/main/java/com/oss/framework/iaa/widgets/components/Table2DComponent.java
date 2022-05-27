@@ -1,13 +1,14 @@
 package com.oss.framework.iaa.widgets.components;
 
-import com.google.common.collect.Lists;
-import com.oss.framework.utils.DelayUtils;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
+import com.google.common.collect.Lists;
+import com.oss.framework.utils.DelayUtils;
 
 public class Table2DComponent {
     private static final String TABLE_2D_WIDGET_XPATH = "//div[@class='Table2DWidget']";
@@ -24,12 +25,10 @@ public class Table2DComponent {
     private static final String HEADER_XPATH = ".//div[@class='Header']";
     private static final String HEADER_CLASS = "Header";
 
-    private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement tableComponent;
 
-    private Table2DComponent(WebDriver driver, WebDriverWait wait, WebElement tableComponent) {
-        this.driver = driver;
+    private Table2DComponent(WebDriverWait wait, WebElement tableComponent) {
         this.wait = wait;
         this.tableComponent = tableComponent;
     }
@@ -40,7 +39,7 @@ public class Table2DComponent {
                 .filter(widget -> widget.findElement(By.xpath(WIDGET_TITLE)).getText().equals(widgetName)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Cannot find Widget with name " + widgetName));
         WebElement table2DComponent = tableWidget.findElement(By.className(TABLE_COMPONENT_CLASS));
-        return new Table2DComponent(driver, wait, table2DComponent);
+        return new Table2DComponent(wait, table2DComponent);
     }
 
     public String getCellValue(String leftHeader, String columnName) {

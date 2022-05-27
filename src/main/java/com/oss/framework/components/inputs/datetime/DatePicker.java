@@ -20,22 +20,17 @@ import com.oss.framework.utils.DelayUtils;
 public class DatePicker {
     private static final String TODAY_BUTTON_XPATH = ".//button[text()='Today']";
     private final WebElement webElement;
-    private final WebDriver driver;
-    private final WebDriverWait wait;
     private final By prev = By.xpath(".//span[contains(@class,'prev')]");
     private final By next = By.xpath(".//span[contains(@class,'next')]");
 
-    public DatePicker(WebDriver driver, WebDriverWait wait, WebElement webElement) {
-        this.driver = driver;
+    public DatePicker(WebElement webElement) {
         this.webElement = webElement;
-        this.wait = wait;
     }
 
     public static DatePicker create(WebDriver driver, WebDriverWait wait, String componentId) {
         WebElement dayPicker = driver.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
         DelayUtils.waitByXPath(wait, ".//span[contains(@class,'next')]");
-
-        return new DatePicker(driver, wait, dayPicker);
+        return new DatePicker(dayPicker);
     }
 
     // yyyy-mm-dd
@@ -109,7 +104,7 @@ public class DatePicker {
         try {
             date = simpleDateFormat.parse(selectedDate);
         } catch (ParseException e) {
-            throw new RuntimeException("Cannot parse date");
+            throw new IllegalArgumentException("Cannot parse date");
         }
         Calendar givenDate = Calendar.getInstance();
         givenDate.setTime(date);
