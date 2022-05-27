@@ -30,8 +30,7 @@ public class PhoneField extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        WebElement input = webElement.findElement(By.xpath(INPUT));
-        input.sendKeys(value.getStringValue());
+        setValue(value);
     }
 
     @Override
@@ -41,7 +40,8 @@ public class PhoneField extends Input {
 
     @Override
     public void setValue(Data value) {
-        setValueContains(value);
+        WebElement input = webElement.findElement(By.xpath(INPUT));
+        input.sendKeys(value.getStringValue());
     }
 
     @Override
