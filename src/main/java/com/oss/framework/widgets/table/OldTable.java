@@ -454,7 +454,7 @@ public class OldTable extends Widget implements TableInterface {
             WebElement cell = getCellByIndex(index);
             WebElementUtils.moveToElement(driver, cell);
             if (isIconPresent(cell)) {
-                return getIconTitles(index);
+                return (getCellText(cell) + " " + getIconTitles(index)).trim();
             }
             return getCellText(cell);
         }
