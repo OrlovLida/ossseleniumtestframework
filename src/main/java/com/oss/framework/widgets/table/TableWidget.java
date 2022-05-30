@@ -27,7 +27,7 @@ public class TableWidget extends Widget implements TableInterface {
     private AdvancedSearch advancedSearch;
     private TableComponent tableComponent;
 
-    private TableWidget(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
+    protected TableWidget(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
         super(driver, wait, tableWidgetId);
     }
 
