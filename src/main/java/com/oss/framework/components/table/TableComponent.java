@@ -314,7 +314,7 @@ public class TableComponent {
         }
 
         private static Header createFromWrapper(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent,
-                WebElement wrapper) {
+                                                WebElement wrapper) {
             String columnId = CSSUtils.getAttributeValue(DATA_COL, wrapper);
             String label = wrapper.getText();
             return new Header(driver, webDriverWait, tableComponent, columnId, label);
@@ -467,6 +467,7 @@ public class TableComponent {
         private static final String PLUS_ICON_CSS = ".OSSIcon";
         private static final String ARIA_LABEL_ATTRIBUTE = "aria-label";
         private static final String MINUS = "MINUS";
+        private static final String ADD = "ADD";
 
         private final WebDriver driver;
         private final WebElement cellElement;
@@ -558,23 +559,23 @@ public class TableComponent {
 
         private void expandCell() {
             if (!isCellExpanded()) {
-                toggleCell();
+                toggleCell(MINUS);
             } else
                 throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
         }
 
         private void collapseCell() {
             if (isCellExpanded()) {
-                toggleCell();
+                toggleCell(ADD);
             } else
                 throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
         }
 
-        private void toggleCell() {
+        private void toggleCell(String character) {
             WebElement expandIcon = cellElement.findElement(By.cssSelector(TREE_NODE_EXPAND_CSS));
             WebElementUtils.clickWebElement(driver, expandIcon);
             DelayUtils.waitForVisibility(new WebDriverWait(driver, 10),
-                    expandIcon.findElement(By.cssSelector("[" + ARIA_LABEL_ATTRIBUTE + "='" + MINUS + "']")));
+                    expandIcon.findElement(By.cssSelector("[" + ARIA_LABEL_ATTRIBUTE + "='" + character + "']")));
         }
 
         private boolean isExpandPresent() {
@@ -650,6 +651,10 @@ public class TableComponent {
 
         public void collapseRow() {
             getFirstCell().collapseCell();
+        }
+
+        public boolean isRowExpanded() {
+            return getFirstCell().isCellExpanded();
         }
 
         private Cell getFirstCell() {
