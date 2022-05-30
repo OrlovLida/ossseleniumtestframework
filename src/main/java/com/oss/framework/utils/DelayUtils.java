@@ -81,7 +81,11 @@ public class DelayUtils {
     }
 
     public static void waitForElementDisappear(WebDriverWait wait, WebElement webElement) {
-        wait.ignoring(StaleElementReferenceException.class, TimeoutException.class).until(ExpectedConditions.invisibilityOf(webElement));
+        try {
+            wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.invisibilityOf(webElement));
+        } catch (TimeoutException e) {
+            log.error("Some element(s) not disappear in expected time");
+        }
     }
 
     public static void waitForVisibility(WebDriverWait wait, List<WebElement> webElements) {
