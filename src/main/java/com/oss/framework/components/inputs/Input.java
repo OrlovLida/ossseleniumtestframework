@@ -170,6 +170,7 @@ public abstract class Input {
         RADIO_BUTTON,
         SCRIPT_COMPONENT,
         SEARCH_BOX,
+        SEARCHBOX,
         SEARCH_FIELD,
         SLIDER,
         SWITCHER,
