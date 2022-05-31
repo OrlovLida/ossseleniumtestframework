@@ -8,11 +8,13 @@ import com.oss.framework.widgets.propertypanel.PropertyPanel;
 
 public class WidgetFactory {
 
+    private WidgetFactory() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Widget getWidget(String widgetId, WidgetType widgetType, WebDriver webDriver, WebDriverWait wait) {
         switch (widgetType) {
-            case TABLE_WIDGET: {
-                break;
-            }
+            case TABLE_WIDGET:
             case OLD_TABLE_WIDGET: {
                 break;
             }
