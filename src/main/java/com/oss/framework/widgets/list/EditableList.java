@@ -143,6 +143,10 @@ public class EditableList extends Widget {
             return getCell(columnId).getText();
         }
 
+        public boolean isCellVisible(String columnId) {
+            return !webElement.findElements(By.xpath(String.format(CELL_PATTERN, columnId))).isEmpty();
+        }
+
         public void setValue(String value, String columnId, String componentId, Input.ComponentType componentType) {
             getCell(columnId).setValue(value, componentId, componentType);
         }
