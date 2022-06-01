@@ -15,6 +15,7 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.contextactions.InlineMenuInterface;
 import com.oss.framework.components.contextactions.OldInlineMenu;
+import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -42,7 +43,13 @@ public class CommonList extends Widget {
     }
 
     public void fullTextSearch(String value) {
-        getAdvanceSearch().fullTextSearch(value);
+        getAdvancedSearch().fullTextSearch(value);
+    }
+
+    public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, componentType, value);
+        confirmFilter();
     }
 
     public void callAction(String actionId) {
@@ -129,8 +136,20 @@ public class CommonList extends Widget {
         getRows().get(row).selectRow();
     }
 
-    private AdvancedSearch getAdvanceSearch() {
+    private AdvancedSearch getAdvancedSearch() {
         return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
+    }
+
+    private void openAdvancedSearch() {
+        getAdvancedSearch().openSearchPanel();
+    }
+
+    private void setFilterContains(String componentId, Input.ComponentType componentType, String value) {
+        getAdvancedSearch().setFilter(componentId, componentType, value);
+    }
+
+    private void confirmFilter() {
+        getAdvancedSearch().clickApply();
     }
 
     public static class Row {
