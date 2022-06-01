@@ -9,6 +9,7 @@ package com.oss.framework.widgets.list;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -52,11 +53,7 @@ public class EditableList extends Widget {
     public List<String> getColumnHeadersLabels() {
         DelayUtils.waitBy(webDriverWait, By.cssSelector(HEADERS_SELECTOR));
         List<WebElement> listElements = webElement.findElements(By.cssSelector(LIST_HEADERS_SELECTOR));
-        List<String> headers = new ArrayList<>();
-        for (WebElement listElement : listElements) {
-            headers.add(listElement.getText());
-        }
-        return headers;
+        return listElements.stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public Row addRow() {
@@ -209,14 +206,10 @@ public class EditableList extends Widget {
 
             public String getText() {
                 if (!webElement.findElements(By.xpath(CHECKBOX_INPUT_XPATH)).isEmpty()) {
-                    return webElement.findElement(By.xpath(CHECKBOX_INPUT_XPATH)).getAttribute(CHECKBOX_INPUT_ATTRIBUTE_NAME);
+                    return CSSUtils.getAttributeValue(CHECKBOX_INPUT_ATTRIBUTE_NAME, webElement.findElement(By.xpath(CHECKBOX_INPUT_XPATH)));
                 } else {
                     return webElement.findElement(By.xpath(TEXT_XPATH)).getText();
                 }
-            }
-
-            public String getAttribute(String attributeName) {
-                return webElement.getAttribute(attributeName);
             }
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
