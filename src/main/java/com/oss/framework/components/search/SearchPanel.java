@@ -63,7 +63,7 @@ public class SearchPanel {
     }
 
     public Input getComponent(String componentId, ComponentType componentType) {
-        return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
+        return ComponentFactory.createFromParent(componentId, componentType, this.driver, this.wait, this.webElement);
     }
 
     List<String> getAllVisibleFilters() {
