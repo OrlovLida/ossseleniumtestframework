@@ -37,8 +37,8 @@ public class EditableList extends Widget {
     private static final String EMPTY_RESULTS_XPATH =
             "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
     private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
-    private static final String HEADERS_SELECTOR = ".list_row--headers";
-    private static final String LIST_HEADERS_SELECTOR = ".list_row--headers > .header";
+    private static final String HEADERS_SELECTOR_CSS = ".list_row--headers";
+    private static final String LIST_HEADERS_SELECTOR_CSS = ".list_row--headers > .header";
 
     private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -51,8 +51,8 @@ public class EditableList extends Widget {
     }
 
     public List<String> getColumnHeadersLabels() {
-        DelayUtils.waitBy(webDriverWait, By.cssSelector(HEADERS_SELECTOR));
-        List<WebElement> listElements = webElement.findElements(By.cssSelector(LIST_HEADERS_SELECTOR));
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(HEADERS_SELECTOR_CSS));
+        List<WebElement> listElements = webElement.findElements(By.cssSelector(LIST_HEADERS_SELECTOR_CSS));
         return listElements.stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
