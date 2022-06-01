@@ -34,7 +34,7 @@ public class LayoutPanel {
     public void changeLayout(LayoutType layout) {
         this.layoutPanelElement.findElement(By.xpath(CHART_LAYOUT_BUTTON_ID + layout.label + "']")).click();
 
-        log.debug(CLICK_BTN + layout.label + " layout");
+        log.debug("{}{} layout", CLICK_BTN, layout.label);
         log.info("Changed layout to {}", layout.label);
     }
 
