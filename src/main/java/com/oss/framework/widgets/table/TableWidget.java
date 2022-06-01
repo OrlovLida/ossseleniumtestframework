@@ -27,7 +27,7 @@ public class TableWidget extends Widget implements TableInterface {
     private AdvancedSearch advancedSearch;
     private TableComponent tableComponent;
 
-    protected TableWidget(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
+    private TableWidget(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
         super(driver, wait, tableWidgetId);
     }
 
@@ -328,4 +328,5 @@ public class TableWidget extends Widget implements TableInterface {
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
         getAdvancedSearch().setFilter(componentId, componentType, value);
     }
+
 }
