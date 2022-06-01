@@ -8,10 +8,8 @@ package com.oss.framework.widgets.treetable;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
@@ -257,10 +255,4 @@ public class TreeTableWidget extends Widget implements TableInterface {
     private void confirmFilter() {
         getAdvancedSearch().clickApply();
     }
-
 }
-
-
-
-
-

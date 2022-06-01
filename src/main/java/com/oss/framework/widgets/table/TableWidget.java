@@ -328,5 +328,4 @@ public class TableWidget extends Widget implements TableInterface {
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
         getAdvancedSearch().setFilter(componentId, componentType, value);
     }
-
 }
