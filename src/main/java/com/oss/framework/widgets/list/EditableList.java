@@ -36,6 +36,8 @@ public class EditableList extends Widget {
     private static final String EMPTY_RESULTS_XPATH =
             "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
     private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
+    private static final String HEADERS_SELECTOR = ".list_row--headers";
+    private static final String LIST_HEADERS_SELECTOR = ".list_row--headers > .header";
 
     private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -45,6 +47,16 @@ public class EditableList extends Widget {
         Widget.waitForWidget(webDriverWait, LIST_WIDGET_CLASS);
         Widget.waitForWidgetById(webDriverWait, componentId);
         return new EditableList(driver, webDriverWait, componentId);
+    }
+
+    public List<String> getColumnHeadersLabels() {
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(HEADERS_SELECTOR));
+        List<WebElement> listElements = webElement.findElements(By.cssSelector(LIST_HEADERS_SELECTOR));
+        List<String> headers = new ArrayList<>();
+        for (WebElement listElement : listElements) {
+            headers.add(listElement.getText());
+        }
+        return headers;
     }
 
     public Row addRow() {
@@ -143,10 +155,6 @@ public class EditableList extends Widget {
             return getCell(columnId).getText();
         }
 
-        public boolean isCellVisible(String columnId) {
-            return !webElement.findElements(By.xpath(String.format(CELL_PATTERN, columnId))).isEmpty();
-        }
-
         public void setValue(String value, String columnId, String componentId, Input.ComponentType componentType) {
             getCell(columnId).setValue(value, componentId, componentType);
         }
@@ -187,6 +195,8 @@ public class EditableList extends Widget {
             private static final String CLASS_TAG_VALUE = "class";
             private static final String EDITABLE_TAG_VALUE = "editable";
             private static final String EDIT_XPATH = ".//ancestor::div[contains(@class, 'list__cell--editable')]//i[@aria-label='EDIT']";
+            private static final String CHECKBOX_INPUT_XPATH = ".//input[@type='checkbox']";
+            private static final String CHECKBOX_INPUT_ATTRIBUTE_NAME = "value";
             private final WebDriver driver;
             private final WebDriverWait wait;
             private final WebElement webElement;
@@ -198,7 +208,15 @@ public class EditableList extends Widget {
             }
 
             public String getText() {
-                return webElement.findElement(By.xpath(TEXT_XPATH)).getText();
+                if (!webElement.findElements(By.xpath(CHECKBOX_INPUT_XPATH)).isEmpty()) {
+                    return webElement.findElement(By.xpath(CHECKBOX_INPUT_XPATH)).getAttribute(CHECKBOX_INPUT_ATTRIBUTE_NAME);
+                } else {
+                    return webElement.findElement(By.xpath(TEXT_XPATH)).getText();
+                }
+            }
+
+            public String getAttribute(String attributeName) {
+                return webElement.getAttribute(attributeName);
             }
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
