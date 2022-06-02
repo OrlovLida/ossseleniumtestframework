@@ -17,19 +17,19 @@ public class SearchField extends Input {
     private SearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
     }
-    
+
     private SearchField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         super(parent, driver, wait, componentId);
     }
-    
+
     static SearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new SearchField(driver, wait, componentId);
     }
-    
+
     static SearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         return new SearchField(parent, driver, wait, componentId);
     }
-    
+
     @Override
     public void setValueContains(Data value) {
         webElement.click();

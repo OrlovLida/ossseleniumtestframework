@@ -28,8 +28,17 @@ public class ObjectSearchField extends Input {
         super(driver, wait, componentId);
     }
 
+    private ObjectSearchField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        super(parent, driver, wait, componentId);
+    }
+
     static ObjectSearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new ObjectSearchField(driver, wait, componentId);
+    }
+
+    public static ObjectSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait,
+                                                     String componentId) {
+        return new ObjectSearchField(parent, driver, wait, componentId);
     }
 
     public void setValue(Data value, boolean isContains) {
