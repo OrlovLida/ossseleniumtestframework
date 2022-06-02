@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
 import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
@@ -38,6 +39,7 @@ public class Combobox extends Input {
     public void setValueContains(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, INPUT_XPATH);
         clear();
+        WebElementUtils.clickWithRetry(driver, webElement, By.xpath(createDropdownList()));
         webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
@@ -55,6 +57,7 @@ public class Combobox extends Input {
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, INPUT_XPATH);
         clear();
+        WebElementUtils.clickWithRetry(driver, webElement, By.xpath(createDropdownList()));
         webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
@@ -82,4 +85,9 @@ public class Combobox extends Input {
     private boolean isClearIconPresent() {
         return !webElement.findElements(By.cssSelector(CLEAR_BUTTON_SELECTOR)).isEmpty();
     }
+
+    private String createDropdownList() {
+        return "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "-dropdown']";
+    }
+
 }
