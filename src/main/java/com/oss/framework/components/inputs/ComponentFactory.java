@@ -140,7 +140,7 @@ public class ComponentFactory {
                 return NumberField.createFromParent(parent, webDriver, wait, componentId);
             }
             case OBJECT_SEARCH_FIELD: {
-                return ObjectSearchField.create(webDriver, wait, componentId);
+                return ObjectSearchField.createFromParent(parent, webDriver, wait, componentId);
             }
             case PASSWORD_FIELD: {
                 return PasswordField.createFromParent(parent, webDriver, wait, componentId);
