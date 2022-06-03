@@ -395,7 +395,7 @@ public class TableComponent {
     }
 
     private static class HeaderSettings {
-        private static final String COLUMN_PANEL_SETTINGS_XPATH = "//div[@class='column-panel-settings']";
+        private static final String COLUMN_PANEL_SETTINGS_XPATH = "//*[contains(@class, 'column-panel-settings')]";
         private static final String TABS_BUTTON_CLASS = "tabs-button";
         private static final String ADMINISTRATION = "Administration";
         private static final String ADMINISTRATION_TAB_IS_NOT_AVAILABLE_EXCEPTION = "Administration tab is not available";
