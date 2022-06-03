@@ -187,12 +187,17 @@ public class ComponentFactory {
 
     public static Input createFromParent(String componentId, WebDriver webDriver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
-        ComponentType componentType = getComponentType(componentId, webDriver);
+        ComponentType componentType = getComponentTypeFromParent(componentId, parent);
         return createFromParent(componentId, componentType, webDriver, wait, parent);
     }
 
     private static ComponentType getComponentType(String componentId, WebDriver webDriver) {
         WebElement webElement = webDriver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, componentId)));
+        return ComponentType.valueOf(webElement.getAttribute("data-input-type"));
+    }
+
+    private static ComponentType getComponentTypeFromParent(String componentId, WebElement parent) {
+        WebElement webElement = parent.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, componentId)));
         return ComponentType.valueOf(webElement.getAttribute("data-input-type"));
     }
 }
