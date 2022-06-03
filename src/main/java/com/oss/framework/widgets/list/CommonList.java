@@ -194,7 +194,16 @@ public class CommonList extends Widget {
         }
 
         public String getFullContent(String attributeName) {
-            return getIcons(attributeName) + ";" + getValue(attributeName);
+            String iconText = getIcons(attributeName);
+            String text = getValue(attributeName);
+            if (iconText.isEmpty() && text.isEmpty()) {
+                return "";
+            } else if (iconText.isEmpty()) {
+                return text;
+            } else if (text.isEmpty()) {
+                return iconText;
+            }
+            return iconText + ";" + text;
         }
 
         public boolean isFavorite() {
