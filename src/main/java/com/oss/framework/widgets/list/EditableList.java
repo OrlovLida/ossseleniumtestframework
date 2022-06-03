@@ -164,6 +164,10 @@ public class EditableList extends Widget {
             getCell(columnId).clearValue(componentId, componentType);
         }
 
+        public void clearValue(String columnId, String componentId) {
+            getCell(columnId).clearValue(componentId);
+        }
+
         public boolean isAttributeEditable(String columnId) {
             return getCell(columnId).isAttributeEditable();
         }
