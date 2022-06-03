@@ -214,7 +214,7 @@ public class EditableList extends Widget {
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
-                    setCheckboxValue(value, componentId);
+                    getCheckbox(componentId).setSingleStringValue(value);
                     return;
                 }
                 WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
@@ -235,18 +235,12 @@ public class EditableList extends Widget {
                     inlineForm.clickButtonByLabel(SAVE_BUTTON);
                     return;
                 }
-                setCheckboxValue(value, componentId);
-            }
-
-            private void setCheckboxValue(String value, String componentId) {
-                WebElementUtils.clickWebElement(driver, webElement);
-                Input input = ComponentFactory.createFromParent(componentId, Input.ComponentType.CHECKBOX, driver, wait, webElement);
-                input.setSingleStringValue(value);
+                getCheckbox(componentId).setSingleStringValue(value);
             }
 
             public void clearValue(String componentId, Input.ComponentType componentType) {
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
-                    Input input = ComponentFactory.create(componentId, componentType, driver, wait);
+                    Input input = ComponentFactory.createFromParent(componentId, componentType, driver, wait, webElement);
                     input.clear();
                     return;
                 }
@@ -258,8 +252,26 @@ public class EditableList extends Widget {
                 inlineForm.clickButtonByLabel(SAVE_BUTTON);
             }
 
+            public void clearValue(String componentId) {
+                if (WebElementUtils.isElementPresent(webElement, By.xpath(EDIT_XPATH))) {
+                    WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
+                    InlineForm inlineForm = InlineForm.create(driver, wait);
+                    Input component = inlineForm.getComponent(componentId);
+                    DelayUtils.sleep(500);
+                    component.clear();
+                    inlineForm.clickButtonByLabel(SAVE_BUTTON);
+                    return;
+                }
+                getCheckbox(componentId).clear();
+            }
+
             public boolean isAttributeEditable() {
                 return webElement.findElement(By.xpath(PARENT_XPATH)).getAttribute(CLASS_TAG_VALUE).contains(EDITABLE_TAG_VALUE);
+            }
+
+            private Input getCheckbox(String componentId) {
+                WebElementUtils.clickWebElement(driver, webElement);
+                return ComponentFactory.createFromParent(componentId, Input.ComponentType.CHECKBOX, driver, wait, webElement);
             }
         }
     }
