@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
-import com.oss.framework.components.inputs.Combobox;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.DelayUtils;
@@ -29,8 +28,7 @@ public class TransformationsManagerWidget extends Widget {
     }
 
     public void selectTransformation(String transformationName) {
-        Combobox selectTransformation = (Combobox) getComponent(SELECT_TRANSFORMATION_INPUT_ID, Input.ComponentType.COMBOBOX);
-        selectTransformation.setValue(Data.createSingleData(transformationName));
+        getComponent(SELECT_TRANSFORMATION_INPUT_ID).setValue(Data.createSingleData(transformationName));
 
     }
 
@@ -39,8 +37,8 @@ public class TransformationsManagerWidget extends Widget {
         DelayUtils.waitByXPath(webDriverWait, TRANSFORMATION_PATH);
     }
 
-    private Input getComponent(String componentId, Input.ComponentType componentType) {
-        return ComponentFactory.create(componentId, componentType, driver, webDriverWait);
+    private Input getComponent(String componentId) {
+        return ComponentFactory.create(componentId, driver, webDriverWait);
     }
 
 }
