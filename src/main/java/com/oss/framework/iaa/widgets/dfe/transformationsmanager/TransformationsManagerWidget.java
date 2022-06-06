@@ -15,7 +15,7 @@ public class TransformationsManagerWidget extends Widget {
 
     public static final String TRANSFORMATION_PATH = "//section[@class='TransformationComponentContainer']";
     private static final String ADD_BTN_PATH = "//button[@class='btn btn-primary btn-add-transformation']";
-    private static final String SELECT_TRANSFORMATION_INPUT_ID = "availableTransformationsComboBox-input";
+    private static final String SELECT_TRANSFORMATION_INPUT_ID = "availableTransformationsComboBox";
     private static final String TRANSFORMATIONS_MANAGER_PATH = "//div[@class='TransformationsManagerContainer']";
     private static final String WIDGET_ID = "transformations-manager";
 
