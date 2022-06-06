@@ -46,6 +46,7 @@ public class ObjectSearchField extends Input {
             WebElementUtils.clickWebElement(driver, webElement);
             WebElement innerInput = driver.findElement(By.xpath(OSF_INNER_INPUT));
             innerInput.sendKeys(value.getStringValue());
+            DelayUtils.waitForSpinners(webDriverWait, webElement);
             DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
             chooseFirstResult();
             WebElementUtils.clickWebElement(driver, webElement);
@@ -53,6 +54,7 @@ public class ObjectSearchField extends Input {
             clear();
             DelayUtils.sleep(1000);
             webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
+            DelayUtils.waitForSpinners(webDriverWait, webElement);
             DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
             chooseFirstResult();
         }
