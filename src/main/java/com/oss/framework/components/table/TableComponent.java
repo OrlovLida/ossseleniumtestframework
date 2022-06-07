@@ -169,9 +169,9 @@ public class TableComponent {
         return cell.getText();
     }
 
-    public String getCellFont(int row, String columnId) {
+    public boolean isCellValueBold(int row, String columnId) {
         Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
-        return cell.getFontStyle();
+        return cell.isBold();
     }
 
     public AttributesChooser getAttributesChooser() {
@@ -529,8 +529,8 @@ public class TableComponent {
             return CSSUtils.getLeftValue(cellElement);
         }
 
-        public String getFontStyle() {
-            return CSSUtils.getStyleAttribute(cellElement.findElement(By.xpath("./div"))).get("font-weight");
+        public boolean isBold() {
+            return CSSUtils.getStyleAttribute(cellElement.findElement(By.xpath("./div"))).containsValue("bold");
         }
 
         public String getText() {

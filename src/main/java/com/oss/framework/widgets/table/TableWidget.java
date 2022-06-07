@@ -106,8 +106,8 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getCellValue(rowIndex, columnId);
     }
 
-    public String getCellFont(int row, String columnId) {
-        return getTableComponent().getCellFont(row, columnId);
+    public boolean isCellValueBold(int row, String columnId) {
+        return getTableComponent().isCellValueBold(row, columnId);
     }
 
     @Override
