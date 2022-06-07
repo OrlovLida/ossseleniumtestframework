@@ -128,8 +128,16 @@ public class AdvancedSearch {
         return openSearchPanel().getComponent(componentId, componentType);
     }
 
+    public Input getComponent(String componentId) {
+        return openSearchPanel().getComponent(componentId);
+    }
+
     public void setFilter(String componentId, ComponentType componentType, String value) {
         getComponent(componentId, componentType).setSingleStringValue(value);
+    }
+
+    public void setFilter(String componentId, String value) {
+        getComponent(componentId).setSingleStringValue(value);
     }
 
     public void clickApply() {
