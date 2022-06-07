@@ -8,8 +8,10 @@ package com.oss.framework.widgets.treetable;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
@@ -27,8 +29,8 @@ import com.oss.framework.widgets.table.TableRow;
  */
 public class TreeTableWidget extends Widget implements TableInterface {
 
-    private static final String TREE_TABLE_WIDGET_CLASS = "common-treetablewidgetgraphql";
     public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private static final String TREE_TABLE_WIDGET_CLASS = "common-treetablewidgetgraphql";
     private static final int REFRESH_INTERVAL = 2000;
 
     private TreeTableWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
@@ -79,10 +81,6 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     public void fullTextSearch(String text) {
         getAdvancedSearch().fullTextSearch(text);
-    }
-
-    private TableComponent getTableComponent() {
-        return TableComponent.create(driver, webDriverWait, id);
     }
 
     @Override
@@ -167,6 +165,13 @@ public class TreeTableWidget extends Widget implements TableInterface {
     }
 
     @Override
+    public void searchByAttribute(String attributeId, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, value);
+        confirmFilter();
+    }
+
+    @Override
     public void callAction(String actionId) {
         getContextActions().callActionById(actionId);
     }
@@ -240,6 +245,14 @@ public class TreeTableWidget extends Widget implements TableInterface {
         getTableComponent().changeColumnsOrderById(columnId, position);
     }
 
+    public ActionsContainer getContextActions() {
+        return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
+    }
+
+    private TableComponent getTableComponent() {
+        return TableComponent.create(driver, webDriverWait, id);
+    }
+
     private void openAdvancedSearch() {
         getAdvancedSearch().openSearchPanel();
     }
@@ -248,8 +261,8 @@ public class TreeTableWidget extends Widget implements TableInterface {
         getAdvancedSearch().setFilter(componentId, componentType, value);
     }
 
-    public ActionsContainer getContextActions() {
-        return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
+    private void setFilterContains(String componentId, String value) {
+        getAdvancedSearch().setFilter(componentId, value);
     }
 
     private void confirmFilter() {
