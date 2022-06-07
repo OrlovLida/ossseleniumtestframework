@@ -106,6 +106,10 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getCellValue(rowIndex, columnId);
     }
 
+    public boolean isCellValueBold(int row, String columnId) {
+        return getTableComponent().isCellValueBold(row, columnId);
+    }
+
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
