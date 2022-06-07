@@ -37,7 +37,7 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     public static ActionsContainer createFromParent(WebElement parentElement, WebDriver webDriver, WebDriverWait webDriverWait) {
-        DelayUtils.waitBy(webDriverWait, By.className(CONTEXT_ACTIONS_CLASS));
+        DelayUtils.waitForNestedElements(webDriverWait, parentElement, By.className(CONTEXT_ACTIONS_CLASS));
         return new ActionsContainer(getActiveContextActions(parentElement), webDriver, webDriverWait);
     }
 

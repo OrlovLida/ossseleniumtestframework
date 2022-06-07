@@ -70,9 +70,9 @@ public class TreeComponent {
     }
     
     public List<Node> getVisibleNodes() {
-        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        DelayUtils.waitForNestedElements(webDriverWait, treeComponentElement,"." + getNodeClassPath());
         return this.treeComponentElement.findElements(By.xpath("." + getNodeClassPath())).stream()
-                .map(node -> new Node(driver, webDriverWait, node)).collect(Collectors.toList());
+                .map(node -> Node.create(driver, webDriverWait, node)).collect(Collectors.toList());
     }
     
     public Optional<Node> findNodeByLabelsPath(String labels) {
@@ -172,17 +172,24 @@ public class TreeComponent {
         private static final String POPUP_CONTAINER_CSS = ".popupContainer";
         private static final String ARIA_LABEL_MINUS_CSS = "[aria-label='MINUS']";
         private static final String ARIA_LABEL_ADD_CSS = "[aria-label='ADD']";
+        private static final String LABEL_NODE_CSS = ".OSSRichText";
 
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
         private final String nodeId;
         
-        private Node(WebDriver driver, WebDriverWait webDriverWait, WebElement node) {
+        private Node(WebDriver driver, WebDriverWait webDriverWait, WebElement node, String nodeId) {
             this.driver = driver;
             this.webDriverWait = webDriverWait;
             this.nodeElement = node;
-            this.nodeId = CSSUtils.getAttributeValue(DATA_GUID_ATTR, nodeElement);
+            this.nodeId = nodeId;
+        }
+
+        private static Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement nodeElement){
+            DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.cssSelector(LABEL_NODE_CSS));
+            String nodeId = CSSUtils.getAttributeValue(DATA_GUID_ATTR, nodeElement);
+            return new Node(driver, webDriverWait, nodeElement, nodeId);
         }
         
         public String getPath() {
