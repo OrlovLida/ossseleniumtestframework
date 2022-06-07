@@ -42,10 +42,6 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().selectRow(row);
     }
 
-    public void clickRow(int row) {
-        getTableComponent().clickRow(row);
-    }
-
     @Override
     public int getColumnSize(int columnIndex) {
         return getTableComponent().getColumnSizeByPosition(columnIndex);
@@ -110,6 +106,10 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getCellValue(rowIndex, columnId);
     }
 
+    public boolean isCellValueBold(int row, String columnId) {
+        return getTableComponent().isCellValueBold(row, columnId);
+    }
+
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
@@ -120,6 +120,13 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+    }
+
+    @Override
+    public void searchByAttribute(String attributeId, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, value);
+        confirmFilter();
     }
 
     @Override
@@ -166,6 +173,10 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public String getCellValueById(int row, String columnId) {
         return getCellValue(row, columnId);
+    }
+
+    public void clickRow(int row) {
+        getTableComponent().clickRow(row);
     }
 
     public ActionsContainer getContextActions() {
@@ -327,5 +338,9 @@ public class TableWidget extends Widget implements TableInterface {
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
         getAdvancedSearch().setFilter(componentId, componentType, value);
+    }
+
+    private void setFilterContains(String componentId, String value) {
+        getAdvancedSearch().setFilter(componentId, value);
     }
 }

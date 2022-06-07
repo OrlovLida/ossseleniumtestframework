@@ -183,6 +183,13 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     @Override
+    public void searchByAttribute(String attributeId, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, value);
+        confirmFilter();
+    }
+
+    @Override
     public void callAction(String actionId) {
         WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, webDriverWait, window);
@@ -352,6 +359,10 @@ public class OldTable extends Widget implements TableInterface {
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
         getAdvancedSearch().setFilter(componentId, componentType, value);
+    }
+
+    private void setFilterContains(String componentId, String value) {
+        getAdvancedSearch().setFilter(componentId, value);
     }
 
     private AdvancedSearch getAdvancedSearch() {
