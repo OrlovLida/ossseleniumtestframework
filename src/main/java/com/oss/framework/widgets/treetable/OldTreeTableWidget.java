@@ -29,6 +29,7 @@ public class OldTreeTableWidget extends Widget {
     }
 
     public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
+        Widget.waitForWidgetById(wait, dataAttributeName);
         return new OldTreeTableWidget(driver, wait, dataAttributeName);
     }
 
