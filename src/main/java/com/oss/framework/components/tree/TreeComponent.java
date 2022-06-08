@@ -70,7 +70,7 @@ public class TreeComponent {
     }
     
     public List<Node> getVisibleNodes() {
-        DelayUtils.waitForNestedElements(webDriverWait, treeComponentElement,"." + getNodeClassPath());
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
         return this.treeComponentElement.findElements(By.xpath("." + getNodeClassPath())).stream()
                 .map(node -> Node.create(driver, webDriverWait, node)).collect(Collectors.toList());
     }
