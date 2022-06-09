@@ -1,8 +1,12 @@
 package com.oss.framework.widgets.propertypanel;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +18,7 @@ import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class PropertyPanel extends Widget implements PropertyPanelInterface {
@@ -41,6 +46,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public List<String> getPropertyLabels() {
         List<String> labels = new ArrayList<>();
         for (WebElement element : this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
+            WebElementUtils.moveToElement(driver, element);
             labels.add(element.getText());
         }
         return labels;
@@ -80,11 +86,31 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         attributesChooser.clickApply();
     }
 
+    public List<String> getPropertiesToList() {
+        Map<String, WebElement> properties = getPropertiesMap();
+        return new ArrayList<>(properties.keySet());
+    }
+
+    public Map<String, String> getPropertiesValuesToList() {
+        Map<String, WebElement> properties = getPropertiesMap();
+
+        return properties.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> getPropertyText(e.getValue())));
+    }
+
     @Override
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
         if (!properties.get(propertyName).findElements(By.xpath(PROPERTY_VALUE_PATH)).isEmpty()) {
             return properties.get(propertyName).findElement(By.xpath(PROPERTY_VALUE_PATH)).getText();
+        } else {
+            return "";
+        }
+    }
+
+    private String getPropertyText(WebElement webElement) {
+        if (!webElement.findElements(By.xpath(PROPERTY_VALUE_PATH)).isEmpty()) {
+            return webElement.findElement(By.xpath(PROPERTY_VALUE_PATH)).getText();
         } else {
             return "";
         }
