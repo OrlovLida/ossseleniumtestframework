@@ -23,10 +23,9 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     public static final String PROCEED = "Proceed";
     public static final String DELETE = "Delete";
     public static final String YES = "Yes";
-    private static final String BUTTON_CSS = "[" + CSSUtils.TEST_ID + "='%s']";
     private static final String BUTTON_BY_TEXT_PATTERN = ".//button[contains(text(),'%s')] | .//a[contains(text(),'%s')]";
     private static final String CONFIRMATION_BOX_CLASS = "ConfirmationBox";
-    private static final String WINDOW_CONTENT_XPATH = ".//div[contains(@class, 'windowContent')]";
+    private static final String CONFIRMATION_BOX_APP_XPATH = ".//div[contains(@class, 'common-confirmationboxapp')]";
     private static final String RICH_TEXT_XPATH = ".//div[contains(@class, 'OSSRichText')]";
 
     private final WebDriver driver;
@@ -58,14 +57,14 @@ public class ConfirmationBox implements ConfirmationBoxInterface {
     public void clickButtonById(String id) {
         DelayUtils.waitForElementToLoad(wait, prompt);
         WebElement button = wait.until(ExpectedConditions
-                .elementToBeClickable(this.prompt.findElement(By.cssSelector(String.format(BUTTON_CSS, id)))));
+                .elementToBeClickable(this.prompt.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, id)))));
         button.click();
     }
 
     @Override
     public String getMessage() {
-        DelayUtils.waitByXPath(wait, WINDOW_CONTENT_XPATH);
-        WebElement windowContent = driver.findElement(By.xpath(WINDOW_CONTENT_XPATH));
+        DelayUtils.waitByXPath(wait, CONFIRMATION_BOX_APP_XPATH);
+        WebElement windowContent = driver.findElement(By.xpath(CONFIRMATION_BOX_APP_XPATH));
         WebElement message = windowContent.findElement(By.xpath(RICH_TEXT_XPATH));
         return message.getText();
     }

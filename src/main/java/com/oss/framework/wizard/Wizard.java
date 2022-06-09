@@ -63,12 +63,23 @@ public class Wizard {
     }
 
     public Input getComponent(String componentId, Input.ComponentType componentType) {
-        return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
+        return ComponentFactory.createFromParent(componentId, componentType, this.driver, this.wait, this.webElement);
+    }
+
+    public Input getComponent(String componentId) {
+        return ComponentFactory.createFromParent(componentId, this.driver, this.wait, this.webElement);
     }
 
     public Input setComponentValue(String componentId, String value, Input.ComponentType componentType) {
         DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_DATA_TEST_ID_PATTERN, componentId));
         Input input = getComponent(componentId, componentType);
+        input.setSingleStringValue(value);
+        return input;
+    }
+
+    public Input setComponentValue(String componentId, String value) {
+        DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_DATA_TEST_ID_PATTERN, componentId));
+        Input input = getComponent(componentId);
         input.setSingleStringValue(value);
         return input;
     }
@@ -199,6 +210,10 @@ public class Wizard {
 
     public boolean isElementPresentById(String id) {
         return isElementPresent(webElement, By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + id + "']"));
+    }
+
+    public void waitForWizardToLoad() {
+        DelayUtils.waitForElementToLoad(wait, webElement);
     }
 
 }

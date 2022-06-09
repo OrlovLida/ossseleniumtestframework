@@ -49,6 +49,8 @@ public interface TableInterface {
 
     void searchByAttributeWithLabel(String attributeLabel, Input.ComponentType componentType, String value);
 
+    void searchByAttribute(String attributeId, String value);
+
     void callAction(String actionId);
 
     void callActionByLabel(String actionLabel);

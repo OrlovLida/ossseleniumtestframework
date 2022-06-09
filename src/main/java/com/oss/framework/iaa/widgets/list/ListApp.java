@@ -17,7 +17,6 @@ public class ListApp {
 
     private static final Logger log = LoggerFactory.getLogger(ListApp.class);
 
-    private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement listAppElement;
 
@@ -25,8 +24,7 @@ public class ListApp {
     private static final String ACTIVE_TAB_CONTENT_CSS = ".active .view-v2-widget";
     private static final String TEXT_FIELD_CSS = ".textFieldCont";
 
-    private ListApp(WebDriver driver, WebDriverWait wait, WebElement listAppElement) {
-        this.driver = driver;
+    private ListApp(WebDriverWait wait, WebElement listAppElement) {
         this.wait = wait;
         this.listAppElement = listAppElement;
     }
@@ -34,7 +32,7 @@ public class ListApp {
     public static ListApp createFromParent(WebDriver driver, WebDriverWait wait, String windowId) {
         DelayUtils.waitBy(wait, By.cssSelector(String.format(APP_LIST_PATTERN, windowId)));
         WebElement listApp = driver.findElement(By.cssSelector(String.format(APP_LIST_PATTERN, windowId)));
-        return new ListApp(driver, wait, listApp);
+        return new ListApp(wait, listApp);
     }
 
     public List<String> getValues() {
@@ -45,7 +43,7 @@ public class ListApp {
     }
 
     public String getValueFromField(String textFieldId) {
-        return listAppElement.findElement(By.cssSelector(String.format("[" + CSSUtils.TEST_ID + "='%s']", textFieldId))).getText();
+        return listAppElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, textFieldId))).getText();
     }
 
     private List<WebElement> getActiveTabContent() {

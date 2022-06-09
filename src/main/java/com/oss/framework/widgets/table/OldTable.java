@@ -61,6 +61,7 @@ public class OldTable extends Widget implements TableInterface {
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
     private static final String TABLE_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String TEXT_ICON_CLASS = "OSSRichTextIcon";
+    private static final String SEARCH_SELECTOR = "[aria-label='SEARCH']";
 
     private AdvancedSearch advancedSearch;
     private Map<String, Column> columns;
@@ -182,6 +183,13 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     @Override
+    public void searchByAttribute(String attributeId, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, value);
+        confirmFilter();
+    }
+
+    @Override
     public void callAction(String actionId) {
         WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         ActionsInterface actions = OldActionsContainer.createFromParent(driver, webDriverWait, window);
@@ -239,11 +247,13 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     public void clearAllColumnValues() {
-        List<Column> columns2 = Lists.newArrayList(getColumns().values());
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        List<Column> columns2 = Lists.newArrayList(getColumns().values());
         for (Column column : columns2) {
-            column.clear();
-            DelayUtils.waitForPageToLoad(driver, webDriverWait);
+            if (column.isColumnWithSearchPresent()) {
+                column.clear();
+                DelayUtils.waitForPageToLoad(driver, webDriverWait);
+            }
         }
     }
 
@@ -302,15 +312,15 @@ public class OldTable extends Widget implements TableInterface {
         List<Column> columns2 =
                 webElement.findElements(By.cssSelector(COLUMNS_WITHOUT_CHECKBOX_CSS))
                         .stream().map(columnElement -> new Column(columnElement, webDriverWait, driver)).collect(Collectors.toList());
-        String columsNumberLog = String.format(NUMBER_OF_COLUMNS_LOG_PATTERN, columns2.size());
-        log.debug(columsNumberLog);
+        String columnsNumberLog = String.format(NUMBER_OF_COLUMNS_LOG_PATTERN, columns2.size());
+        log.debug(columnsNumberLog);
         for (Column column : columns2) {
             if (column.isLabelPresent()) {
                 columnMap.put(column.getLabel(), column);
             }
         }
-        String columsWithLabelsNumberLog = String.format(NUMBER_OF_COLUMNS_WITH_LABEL_LOG_PATTERN, columnMap.size());
-        log.debug(columsWithLabelsNumberLog);
+        String columnsWithLabelsNumberLog = String.format(NUMBER_OF_COLUMNS_WITH_LABEL_LOG_PATTERN, columnMap.size());
+        log.debug(columnsWithLabelsNumberLog);
         return columnMap;
     }
 
@@ -349,6 +359,10 @@ public class OldTable extends Widget implements TableInterface {
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
         getAdvancedSearch().setFilter(componentId, componentType, value);
+    }
+
+    private void setFilterContains(String componentId, String value) {
+        getAdvancedSearch().setFilter(componentId, value);
     }
 
     private AdvancedSearch getAdvancedSearch() {
@@ -434,6 +448,11 @@ public class OldTable extends Widget implements TableInterface {
             }
         }
 
+        private boolean isColumnWithSearchPresent() {
+            moveToHeader();
+            return !columnElement.findElements(By.cssSelector(SEARCH_SELECTOR)).isEmpty();
+        }
+
         private void clickCell(String value) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
@@ -446,7 +465,7 @@ public class OldTable extends Widget implements TableInterface {
             WebElement cell = getCellByIndex(index);
             WebElementUtils.moveToElement(driver, cell);
             if (isIconPresent(cell)) {
-                return getIconTitles(index);
+                return (getCellText(cell) + " " + getIconTitles(index)).trim();
             }
             return getCellText(cell);
         }

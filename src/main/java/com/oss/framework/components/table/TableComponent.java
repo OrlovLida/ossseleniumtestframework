@@ -169,6 +169,11 @@ public class TableComponent {
         return cell.getText();
     }
 
+    public boolean isCellValueBold(int row, String columnId) {
+        Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
+        return cell.isBold();
+    }
+
     public AttributesChooser getAttributesChooser() {
         Actions action = new Actions(this.driver);
         action.click(getColumnsManagement()).perform();
@@ -314,7 +319,7 @@ public class TableComponent {
         }
 
         private static Header createFromWrapper(WebDriver driver, WebDriverWait webDriverWait, WebElement tableComponent,
-                WebElement wrapper) {
+                                                WebElement wrapper) {
             String columnId = CSSUtils.getAttributeValue(DATA_COL, wrapper);
             String label = wrapper.getText();
             return new Header(driver, webDriverWait, tableComponent, columnId, label);
@@ -395,7 +400,7 @@ public class TableComponent {
     }
 
     private static class HeaderSettings {
-        private static final String COLUMN_PANEL_SETTINGS_XPATH = "//div[@class='column-panel-settings']";
+        private static final String COLUMN_PANEL_SETTINGS_XPATH = "//*[contains(@class, 'column-panel-settings')]";
         private static final String TABS_BUTTON_CLASS = "tabs-button";
         private static final String ADMINISTRATION = "Administration";
         private static final String ADMINISTRATION_TAB_IS_NOT_AVAILABLE_EXCEPTION = "Administration tab is not available";
@@ -467,6 +472,7 @@ public class TableComponent {
         private static final String PLUS_ICON_CSS = ".OSSIcon";
         private static final String ARIA_LABEL_ATTRIBUTE = "aria-label";
         private static final String MINUS = "MINUS";
+        private static final String ADD = "ADD";
 
         private final WebDriver driver;
         private final WebElement cellElement;
@@ -523,6 +529,10 @@ public class TableComponent {
             return CSSUtils.getLeftValue(cellElement);
         }
 
+        public boolean isBold() {
+            return CSSUtils.getStyleAttribute(cellElement.findElement(By.xpath("./div"))).containsValue("bold");
+        }
+
         public String getText() {
             if (isCheckBox()) {
                 if (isSelected()) {
@@ -558,23 +568,23 @@ public class TableComponent {
 
         private void expandCell() {
             if (!isCellExpanded()) {
-                toggleCell();
+                toggleCell(MINUS);
             } else
                 throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
         }
 
         private void collapseCell() {
             if (isCellExpanded()) {
-                toggleCell();
+                toggleCell(ADD);
             } else
                 throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
         }
 
-        private void toggleCell() {
+        private void toggleCell(String character) {
             WebElement expandIcon = cellElement.findElement(By.cssSelector(TREE_NODE_EXPAND_CSS));
             WebElementUtils.clickWebElement(driver, expandIcon);
-            DelayUtils.waitForVisibility(new WebDriverWait(driver, 10),
-                    expandIcon.findElement(By.cssSelector("[" + ARIA_LABEL_ATTRIBUTE + "='" + MINUS + "']")));
+            DelayUtils.waitForNestedElements(new WebDriverWait(driver, 10), expandIcon,
+                    By.cssSelector("[" + ARIA_LABEL_ATTRIBUTE + "='" + character + "']"));
         }
 
         private boolean isExpandPresent() {
@@ -652,10 +662,15 @@ public class TableComponent {
             getFirstCell().collapseCell();
         }
 
+        public boolean isRowExpanded() {
+            return getFirstCell().isCellExpanded();
+        }
+
         private Cell getFirstCell() {
-            List<Cell> cells = tableComponent.findElements(By.cssSelector(String.format(CELL_ROW_PATTERN, index) + NOT_CELL_CHECKBOX_CSS)).stream()
-                    .map(cell -> Cell.createCell(driver, cell))
-                    .collect(Collectors.toList());
+            List<Cell> cells =
+                    tableComponent.findElements(By.cssSelector(String.format(CELL_ROW_PATTERN, index) + NOT_CELL_CHECKBOX_CSS)).stream()
+                            .map(cell -> Cell.createCell(driver, cell))
+                            .collect(Collectors.toList());
             return cells.get(0);
         }
 
