@@ -22,7 +22,8 @@ public class ActionsContainer implements ActionsInterface {
     public static final String SHOW_ON_GROUP_ID = "NAVIGATION";
     private static final String MORE_GROUP_ID = "moreActions";
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer--default";
-    private static final String GROUP_PATTERN = ".//div[@id='%s'] | .//div[@id= '" + MORE_GROUP_ID + "']";
+    private static final String GROUP_ALL_PATTERN = ".//div[@id='%s'] | .//*[contains(text(),'%s')] | .//div[@id= '" + MORE_GROUP_ID + "']";
+    private static final String GROUP_PATTERN = ".//div[@id='%s'] | .//*[contains(text(),'%s')]";
     private static final String UNSUPPORTED_EXCEPTION = "Method not implemented for Actions Container.";
     private static final String NO_ACTION_EXCEPTION = "No active Context Action.";
 
@@ -53,8 +54,8 @@ public class ActionsContainer implements ActionsInterface {
     }
 
     @Override
-    public void callActionByLabel(String groupId, String actionLabel) {
-        clickOnGroup(groupId);
+    public void callActionByLabel(String groupLabel, String actionLabel) {
+        clickOnGroup(groupLabel);
         DropdownList.create(webDriver, webDriverWait).selectOption(actionLabel);
     }
 
@@ -74,13 +75,13 @@ public class ActionsContainer implements ActionsInterface {
         DropdownList.create(webDriver, webDriverWait).selectOptionById(actionId);
     }
 
-    private void clickOnGroup(String groupId) {
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_PATTERN, groupId));
-        if (isElementPresent(webElement, By.id(groupId))) {
-            clickWithRetry(webElement.findElement(By.id(groupId)), By.className(DropdownList.PORTAL_CLASS));
+    private void clickOnGroup(String group) {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_ALL_PATTERN, group, group));
+        if (isElementPresent(webElement, By.xpath(String.format(GROUP_PATTERN, group, group)))) {
+            clickWithRetry(webElement.findElement(By.xpath(String.format(GROUP_PATTERN, group, group))), By.className(DropdownList.PORTAL_CLASS));
         } else {
             clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
-            DropdownList.create(webDriver, webDriverWait).selectOptionById(groupId);
+            DropdownList.create(webDriver, webDriverWait).selectOptionById(group);
         }
     }
 
