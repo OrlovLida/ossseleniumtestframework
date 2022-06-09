@@ -1,21 +1,23 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.components.data.Data;
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.oss.framework.components.data.Data;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class MultiSearchField extends Input {
     private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
-    private static final String INPUT_LABEL_CSS = ".md-input-label-text";
+    private static final String SEARCH_ID = "search-box__button-search";
 
     private MultiSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -43,12 +45,8 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        WebElementUtils.clickWebElement(driver, webElement);
-        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
-        dropdownList.search(value.getStringValue());
-        DelayUtils.waitForSpinners(webDriverWait, webElement);
-        dropdownList.selectOptionContains(value.getStringValue());
-        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(INPUT_LABEL_CSS)));
+        search(value).selectOptionContains(value.getStringValue());
+        webElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, SEARCH_ID))).click();
     }
 
     @Override
@@ -58,12 +56,8 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValue(Data value) {
-        WebElementUtils.clickWebElement(driver, webElement);
-        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
-        dropdownList.search(value.getStringValue());
-        DelayUtils.waitForSpinners(webDriverWait, webElement);
-        dropdownList.selectOption(value.getStringValue());
-        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(INPUT_LABEL_CSS)));
+        search(value).selectOption(value.getStringValue());
+        webElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, SEARCH_ID))).click();
     }
 
     @Override
@@ -79,5 +73,18 @@ public class MultiSearchField extends Input {
 
     private void clearSingle(WebElement closeButton) {
         WebElementUtils.clickWebElement(driver, closeButton);
+    }
+
+    private String createDropdownList() {
+        return "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "-dropdown']";
+    }
+
+    private DropdownList search(Data value) {
+        WebElementUtils.clickWithRetry(driver, webElement, By.xpath(createDropdownList()));
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
+        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
+        dropdownList.search(value.getStringValue());
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
+        return dropdownList;
     }
 }
