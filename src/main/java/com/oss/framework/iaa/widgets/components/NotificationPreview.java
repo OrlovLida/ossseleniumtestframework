@@ -34,7 +34,7 @@ public class NotificationPreview {
         this.notificationPreviewElement = notificationPreviewElement;
     }
 
-    public static NotificationPreview createById(WebDriver driver, WebDriverWait wait) {
+    public static NotificationPreview create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitBy(wait, By.className(NOTIFICATION_PREVIEW_CLASS));
         WebElement notificationPreview = driver.findElement(By.className(NOTIFICATION_PREVIEW_CLASS));
         return new NotificationPreview(driver, wait, notificationPreview);
