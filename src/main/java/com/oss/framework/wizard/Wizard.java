@@ -212,4 +212,8 @@ public class Wizard {
         return isElementPresent(webElement, By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + id + "']"));
     }
 
+    public void waitForWizardToLoad() {
+        DelayUtils.waitForElementToLoad(wait, webElement);
+    }
+
 }
