@@ -23,7 +23,7 @@ public class ActionsContainer implements ActionsInterface {
     private static final String MORE_GROUP_ID = "moreActions";
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer--default";
     private static final String GROUP_ALL_PATTERN = ".//div[@id='%s'] | .//div[text()= '%s'] | .//div[@id= '" + MORE_GROUP_ID + "']";
-    private static final String GROUP_PATTERN = ".//div[@id='%s'] | .//*[contains(text(),'%s')]";
+    private static final String GROUP_PATTERN = ".//div[@id='%s'] | .//div[text()='%s']";
     private static final String UNSUPPORTED_EXCEPTION = "Method not implemented for Actions Container.";
     private static final String NO_ACTION_EXCEPTION = "No active Context Action.";
     
