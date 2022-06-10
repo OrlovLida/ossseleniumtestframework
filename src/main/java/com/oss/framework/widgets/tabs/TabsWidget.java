@@ -43,8 +43,9 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String ANCESTOR_PATTERN = "(%s)//ancestor::a";
     private static final String BUTTON_PATTERN = ".//button[text()='%s']";
     private static final String TABS_HEADER_CSS = ".tabsContainerHeader";
+    private static final String TOOLBAR_CONTENT_CSS =".toolbarComponent";
     private static final String HEADER_ACTION_CSS =
-            TABS_HEADER_CSS + " " + WINDOW_TOOLBAR_CSS + "," + TABS_HEADER_CSS + " " + ACTIONS_CONTAINER_CSS;
+            TABS_HEADER_CSS + " " + TOOLBAR_CONTENT_CSS + "," + TABS_HEADER_CSS + " " + ACTIONS_CONTAINER_CSS;
     
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
