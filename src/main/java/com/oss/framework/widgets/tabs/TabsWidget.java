@@ -168,11 +168,11 @@ public class TabsWidget extends Widget implements TabsInterface {
         boolean isNewActionContainer = isElementPresent(parent, By.cssSelector(ACTIONS_CONTAINER_CSS));
         boolean isOldActionContainer = isElementPresent(parent, By.cssSelector(WINDOW_TOOLBAR_CSS));
         if (isNewActionContainer) {
-            return ActionsContainer.createFromParent(createTabs(), driver, webDriverWait);
+            return ActionsContainer.createFromParent(parent, driver, webDriverWait);
         } else if (isOldActionContainer)
-            return OldActionsContainer.createFromParent(driver, webDriverWait, createTabs());
+            return OldActionsContainer.createFromParent(driver, webDriverWait, parent);
         else {
-            return ButtonContainer.createFromParent(createTabs(), driver, webDriverWait);
+            return ButtonContainer.createFromParent(parent, driver, webDriverWait);
         }
     }
     
