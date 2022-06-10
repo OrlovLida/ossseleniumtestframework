@@ -18,6 +18,8 @@ import com.oss.framework.utils.WebElementUtils;
 public class MultiSearchField extends Input {
     private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
     private static final String SEARCH_ID = "search-box__button-search";
+    private static final String TAGS_INPUT_LABEL_CSS = ".tags-input__label";
+    private static final String INPUT_LABEL_CLASS = "oss-input__input-label";
 
     private MultiSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -51,7 +53,7 @@ public class MultiSearchField extends Input {
 
     @Override
     public Data getValue() {
-        return Data.createMultiData(webElement.findElements(By.xpath(".//span//span")).stream().map(value -> value.getAttribute("textContent")).collect(Collectors.toList()));
+        return Data.createMultiData(webElement.findElements(By.cssSelector(TAGS_INPUT_LABEL_CSS)).stream().map(value -> value.getAttribute("textContent")).collect(Collectors.toList()));
     }
 
     @Override
@@ -68,7 +70,7 @@ public class MultiSearchField extends Input {
 
     @Override
     public String getLabel() {
-        return webElement.findElement(By.xpath(".//span")).getText();
+        return webElement.findElement(By.className(INPUT_LABEL_CLASS)).getText();
     }
 
     private void clearSingle(WebElement closeButton) {
