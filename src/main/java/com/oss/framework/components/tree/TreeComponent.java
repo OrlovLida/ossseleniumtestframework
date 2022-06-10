@@ -36,7 +36,8 @@ public class TreeComponent {
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
     private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
-    
+    private static final String TREE_COMPONENT_NOT_TREE_COMPONENT_LOADER_CSSS = ".tree-component:not(.tree-component--loader)";
+
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
@@ -48,7 +49,7 @@ public class TreeComponent {
     }
     
     public static TreeComponent create(WebDriver driver, WebDriverWait webDriverWait, WebElement parent) {
-        DelayUtils.waitForNestedElements(webDriverWait, parent, By.className(TREE_CLASS));
+        DelayUtils.waitForNestedElements(webDriverWait, parent, By.cssSelector(TREE_COMPONENT_NOT_TREE_COMPONENT_LOADER_CSSS));
         WebElement treeComponent = parent.findElement(By.className(TREE_CLASS));
         return new TreeComponent(driver, webDriverWait, treeComponent);
     }
