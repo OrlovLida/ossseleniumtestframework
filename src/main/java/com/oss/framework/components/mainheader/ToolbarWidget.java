@@ -1,12 +1,13 @@
 package com.oss.framework.components.mainheader;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.inputs.Button;
+import com.oss.framework.components.inputs.ComponentFactory;
+import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.DelayUtils;
 
 public class ToolbarWidget {
@@ -19,11 +20,11 @@ public class ToolbarWidget {
     private static final String QUERY_CONTEXT_BUTTON_XPATH = ".//div[@class='query-context']//div[@role='button']";
     private static final String QUERY_CONTEXT_PANEL_XPATH =
             ".//div[@class='icon-dropdown-action-list query-context__dropdown']";
-    private static final String GLOBAL_SEARCH_INPUT_XPATH = ".//div[@class='oss-input__input-content']";
     private static final String SHARE_PANEL_ICON_XPATH = ".//*[@data-testid='ButtonShareView']";
     private static final String SHARE_PANEL_XPATH = ".//div[@data-testid='Share_view_popup']";
     private static final String VIEW_TITLE_XPATH = ".//div[contains(@class, 'header-title')]";
     private static final String CLOSE_SHARE_PANEL_ICON_ID = "Share_view_popup-close_button";
+    private static final String GLOBAL_SEARCH_ID = "global-search";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement toolbar;
@@ -86,13 +87,14 @@ public class ToolbarWidget {
         }
     }
 
-    // pending the solution of OSSWEB-9263
-    public void typeAndEnterInGlobalSearch(String value) {
-        WebElement input = getGlobalSearch().findElement(By.xpath(".//input"));
-        input.sendKeys(value);
-        DelayUtils.waitForSpinners(wait, getGlobalSearch());
-        input.sendKeys(Keys.ARROW_DOWN);
-        input.sendKeys(Keys.ENTER);
+    public void searchInGlobalSearch(String value) {
+        Input input = ComponentFactory.createFromParent(GLOBAL_SEARCH_ID, driver, wait, toolbar);
+        input.setSingleStringValue(value);
+    }
+
+    public void searchInGlobalSearchContains(String value) {
+        Input input = ComponentFactory.createFromParent(GLOBAL_SEARCH_ID, driver, wait, toolbar);
+        input.setSingleStringValueContains(value);
     }
 
     public String getUserName() {
@@ -110,11 +112,6 @@ public class ToolbarWidget {
 
     private boolean isOpen(String panelXpath) {
         return !driver.findElements(By.xpath(panelXpath)).isEmpty();
-    }
-
-    private WebElement getGlobalSearch() {
-        DelayUtils.waitByXPath(wait, GLOBAL_SEARCH_INPUT_XPATH);
-        return this.toolbar.findElement(By.xpath(GLOBAL_SEARCH_INPUT_XPATH));
     }
 
     private void callAction(String buttonXpath) {
