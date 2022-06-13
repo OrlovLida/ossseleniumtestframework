@@ -25,6 +25,7 @@ public class TableWidget extends Widget implements TableInterface {
     public static final String EXPORT_ACTION_ID = "exportButton";
     private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
+    private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "='%s'] " + TABLE_CONTENT_CSS;
     private static final int REFRESH_INTERVAL = 2000;
 
     private AdvancedSearch advancedSearch;
@@ -36,7 +37,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     public static TableWidget createById(WebDriver driver, String tableWidgetId, WebDriverWait webDriverWait) {
         Widget.waitForWidget(webDriverWait, TABLE_WIDGET_CLASS);
-        DelayUtils.waitBy(webDriverWait, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + tableWidgetId + "'] " + TABLE_CONTENT_CSS));
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, tableWidgetId)));
         return new TableWidget(driver, webDriverWait, tableWidgetId);
     }
 

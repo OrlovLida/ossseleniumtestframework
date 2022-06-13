@@ -35,6 +35,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
     private static final String TREE_TABLE_WIDGET_CLASS = "common-treetablewidgetgraphql";
     private static final int REFRESH_INTERVAL = 2000;
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
+    private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "='%s'] " + TABLE_CONTENT_CSS;
 
     private TreeTableWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -42,7 +43,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     public static TreeTableWidget createById(WebDriver driver, WebDriverWait wait, String widgetId) {
         Widget.waitForWidget(wait, TREE_TABLE_WIDGET_CLASS);
-        DelayUtils.waitBy(wait, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + widgetId + "'] " + TABLE_CONTENT_CSS));
+        DelayUtils.waitBy(wait, By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId)));
         return new TreeTableWidget(driver, wait, widgetId);
     }
 

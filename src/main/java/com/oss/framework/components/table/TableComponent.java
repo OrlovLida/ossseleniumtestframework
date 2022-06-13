@@ -40,6 +40,7 @@ public class TableComponent {
     private static final String NOT_CELL_CHECKBOX_CSS = ":not(.table-component__cell__checkbox)";
     private static final String CELL_ROW_PATTERN = "[" + DATA_ROW + "='%s']";
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
+    private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s'] ." + TABLE_COMPONENT_CLASS;
     
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
@@ -57,13 +58,9 @@ public class TableComponent {
     
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         DelayUtils.waitBy(webDriverWait,
-                By.cssSelector("[" + CSSUtils.TEST_ID + "= '" + widgetId + "'] ." + TABLE_COMPONENT_CLASS + " " + TABLE_CONTENT_CSS));
-        WebElement webElement = driver.findElement(By.xpath(getTableComponentPath(widgetId)));
+                By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId) + " " + TABLE_CONTENT_CSS));
+        WebElement webElement = driver.findElement(By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId)));
         return new TableComponent(driver, webDriverWait, webElement, widgetId);
-    }
-    
-    private static String getTableComponentPath(String widgetId) {
-        return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'" + TABLE_COMPONENT_CLASS + "')]";
     }
     
     public void selectRow(int index) {
