@@ -50,8 +50,7 @@ public class ComponentFactory {
                 return MultiCombobox.create(webDriver, wait, componentId);
             }
             case MULTI_SEARCH_FIELD:
-            case MULTI_SEARCHBOX:
-            case TAGS: {
+            case MULTI_SEARCHBOX: {
                 return MultiSearchField.create(webDriver, wait, componentId);
             }
             case NUMBER_FIELD: {
@@ -85,6 +84,9 @@ public class ComponentFactory {
             }
             case SWITCHER: {
                 return Switcher.create(webDriver, wait, componentId);
+            }
+            case TAGS: {
+                return Tags.create(webDriver, wait, componentId);
             }
             case TEXT_AREA: {
                 return TextArea.create(webDriver, wait, componentId);
@@ -132,8 +134,7 @@ public class ComponentFactory {
                 return MultiCombobox.createFromParent(parent, webDriver, wait, componentId);
             }
             case MULTI_SEARCH_FIELD:
-            case MULTI_SEARCHBOX:
-            case TAGS: {
+            case MULTI_SEARCHBOX: {
                 return MultiSearchField.createFromParent(parent, webDriver, wait, componentId);
             }
             case NUMBER_FIELD: {
@@ -167,6 +168,9 @@ public class ComponentFactory {
             }
             case SWITCHER: {
                 return Switcher.createFromParent(parent, webDriver, wait, componentId);
+            }
+            case TAGS: {
+                return Tags.createFromParent(parent, webDriver, wait, componentId);
             }
             case TEXT_AREA: {
                 return TextArea.createFromParent(parent, webDriver, wait, componentId);
