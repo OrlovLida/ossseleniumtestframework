@@ -295,6 +295,10 @@ public class OldTable extends Widget implements TableInterface {
         getAdvancedSearch().fullTextSearch(text);
     }
 
+    public void getColumnsHeaders() {
+        getColumns().keySet()
+    }
+
     private Column getColumn(String columnLabel) {
         Map<String, Column> columnsMap = getColumns();
         if (columnsMap.containsKey(columnLabel)) {
