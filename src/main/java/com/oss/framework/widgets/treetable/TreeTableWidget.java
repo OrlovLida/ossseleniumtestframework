@@ -9,6 +9,7 @@ package com.oss.framework.widgets.treetable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -19,6 +20,7 @@ import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.table.TableComponent;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.table.TableInterface;
@@ -29,9 +31,10 @@ import com.oss.framework.widgets.table.TableRow;
  */
 public class TreeTableWidget extends Widget implements TableInterface {
 
-    public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
     private static final String TREE_TABLE_WIDGET_CLASS = "common-treetablewidgetgraphql";
     private static final int REFRESH_INTERVAL = 2000;
+    private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
 
     private TreeTableWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -39,7 +42,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     public static TreeTableWidget createById(WebDriver driver, WebDriverWait wait, String widgetId) {
         Widget.waitForWidget(wait, TREE_TABLE_WIDGET_CLASS);
-        Widget.waitForWidgetById(wait, widgetId);
+        DelayUtils.waitBy(wait, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + widgetId + "'] " + TABLE_CONTENT_CSS));
         return new TreeTableWidget(driver, wait, widgetId);
     }
 
