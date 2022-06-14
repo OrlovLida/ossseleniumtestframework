@@ -41,6 +41,7 @@ public class TableComponent {
     private static final String CELL_ROW_PATTERN = "[" + DATA_ROW + "='%s']";
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
     private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s'] ." + TABLE_COMPONENT_CLASS;
+    private static final String TABLE_COMPONENT_ID_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s']." + TABLE_COMPONENT_CLASS;
     
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
@@ -61,6 +62,13 @@ public class TableComponent {
                 By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId) + " " + TABLE_CONTENT_CSS));
         WebElement webElement = driver.findElement(By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId)));
         return new TableComponent(driver, webDriverWait, webElement, widgetId);
+    }
+
+    public static TableComponent createByTableComponentId(WebDriver driver, WebDriverWait webDriverWait, String tableComponentId) {
+        DelayUtils.waitBy(webDriverWait,
+                By.cssSelector(String.format(TABLE_COMPONENT_ID_PATTERN, tableComponentId) + " " + TABLE_CONTENT_CSS));
+        WebElement webElement = driver.findElement(By.cssSelector(String.format(TABLE_COMPONENT_ID_PATTERN, tableComponentId)));
+        return new TableComponent(driver, webDriverWait, webElement, tableComponentId);
     }
     
     public void selectRow(int index) {
