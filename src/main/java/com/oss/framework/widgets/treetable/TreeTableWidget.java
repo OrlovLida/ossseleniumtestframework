@@ -175,6 +175,10 @@ public class TreeTableWidget extends Widget implements TableInterface {
         confirmFilter();
     }
 
+    public void clearAllFilters() {
+        getAdvancedSearch().clearAllFilters();
+    }
+
     @Override
     public void callAction(String actionId) {
         getContextActions().callActionById(actionId);
@@ -216,9 +220,13 @@ public class TreeTableWidget extends Widget implements TableInterface {
                 .filter(TableRow::isSelected).collect(Collectors.toList());
     }
 
+    public List<TableRow> getAllRows() {
+        return getTableComponent().getVisibleRows();
+    }
+
     @Override
     public String getCellValueById(int row, String columnId) {
-        return null;
+        return getTableComponent().getCellValue(row, columnId);
     }
 
     public void clickRow(int row) {
