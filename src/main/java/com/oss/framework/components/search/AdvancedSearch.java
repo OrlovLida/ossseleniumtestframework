@@ -18,6 +18,7 @@ import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class AdvancedSearch {
     public static final String SEARCH_COMPONENT_CLASS = "advanced-search_search";
@@ -236,8 +237,7 @@ public class AdvancedSearch {
     }
 
     private boolean isSearchPanelOpen() {
-        return !driver.findElements(By.cssSelector(ADVANCED_SEARCH_CSS))
-                .isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.cssSelector(ADVANCED_SEARCH_CSS));
     }
 
     private static class Tags {
