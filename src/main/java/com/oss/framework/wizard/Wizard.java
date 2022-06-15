@@ -56,10 +56,10 @@ public class Wizard {
         return new Wizard(driver, wait, webElement, wizardId);
     }
     
-    public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String componentId) {
-        Widget.waitForWidgetById(wait, componentId);
-        WebElement webElement = driver.findElement(By.xpath(String.format(BY_DATA_TEST_ID_PATTERN, componentId)));
-        return new Wizard(driver, wait, webElement, componentId);
+    public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String wizardId) {
+        Widget.waitForWidgetById(wait, wizardId);
+        WebElement webElement = driver.findElement(By.xpath(String.format(BY_DATA_TEST_ID_PATTERN, wizardId)));
+        return new Wizard(driver, wait, webElement, wizardId);
     }
     
     private static boolean isElementPresent(WebElement webElement, By by) {

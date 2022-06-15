@@ -47,15 +47,15 @@ public class TableComponent {
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement webElement;
-    private final String widgetId;
+    private final String id;
     
     private PaginationComponent paginationComponent;
     
-    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String widgetId) {
+    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String id) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.webElement = component;
-        this.widgetId = widgetId;
+        this.id = id;
     }
     
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
@@ -222,7 +222,7 @@ public class TableComponent {
     
     public PaginationComponent getPaginationComponent() {
         if (paginationComponent == null) {
-            WebElement parent = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+            WebElement parent = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']"));
             paginationComponent = PaginationComponent.createFromParent(parent);
         }
         return paginationComponent;
