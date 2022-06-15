@@ -42,7 +42,8 @@ public class TableComponent {
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
     private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s'] ." + TABLE_COMPONENT_CLASS;
     private static final String TABLE_COMPONENT_ID_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s']." + TABLE_COMPONENT_CLASS;
-    
+    private static final String COLUMN_MANAGER_BUTTON = ".table-component__management-btn button";
+
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement webElement;
@@ -64,7 +65,7 @@ public class TableComponent {
         return new TableComponent(driver, webDriverWait, webElement, widgetId);
     }
 
-    public static TableComponent createByTableComponentId(WebDriver driver, WebDriverWait webDriverWait, String tableComponentId) {
+    public static TableComponent createById(WebDriver driver, WebDriverWait webDriverWait, String tableComponentId) {
         DelayUtils.waitBy(webDriverWait,
                 By.cssSelector(String.format(TABLE_COMPONENT_ID_PATTERN, tableComponentId) + " " + TABLE_CONTENT_CSS));
         WebElement webElement = driver.findElement(By.cssSelector(String.format(TABLE_COMPONENT_ID_PATTERN, tableComponentId)));
@@ -232,7 +233,7 @@ public class TableComponent {
     }
     
     private WebElement getColumnsManagement() {
-        return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" + "']"));
+        return webElement.findElement(By.cssSelector(COLUMN_MANAGER_BUTTON));
     }
     
     public Row getRow(int index) {

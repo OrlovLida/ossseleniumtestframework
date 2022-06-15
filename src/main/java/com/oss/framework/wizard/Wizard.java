@@ -183,7 +183,7 @@ public class Wizard {
     }
     
     public TableComponent getTableComponent(String tableComponentId) {
-        return TableComponent.createByTableComponentId(driver, wait, tableComponentId);
+        return TableComponent.createById(driver, wait, tableComponentId);
     }
     
     private void clickButton(String xpath) {
