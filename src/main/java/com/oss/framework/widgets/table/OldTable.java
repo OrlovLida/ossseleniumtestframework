@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -166,6 +167,15 @@ public class OldTable extends Widget implements TableInterface {
         return getColumn(attributeLabel).getValueCell(index);
     }
 
+    public List<String> getRowValues(int index) {
+        List<String> columnHeaders = getActiveColumnHeaders();
+        List<String> rowValues = new ArrayList<>();
+        for (int i = 0; i <= columnHeaders.size(); i++) {
+            rowValues.add(getCellValue(index, columnHeaders.get(i)));
+        }
+        return rowValues;
+    }
+
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
@@ -295,8 +305,8 @@ public class OldTable extends Widget implements TableInterface {
         getAdvancedSearch().fullTextSearch(text);
     }
 
-    public void getColumnsHeaders() {
-        getColumns().keySet()
+    public List<String> getColumnsHeaders() {
+        return new ArrayList<>(getColumns().keySet());
     }
 
     private Column getColumn(String columnLabel) {
@@ -311,7 +321,7 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private Map<String, Column> createColumnsFilters() {
-        Map<String, Column> columnMap = Maps.newHashMap();
+        Map<String, Column> columnMap = Maps.newLinkedHashMap();
         DelayUtils.waitForNestedElements(webDriverWait, webElement, TABLE_COMPONENT_XPATH);
         List<Column> columns2 =
                 webElement.findElements(By.cssSelector(COLUMNS_WITHOUT_CHECKBOX_CSS))
@@ -328,7 +338,7 @@ public class OldTable extends Widget implements TableInterface {
         return columnMap;
     }
 
-    private Map<String, Column> getColumns() {
+    public Map<String, Column> getColumns() {
         if (columns == null) {
             columns = createColumnsFilters();
         }
@@ -376,7 +386,7 @@ public class OldTable extends Widget implements TableInterface {
         return advancedSearch;
     }
 
-    private static class Column {
+    public static class Column {
         private static final String FLEX_CLASS = "flex";
         private static final String LABEL_ATTRIBUTE = "label";
         private static final String CELL_ROW_XPATH = ".//div[contains(@class, 'Cell Row')]";
