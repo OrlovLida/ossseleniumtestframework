@@ -66,6 +66,10 @@ public class OldTreeTableWidget extends Widget {
         createTable().callActionByLabel(groupLabel, actionLabel);
     }
 
+    public void callActionById(String groupId, String actionId){
+        createTable().callAction(groupId, actionId);
+    }
+
     public void fullTextSearch(String text) {
         createTable().fullTextSearch(text);
     }

@@ -3,6 +3,7 @@ package com.oss.framework.widgets.table;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -14,6 +15,7 @@ import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -21,7 +23,9 @@ public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
     public static final String REFRESH_ACTION_ID = "refreshButton";
     public static final String EXPORT_ACTION_ID = "exportButton";
-    public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
+    private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "='%s'] " + TABLE_CONTENT_CSS;
     private static final int REFRESH_INTERVAL = 2000;
 
     private AdvancedSearch advancedSearch;
@@ -33,7 +37,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     public static TableWidget createById(WebDriver driver, String tableWidgetId, WebDriverWait webDriverWait) {
         Widget.waitForWidget(webDriverWait, TABLE_WIDGET_CLASS);
-        Widget.waitForWidgetById(webDriverWait, tableWidgetId);
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, tableWidgetId)));
         return new TableWidget(driver, webDriverWait, tableWidgetId);
     }
 

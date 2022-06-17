@@ -22,27 +22,27 @@ import com.oss.framework.utils.WebElementUtils;
  * @author Gabriela Zaranek
  */
 public class SearchBox extends Input {
-    
+
     private static final String INPUT_CSS = "input";
     private static final String DROPDOWN_CSS = ".ExtendedSearchResults.open";
     private static final String DATA_VALUE = "data-value";
-    
+
     SearchBox(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         super(driver, webDriverWait, componentId);
     }
-    
+
     SearchBox(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
         super(parent, driver, webDriverWait, componentId);
     }
-    
+
     public static SearchBox create(WebDriver driver, WebDriverWait wait, String componentId) {
         return new SearchBox(driver, wait, componentId);
     }
-    
+
     public static SearchBox createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         return new SearchBox(parent, driver, wait, componentId);
     }
-    
+
     @Override
     public void setValueContains(Data value) {
         typeValue(value.getStringValue());
@@ -50,20 +50,20 @@ public class SearchBox extends Input {
             getDropdown().selectOptionContains(value.getStringValue());
         }
     }
-    
+
     @Override
     public Data getValue() {
         return Data.createSingleData(webElement.findElement(By.cssSelector(INPUT_CSS)).getAttribute(DATA_VALUE));
     }
-    
+
     @Override
     public void setValue(Data value) {
         typeValue(value.getStringValue());
         if (isDropdownPresent()) {
-            getDropdown().selectOption(value.getStringValue());
+            getDropdown().selectOptionByTitle(value.getStringValue());
         }
     }
-    
+
     @Override
     public void clear() {
         DelayUtils.waitForClickability(webDriverWait, webElement);
@@ -71,7 +71,7 @@ public class SearchBox extends Input {
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }
-    
+
     private void typeValue(String value) {
         clear();
         webElement.click();
@@ -82,11 +82,11 @@ public class SearchBox extends Input {
                 .sendKeys(Keys.ENTER)
                 .perform();
     }
-    
+
     private boolean isDropdownPresent() {
         return WebElementUtils.isElementPresent(driver, By.cssSelector(DROPDOWN_CSS));
     }
-    
+
     private DropdownList getDropdown() {
         return DropdownList.create(driver, webDriverWait);
     }

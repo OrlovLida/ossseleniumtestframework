@@ -14,7 +14,7 @@ import com.oss.framework.utils.DelayUtils;
 
 public class Popup {
 
-    private static final String POPUP_CSS_SELECTOR = ".popupContainer";
+    private static final String POPUP_CSS_SELECTOR = ".popupContainer,.prompt-view";
     private static final String POPUP_TITLE_XPATH = ".//span[@class='popupTitle']";
     private static final String BUTTON_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')]";
 
@@ -22,14 +22,16 @@ public class Popup {
     protected final WebDriverWait wait;
     protected final WebElement webElement;
 
-    public Popup(WebDriver driver, WebDriverWait wait) {
+    private Popup(WebDriver driver, WebDriverWait wait, WebElement webElement) {
         this.wait = wait;
         this.driver = driver;
-        this.webElement = driver.findElement(By.className("popupContainer"));
+        this.webElement = webElement;
     }
 
     public static Popup create(WebDriver driver, WebDriverWait wait) {
-        return new Popup(driver, wait);
+        DelayUtils.waitBy(wait, By.cssSelector(POPUP_CSS_SELECTOR));
+        WebElement webElement = driver.findElement(By.cssSelector(POPUP_CSS_SELECTOR));
+        return new Popup(driver, wait, webElement);
     }
 
     public String getPopupTitle() {

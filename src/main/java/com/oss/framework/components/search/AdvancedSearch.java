@@ -18,6 +18,7 @@ import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class AdvancedSearch {
     public static final String SEARCH_COMPONENT_CLASS = "advanced-search_search";
@@ -29,7 +30,7 @@ public class AdvancedSearch {
     private static final String SEARCH_PANEL_OPEN_BUTTON = ".//button[@class='button-filters-panel']";
     private static final String TAG_CLOSE_BUTTON_PATH = ".//span[@class='md-input-close']";
     private static final String TAGS_SEPARATOR = ": ";
-    private static final String ADVANCED_SEARCH_XPATH = "//*[@class='advanced-search_panel'] | //*[@class='filters-box']";
+    private static final String ADVANCED_SEARCH_CSS = ".advanced-search_panel,.filters-box";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -225,8 +226,8 @@ public class AdvancedSearch {
     }
 
     private SearchPanel getSearchPanel() {
-        DelayUtils.waitBy(this.wait, By.xpath(ADVANCED_SEARCH_XPATH));
-        WebElement searchPanel = driver.findElement(By.xpath(ADVANCED_SEARCH_XPATH));
+        DelayUtils.waitBy(this.wait, By.cssSelector(ADVANCED_SEARCH_CSS));
+        WebElement searchPanel = driver.findElement(By.cssSelector(ADVANCED_SEARCH_CSS));
         DelayUtils.waitForSpinners(wait, searchPanel);
         return SearchPanel.create(this.driver, this.wait);
     }
@@ -236,8 +237,7 @@ public class AdvancedSearch {
     }
 
     private boolean isSearchPanelOpen() {
-        return !webElement.findElements(By.xpath(ADVANCED_SEARCH_XPATH))
-                .isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.cssSelector(ADVANCED_SEARCH_CSS));
     }
 
     private static class Tags {
