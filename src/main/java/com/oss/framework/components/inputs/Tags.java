@@ -16,7 +16,7 @@ import com.oss.framework.utils.WebElementUtils;
 
 public class Tags extends Input {
     private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
-    private static final String INPUT_LABEL_CSS = ".md-input-label-text";
+    private static final String SEARCH_CSS = "[aria-label='SEARCH']";
 
     private Tags(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -49,7 +49,7 @@ public class Tags extends Input {
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         dropdownList.selectOptionContains(value.getStringValue());
-        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(INPUT_LABEL_CSS)));
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_CSS)));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Tags extends Input {
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         dropdownList.selectOption(value.getStringValue());
-        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(INPUT_LABEL_CSS)));
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_CSS)));
     }
 
     @Override
