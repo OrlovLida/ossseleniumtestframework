@@ -47,7 +47,10 @@ public class Wizard {
         this.webElement = webElement;
         this.wizardId = wizardId;
     }
-    
+
+    /**
+     * @deprecated (to remove with next release 3.0.x, please use method createByComponentId(WebDriver driver, WebDriverWait wait, String wizardId))
+     */
     @Deprecated
     public static Wizard createWizard(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, OSS_WINDOW_XPATH);

@@ -15,6 +15,7 @@ import com.oss.framework.utils.WebElementUtils;
 public class NotificationPreview {
 
     private static final String NOTIFICATION_PREVIEW_CLASS = "notification-preview";
+    private static final String NOTIFICATION_PREVIEW_PATTERN = "[data-testid='%s']";
     private static final String RICH_TEXT_CLASS = "OSSRichText";
     private static final String CHANNEL_CLASS = "im-channel";
     private static final String ICON_XPATH = ".//i[contains(@class, 'OSSIcon')]";
@@ -34,9 +35,19 @@ public class NotificationPreview {
         this.notificationPreviewElement = notificationPreviewElement;
     }
 
+    /**
+     * @deprecated (to remove with next release 1.1.x or 2.0.x because component now has an id)
+     */
+    @Deprecated
     public static NotificationPreview create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitBy(wait, By.className(NOTIFICATION_PREVIEW_CLASS));
         WebElement notificationPreview = driver.findElement(By.className(NOTIFICATION_PREVIEW_CLASS));
+        return new NotificationPreview(driver, wait, notificationPreview);
+    }
+
+    public static NotificationPreview createById(WebDriver driver, WebDriverWait wait, String componentId) {
+        DelayUtils.waitBy(wait, By.cssSelector(String.format(NOTIFICATION_PREVIEW_PATTERN, componentId)));
+        WebElement notificationPreview = driver.findElement(By.cssSelector(String.format(NOTIFICATION_PREVIEW_PATTERN, componentId)));
         return new NotificationPreview(driver, wait, notificationPreview);
     }
 

@@ -63,6 +63,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String TABLE_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String TEXT_ICON_CLASS = "OSSRichTextIcon";
     private static final String SEARCH_SELECTOR = "[aria-label='SEARCH']";
+    private static final String CLASS_ATTRIBUTE = "class";
 
     private AdvancedSearch advancedSearch;
     private Map<String, Column> columns;
@@ -96,7 +97,7 @@ public class OldTable extends Widget implements TableInterface {
                 .filter(webElement -> webElement.findElements(By.cssSelector(HREF_CSS)).isEmpty())
                 .map(columnElement -> new Column(columnElement, webDriverWait, driver))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException(NO_AVAILABLE_ROWS)).clickCell(row);
+                .orElseThrow(() -> new NoSuchElementException(NO_AVAILABLE_ROWS)).selectCellByIndex(row);
     }
 
     @Override
@@ -141,9 +142,7 @@ public class OldTable extends Widget implements TableInterface {
 
     @Override
     public boolean hasNoData() {
-        List<WebElement> noData = webElement
-                .findElements(By.xpath(NO_DATA_XPATH));
-        return !noData.isEmpty();
+        return WebElementUtils.isElementPresent(webElement, By.xpath(NO_DATA_XPATH));
     }
 
     @Override
@@ -160,7 +159,7 @@ public class OldTable extends Widget implements TableInterface {
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
-        getColumn(attributeLabel).clickCell(value);
+        getColumn(attributeLabel).selectCellByValue(value);
     }
 
     public String getCellValue(int index, String attributeLabel) {
@@ -246,6 +245,11 @@ public class OldTable extends Widget implements TableInterface {
     @Override
     public String getCellValueById(int row, String columnId) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
+    }
+
+    public void unselectRow(String attributeLabel, String value) {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        getColumn(attributeLabel).unselectCellByValue(value);
     }
 
     public Column clearColumnValue(String attributeLabel) {
@@ -397,6 +401,8 @@ public class OldTable extends Widget implements TableInterface {
         private static final String CELL_XPATH = ".//div[contains(@class, 'Cell')]";
         private static final String CANNOT_FIND_ROW_EXCEPTION = "Cannot find a row with the provided value.";
         private static final String CANNOT_FIND_CELL_EXCEPTION = "Cannot find a cell with the provided value.";
+        private static final String CELL_ALREADY_SELECTED_LOG = "The cell you want to select is already selected.";
+        private static final String CELL_ALREADY_UNSELECTED_LOG = "The cell you want to unselect is already unselected.";
 
         private final WebElement columnElement;
         private final WebDriverWait wait;
@@ -419,11 +425,38 @@ public class OldTable extends Widget implements TableInterface {
             throw new NoSuchElementException(CANNOT_FIND_ROW_EXCEPTION);
         }
 
-        public void clickCell(int index) {
+        private void selectCellByIndex(int index) {
             WebElement cell = getCellByIndex(index);
-            WebElementUtils.moveToElement(driver, cell);
-            Actions action = new Actions(driver);
-            action.click(cell).perform();
+            selectCell(cell);
+        }
+
+        private void selectCellByValue(String value) {
+            selectCell(getCell(value));
+        }
+
+        private void unselectCellByValue(String value) {
+            unselectCell(getCell(value));
+        }
+
+        private void unselectCell(WebElement cell) {
+            if (!isSelected(cell)) {
+                log.debug(CELL_ALREADY_UNSELECTED_LOG);
+                return;
+            }
+            WebElementUtils.clickWebElement(driver, cell);
+        }
+
+        private void selectCell(WebElement cell) {
+            if (isSelected(cell)) {
+                log.debug(CELL_ALREADY_SELECTED_LOG);
+                return;
+            }
+            WebElementUtils.clickWebElement(driver, cell);
+        }
+
+        private boolean isSelected(WebElement cell) {
+            String cellClass = cell.getAttribute(CLASS_ATTRIBUTE);
+            return cellClass.endsWith(" selected");
         }
 
         private String getCellText(WebElement cell) {
@@ -464,15 +497,7 @@ public class OldTable extends Widget implements TableInterface {
 
         private boolean isColumnWithSearchPresent() {
             moveToHeader();
-            return !columnElement.findElements(By.cssSelector(SEARCH_SELECTOR)).isEmpty();
-        }
-
-        private void clickCell(String value) {
-            moveToHeader();
-            List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
-            WebElement element = cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
-            Actions action = new Actions(driver);
-            action.click(element).perform();
+            return WebElementUtils.isElementPresent(columnElement, By.cssSelector(SEARCH_SELECTOR));
         }
 
         private String getValueCell(int index) {
@@ -499,6 +524,12 @@ public class OldTable extends Widget implements TableInterface {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_XPATH));
             return cells.get(index);
+        }
+
+        private WebElement getCell(String value) {
+            moveToHeader();
+            List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
+            return cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
         }
 
         private int countRows() {
@@ -535,7 +566,6 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private static class PredefinedFilter {
-        private static final String CLASS_ATTRIBUTE = "class";
         private static final String TOGGLE_BUTTON_XPATH = ".//span[contains(@class,'ToggleButton')]";
         private static final String NO_PREDEFINED_FILTER_EXCEPTION = "There is no Predefined Filter";
 
@@ -566,7 +596,6 @@ public class OldTable extends Widget implements TableInterface {
         private boolean isFilterSelected() {
             return predefinedFilterElement.getAttribute(CLASS_ATTRIBUTE).contains("active");
         }
-
     }
 
     private static class AttributeChooser {

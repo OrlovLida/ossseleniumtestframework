@@ -49,9 +49,12 @@ public class ComponentFactory {
             case MULTI_COMBOBOX: {
                 return MultiCombobox.create(webDriver, wait, componentId);
             }
-            case MULTI_SEARCH_FIELD:
-            case MULTI_SEARCHBOX: {
+            case MULTI_SEARCH_FIELD: {
                 return MultiSearchField.create(webDriver, wait, componentId);
+            }
+            case MULTI_SEARCHBOX:
+            case TAGS: {
+                return Tags.create(webDriver, wait, componentId);
             }
             case NUMBER_FIELD: {
                 return NumberField.create(webDriver, wait, componentId);
@@ -84,9 +87,6 @@ public class ComponentFactory {
             }
             case SWITCHER: {
                 return Switcher.create(webDriver, wait, componentId);
-            }
-            case TAGS: {
-                return Tags.create(webDriver, wait, componentId);
             }
             case TEXT_AREA: {
                 return TextArea.create(webDriver, wait, componentId);
@@ -133,9 +133,12 @@ public class ComponentFactory {
             case MULTI_COMBOBOX: {
                 return MultiCombobox.createFromParent(parent, webDriver, wait, componentId);
             }
-            case MULTI_SEARCH_FIELD:
-            case MULTI_SEARCHBOX: {
+            case MULTI_SEARCH_FIELD: {
                 return MultiSearchField.createFromParent(parent, webDriver, wait, componentId);
+            }
+            case MULTI_SEARCHBOX:
+            case TAGS: {
+                return Tags.createFromParent(parent, webDriver, wait, componentId);
             }
             case NUMBER_FIELD: {
                 return NumberField.createFromParent(parent, webDriver, wait, componentId);
@@ -168,9 +171,6 @@ public class ComponentFactory {
             }
             case SWITCHER: {
                 return Switcher.createFromParent(parent, webDriver, wait, componentId);
-            }
-            case TAGS: {
-                return Tags.createFromParent(parent, webDriver, wait, componentId);
             }
             case TEXT_AREA: {
                 return TextArea.createFromParent(parent, webDriver, wait, componentId);

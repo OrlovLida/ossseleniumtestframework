@@ -1,13 +1,8 @@
 package com.oss.framework.components.inputs.datetime;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Month;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,19 +13,25 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 
 public class DatePicker {
-    private static final String TODAY_BUTTON_XPATH = ".//button[text()='Today']";
-    private final WebElement webElement;
-    private final By prev = By.xpath(".//span[contains(@class,'prev')]");
-    private final By next = By.xpath(".//span[contains(@class,'next')]");
+    private static final By TODAY_BUTTON = By.xpath(".//button[@class='DayPicker-TodayButton btn btn-primary']");
+    private static final By PREV_YEAR = By.xpath(".//span[@class='DayPicker-NavButton DayPicker-NavButton-year--prev']");
+    private static final By PREV_MONTH = By.xpath(".//span[contains(@class, 'DayPicker-NavButton DayPicker-NavButton--prev')]");
+    private static final By NEXT_YEAR = By.xpath(".//span[@class='DayPicker-NavButton DayPicker-NavButton-year--next']");
+    private static final By NEXT_MONTH = By.xpath(".//span[contains(@class, 'DayPicker-NavButton DayPicker-NavButton--next')]");
+    private static final String DATE_TIME_PICKER_ID = "dateTimePicker";
 
-    public DatePicker(WebElement webElement) {
+    private final WebElement webElement;
+    private final String componentId;
+
+    private DatePicker(WebElement webElement, String componentId) {
         this.webElement = webElement;
+        this.componentId = componentId;
     }
 
     public static DatePicker create(WebDriver driver, WebDriverWait wait, String componentId) {
+        DelayUtils.waitForPresence(wait, By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
         WebElement dayPicker = driver.findElement(By.xpath(".//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
-        DelayUtils.waitByXPath(wait, ".//span[contains(@class,'next')]");
-        return new DatePicker(dayPicker);
+        return new DatePicker(dayPicker, componentId);
     }
 
     // yyyy-mm-dd
@@ -39,50 +40,35 @@ public class DatePicker {
         int day = Integer.parseInt(dateList.get(2));
         int month = Integer.parseInt(dateList.get(1));
         int year = Integer.parseInt(dateList.get(0));
-
-        if (year == getCalendarYear()) {
-            if (month > getCalendarMonth()) {
-                int monthDifference = month - getCalendarMonth();
-                for (int i = 0; i < monthDifference; i++) {
-                    next().click();
-                }
-            } else if (month < getCalendarMonth()) {
-                int monthDifference = getCalendarMonth() - month;
-                for (int i = 0; i < monthDifference; i++) {
-                    prev().click();
-                }
-            }
-        } else if (year > getCalendarYear()) {
-            setYear(year);
-            for (int i = 0; i < month - 1; i++) {
-                next().click();
-            }
-        } else if (year < getCalendarYear()) {
-            setYear(year);
-            for (int i = 0; i < 12 - month; i++) {
-                prev().click();
-            }
-        }
+        setYear(year);
+        setMonth(month);
         setDay(day);
     }
 
     private void setYear(int year) {
         while (getCalendarYear() != year) {
             if (getCalendarYear() < year) {
-                next().click();
+                clickArrow(getNextYearButton());
             } else {
-                prev().click();
+                clickArrow(getPreviousYearButton());
             }
             DelayUtils.sleep(80);
         }
     }
 
-    private WebElement prev() {
-        return webElement.findElement(prev);
+    private void setMonth(int month) {
+        while (getCalendarMonth() != month) {
+            if (getCalendarMonth() < month) {
+                clickArrow(NEXT_MONTH);
+            } else {
+                clickArrow(PREV_MONTH);
+            }
+            DelayUtils.sleep(80);
+        }
     }
 
-    private WebElement next() {
-        return webElement.findElement(next);
+    private void clickArrow(By arrowBy) {
+        webElement.findElement(arrowBy).click();
     }
 
     private void setDay(int day) {
@@ -90,29 +76,34 @@ public class DatePicker {
     }
 
     private int getCalendarYear() {
-        String calendarTitle = webElement
-                .findElement(By.xpath(".//div[contains(@class,'DayPicker-Caption')]")).getText();
-        return Integer.parseInt(calendarTitle.substring(calendarTitle.length() - 4));
+        return Integer.parseInt(getCurrentCalendarTitle()[1]);
     }
 
     private int getCalendarMonth() {
-        WebElement selectedDay = webElement.findElements(By.className("DayPicker-Day")).stream()
-                .filter(day -> day.getAttribute("aria-selected").equals("true")).findFirst().orElseThrow(() -> new NoSuchElementException("Cannot select day"));
-        String selectedDate = selectedDay.getAttribute("aria-label");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.ENGLISH);
-        Date date = null;
-        try {
-            date = simpleDateFormat.parse(selectedDate);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Cannot parse date");
-        }
-        Calendar givenDate = Calendar.getInstance();
-        givenDate.setTime(date);
+        Month month = Month.valueOf(getCurrentCalendarTitle()[0].toUpperCase());
+        return month.getValue();
+    }
 
-        return givenDate.get(Calendar.MONTH) + 1;
+    private String[] getCurrentCalendarTitle() {
+        return webElement
+                .findElement(By.xpath(".//div[contains(@class,'DayPicker-Caption')]")).getText().split(" ");
     }
 
     private void setToday() {
-        webElement.findElement(By.xpath(TODAY_BUTTON_XPATH)).click();
+        webElement.findElement(TODAY_BUTTON).click();
+    }
+
+    private By getNextYearButton() {
+        if (componentId.equals(DATE_TIME_PICKER_ID)) {
+            return NEXT_MONTH;
+        }
+        return NEXT_YEAR;
+    }
+
+    private By getPreviousYearButton() {
+        if (componentId.equals(DATE_TIME_PICKER_ID)) {
+            return PREV_MONTH;
+        }
+        return PREV_YEAR;
     }
 }
