@@ -20,17 +20,6 @@ public class AdvancedSearchWidget extends Widget {
     
     private AdvancedSearchWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement webElement) {
         super(driver, webDriverWait, widgetId, webElement);
-        
-    }
-    
-    /**
-     * @deprecated (to remove with next release 2.0.x because component now has an id)
-     */
-    @Deprecated
-    public static AdvancedSearchWidget create(WebDriver driver, WebDriverWait wait) {
-        waitForWidget(wait, ADVANCED_SEARCH_WIDGET_CLASS);
-        WebElement webElement = driver.findElement(By.className(ADVANCED_SEARCH_WIDGET_CLASS));
-        return new AdvancedSearchWidget(driver, wait, "advancedSearch", webElement);
     }
     
     public static AdvancedSearchWidget createById(WebDriver driver, WebDriverWait wait, String widgetId) {
@@ -48,7 +37,7 @@ public class AdvancedSearchWidget extends Widget {
     }
     
     /**
-     * @deprecated (to remove with next release 2.0.x, please use method getTableComponent())
+     * @deprecated (to remove with next release 3.0.x, please use method getTableComponent())
      */
     @Deprecated
     public TableComponent getTableComponent(String widgetId) {
