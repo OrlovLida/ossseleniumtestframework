@@ -27,6 +27,11 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String PROPERTY_VALUE_PATH =
             ".//div[@class='propertyPanelRow-value']";
     private static final String DRAGGABLE_ELEMENT_CSS = ".btn-drag";
+    private static final String ID_ATTRIBUTE = "id";
+    private static final String VALUE_ATTRIBUTE = "value";
+    private static final String ACTION_SETTINGS_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='chooseAttributes']";
+    private static final String ACTIONS_DROPDOWN_CLASS = "actionsDropdown";
+    private static final String SEARCH_XPATH = "//ancestor::div[@" + CSSUtils.TEST_ID + "='PropertyPanelWidget-search']";
 
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id, WebElement propertyPanel) {
         super(driver, wait, id, propertyPanel);
@@ -51,7 +56,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public List<String> getVisibleAttributes() {
         List<String> propertyId = new ArrayList<>();
         for (WebElement element : getProperties()) {
-            propertyId.add(element.getAttribute("id"));
+            propertyId.add(element.getAttribute(ID_ATTRIBUTE));
         }
         return propertyId;
     }
@@ -61,12 +66,12 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public void hideEmpty() {
-        if (getSwitcher().findElement(By.xpath(INPUT)).getAttribute("value").equals("false"))
+        if (getSwitcher().findElement(By.xpath(INPUT)).getAttribute(VALUE_ATTRIBUTE).equals("false"))
             getSwitcher().click();
     }
 
     public void showEmpty() {
-        if (getSwitcher().findElement(By.xpath(INPUT)).getAttribute("value").equals("true"))
+        if (getSwitcher().findElement(By.xpath(INPUT)).getAttribute(VALUE_ATTRIBUTE).equals("true"))
             getSwitcher().click();
     }
 
@@ -124,14 +129,14 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private void openActionSettings() {
-        WebElement actionList = driver.findElement(By.className("actionsDropdown"));
-        actionList.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='chooseAttributes']")).click();
+        WebElement actionList = driver.findElement(By.className(ACTIONS_DROPDOWN_CLASS));
+        actionList.findElement(By.xpath(ACTION_SETTINGS_XPATH)).click();
     }
 
     private Map<String, WebElement> getPropertiesMap() {
         Map<String, WebElement> properties = Maps.newHashMap();
         for (WebElement element : getProperties()) {
-            properties.put(element.getAttribute("id"), element);
+            properties.put(element.getAttribute(ID_ATTRIBUTE), element);
         }
         return properties;
     }
@@ -156,7 +161,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         }
 
         private WebElement createSearch() {
-            WebElement search = webElement.findElement(By.xpath("//ancestor::div[@" + CSSUtils.TEST_ID + "='PropertyPanelWidget-search']"));
+            WebElement search = webElement.findElement(By.xpath(SEARCH_XPATH));
             return search.findElement(By.xpath(INPUT));
         }
 
