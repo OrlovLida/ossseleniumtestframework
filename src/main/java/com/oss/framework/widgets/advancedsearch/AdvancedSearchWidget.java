@@ -10,7 +10,7 @@ import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.table.TableComponent;
-import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.widgets.Widget;
 
 public class AdvancedSearchWidget extends Widget {
@@ -23,17 +23,20 @@ public class AdvancedSearchWidget extends Widget {
         
     }
     
+    /**
+     * @deprecated (to remove with next release 2.0.x because component now has an id)
+     */
     @Deprecated
     public static AdvancedSearchWidget create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, "//*[contains(@class,'" + ADVANCED_SEARCH_WIDGET_CLASS + "')]");
+        waitForWidget(wait, ADVANCED_SEARCH_WIDGET_CLASS);
         WebElement webElement = driver.findElement(By.className(ADVANCED_SEARCH_WIDGET_CLASS));
         return new AdvancedSearchWidget(driver, wait, "advancedSearch", webElement);
     }
     
-    public static AdvancedSearchWidget createById(WebDriver driver, WebDriverWait wait, String id) {
-        DelayUtils.waitByXPath(wait, "//*[@id='" + id + "']");
-        WebElement webElement = driver.findElement(By.xpath("//*[@id='" + id + "']"));
-        return new AdvancedSearchWidget(driver, wait, id, webElement);
+    public static AdvancedSearchWidget createById(WebDriver driver, WebDriverWait wait, String widgetId) {
+        waitForWidgetById(wait, widgetId);
+        WebElement webElement = driver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
+        return new AdvancedSearchWidget(driver, wait, widgetId, webElement);
     }
     
     public Input getComponent(String componentId, ComponentType componentType) {
@@ -44,13 +47,16 @@ public class AdvancedSearchWidget extends Widget {
         getAdvancedSearch().setFilter(componentId, value);
     }
     
+    /**
+     * @deprecated (to remove with next release 2.0.x, please use method getTableComponent())
+     */
     @Deprecated
     public TableComponent getTableComponent(String widgetId) {
-        return TableComponent.create(this.driver, webDriverWait, widgetId);
+        return TableComponent.create(driver, webDriverWait, widgetId);
     }
     
     public TableComponent getTableComponent() {
-        return TableComponent.create(this.driver, webDriverWait, id);
+        return TableComponent.create(driver, webDriverWait, id);
     }
     
     public void clickAdd() {
