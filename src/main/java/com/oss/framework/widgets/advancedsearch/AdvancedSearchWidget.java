@@ -16,8 +16,7 @@ import com.oss.framework.widgets.Widget;
 public class AdvancedSearchWidget extends Widget {
     
     private static final String ADD_BTN_PATH = ".//a[text()='Add']";
-    private static final String ADVANCED_SEARCH_WIDGET_CLASS = "common-advancedsearchwidget";
-    
+
     private AdvancedSearchWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement webElement) {
         super(driver, webDriverWait, widgetId, webElement);
     }
@@ -58,6 +57,6 @@ public class AdvancedSearchWidget extends Widget {
     }
     
     private AdvancedSearch getAdvancedSearch() {
-        return AdvancedSearch.createByClass(driver, webDriverWait, ADVANCED_SEARCH_WIDGET_CLASS);
+        return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
     }
 }
