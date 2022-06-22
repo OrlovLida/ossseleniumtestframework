@@ -14,6 +14,7 @@ import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class PropertyPanel extends Widget implements PropertyPanelInterface {
@@ -41,6 +42,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public List<String> getPropertyLabels() {
         List<String> labels = new ArrayList<>();
         for (WebElement element : this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
+            WebElementUtils.moveToElement(driver, element);
             labels.add(element.getText());
         }
         return labels;
@@ -112,7 +114,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
     private AttributesChooser getAttributesChooser() {
         webElement.findElement(By.className(PROPERTIES_FILTER_PANEL_CLASS)).click();
-        openActionSettings("chooseAttributes");
+        openActionSettings();
         return AttributesChooser.create(driver, webDriverWait);
     }
 
@@ -121,9 +123,9 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         return propertyPanelWrapper.findElement(By.cssSelector("div.switcher"));
     }
 
-    private void openActionSettings(String actionId) {
+    private void openActionSettings() {
         WebElement actionList = driver.findElement(By.className("actionsDropdown"));
-        actionList.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + actionId + "']")).click();
+        actionList.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='chooseAttributes']")).click();
     }
 
     private Map<String, WebElement> getPropertiesMap() {
