@@ -96,7 +96,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
     public void waitForMessageDisappear() {
         DelayUtils.waitForElementDisappear(wait, driver.findElement(By.className(SYSTEM_MESSAGE_ITEM_CLASS)));
     }
-    
+
+    /**
+     * @deprecated (to remove with next release 3.0.x, method is redundant)
+     */
     @Override
     @Deprecated
     public boolean isErrorDisplayed(boolean printErrors) {
@@ -130,7 +133,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
             DelayUtils.waitForPresence(wait, By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
         }
     }
-    
+
+    /**
+     * @deprecated (to remove with next release 3.0.x, method is redundant)
+     */
     @Deprecated
     private void printErrors(List<String> messages) {
         messages
