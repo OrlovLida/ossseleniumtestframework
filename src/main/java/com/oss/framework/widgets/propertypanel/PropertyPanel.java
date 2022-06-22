@@ -14,6 +14,7 @@ import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class PropertyPanel extends Widget implements PropertyPanelInterface {
@@ -41,6 +42,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public List<String> getPropertyLabels() {
         List<String> labels = new ArrayList<>();
         for (WebElement element : this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
+            WebElementUtils.moveToElement(driver, element);
             labels.add(element.getText());
         }
         return labels;
