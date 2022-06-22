@@ -85,6 +85,11 @@ public class TreeWidget extends Widget {
         return treeRow.isExpanded();
     }
 
+    public void callActionById(String id) {
+        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
+        actionsContainer.callActionById(id);
+    }
+
     public void callActionById(String groupLabel, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
         actionsContainer.callActionById(groupLabel, id);

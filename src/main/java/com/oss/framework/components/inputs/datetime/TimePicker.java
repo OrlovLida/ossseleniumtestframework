@@ -13,8 +13,6 @@ import com.oss.framework.utils.DelayUtils;
 
 public class TimePicker {
     private final WebDriver driver;
-    private final WebElement webElement;
-    private final WebDriverWait webDriverWait;
 
     private final By hoursContainer = By.xpath("(//div[@class='timePicker-valuePickerContainer'])[1]");
     private final By minutesContainer = By.xpath("(//div[@class='timePicker-valuePickerContainer'])[2]");
@@ -23,17 +21,14 @@ public class TimePicker {
     private final By downButton = By.xpath(".//div[contains(@class,'navButton--less')]");
     private final By value = By.xpath(".//div[@class='timePicker-value']");
 
-    public TimePicker(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
-        this.webElement = webElement;
-        this.webDriverWait = webDriverWait;
+    private TimePicker(WebDriver driver) {
         this.driver = driver;
     }
 
     public static TimePicker create(WebDriver driver, WebDriverWait webDriverWait) {
         String timePickerXpath = "//div[@" + CSSUtils.TEST_ID + "='dateTimePicker']";
         DelayUtils.waitByXPath(webDriverWait, timePickerXpath);
-        WebElement timePicker = driver.findElement(By.xpath(timePickerXpath));
-        return new TimePicker(driver, webDriverWait, timePicker);
+        return new TimePicker(driver);
     }
 
     public void chooseTime(String time) {

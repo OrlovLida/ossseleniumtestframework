@@ -34,7 +34,7 @@ public class LayoutPanel {
     public void changeLayout(LayoutType layout) {
         this.layoutPanelElement.findElement(By.xpath(CHART_LAYOUT_BUTTON_ID + layout.label + "']")).click();
 
-        log.debug(CLICK_BTN + layout.label + " layout");
+        log.debug("{}{} layout", CLICK_BTN, layout.label);
         log.info("Changed layout to {}", layout.label);
     }
 
@@ -45,12 +45,12 @@ public class LayoutPanel {
     }
 
     public enum LayoutType {
-        LAYOUT_1x1("1x1"),
-        LAYOUT_2x1("2x1"),
-        LAYOUT_2x2("2x2"),
-        LAYOUT_3x2("3x2"),
-        LAYOUT_3x3("3x3"),
-        LAYOUT_4x4("4x4"),
+        LAYOUT_1X1("1x1"),
+        LAYOUT_2X1("2x1"),
+        LAYOUT_2X2("2x2"),
+        LAYOUT_3X2("3x2"),
+        LAYOUT_3X3("3x3"),
+        LAYOUT_4X4("4x4"),
         LAYOUT_AUTO("auto");
 
         public final String label;

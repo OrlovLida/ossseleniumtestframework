@@ -63,7 +63,7 @@ public class KpiToolbarPanel extends Widget {
         if (!isTopNPanelOpen()) {
             clickTopNButton();
         }
-        return TopNPanel.create(driver, webDriverWait);
+        return TopNPanel.create(driver);
     }
 
     public ExportPanel openExportPanel() {
@@ -77,7 +77,7 @@ public class KpiToolbarPanel extends Widget {
         if (!isFilterPanelOpen()) {
             clickFilterButton();
         }
-        return FiltersPanel.create(driver, webDriverWait);
+        return FiltersPanel.create(driver);
     }
 
     public void clickApply() {
