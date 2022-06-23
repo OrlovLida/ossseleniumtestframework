@@ -21,10 +21,9 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
     public static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
     private static final String INPUT = ".//input";
-    private static final String PROPERTY_PATH = ".//div[contains(@class, 'propertyPanelRow row')]";
-    private static final String PROPERTY_NAME_PATH = ".//div[@class='propertyPanelRow-label']";
-    private static final String PROPERTY_VALUE_PATH =
-            ".//div[@class='propertyPanelRow-value']";
+    private static final String PROPERTY_CSS = ".propertyPanelRow";
+    private static final String PROPERTY_NAME_CSS = ".propertyPanelRow-label";
+    private static final String PROPERTY_VALUE_CSS = ".propertyPanelRow-value";
     private static final String DRAGGABLE_ELEMENT_CSS = ".btn-drag";
 
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id, WebElement propertyPanel) {
@@ -40,7 +39,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
     public List<String> getPropertyLabels() {
         List<String> labels = new ArrayList<>();
-        for (WebElement element : this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH))) {
+        for (WebElement element : this.webElement.findElements(By.cssSelector(PROPERTY_NAME_CSS))) {
             labels.add(element.getText());
         }
         return labels;
@@ -83,8 +82,8 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     @Override
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
-        if (!properties.get(propertyName).findElements(By.xpath(PROPERTY_VALUE_PATH)).isEmpty()) {
-            return properties.get(propertyName).findElement(By.xpath(PROPERTY_VALUE_PATH)).getText();
+        if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
+           return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getText();
         } else {
             return "";
         }
@@ -106,7 +105,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private DragAndDrop.DropElement getDropElement(int position) {
-        WebElement target = this.webElement.findElements(By.xpath(PROPERTY_NAME_PATH)).get(position);
+        WebElement target = this.webElement.findElements(By.cssSelector(PROPERTY_NAME_CSS)).get(position);
         return new DragAndDrop.DropElement(target);
     }
 
@@ -139,7 +138,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private List<WebElement> getProperties() {
-        return this.webElement.findElements(By.xpath(PROPERTY_PATH));
+        return this.webElement.findElements(By.cssSelector(PROPERTY_CSS));
     }
 
     public static class Search {
