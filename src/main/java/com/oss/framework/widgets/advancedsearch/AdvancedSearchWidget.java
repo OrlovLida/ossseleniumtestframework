@@ -11,12 +11,14 @@ import com.oss.framework.components.inputs.Input.ComponentType;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class AdvancedSearchWidget extends Widget {
     
     private static final String ADD_BTN_PATH = ".//a[text()='Add']";
-
+    private static final String CANCEL_BTN_CSS = "[" + CSSUtils.TEST_ID + "= 'cancelButton']";
+    
     private AdvancedSearchWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement webElement) {
         super(driver, webDriverWait, widgetId, webElement);
     }
@@ -48,7 +50,11 @@ public class AdvancedSearchWidget extends Widget {
     }
     
     public void clickAdd() {
-        this.webElement.findElement(By.xpath(ADD_BTN_PATH)).click();
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(ADD_BTN_PATH)));
+    }
+    
+    public void clickCancel() {
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(CANCEL_BTN_CSS)));
     }
     
     public Multimap<String, String> getAppliedFilters() {
