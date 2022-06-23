@@ -29,6 +29,7 @@ public class OldTreeTableWidget extends Widget {
     }
 
     public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
+        Widget.waitForWidgetById(wait, dataAttributeName);
         return new OldTreeTableWidget(driver, wait, dataAttributeName);
     }
 
@@ -63,6 +64,10 @@ public class OldTreeTableWidget extends Widget {
 
     public void callActionByLabel(String groupLabel, String actionLabel) {
         createTable().callActionByLabel(groupLabel, actionLabel);
+    }
+
+    public void callActionById(String groupId, String actionId){
+        createTable().callAction(groupId, actionId);
     }
 
     public void fullTextSearch(String text) {

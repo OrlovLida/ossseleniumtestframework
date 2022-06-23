@@ -54,8 +54,7 @@ public class WebElementUtils {
 
     public static void moveToElement(WebDriver driver, WebElement webElement) {
         if (!isDisplayedInViewport(webElement)) {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });", webElement);
-            DelayUtils.sleep();
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({ behavior: 'instant', block: 'center', inline: 'center' });", webElement);
         }
         Actions actions = new Actions(driver);
         actions.moveToElement(webElement).build().perform();

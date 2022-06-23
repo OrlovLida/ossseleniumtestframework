@@ -19,8 +19,8 @@ import com.oss.framework.utils.WebElementUtils;
 public class SearchPanel {
     private static final String ADVANCED_SEARCH_PANEL_CLASS = "advanced-search_panel";
     private static final String FILTERS_PATH = ".//div[@class='filter_wrapper']";
-    private static final String INPUT_LABEL_PATH = ".//span[@class='md-input-label-text']";
-    private static final String NEW_COMBOBOX_LABEL_PATH = ".//*[@class='oss-input__input-label']";
+    private static final String INPUT_LABEL_CSS = ".md-input-label-text";
+    private static final String NEW_COMBOBOX_LABEL_PATH = ".oss-input__input-label";
     private static final String INPUT_PATH = ".//input";
 
     private static final String APPLY_BTN_PATH = ".//a[text()='Apply']";
@@ -32,6 +32,7 @@ public class SearchPanel {
     private static final String SAVE_AS_NEW_FILTER_BTN_ID = "save_as_new_filter";
     private static final String SAVE_AS_NEW_FILTER_FORM_PATH = ".//div[@" + CSSUtils.TEST_ID + "='save_as_new_filter_form']";
     private static final String SAVE_FILTER_BTN_ID = "save_filter";
+    private static final String ADVANCED_SEARCH_CSS = ".advanced-search_panel,.filters-box";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -45,7 +46,7 @@ public class SearchPanel {
 
     public static SearchPanel create(WebDriver driver, WebDriverWait wait) {
         WebElement webElement =
-                driver.findElement(By.xpath("//*[@class='" + ADVANCED_SEARCH_PANEL_CLASS + "'] | //*[@class='filters-box']"));
+                driver.findElement(By.cssSelector(ADVANCED_SEARCH_CSS));
         return new SearchPanel(driver, wait, webElement);
     }
 
@@ -66,10 +67,14 @@ public class SearchPanel {
         return ComponentFactory.createFromParent(componentId, componentType, this.driver, this.wait, this.webElement);
     }
 
+    public Input getComponent(String componentId) {
+        return ComponentFactory.createFromParent(componentId, this.driver, this.wait, this.webElement);
+    }
+
     List<String> getAllVisibleFilters() {
         return this.webElement
                 .findElements(By.xpath(FILTERS_PATH)).stream()
-                .map(filter -> filter.findElement(By.xpath(INPUT_LABEL_PATH + " | " + NEW_COMBOBOX_LABEL_PATH)).getText())
+                .map(filter -> filter.findElement(By.cssSelector(INPUT_LABEL_CSS + "," + NEW_COMBOBOX_LABEL_PATH)).getText())
                 .collect(Collectors.toList());
     }
 

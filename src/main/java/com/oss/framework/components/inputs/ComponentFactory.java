@@ -49,10 +49,12 @@ public class ComponentFactory {
             case MULTI_COMBOBOX: {
                 return MultiCombobox.create(webDriver, wait, componentId);
             }
-            case MULTI_SEARCH_FIELD:
+            case MULTI_SEARCH_FIELD: {
+                return MultiSearchField.create(webDriver, wait, componentId);
+            }
             case MULTI_SEARCHBOX:
             case TAGS: {
-                return MultiSearchField.create(webDriver, wait, componentId);
+                return Tags.create(webDriver, wait, componentId);
             }
             case NUMBER_FIELD: {
                 return NumberField.create(webDriver, wait, componentId);
@@ -131,10 +133,12 @@ public class ComponentFactory {
             case MULTI_COMBOBOX: {
                 return MultiCombobox.createFromParent(parent, webDriver, wait, componentId);
             }
-            case MULTI_SEARCH_FIELD:
+            case MULTI_SEARCH_FIELD: {
+                return MultiSearchField.createFromParent(parent, webDriver, wait, componentId);
+            }
             case MULTI_SEARCHBOX:
             case TAGS: {
-                return MultiSearchField.createFromParent(parent, webDriver, wait, componentId);
+                return Tags.createFromParent(parent, webDriver, wait, componentId);
             }
             case NUMBER_FIELD: {
                 return NumberField.createFromParent(parent, webDriver, wait, componentId);
@@ -187,12 +191,17 @@ public class ComponentFactory {
 
     public static Input createFromParent(String componentId, WebDriver webDriver, WebDriverWait wait, WebElement parent) {
         DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
-        ComponentType componentType = getComponentType(componentId, webDriver);
+        ComponentType componentType = getComponentTypeFromParent(componentId, parent);
         return createFromParent(componentId, componentType, webDriver, wait, parent);
     }
 
     private static ComponentType getComponentType(String componentId, WebDriver webDriver) {
         WebElement webElement = webDriver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, componentId)));
+        return ComponentType.valueOf(webElement.getAttribute("data-input-type"));
+    }
+
+    private static ComponentType getComponentTypeFromParent(String componentId, WebElement parent) {
+        WebElement webElement = parent.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, componentId)));
         return ComponentType.valueOf(webElement.getAttribute("data-input-type"));
     }
 }

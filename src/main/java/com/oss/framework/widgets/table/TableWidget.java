@@ -3,6 +3,7 @@ package com.oss.framework.widgets.table;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -14,6 +15,7 @@ import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -21,7 +23,9 @@ public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
     public static final String REFRESH_ACTION_ID = "refreshButton";
     public static final String EXPORT_ACTION_ID = "exportButton";
-    public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
+    private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "='%s'] " + TABLE_CONTENT_CSS;
     private static final int REFRESH_INTERVAL = 2000;
 
     private AdvancedSearch advancedSearch;
@@ -33,17 +37,13 @@ public class TableWidget extends Widget implements TableInterface {
 
     public static TableWidget createById(WebDriver driver, String tableWidgetId, WebDriverWait webDriverWait) {
         Widget.waitForWidget(webDriverWait, TABLE_WIDGET_CLASS);
-        Widget.waitForWidgetById(webDriverWait, tableWidgetId);
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, tableWidgetId)));
         return new TableWidget(driver, webDriverWait, tableWidgetId);
     }
 
     @Override
     public void selectRow(int row) {
         getTableComponent().selectRow(row);
-    }
-
-    public void clickRow(int row) {
-        getTableComponent().clickRow(row);
     }
 
     @Override
@@ -110,6 +110,10 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getCellValue(rowIndex, columnId);
     }
 
+    public boolean isCellValueBold(int row, String columnId) {
+        return getTableComponent().isCellValueBold(row, columnId);
+    }
+
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
@@ -120,6 +124,13 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttributeWithLabel(String attributeLabel, ComponentType componentType, String value) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+    }
+
+    @Override
+    public void searchByAttribute(String attributeId, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, value);
+        confirmFilter();
     }
 
     @Override
@@ -166,6 +177,10 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public String getCellValueById(int row, String columnId) {
         return getCellValue(row, columnId);
+    }
+
+    public void clickRow(int row) {
+        getTableComponent().clickRow(row);
     }
 
     public ActionsContainer getContextActions() {
@@ -327,5 +342,9 @@ public class TableWidget extends Widget implements TableInterface {
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
         getAdvancedSearch().setFilter(componentId, componentType, value);
+    }
+
+    private void setFilterContains(String componentId, String value) {
+        getAdvancedSearch().setFilter(componentId, value);
     }
 }

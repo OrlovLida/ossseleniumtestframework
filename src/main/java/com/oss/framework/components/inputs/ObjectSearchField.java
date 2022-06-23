@@ -23,6 +23,7 @@ public class ObjectSearchField extends Input {
     private static final String OSF_SINGLE = "object-input-component__single__dropdown";
     private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
     private static final String INPUT = ".//input";
+    private static final String ADVANCED_SEARCH_ID = "advancedSearch";
 
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
         super(driver, wait, componentId);
@@ -46,6 +47,7 @@ public class ObjectSearchField extends Input {
             WebElementUtils.clickWebElement(driver, webElement);
             WebElement innerInput = driver.findElement(By.xpath(OSF_INNER_INPUT));
             innerInput.sendKeys(value.getStringValue());
+            DelayUtils.waitForSpinners(webDriverWait, webElement);
             DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
             chooseFirstResult();
             WebElementUtils.clickWebElement(driver, webElement);
@@ -53,6 +55,7 @@ public class ObjectSearchField extends Input {
             clear();
             DelayUtils.sleep(1000);
             webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
+            DelayUtils.waitForSpinners(webDriverWait, webElement);
             DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
             chooseFirstResult();
         }
@@ -99,7 +102,7 @@ public class ObjectSearchField extends Input {
     public AdvancedSearchWidget openAdvancedSearchWidget() {
         WebElement searchPlus = webElement.findElement(By.xpath(SEARCH_PLUS_ICON_XPATH));
         searchPlus.click();
-        return AdvancedSearchWidget.create(driver, webDriverWait);
+        return AdvancedSearchWidget.createById(driver, webDriverWait, ADVANCED_SEARCH_ID);
     }
 
     private boolean isSingleComponent() {
@@ -116,4 +119,5 @@ public class ObjectSearchField extends Input {
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
     }
+
 }

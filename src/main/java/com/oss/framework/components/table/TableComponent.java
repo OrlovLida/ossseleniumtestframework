@@ -39,29 +39,37 @@ public class TableComponent {
     private static final String DATA_COL = "data-col";
     private static final String NOT_CELL_CHECKBOX_CSS = ":not(.table-component__cell__checkbox)";
     private static final String CELL_ROW_PATTERN = "[" + DATA_ROW + "='%s']";
-    
+    private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
+    private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s'] ." + TABLE_COMPONENT_CLASS;
+    private static final String TABLE_COMPONENT_ID_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s']." + TABLE_COMPONENT_CLASS;
+    private static final String COLUMN_MANAGER_BUTTON = ".table-component__management-btn button";
+
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement webElement;
-    private final String widgetId;
+    private final String id;
     
     private PaginationComponent paginationComponent;
     
-    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String widgetId) {
+    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String id) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.webElement = component;
-        this.widgetId = widgetId;
+        this.id = id;
     }
     
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
-        DelayUtils.waitByXPath(webDriverWait, getTableComponentPath(widgetId));
-        WebElement webElement = driver.findElement(By.xpath(getTableComponentPath(widgetId)));
+        DelayUtils.waitBy(webDriverWait,
+                By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId) + " " + TABLE_CONTENT_CSS));
+        WebElement webElement = driver.findElement(By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId)));
         return new TableComponent(driver, webDriverWait, webElement, widgetId);
     }
-    
-    private static String getTableComponentPath(String widgetId) {
-        return "//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']//div[contains(@class,'" + TABLE_COMPONENT_CLASS + "')]";
+
+    public static TableComponent createById(WebDriver driver, WebDriverWait webDriverWait, String tableComponentId) {
+        DelayUtils.waitBy(webDriverWait,
+                By.cssSelector(String.format(TABLE_COMPONENT_ID_PATTERN, tableComponentId) + " " + TABLE_CONTENT_CSS));
+        WebElement webElement = driver.findElement(By.cssSelector(String.format(TABLE_COMPONENT_ID_PATTERN, tableComponentId)));
+        return new TableComponent(driver, webDriverWait, webElement, tableComponentId);
     }
     
     public void selectRow(int index) {
@@ -169,6 +177,11 @@ public class TableComponent {
         return cell.getText();
     }
     
+    public boolean isCellValueBold(int row, String columnId) {
+        Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
+        return cell.isBold();
+    }
+    
     public AttributesChooser getAttributesChooser() {
         Actions action = new Actions(this.driver);
         action.click(getColumnsManagement()).perform();
@@ -209,7 +222,7 @@ public class TableComponent {
     
     public PaginationComponent getPaginationComponent() {
         if (paginationComponent == null) {
-            WebElement parent = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+            WebElement parent = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']"));
             paginationComponent = PaginationComponent.createFromParent(parent);
         }
         return paginationComponent;
@@ -220,7 +233,7 @@ public class TableComponent {
     }
     
     private WebElement getColumnsManagement() {
-        return webElement.findElement(By.xpath(".//button[@" + CSSUtils.TEST_ID + "='table-" + widgetId + "-mng-btn" + "']"));
+        return webElement.findElement(By.cssSelector(COLUMN_MANAGER_BUTTON));
     }
     
     public Row getRow(int index) {
@@ -522,6 +535,10 @@ public class TableComponent {
         
         public int getLeft() {
             return CSSUtils.getLeftValue(cellElement);
+        }
+        
+        public boolean isBold() {
+            return CSSUtils.getStyleAttribute(cellElement.findElement(By.xpath("./div"))).containsValue("bold");
         }
         
         public String getText() {
