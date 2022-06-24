@@ -24,6 +24,8 @@ import com.oss.framework.widgets.table.OldTable;
  */
 public class OldTreeTableWidget extends Widget {
 
+    private static final String CONTAINS_TEXT_PATTERN = "//*[contains(text(),'%s')]";
+
     private OldTreeTableWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
     }
@@ -66,7 +68,16 @@ public class OldTreeTableWidget extends Widget {
         createTable().callActionByLabel(groupLabel, actionLabel);
     }
 
-    public void callActionById(String groupId, String actionId){
+    public String getCellValue(int index, String attributeLabel) {
+        return createTable().getCellValue(index, attributeLabel);
+    }
+
+    public int getRowNumber(String value, String attributeLabel) {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(CONTAINS_TEXT_PATTERN, value));
+        return createTable().getRowNumber(value, attributeLabel);
+    }
+
+    public void callActionById(String groupId, String actionId) {
         createTable().callAction(groupId, actionId);
     }
 
