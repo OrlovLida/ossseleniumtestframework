@@ -280,6 +280,13 @@ public class TreeComponent {
             advancedSearch.clickApply();
             DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className("OSSIcon"));
         }
+
+        public void searchByAttribute(String attributeId, String value) {
+            AdvancedSearch advancedSearch = openAdvancedSearch();
+            advancedSearch.setFilter(attributeId, value);
+            advancedSearch.clickApply();
+            DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className("OSSIcon"));
+        }
         
         public int countDecorators() {
             return nodeElement.findElements(By.cssSelector(DECORATOR_ICON_CSS)).size();
