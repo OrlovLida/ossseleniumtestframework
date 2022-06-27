@@ -20,7 +20,7 @@ import com.oss.framework.widgets.Widget;
 public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
     public static final String PROPERTY_PANEL_CLASS = "PropertyPanel";
-    public static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
+    private static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
     private static final String INPUT = ".//input";
     private static final String PROPERTY_CSS = ".propertyPanelRow";
     private static final String PROPERTY_NAME_CSS = ".propertyPanelRow-label";
@@ -31,6 +31,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String ACTION_SETTINGS_XPATH = ".//a[@" + CSSUtils.TEST_ID + "='chooseAttributes']";
     private static final String ACTIONS_DROPDOWN_CLASS = "actionsDropdown";
     private static final String SEARCH_XPATH = "//ancestor::div[@" + CSSUtils.TEST_ID + "='PropertyPanelWidget-search']";
+    private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
 
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id, WebElement propertyPanel) {
         super(driver, wait, id, propertyPanel);
@@ -90,7 +91,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
         if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
-           return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getText();
+           return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
         } else {
             return "";
         }
