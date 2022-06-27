@@ -103,7 +103,7 @@ public class TreeWidget extends Widget {
         input.sendKeys(Keys.ENTER);
     }
 
-    public boolean isElementPresent(String text) {
+    public boolean isRowPresent(String text) {
         return getVisibleTreeRow()
                 .stream()
                 .anyMatch(treeRow -> treeRow.getLabel().equals(text));
