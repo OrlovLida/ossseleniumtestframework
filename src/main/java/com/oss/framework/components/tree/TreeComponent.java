@@ -37,7 +37,6 @@ public class TreeComponent {
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
     private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
     private static final String TREE_COMPONENT_NOT_TREE_COMPONENT_LOADER_CSSS = ".tree-component:not(.tree-component--loader)";
-
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
@@ -95,7 +94,7 @@ public class TreeComponent {
             String tempPath = currentPath.toString();
             List<Node> nodes = getVisibleNodes();
             node = getNode(isLabel, tempPath, nodes);
-            
+
             if (i != pathElements.size() - 1) {
                 if (!node.isPresent()) {
                     node = scrollToNode(isLabel, node, tempPath);
@@ -106,7 +105,7 @@ public class TreeComponent {
         }
         return node;
     }
-    
+
     private Optional<Node> scrollToNode(boolean isLabel, Optional<Node> node, String tempPath) {
         List<Node> nodes = getVisibleNodes();
         Node lastNode = nodes.get(nodes.size() - 1);
@@ -120,7 +119,7 @@ public class TreeComponent {
         }
         return node;
     }
-    
+
     private Optional<Node> getNode(boolean isLabel, String tempPath, List<Node> nodes) {
         Optional<Node> node;
         if (isLabel) {
@@ -139,22 +138,22 @@ public class TreeComponent {
         CustomScrolls scrolls = getCustomScrolls();
         if (scrolls.getVerticalBarHeight() == 0)
             return;
-        
+
         int translateY = scrolls.getTranslateYValue();
         if (translateY == 0)
             return;
-        
+
         scrolls.scrollVertically(-translateY);
     }
-    
+
     private boolean isScrollPresent() {
         return !treeComponentElement.findElements(By.cssSelector(CUSTOM_SCROLLBARS_CSS)).isEmpty();
     }
-    
+
     private CustomScrolls getCustomScrolls() {
         return CustomScrolls.create(driver, webDriverWait, treeComponentElement);
     }
-    
+
     private String getNodeClassPath() {
         return "//div[@class='" + NODE_CLASS + "']";
     }
@@ -174,12 +173,11 @@ public class TreeComponent {
         private static final String ARIA_LABEL_MINUS_CSS = "[aria-label='MINUS']";
         private static final String ARIA_LABEL_ADD_CSS = "[aria-label='ADD']";
         private static final String LABEL_NODE_CSS = ".OSSRichText";
-
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
         private final String nodeId;
-        
+
         private Node(WebDriver driver, WebDriverWait webDriverWait, WebElement node, String nodeId) {
             this.driver = driver;
             this.webDriverWait = webDriverWait;
@@ -284,7 +282,7 @@ public class TreeComponent {
         public int countDecorators() {
             return nodeElement.findElements(By.cssSelector(DECORATOR_ICON_CSS)).size();
         }
-        
+
         public DecoratorStatus getDecoratorStatus() {
             if (countDecorators() != 0) {
                 String style = nodeElement.findElement(By.cssSelector(DECORATOR_ICON_CSS)).getAttribute("style");
@@ -304,15 +302,14 @@ public class TreeComponent {
             }
             return DecoratorStatus.NONE;
         }
-        
+
         public String getBadge() {
             return nodeElement.findElement(By.cssSelector(TREE_NODE_BADGE_CSS)).getText();
         }
-        
+
         public boolean isBadgePresent() {
             return !nodeElement.findElements(By.cssSelector(TREE_NODE_BADGE_CSS)).isEmpty();
         }
-        
         boolean isExpandNextLevelPresent() {
             return !nodeElement.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
         }
@@ -328,11 +325,11 @@ public class TreeComponent {
         private boolean isFilterButtonPresent() {
             return !nodeElement.findElements(By.xpath(FILTERS_BUTTON_XPATH)).isEmpty();
         }
-        
+
         private void moveToNode() {
             WebElementUtils.moveToElement(driver, nodeElement);
         }
-        
+
         @Override
         public boolean equals(Object o) {
             if (this == o)
@@ -342,15 +339,15 @@ public class TreeComponent {
             Node node = (Node) o;
             return Objects.equals(nodeId, node.nodeId);
         }
-        
+
         @Override
         public int hashCode() {
             return Objects.hash(nodeId);
         }
-        
+
         public enum DecoratorStatus {
             GREEN, PURPLE, RED, NONE
         }
-        
+
     }
 }
