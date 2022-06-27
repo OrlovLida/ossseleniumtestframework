@@ -21,7 +21,8 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String PROPERTY_ATTRIBUTES_NAME_CSS = ".Col_PropertyName";
     private static final String PROPERTY_VALUES_CSS = ".Col_PropertyValue";
     private static final String CELL_CSS = ".Cell";
-    
+    private static final String ROW_CSS = ".row";
+
     private OldPropertyPanel(WebDriver driver, WebDriverWait wait, String widgetId) {
         super(driver, wait, widgetId);
     }
@@ -61,5 +62,8 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
     }
-    
+
+    public int countRows() {
+        return webElement.findElements(By.cssSelector(ROW_CSS)).size();
+    }
 }
