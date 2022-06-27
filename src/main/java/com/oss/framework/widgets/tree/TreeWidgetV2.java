@@ -57,6 +57,11 @@ public class TreeWidgetV2 extends Widget {
         getAdvancedSearch().fullTextSearch(text);
     }
 
+    public void callActionByLabel(String groupLabel, String actionLabel) {
+        ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
+        actionsContainer.callActionByLabel(groupLabel, actionLabel);
+    }
+
     public void callActionById(String groupId, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
         actionsContainer.callActionById(groupId, id);
@@ -65,6 +70,11 @@ public class TreeWidgetV2 extends Widget {
     public void callActionById(String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
         actionsContainer.callActionById(id);
+    }
+
+    public String getGroupActionLabel(String id) {
+        ActionsContainer actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
+        return actionsContainer.getGroupActionLabel(id);
     }
 
     public void selectNodeByLabel(String label) {

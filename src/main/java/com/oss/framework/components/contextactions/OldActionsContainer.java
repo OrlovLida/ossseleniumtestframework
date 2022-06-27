@@ -41,8 +41,8 @@ public class OldActionsContainer implements ActionsInterface {
     }
 
     public static OldActionsContainer createById(WebDriver driver, WebDriverWait wait, String actionContainerId) {
-        DelayUtils.waitBy(wait, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + actionContainerId + "']"));
-        WebElement toolbar = driver.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + actionContainerId + "']"));
+        DelayUtils.waitBy(wait, By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, actionContainerId)));
+        WebElement toolbar = driver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, actionContainerId)));
         return new OldActionsContainer(driver, wait, toolbar);
     }
 
@@ -108,8 +108,9 @@ public class OldActionsContainer implements ActionsInterface {
         DelayUtils.waitForVisibility(wait, toolbar);
         DelayUtils.waitForPageToLoad(driver, wait);
         if (!isElementPresent(toolbar, By.xpath(actionXpath))) {
-            clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.xpath(actionXpath));
-            clickWebElement(driver.findElement(By.xpath(actionXpath)));
+            clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.className(DropdownList.PORTAL_CLASS));
+            WebElement dropdown = driver.findElement(By.className(DropdownList.PORTAL_CLASS));
+            clickWebElement(dropdown.findElement(By.xpath(actionXpath)));
             return;
         }
         clickActionByXpath(actionXpath);

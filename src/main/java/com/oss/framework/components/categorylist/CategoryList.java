@@ -27,50 +27,50 @@ public class CategoryList {
     private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
     private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
     private static final String CATEGORY_LIST_ELEMENT_CSS = ".categoryListElement";
-    
+
     private WebDriver driver;
     private WebDriverWait wait;
     private WebElement categoryElement;
-    
+
     private CategoryList(WebDriver driver, WebDriverWait wait, WebElement categoryElement) {
         this.driver = driver;
         this.wait = wait;
         this.categoryElement = categoryElement;
     }
-    
+
     public static List<CategoryList> create(WebDriver driver, WebDriverWait wait, String widgetId) {
-        DelayUtils.waitBy(wait, By.cssSelector("[" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
-        WebElement widget = driver.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+        DelayUtils.waitBy(wait, By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
+        WebElement widget = driver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
         return widget.findElements(By.cssSelector(CATEGORY_LIST_ELEMENT_CSS)).stream()
                 .map(category -> new CategoryList(driver, wait, category)).collect(Collectors.toList());
     }
-    
+
     public String getValue() {
         return categoryElement.findElement(By.className(CATEGORY_NAME_XPATH)).getText();
     }
-    
+
     public void callAction(String groupId, String actionId) {
         InlineMenu.create(categoryElement, driver, wait).callAction(groupId, actionId);
     }
-    
+
     public void callAction(String actionId) {
         InlineMenu.create(categoryElement, driver, wait).callAction(actionId);
     }
-    
+
     public void expandCategory() {
         if (!isExpanded()) {
             WebElementUtils.clickWebElement(driver, categoryElement.findElement(By.xpath(EXPAND_ICON_XPATH)));
         }
         DelayUtils.waitForElementToLoad(wait, categoryElement);
     }
-    
+
     public void collapseCategory() {
         if (isExpanded()) {
             WebElementUtils.clickWebElement(driver, categoryElement.findElement(By.xpath(COLLAPSE_ICON_XPATH)));
         }
         DelayUtils.waitForElementToLoad(wait, categoryElement);
     }
-    
+
     private boolean isExpanded() {
         return !categoryElement.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
     }

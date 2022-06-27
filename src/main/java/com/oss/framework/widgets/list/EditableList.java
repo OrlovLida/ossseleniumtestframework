@@ -9,6 +9,7 @@ package com.oss.framework.widgets.list;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -36,6 +37,8 @@ public class EditableList extends Widget {
     private static final String EMPTY_RESULTS_XPATH =
             "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
     private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
+    private static final String HEADERS_SELECTOR_CSS = ".list_row--headers";
+    private static final String LIST_HEADERS_SELECTOR_CSS = ".list_row--headers > .header";
 
     private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -45,6 +48,12 @@ public class EditableList extends Widget {
         Widget.waitForWidget(webDriverWait, LIST_WIDGET_CLASS);
         Widget.waitForWidgetById(webDriverWait, componentId);
         return new EditableList(driver, webDriverWait, componentId);
+    }
+
+    public List<String> getColumnHeadersLabels() {
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(HEADERS_SELECTOR_CSS));
+        List<WebElement> listElements = webElement.findElements(By.cssSelector(LIST_HEADERS_SELECTOR_CSS));
+        return listElements.stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public Row addRow() {
@@ -58,6 +67,11 @@ public class EditableList extends Widget {
     public void setValue(int rowIndex, String value, String columnId, String componentId, Input.ComponentType componentType) {
         Row row = getRow(rowIndex);
         row.setValue(value, columnId, componentId, componentType);
+    }
+
+    public void setValue(int rowIndex, String value, String columnId, String componentId) {
+        Row row = getRow(rowIndex);
+        row.setValue(value, columnId, componentId);
     }
 
     public Row getRow(int row) {
@@ -142,8 +156,16 @@ public class EditableList extends Widget {
             getCell(columnId).setValue(value, componentId, componentType);
         }
 
+        public void setValue(String value, String columnId, String componentId) {
+            getCell(columnId).setValue(value, componentId);
+        }
+
         public void clearValue(String columnId, String componentId, Input.ComponentType componentType) {
             getCell(columnId).clearValue(componentId, componentType);
+        }
+
+        public void clearValue(String columnId, String componentId) {
+            getCell(columnId).clearValue(componentId);
         }
 
         public boolean isAttributeEditable(String columnId) {
@@ -170,7 +192,12 @@ public class EditableList extends Widget {
         public static class Cell {
             private static final String TEXT_XPATH = ".//div[@class='text-wrapper' or 'textContainer']";
             private static final String SAVE_BUTTON = "Save";
+            private static final String PARENT_XPATH = ".//parent::div";
+            private static final String CLASS_TAG_VALUE = "class";
+            private static final String EDITABLE_TAG_VALUE = "editable";
             private static final String EDIT_XPATH = ".//ancestor::div[contains(@class, 'list__cell--editable')]//i[@aria-label='EDIT']";
+            private static final String CHECKBOX_INPUT_XPATH = ".//input[@type='checkbox']";
+            private static final String CHECKBOX_INPUT_ATTRIBUTE_NAME = "value";
             private final WebDriver driver;
             private final WebDriverWait wait;
             private final WebElement webElement;
@@ -182,14 +209,16 @@ public class EditableList extends Widget {
             }
 
             public String getText() {
-                return webElement.findElement(By.xpath(TEXT_XPATH)).getText();
+                if (!webElement.findElements(By.xpath(CHECKBOX_INPUT_XPATH)).isEmpty()) {
+                    return CSSUtils.getAttributeValue(CHECKBOX_INPUT_ATTRIBUTE_NAME, webElement.findElement(By.xpath(CHECKBOX_INPUT_XPATH)));
+                } else {
+                    return webElement.findElement(By.xpath(TEXT_XPATH)).getText();
+                }
             }
 
             public void setValue(String value, String componentId, Input.ComponentType componentType) {
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
-                    WebElementUtils.clickWebElement(driver, webElement);
-                    Input input = ComponentFactory.createFromParent(componentId, componentType, driver, wait, webElement);
-                    input.setSingleStringValue(value);
+                    getCheckbox(componentId).setSingleStringValue(value);
                     return;
                 }
                 WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
@@ -200,21 +229,53 @@ public class EditableList extends Widget {
                 inlineForm.clickButtonByLabel(SAVE_BUTTON);
             }
 
+            public void setValue(String value, String componentId) {
+                if (WebElementUtils.isElementPresent(webElement, By.xpath(EDIT_XPATH))) {
+                    WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
+                    InlineForm inlineForm = InlineForm.create(driver, wait);
+                    Input component = inlineForm.getComponent(componentId);
+                    DelayUtils.sleep(500);
+                    component.setSingleStringValue(value);
+                    inlineForm.clickButtonByLabel(SAVE_BUTTON);
+                    return;
+                }
+                getCheckbox(componentId).setSingleStringValue(value);
+            }
+
             public void clearValue(String componentId, Input.ComponentType componentType) {
-                WebElementUtils.clickWebElement(driver, webElement);
                 if (componentType.equals(Input.ComponentType.CHECKBOX)) {
-                    Input input = ComponentFactory.create(componentId, componentType, driver, wait);
+                    Input input = ComponentFactory.createFromParent(componentId, componentType, driver, wait, webElement);
                     input.clear();
                     return;
                 }
+                WebElementUtils.moveToElement(driver, webElement);
+                WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
                 InlineForm inlineForm = InlineForm.create(driver, wait);
                 Input component = inlineForm.getComponent(componentId, componentType);
                 component.clear();
                 inlineForm.clickButtonByLabel(SAVE_BUTTON);
             }
 
+            public void clearValue(String componentId) {
+                if (WebElementUtils.isElementPresent(webElement, By.xpath(EDIT_XPATH))) {
+                    WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
+                    InlineForm inlineForm = InlineForm.create(driver, wait);
+                    Input component = inlineForm.getComponent(componentId);
+                    DelayUtils.sleep(500);
+                    component.clear();
+                    inlineForm.clickButtonByLabel(SAVE_BUTTON);
+                    return;
+                }
+                getCheckbox(componentId).clear();
+            }
+
             public boolean isAttributeEditable() {
-                return webElement.getAttribute("class").contains("editable");
+                return webElement.findElement(By.xpath(PARENT_XPATH)).getAttribute(CLASS_TAG_VALUE).contains(EDITABLE_TAG_VALUE);
+            }
+
+            private Input getCheckbox(String componentId) {
+                WebElementUtils.clickWebElement(driver, webElement);
+                return ComponentFactory.createFromParent(componentId, Input.ComponentType.CHECKBOX, driver, wait, webElement);
             }
         }
     }

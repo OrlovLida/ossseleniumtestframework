@@ -23,17 +23,17 @@ public class OptionsPanel {
 
     private static final Logger log = LoggerFactory.getLogger(OptionsPanel.class);
 
-    private static final String OPTIONS_PANEL_XPATH = "//div[@data-testid='options-menu']";
-    private static final String TIME_PERIOD_CHOOSER_PATH = "//div[@data-testid = 'time-period-chooser']";
+    private static final String OPTIONS_PANEL_XPATH = "//div[@" + CSSUtils.TEST_ID + "='options-menu']";
+    private static final String TIME_PERIOD_CHOOSER_PATH = "//div[@" + CSSUtils.TEST_ID + "='input_time-period-chooser']";
     private static final String TIME_PERIOD_CHOOSER_INPUT_PATH = "//div[@class='md-input']//input[@label='%s']";
-    private static final String AGGREGATION_METHOD_CHOOSER_PATH = "//div[@data-testid = 'aggregation-method-button']";
-    private static final String AGGREGATION_METHOD_CHOOSER_INPUT_PATH = "//*[contains(@class,'list-group')]//*[@data-testid='%s']";
+    private static final String AGGREGATION_METHOD_CHOOSER_PATH = "//div[@" + CSSUtils.TEST_ID + "='aggregation-method-button']";
+    private static final String AGGREGATION_METHOD_CHOOSER_INPUT_PATH = "//*[contains(@class,'list-group')]//*[@" + CSSUtils.TEST_ID + "='%s']";
     private static final String ACTIVE_AGGREGATION_METHOT_XPATH = ".//*[@class='list-group-item active']";
-    private static final String Y_AXIS_SETTINGS_PATH = "//*[@data-testid = 'y-axis-options-button']";
+    private static final String Y_AXIS_SETTINGS_PATH = "//*[@" + CSSUtils.TEST_ID + "='y-axis-options-button']";
     private static final String Y_AXIS_SETTINGS_INPUT_PATH = "//label[contains(@for,'%s')]";
-    private static final String MISCELLANEOUS_OPTIONS_PATH = "//*[@data-testid = 'miscellaneous-options-common-form']";
-    private static final String COMPARE_WITH_OTHER_PERIOD_OPTIONS_PATH = "//*[@data-testid = 'compare-with-period-common-form']";
-    private static final String AGGREGATION_METHODS_SELECT_XPATH = "//*[@data-testid = 'aggregation-method-select']";
+    private static final String MISCELLANEOUS_OPTIONS_PATH = "//*[@" + CSSUtils.TEST_ID + "='miscellaneous-options-common-form']";
+    private static final String COMPARE_WITH_OTHER_PERIOD_OPTIONS_PATH = "//*[@" + CSSUtils.TEST_ID + "='compare-with-period-common-form']";
+    private static final String AGGREGATION_METHODS_SELECT_XPATH = "//*[@" + CSSUtils.TEST_ID + "='aggregation-method-select']";
 
     private final WebDriver driver;
     private final WebDriverWait wait;

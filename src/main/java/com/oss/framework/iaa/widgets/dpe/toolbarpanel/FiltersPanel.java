@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,19 +24,17 @@ public class FiltersPanel {
     private static final String CLICK_BTN = "Clicking button: ";
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
     private final WebElement filterPanel;
 
-    private FiltersPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement filterPanel) {
+    private FiltersPanel(WebDriver driver, WebElement filterPanel) {
         this.driver = driver;
-        this.wait = webDriverWait;
         this.filterPanel = filterPanel;
     }
 
-    static FiltersPanel create(WebDriver driver, WebDriverWait webDriverWait) {
+    static FiltersPanel create(WebDriver driver) {
         WebElement filterPanel = driver.findElement(By.xpath(FILTER_PANEL_XPATH));
 
-        return new FiltersPanel(driver, webDriverWait, filterPanel);
+        return new FiltersPanel(driver, filterPanel);
     }
 
     public void clearFilters() {

@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,18 +20,16 @@ public class TopNPanel {
     private static final String CLICK_BTN = "Clicking button: ";
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
     private final WebElement topNPanelElement;
 
-    private TopNPanel(WebDriver driver, WebDriverWait webDriverWait, WebElement topNPanelElement) {
+    private TopNPanel(WebDriver driver, WebElement topNPanelElement) {
         this.driver = driver;
-        this.wait = webDriverWait;
         this.topNPanelElement = topNPanelElement;
     }
 
-    public static TopNPanel create(WebDriver driver, WebDriverWait wait) {
+    public static TopNPanel create(WebDriver driver) {
         WebElement topNPanel = driver.findElement(By.xpath(TOP_N_PANEL_XPATH));
-        return new TopNPanel(driver, wait, topNPanel);
+        return new TopNPanel(driver, topNPanel);
     }
 
     public void setDimension(String dimensionId) {

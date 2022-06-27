@@ -39,7 +39,11 @@ public class InlineForm {
     }
 
     public Input getComponent(String componentId, Input.ComponentType componentType) {
-        return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
+        return ComponentFactory.createFromParent(componentId, componentType, this.driver, this.wait, this.webElement);
+    }
+
+    public Input getComponent(String componentId) {
+        return ComponentFactory.createFromParent(componentId, this.driver, this.wait, this.webElement);
     }
 
 }

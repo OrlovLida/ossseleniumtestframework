@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.list;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.contextactions.InlineMenuInterface;
 import com.oss.framework.components.contextactions.OldInlineMenu;
+import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -42,7 +44,13 @@ public class CommonList extends Widget {
     }
 
     public void fullTextSearch(String value) {
-        getAdvanceSearch().fullTextSearch(value);
+        getAdvancedSearch().fullTextSearch(value);
+    }
+
+    public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
+        openAdvancedSearch();
+        setFilterContains(attributeId, componentType, value);
+        confirmFilter();
     }
 
     public void callAction(String actionId) {
@@ -129,12 +137,24 @@ public class CommonList extends Widget {
         getRows().get(row).selectRow();
     }
 
-    private AdvancedSearch getAdvanceSearch() {
+    private AdvancedSearch getAdvancedSearch() {
         return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
     }
 
+    private void openAdvancedSearch() {
+        getAdvancedSearch().openSearchPanel();
+    }
+
+    private void setFilterContains(String componentId, Input.ComponentType componentType, String value) {
+        getAdvancedSearch().setFilter(componentId, componentType, value);
+    }
+
+    private void confirmFilter() {
+        getAdvancedSearch().clickApply();
+    }
+
     public static class Row {
-        private static final String CHECK_CHECKBOX_XPATH = ".//i[contains(@class,'check')]";
+        private static final String OSSICON_XPATH = ".//i[contains(@class,'OSSIcon')]";
         private static final String COLUMN_DATA_CLASS = "list__cell_content";
         private static final String SELECTED_ROW_CLASS = "rowSelected";
         private static final String FAVOURITE_BUTTON_XPATH = ".//button[@class='favouriteButton favourite']";
@@ -157,12 +177,33 @@ public class CommonList extends Widget {
         }
 
         public String getValue(String attributeName) {
-            List<WebElement> rowCells = rowElement.findElements(By.className(COLUMN_DATA_CLASS));
-            WebElement cell = rowCells.get(headers.indexOf(attributeName));
-            if (!cell.findElements(By.xpath(CHECK_CHECKBOX_XPATH)).isEmpty()) {
-                return cell.getAttribute("value");
+            return getCell(attributeName).getText();
+        }
+
+        public String getIcons(String attributeName) {
+            List<WebElement> iconList = getCell(attributeName).findElements(By.xpath(OSSICON_XPATH));
+            if (iconList.isEmpty()) {
+                return "";
             }
-            return cell.getText();
+            List<String> list = new ArrayList<>();
+            for (WebElement icon : iconList) {
+                list.add(icon.getAttribute("class"));
+//                list.add(icon.getAttribute("data-icon-name")); //TODO change to this after OSSWEB-18550 will be resolved
+            }
+            return String.join(",", list);
+        }
+
+        public String getFullContent(String attributeName) {
+            String iconText = getIcons(attributeName);
+            String text = getValue(attributeName);
+            if (iconText.isEmpty() && text.isEmpty()) {
+                return "";
+            } else if (iconText.isEmpty()) {
+                return text;
+            } else if (text.isEmpty()) {
+                return iconText;
+            }
+            return iconText + ";" + text;
         }
 
         public boolean isFavorite() {
@@ -225,6 +266,11 @@ public class CommonList extends Widget {
             if (!rowElement.getAttribute("class").contains(SELECTED_ROW_CLASS)) {
                 rowElement.click();
             }
+        }
+
+        private WebElement getCell(String attributeName) {
+            List<WebElement> rowCells = rowElement.findElements(By.className(COLUMN_DATA_CLASS));
+            return rowCells.get(headers.indexOf(attributeName));
         }
 
         private InlineMenuInterface getInlineMenu() {
