@@ -13,7 +13,7 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public class ActionsContainer implements ActionsInterface {
-    
+
     public static final String KEBAB_GROUP_ID = "frameworkCustomButtonsGroup";
     public static final String CREATE_GROUP_ID = "CREATE";
     public static final String EDIT_GROUP_ID = "EDIT";
@@ -26,39 +26,40 @@ public class ActionsContainer implements ActionsInterface {
     private static final String GROUP_PATTERN = ".//div[@id='%s'] | .//div[text()='%s']";
     private static final String UNSUPPORTED_EXCEPTION = "Method not implemented for Actions Container.";
     private static final String NO_ACTION_EXCEPTION = "No active Context Action.";
-    
+    private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
+
     private final WebElement webElement;
     private final WebDriver webDriver;
     private final WebDriverWait webDriverWait;
-    
+
     private ActionsContainer(WebElement activeContextActions, WebDriver webDriver, WebDriverWait webDriverWait) {
         this.webDriver = webDriver;
         this.webElement = activeContextActions;
         this.webDriverWait = webDriverWait;
     }
-    
+
     public static ActionsContainer createFromParent(WebElement parentElement, WebDriver webDriver, WebDriverWait webDriverWait) {
         DelayUtils.waitForNestedElements(webDriverWait, parentElement, By.className(CONTEXT_ACTIONS_CLASS));
         return new ActionsContainer(getActiveContextActions(parentElement), webDriver, webDriverWait);
     }
-    
+
     private static WebElement getActiveContextActions(WebElement parentElement) {
         List<WebElement> allContextAction = parentElement.findElements(By.className(CONTEXT_ACTIONS_CLASS));
         return allContextAction.stream().filter(WebElement::isDisplayed).findFirst()
                 .orElseThrow(() -> new NoSuchElementException(NO_ACTION_EXCEPTION));
     }
-    
+
     @Override
     public void callActionByLabel(String label) {
         throw new UnsupportedOperationException(UNSUPPORTED_EXCEPTION);
     }
-    
+
     @Override
     public void callActionByLabel(String groupLabel, String actionLabel) {
         clickOnGroup(groupLabel);
         DropdownList.create(webDriver, webDriverWait).selectOption(actionLabel);
     }
-    
+
     @Override
     public void callActionById(String id) {
         if (isElementPresent(webElement, By.id(id))) {
@@ -68,13 +69,24 @@ public class ActionsContainer implements ActionsInterface {
             DropdownList.create(webDriver, webDriverWait).selectOptionById(id);
         }
     }
-    
+
     @Override
     public void callActionById(String groupId, String actionId) {
         clickOnGroup(groupId);
         DropdownList.create(webDriver, webDriverWait).selectOptionById(actionId);
     }
-    
+
+    public String getGroupActionLabel(String groupId) {
+        String xpath = String.format(GROUP_PATTERN, groupId, groupId);
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_ALL_PATTERN, groupId, groupId));
+        if (isElementPresent(webElement, By.xpath(xpath))) {
+            return webElement.findElement(By.xpath(xpath)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+        } else {
+            clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
+            return webDriver.findElement(By.xpath(xpath)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+        }
+    }
+
     private void clickOnGroup(String group) {
         DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_ALL_PATTERN, group, group));
         if (isElementPresent(webElement, By.xpath(String.format(GROUP_PATTERN, group, group)))) {
@@ -85,15 +97,15 @@ public class ActionsContainer implements ActionsInterface {
             DropdownList.create(webDriver, webDriverWait).selectOptionById(group);
         }
     }
-    
+
     private void clickWebElement(WebElement webElement) {
         WebElementUtils.clickWebElement(webDriver, webElement);
     }
-    
+
     private void clickWithRetry(WebElement elementToClick, By elementToWait) {
         WebElementUtils.clickWithRetry(webDriver, elementToClick, elementToWait);
     }
-    
+
     private boolean isElementPresent(WebElement webElement, By by) {
         return WebElementUtils.isElementPresent(webElement, by);
     }
