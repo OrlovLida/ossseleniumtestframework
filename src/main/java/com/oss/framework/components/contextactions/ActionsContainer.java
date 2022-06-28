@@ -26,7 +26,7 @@ public class ActionsContainer implements ActionsInterface {
     private static final String GROUP_PATTERN = ".//div[@id='%s'] | .//div[text()='%s']";
     private static final String UNSUPPORTED_EXCEPTION = "Method not implemented for Actions Container.";
     private static final String NO_ACTION_EXCEPTION = "No active Context Action.";
-    
+    private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
     private final WebElement webElement;
     private final WebDriver webDriver;
     private final WebDriverWait webDriverWait;
@@ -73,6 +73,17 @@ public class ActionsContainer implements ActionsInterface {
     public void callActionById(String groupId, String actionId) {
         clickOnGroup(groupId);
         DropdownList.create(webDriver, webDriverWait).selectOptionById(actionId);
+    }
+    
+    public String getGroupActionLabel(String groupId) {
+        String xpath = String.format(GROUP_PATTERN, groupId, groupId);
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_ALL_PATTERN, groupId, groupId));
+        if (isElementPresent(webElement, By.xpath(xpath))) {
+            return webElement.findElement(By.xpath(xpath)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+        } else {
+            clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(DropdownList.PORTAL_CLASS));
+            return webDriver.findElement(By.xpath(xpath)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+        }
     }
     
     private void clickOnGroup(String group) {

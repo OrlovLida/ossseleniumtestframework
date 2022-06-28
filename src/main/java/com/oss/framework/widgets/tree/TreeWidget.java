@@ -103,6 +103,12 @@ public class TreeWidget extends Widget {
         input.sendKeys(Keys.ENTER);
     }
 
+    public boolean isRowPresent(String text) {
+        return getVisibleTreeRow()
+                .stream()
+                .anyMatch(treeRow -> treeRow.getLabel().equals(text));
+    }
+
     private List<TreeRow> getVisibleTreeRow() {
         List<TreeRow> treeRowList = this.webElement.findElements(By.className("TreeRow")).stream()
                 .map(webElement -> new TreeRow(webElement, driver)).collect(Collectors.toList());

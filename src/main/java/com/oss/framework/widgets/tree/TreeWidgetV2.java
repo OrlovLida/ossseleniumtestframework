@@ -72,6 +72,11 @@ public class TreeWidgetV2 extends Widget {
         actionsContainer.callActionById(id);
     }
 
+    public String getGroupActionLabel(String id) {
+        ActionsContainer actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
+        return actionsContainer.getGroupActionLabel(id);
+    }
+
     public void selectNodeByLabel(String label) {
         getNode(label).toggleNode();
     }

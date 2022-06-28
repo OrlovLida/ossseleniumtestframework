@@ -190,16 +190,12 @@ public class OldTable extends Widget implements TableInterface {
 
     @Override
     public void callAction(String actionId) {
-        WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
-        ActionsInterface actions = OldActionsContainer.createFromParent(driver, webDriverWait, window);
-        actions.callActionById(actionId);
+        getActionsInterface().callActionById(actionId);
     }
 
     @Override
     public void callActionByLabel(String actionLabel) {
-        WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
-        ActionsInterface actions = OldActionsContainer.createFromParent(driver, webDriverWait, window);
-        actions.callActionByLabel(actionLabel);
+        getActionsInterface().callActionByLabel(actionLabel);
     }
 
     @Override
