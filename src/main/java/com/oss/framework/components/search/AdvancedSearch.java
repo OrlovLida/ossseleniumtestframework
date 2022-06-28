@@ -92,7 +92,7 @@ public class AdvancedSearch {
 
     public SearchPanel openSearchPanel() {
         if (!isSearchPanelOpen()) {
-            this.webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)).click();
+            WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)) );
         }
         return getSearchPanel();
     }
