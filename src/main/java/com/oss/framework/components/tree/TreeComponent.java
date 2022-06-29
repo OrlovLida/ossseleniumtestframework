@@ -37,7 +37,6 @@ public class TreeComponent {
     private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
     private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
     private static final String TREE_COMPONENT_NOT_TREE_COMPONENT_LOADER_CSSS = ".tree-component:not(.tree-component--loader)";
-
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
@@ -174,7 +173,6 @@ public class TreeComponent {
         private static final String ARIA_LABEL_MINUS_CSS = "[aria-label='MINUS']";
         private static final String ARIA_LABEL_ADD_CSS = "[aria-label='ADD']";
         private static final String LABEL_NODE_CSS = ".OSSRichText";
-
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
@@ -186,8 +184,8 @@ public class TreeComponent {
             this.nodeElement = node;
             this.nodeId = nodeId;
         }
-
-        private static Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement nodeElement){
+        
+        private static Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement nodeElement) {
             DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.cssSelector(LABEL_NODE_CSS));
             String nodeId = CSSUtils.getAttributeValue(DATA_GUID_ATTR, nodeElement);
             return new Node(driver, webDriverWait, nodeElement, nodeId);
