@@ -173,6 +173,7 @@ public class TreeComponent {
         private static final String ARIA_LABEL_MINUS_CSS = "[aria-label='MINUS']";
         private static final String ARIA_LABEL_ADD_CSS = "[aria-label='ADD']";
         private static final String LABEL_NODE_CSS = ".OSSRichText";
+        private static final String OSS_ICON_CLASS = "OSSIcon";
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
@@ -276,14 +277,14 @@ public class TreeComponent {
             AdvancedSearch advancedSearch = openAdvancedSearch();
             advancedSearch.setFilter(attributeId, componentType, value);
             advancedSearch.clickApply();
-            DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className("OSSIcon"));
+            DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className(OSS_ICON_CLASS));
         }
 
         public void searchByAttribute(String attributeId, String value) {
             AdvancedSearch advancedSearch = openAdvancedSearch();
             advancedSearch.setFilter(attributeId, value);
             advancedSearch.clickApply();
-            DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className("OSSIcon"));
+            DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className(OSS_ICON_CLASS));
         }
         
         public int countDecorators() {

@@ -80,7 +80,7 @@ public class CSSUtils {
     }
     
     public static boolean isElementPresent(WebDriver driver, String elementId) {
-        return !driver.findElements(By.cssSelector("[" + TEST_ID + "= '" + elementId + "']")).isEmpty();
+        return !driver.findElements(By.cssSelector(String.format(WEB_ELEMENT_PATTERN, elementId))).isEmpty();
     }
     
     private static double getDecimalValue(WebElement webElement) {
