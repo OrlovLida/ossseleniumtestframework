@@ -1,8 +1,12 @@
 package com.oss.framework.widgets.propertypanel;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -87,11 +91,31 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         attributesChooser.clickApply();
     }
 
+    public List<String> getPropertiesToList() {
+        Map<String, WebElement> properties = getPropertiesMap();
+        return new ArrayList<>(properties.keySet());
+    }
+
+    public Map<String, String> getPropertiesValuesToList() {
+        Map<String, WebElement> properties = getPropertiesMap();
+
+        return properties.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> getPropertyText(e.getValue())));
+    }
+
     @Override
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
         if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
            return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+        } else {
+            return "";
+        }
+    }
+
+    private String getPropertyText(WebElement webElement) {
+        if (!webElement.findElements(By.xpath(PROPERTY_VALUE_PATH)).isEmpty()) {
+            return webElement.findElement(By.xpath(PROPERTY_VALUE_PATH)).getText();
         } else {
             return "";
         }
