@@ -13,9 +13,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.contextactions.InlineMenu;
+import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.WebElementUtils;
 
@@ -47,15 +49,18 @@ public class Application {
     }
     
     static Application createApplicationByName(WebDriver driver, WebDriverWait wait, WebElement parent, String applicationName) {
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".category-box .skeleton-preloader"),0));
         WebElement applicationBox = parent.findElements(By.cssSelector(APPLICATIONS_IN_SUBCATEGORY_CSS)).stream()
-                .filter(application -> application.findElement(By.cssSelector(APPLICATION_BOX_CSS)).getText().equals(applicationName))
+                .filter(application -> application.findElement(By.cssSelector(APPLICATION_BOX_CSS)).getAttribute("textContent").equals(applicationName))
                 .findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_APPLICATION_BOX_WITH_PROVIDED_NAME_EXCEPTION));
-        
+                WebElementUtils.moveToElement(driver, applicationBox);
         return new Application(driver, wait, applicationBox, applicationName);
     }
     
     static Application createApplication(WebDriver driver, WebDriverWait wait, WebElement applicationBox) {
-        String applicationName = applicationBox.getText();
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".category-box .skeleton-preloader"),0));
+        String applicationName = applicationBox.getAttribute("textContent");
+        WebElementUtils.moveToElement(driver, applicationBox);
         return new Application(driver, wait, applicationBox, applicationName);
     }
     
