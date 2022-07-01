@@ -91,7 +91,7 @@ public class ActionsContainer implements ActionsInterface {
         DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_ALL_PATTERN, group, group));
         if (isElementPresent(webElement, By.xpath(String.format(GROUP_PATTERN, group, group)))) {
             clickWithRetry(webElement.findElement(By.xpath(String.format(GROUP_PATTERN, group, group))),
-                    By.className(DropdownList.PORTAL_CLASS));
+                    By.className(ACTIONS_DROPDOWN_CLASS));
         } else {
             clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(ACTIONS_DROPDOWN_CLASS));
             DropdownList.create(webDriver, webDriverWait).selectOptionById(group);
