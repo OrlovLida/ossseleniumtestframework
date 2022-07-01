@@ -29,6 +29,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String PROPERTY_CSS = ".propertyPanelRow";
     private static final String PROPERTY_NAME_CSS = ".propertyPanelRow-label";
     private static final String PROPERTY_VALUE_CSS = ".propertyPanelRow-value";
+    private static final String PROPERTY_VALUE_PATH = "./ancestor::li[@class='row']//div[@class='item-value']";
     private static final String DRAGGABLE_ELEMENT_CSS = ".btn-drag";
     private static final String ID_ATTRIBUTE = "id";
     private static final String VALUE_ATTRIBUTE = "value";
