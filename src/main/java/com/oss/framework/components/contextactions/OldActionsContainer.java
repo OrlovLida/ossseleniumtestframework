@@ -24,6 +24,7 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String KEBAB_BUTTON_XPATH = ".//li[@data-group-id='frameworkCustomEllipsis']";
     private static final String ACTION_BY_ID_PATTERN = ".//a[@" + CSSUtils.TEST_ID + "='%s'] | .//*[@id='%s'] | .//*[@data-widget-id='%s']";
     private static final String DROPDOWN_PATTERN = "//a[@class='dropdown']//div[text()='%s']";
+    private static final String DROPDOWN_LIST = ".portal .widgetList";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -67,7 +68,7 @@ public class OldActionsContainer implements ActionsInterface {
     public void callActionByLabel(String groupLabel, String actionLabel) {
         String groupXpath = String.format(ACTION_BY_LABEL_PATTERN, groupLabel, groupLabel, groupLabel);
         DelayUtils.waitForNestedElements(wait, toolbar, groupXpath);
-        clickWithRetry(toolbar.findElement(By.xpath(groupXpath)), By.className(DropdownList.PORTAL_CLASS));
+        clickWithRetry(toolbar.findElement(By.xpath(groupXpath)), By.cssSelector(DROPDOWN_LIST));
         DropdownList.create(driver, wait).selectOption(actionLabel);
     }
 
@@ -108,7 +109,7 @@ public class OldActionsContainer implements ActionsInterface {
         DelayUtils.waitForVisibility(wait, toolbar);
         DelayUtils.waitForPageToLoad(driver, wait);
         if (!isElementPresent(toolbar, By.xpath(actionXpath))) {
-            clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.className(DropdownList.PORTAL_CLASS));
+            clickWithRetry(toolbar.findElement(By.xpath(GROUP_XPATH)), By.cssSelector(DROPDOWN_LIST));
             WebElement dropdown = driver.findElement(By.className(DropdownList.PORTAL_CLASS));
             clickWebElement(dropdown.findElement(By.xpath(actionXpath)));
             return;
@@ -117,7 +118,7 @@ public class OldActionsContainer implements ActionsInterface {
     }
 
     private void callActionFromKebab(String actionId) {
-        clickWithRetry(toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH)), By.className(DropdownList.PORTAL_CLASS));
+        clickWithRetry(toolbar.findElement(By.xpath(KEBAB_BUTTON_XPATH)), By.cssSelector(DROPDOWN_LIST));
         DropdownList.create(driver, wait).selectOptionById(actionId);
     }
 
