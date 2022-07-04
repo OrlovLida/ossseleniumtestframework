@@ -156,6 +156,10 @@ public class DelayUtils {
         waitForElementsDisappear(webDriverWait, newList);
     }
 
+    public static void waitForNumberOfElementsToBe(WebDriverWait wait, By by, int number){
+        wait.until(ExpectedConditions.numberOfElementsToBe(by, number));
+    }
+
     private static List<WebElement> listOfLoaders(WebDriver driver) {
         List<WebElement> faSpins = driver.findElements(By.xpath(FA_SPIN_XPATH));
         List<WebElement> spinners = driver.findElements(By.xpath(SPINNER_XPATH));

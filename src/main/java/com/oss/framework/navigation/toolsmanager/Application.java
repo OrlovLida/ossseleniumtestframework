@@ -37,6 +37,7 @@ public class Application {
     private static final String ARIA_LABEL_ATTRIBUTE = "aria-label";
     private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
     private static final String HREF_ATTRIBUTE = "href";
+    private static final String APPLICATION_LOADER = ".category-box .skeleton-preloader";
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -51,16 +52,16 @@ public class Application {
     }
 
     static Application createApplicationByName(WebDriver driver, WebDriverWait wait, WebElement parent, String applicationName) {
-        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".category-box .skeleton-preloader"),0));
+        DelayUtils.waitForNumberOfElementsToBe(wait, By.cssSelector(APPLICATION_LOADER), 0);
         WebElement applicationBox = parent.findElements(By.cssSelector(APPLICATIONS_IN_SUBCATEGORY_CSS)).stream()
-                .filter(application -> application.findElement(By.cssSelector(APPLICATION_BOX_CSS)).getAttribute("textContent").equals(applicationName))
+                .filter(application -> application.findElement(By.cssSelector(APPLICATION_BOX_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE).equals(applicationName))
                 .findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_APPLICATION_BOX_WITH_PROVIDED_NAME_EXCEPTION));
                 WebElementUtils.moveToElement(driver, applicationBox);
         return new Application(driver, wait, applicationBox, applicationName);
     }
 
     static Application createApplication(WebDriver driver, WebDriverWait wait, WebElement applicationBox) {
-        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".category-box .skeleton-preloader"),0));
+        DelayUtils.waitForNumberOfElementsToBe(wait, By.cssSelector(APPLICATION_LOADER), 0);
         String applicationName = applicationBox.getAttribute(TEXT_CONTENT_ATTRIBUTE);
         return new Application(driver, wait, applicationBox, applicationName);
     }

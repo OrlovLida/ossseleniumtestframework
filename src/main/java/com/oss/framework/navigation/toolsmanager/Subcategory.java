@@ -34,6 +34,7 @@ public class Subcategory {
     private static final String SUBCATEGORIES_CONTENT_CSS = ".subcategories__content,.subcategories--empty";
     private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
     private static final String LESS = "Less";
+    private static final String SUBCATEGORIES_LOADER = ".subcategories__name .skeleton-preloader";
 
     private WebElement subcategoryElement;
     private WebDriver driver;
@@ -46,6 +47,7 @@ public class Subcategory {
     }
 
     static Subcategory createSubcategory(WebDriver driver, WebDriverWait wait, WebElement subcategory) {
+        DelayUtils.waitForNumberOfElementsToBe(wait, By.cssSelector(SUBCATEGORIES_LOADER),0);
         WebElementUtils.moveToElement(driver, subcategory.findElement(By.cssSelector(SUBCATEGORIES_CONTENT_CSS)));
         return new Subcategory(subcategory, driver, wait);
     }
