@@ -28,10 +28,11 @@ import com.oss.framework.utils.WebElementUtils;
 public class SideMenu {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SideMenu.class);
-    private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menuLevel']//div[@data-testid='%s']";
+    private static final String MENU_LEVEL_XPATH = ".//div[@class='menuLevel']";
+    private static final String ACTION_NAME_PATH_PATTERN = MENU_LEVEL_XPATH + "//div[@data-testid='%s']";
     private static final String SIDE_MENU_XPATH = ".//div[@class='sideMenu'] | .//div[@class='sideMenu alpha-mode']";
     private static final String SIDE_MENU_HOME_XPATH = ".//div[@class='sideMenu alpha-mode']//div[@data-testid='Home']";
-    private static final String HOVER_MODE_XPATH = "//nav[@id='ossSideMenu' and contains(@class, 'hover-mode')]";
+    private static final String HOVER_MODE_XPATH = ".//nav[@id='ossSideMenu' and contains(@class, 'hover-mode')]";
     private static final String SIDE_MENU_BUTTON_CSS = "button.menuButton.alpha-mode";
     private static final String OPEN_SIDE_MENU_CSS = ".alpha-mode.open";
     private static final String CLASS = "class";
@@ -127,7 +128,7 @@ public class SideMenu {
     }
 
     private List<WebElement> getPresentMenuElements() {
-        return driver.findElement(By.xpath("//div[@class='sideMenu alpha-mode']")).findElements(By.xpath("//div[@class='menuLevel']"));
+        return driver.findElement(By.xpath(SIDE_MENU_XPATH)).findElements(By.xpath(MENU_LEVEL_XPATH));
 
     }
 
