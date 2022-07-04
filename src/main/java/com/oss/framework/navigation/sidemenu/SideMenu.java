@@ -28,10 +28,11 @@ import com.oss.framework.utils.WebElementUtils;
 public class SideMenu {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SideMenu.class);
-    private static final String ACTION_NAME_PATH_PATTERN = "//div[@class='menuLevel']//div[@data-testid='%s']";
+    private static final String MENU_LEVEL_XPATH = ".//div[@class='menuLevel']";
+    private static final String ACTION_NAME_PATH_PATTERN = MENU_LEVEL_XPATH + "//div[@data-testid='%s']";
     private static final String SIDE_MENU_XPATH = ".//div[@class='sideMenu'] | .//div[@class='sideMenu alpha-mode']";
     private static final String SIDE_MENU_HOME_XPATH = ".//div[@class='sideMenu alpha-mode']//div[@data-testid='Home']";
-    private static final String HOVER_MODE_XPATH = "//nav[@id='ossSideMenu' and contains(@class, 'hover-mode')]";
+    private static final String HOVER_MODE_XPATH = ".//nav[@id='ossSideMenu' and contains(@class, 'hover-mode')]";
     private static final String SIDE_MENU_BUTTON_CSS = "button.menuButton.alpha-mode";
     private static final String OPEN_SIDE_MENU_CSS = ".alpha-mode.open";
     private static final String CLASS = "class";
@@ -72,13 +73,12 @@ public class SideMenu {
         LOGGER.info("Search {}", testid);
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
         searchWithRetry(actionXpath);
-        LOGGER.info("Click on {}", testid);
         clickOnElement(moveToElement(actionXpath));
     }
 
     private boolean searchElement(String xpath) {
         boolean elementPresent = isElementPresent(By.xpath(xpath));
-        for (int scrollDownCount = 0; scrollDownCount < 10; scrollDownCount++) {
+        for (int scrollDownCount = 0; scrollDownCount < 5; scrollDownCount++) {
             if (elementPresent) {
                 return true;
             }
@@ -110,25 +110,26 @@ public class SideMenu {
 
     private void moveDownOnTheSideMenu() {
         LOGGER.info("Moving down on the side menu.");
-        moveOnTheSideMenu(Keys.PAGE_DOWN);
+        List<WebElement> presentMenuElements = getPresentMenuElements();
+        WebElementUtils.moveToElement(driver, presentMenuElements.get(presentMenuElements.size() - 1));
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
     }
 
     private void moveToTopOfSideMenu() {
         Actions action = new Actions(driver);
         if (!isHomePresent()) {
             LOGGER.info("Moving up on the side menu.");
-            moveOnTheSideMenu(Keys.HOME);
+            action.moveToElement(getSideMenu()).build().perform();
+            action.moveToElement(getSideMenu()).sendKeys(Keys.HOME).build().perform();
+            DelayUtils.waitForLoadBars(wait, getSideMenu());
         }
-        LOGGER.info("Moving to the top of side menu.");
         action.moveToElement(driver.findElement(By.xpath(SIDE_MENU_HOME_XPATH))).build().perform();
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(SIDE_MENU_HOME_XPATH)));
     }
 
-    private void moveOnTheSideMenu(Keys key) {
-        Actions action = new Actions(driver);
-        action.moveToElement(getSideMenu()).build().perform();
-        action.moveToElement(getSideMenu()).sendKeys(key).build().perform();
-        DelayUtils.waitForLoadBars(wait, getSideMenu());
+    private List<WebElement> getPresentMenuElements() {
+        return driver.findElement(By.xpath(SIDE_MENU_XPATH)).findElements(By.xpath(MENU_LEVEL_XPATH));
+
     }
 
     private boolean isHomePresent() {
@@ -141,26 +142,28 @@ public class SideMenu {
 
     private void waitForClickedAction(String testid) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
-        LOGGER.debug("Waiting for {} to be clicked.", testid);
+        List<WebElement> elementList = driver.findElements(By.xpath(actionXpath));
+        WebElement action = elementList.get(elementList.size() - 1);
+        WebDriverWait shortWait = new WebDriverWait(driver, 15);
         try {
-            wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), CLASS, IS_ACTIVE));
+            shortWait.until(ExpectedConditions.attributeContains(action, CLASS, IS_ACTIVE));
         } catch (TimeoutException e) {
             LOGGER.warn("Action not active after first click. Retrying.");
-            clickOnElement(driver.findElement(By.xpath(actionXpath)));
-            wait.until(ExpectedConditions.attributeContains(By.xpath(actionXpath), CLASS, IS_ACTIVE));
+            clickOnElement(action);
+            shortWait.until(ExpectedConditions.attributeContains(action, CLASS, IS_ACTIVE));
         }
         LOGGER.info("{} clicked.", testid);
     }
 
     private void waitForClickedPath(String path) {
         String pathXpath = String.format(ACTION_NAME_PATH_PATTERN, path);
-        LOGGER.debug("Waiting for {} to be expanded", path);
+        WebDriverWait shortWait = new WebDriverWait(driver, 15);
         try {
-            wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, IS_EXPANDED));
+            shortWait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, IS_EXPANDED));
         } catch (TimeoutException e) {
             LOGGER.warn("Path not expanded after first click. Retrying.");
             clickOnElement(driver.findElement(By.xpath(pathXpath)));
-            wait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, IS_EXPANDED));
+            shortWait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, IS_EXPANDED));
         }
         LOGGER.info("{} expanded.", path);
     }
@@ -178,7 +181,6 @@ public class SideMenu {
 
     private void turnOffHoverMode() {
         if (isHoverModeOn()) {
-            LOGGER.info("Turning off hover mode in side menu.");
             WebElement menuButton = driver.findElement(By.cssSelector(SIDE_MENU_BUTTON_CSS));
             WebElementUtils.clickWithRetry(driver, menuButton, By.cssSelector(OPEN_SIDE_MENU_CSS));
         }
