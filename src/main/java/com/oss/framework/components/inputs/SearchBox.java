@@ -81,6 +81,7 @@ public class SearchBox extends Input {
                 .click()
                 .sendKeys(Keys.ENTER)
                 .perform();
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
     }
 
     private boolean isDropdownPresent() {
