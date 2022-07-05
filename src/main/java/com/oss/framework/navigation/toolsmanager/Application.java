@@ -51,7 +51,7 @@ public class Application {
     }
     
     static Application createApplicationByName(WebDriver driver, WebDriverWait wait, WebElement parent, String applicationName) {
-        DelayUtils.waitForNumberOfElementsToBe(wait, By.cssSelector(APPLICATION_LOADER), 0);
+        DelayUtils.waitForElementDisappear(wait, By.cssSelector(APPLICATION_LOADER));
         WebElement applicationBox = parent.findElements(By.cssSelector(APPLICATIONS_IN_SUBCATEGORY_CSS)).stream()
                 .filter(application -> application.findElement(By.cssSelector(APPLICATION_BOX_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE)
                         .equals(applicationName))
@@ -61,7 +61,7 @@ public class Application {
     }
     
     static Application createApplication(WebDriver driver, WebDriverWait wait, WebElement applicationBox) {
-        DelayUtils.waitForNumberOfElementsToBe(wait, By.cssSelector(APPLICATION_LOADER), 0);
+        DelayUtils.waitForElementDisappear(wait, By.cssSelector(APPLICATION_LOADER));
         String applicationName = applicationBox.getAttribute(TEXT_CONTENT_ATTRIBUTE);
         return new Application(driver, wait, applicationBox, applicationName);
     }

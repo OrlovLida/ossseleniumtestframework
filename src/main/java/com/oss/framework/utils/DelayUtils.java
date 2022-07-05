@@ -26,15 +26,15 @@ public class DelayUtils {
     public static final String INTERRUPTED_EXCEPTION = "Interrputed exception occured.";
     private static final Logger log = LoggerFactory.getLogger(DelayUtils.class);
     private static final String SKELETON_PRELOADER_2_CLASS = "skeletonPreloader";
-
+    
     private DelayUtils() {
         throw new IllegalStateException("Utility class");
     }
-
+    
     public static void sleep() {
         sleep(1000);
     }
-
+    
     public static void sleep(int millis) {
         try {
             Thread.sleep(millis);
@@ -43,43 +43,43 @@ public class DelayUtils {
             Thread.currentThread().interrupt();
         }
     }
-
+    
     public static void waitBy(WebDriverWait wait, By by) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
     }
-
+    
     public static void waitByXPath(WebDriverWait wait, String xPath) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xPath)));
     }
-
+    
     public static void waitForNestedElements(WebDriverWait wait, WebElement parent, String xPath) {
         wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(parent, By.xpath(xPath)));
     }
-
+    
     public static void waitForNestedElements(WebDriverWait wait, WebElement parent, By by) {
         wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(parent, by));
     }
-
+    
     public static void waitForNestedElements(WebDriverWait wait, String parentXpath, String xPath) {
         wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(By.xpath(parentXpath), By.xpath(xPath)));
     }
-
+    
     public static void waitByElement(WebDriverWait wait, WebElement element) {
         wait.until(ExpectedConditions.visibilityOf(element));
     }
-
+    
     public static void waitForVisibility(WebDriverWait wait, WebElement webelement) {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOf(webelement));
     }
-
+    
     public static void waitForPresence(WebDriverWait wait, By locator) {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
-
+    
     public static void waitForPresenceAndVisibility(WebDriverWait wait, By locator) {
         wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
-
+    
     public static void waitForElementDisappear(WebDriverWait wait, WebElement webElement) {
         try {
             wait.ignoring(StaleElementReferenceException.class).until(ExpectedConditions.invisibilityOf(webElement));
@@ -87,15 +87,19 @@ public class DelayUtils {
             log.error("Some element(s) not disappear in expected time");
         }
     }
-
+    
+    public static void waitForElementDisappear(WebDriverWait wait, By by) {
+        waitForNumberOfElementsToBe(wait, by, 0);
+    }
+    
     public static void waitForVisibility(WebDriverWait wait, List<WebElement> webElements) {
         wait.until(ExpectedConditions.visibilityOfAllElements(webElements));
     }
-
+    
     public static void waitForClickability(WebDriverWait wait, WebElement webelement) {
         wait.until(ExpectedConditions.elementToBeClickable(webelement));
     }
-
+    
     public static void waitForPageToLoad(WebDriver driver, WebDriverWait wait) {
         DelayUtils.sleep(1000);
         waitByXPath(wait, OSS_APP_XPATH);
@@ -114,20 +118,20 @@ public class DelayUtils {
             log.warn("Page did not load for a two minutes!");
         }
     }
-
+    
     public static void waitForButtonDisappear(WebDriver driver, String buttonXpath) {
         DelayUtils.sleep(1000);
         List<WebElement> buttons = driver.findElements(By.xpath(buttonXpath));
         waitForElementsDisappear(new WebDriverWait(driver, 90), buttons);
     }
-
+    
     public static void waitForSpinners(WebDriverWait webDriverWait, WebElement webElement) {
         DelayUtils.sleep(1000);
         List<WebElement> spinners = webElement.findElements(By.xpath(FA_SPIN_XPATH));
         waitForElementsDisappear(webDriverWait, spinners);
-
+        
     }
-
+    
     public static void waitForLoadBars(WebDriverWait webDriverWait, WebElement webElement) {
         DelayUtils.sleep(1000);
         List<WebElement> loadBars = webElement.findElements(By.xpath(LOAD_BARS_XPATH));
@@ -136,7 +140,7 @@ public class DelayUtils {
         newList.addAll(barsLoader);
         waitForElementsDisappear(webDriverWait, newList);
     }
-
+    
     public static void waitForElementToLoad(WebDriverWait webDriverWait, WebElement webElement) {
         DelayUtils.sleep(1000);
         List<WebElement> faSpins = webElement.findElements(By.xpath(FA_SPIN_XPATH));
@@ -155,11 +159,11 @@ public class DelayUtils {
         newList.addAll(skeletonPreloader2);
         waitForElementsDisappear(webDriverWait, newList);
     }
-
-    public static void waitForNumberOfElementsToBe(WebDriverWait wait, By by, int number){
+    
+    private static void waitForNumberOfElementsToBe(WebDriverWait wait, By by, int number) {
         wait.until(ExpectedConditions.numberOfElementsToBe(by, number));
     }
-
+    
     private static List<WebElement> listOfLoaders(WebDriver driver) {
         List<WebElement> faSpins = driver.findElements(By.xpath(FA_SPIN_XPATH));
         List<WebElement> spinners = driver.findElements(By.xpath(SPINNER_XPATH));
@@ -177,7 +181,7 @@ public class DelayUtils {
         newList.addAll(skeletonPreloader2);
         return newList;
     }
-
+    
     private static void waitForElementsDisappear(WebDriverWait webDriverWait, List<WebElement> webElements) {
         if (!webElements.isEmpty()) {
             DelayUtils.waitForElementDisappear(webDriverWait, webElements.get(0));
