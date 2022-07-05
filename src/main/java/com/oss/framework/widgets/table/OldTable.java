@@ -381,7 +381,7 @@ public class OldTable extends Widget implements TableInterface {
 
     private AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
-            advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
+            advancedSearch = AdvancedSearch.createById(driver, webDriverWait, id);
         }
         return advancedSearch;
     }
