@@ -75,7 +75,7 @@ public class Card {
 
     private ActionsInterface getActionsInterface() {
         DelayUtils.waitForPageToLoad(driver, wait);
-        DelayUtils.waitBy(wait, By.cssSelector(CONTEXT_ACTIONS_CSS));
+        DelayUtils.waitForPresence(wait, By.cssSelector(CONTEXT_ACTIONS_CSS));
         boolean isNewActionContainer = isElementPresent(cardElement, By.cssSelector(ACTIONS_CONTAINER_CSS));
         boolean isOldActionContainer = isElementPresent(cardElement, By.cssSelector(WINDOW_TOOLBAR_CSS));
         if (isNewActionContainer) {

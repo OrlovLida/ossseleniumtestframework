@@ -74,12 +74,14 @@ public class ComponentFactory {
             case SCRIPT_COMPONENT: {
                 return ScriptComponent.create(webDriver, wait, componentId);
             }
-            case SEARCHBOX:
             case SEARCH_FIELD: {
                 return SearchField.create(webDriver, wait, componentId);
             }
             case SEARCH_BOX: {
                 return SearchBox.create(webDriver, wait, componentId);
+            }
+            case SEARCHBOX: {
+                return SearchBoxV2.create(webDriver, wait, componentId);
             }
             case SLIDER:
             case TEXT_FIELD: {
@@ -158,12 +160,14 @@ public class ComponentFactory {
             case SCRIPT_COMPONENT: {
                 return ScriptComponent.create(parent, webDriver, wait, componentId);
             }
-            case SEARCHBOX:
             case SEARCH_FIELD: {
                 return SearchField.createFromParent(parent, webDriver, wait, componentId);
             }
             case SEARCH_BOX: {
                 return SearchBox.createFromParent(parent, webDriver, wait, componentId);
+            }
+            case SEARCHBOX: {
+                return SearchBoxV2.createFromParent(parent, webDriver, wait, componentId);
             }
             case SLIDER:
             case TEXT_FIELD: {
