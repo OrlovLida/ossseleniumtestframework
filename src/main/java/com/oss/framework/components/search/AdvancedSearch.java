@@ -163,6 +163,10 @@ public class AdvancedSearch {
                 .map(FiltersSettings.SavedFilter::getFilterLabel).collect(Collectors.toList());
     }
 
+    public boolean isSavedFiltersPresent(){
+      return   openFiltersSettings().isSavedFiltersPresent();
+    }
+
     public int getTagsNumber() {
         return this.webElement.findElements(By.cssSelector(TAGS_ITEMS)).size();
     }
