@@ -63,8 +63,8 @@ public class FiltersSettings {
                 .map(savedFilter -> SavedFilter.create(driver, wait, savedFilter, webElement))
                 .collect(Collectors.toList());
     }
-
-     boolean isSavedFiltersPresent(){
+    
+    boolean isSavedFiltersPresent() {
         return this.webElement.findElements(By.cssSelector(SAVED_FILTERS_TAB_CSS)).isEmpty();
     }
     
