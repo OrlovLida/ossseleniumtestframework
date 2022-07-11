@@ -35,6 +35,7 @@ public class FiltersSettings {
     private static final String FILTER_WITH_PROVIDED_NAME_DOESNT_EXIST_EXCEPTION = "Filter with provided name doesn't exist.";
     private static final String ARIA_LABEL = "aria-label";
     private static final String CANNOT_FIND_FILTER_WITH_NAME_EXCEPTION = "Cannot find filter with Name:  ";
+    private static final String FILTERS_TABS_BUTTON_CSS = ".filters-tabs-button";
     
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -65,7 +66,7 @@ public class FiltersSettings {
     }
     
     boolean isSavedFiltersPresent() {
-        return this.webElement.findElements(By.cssSelector(SAVED_FILTERS_TAB_CSS)).isEmpty();
+        return this.webElement.findElements(By.cssSelector(FILTERS_TABS_BUTTON_CSS)).size() == 2;
     }
     
     void selectFilterByLabel(String filterLabel) {
