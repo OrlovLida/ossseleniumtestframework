@@ -24,8 +24,6 @@ import com.oss.framework.widgets.table.OldTable;
  */
 public class OldTreeTableWidget extends Widget {
 
-    private static final String CONTAINS_TEXT_PATTERN = "//*[contains(text(),'%s')]";
-
     private OldTreeTableWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
     }
