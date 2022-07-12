@@ -7,7 +7,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class BpmCombobox extends Input {
 
@@ -16,20 +18,20 @@ public class BpmCombobox extends Input {
     private static final String SELECT = ".//select";
     private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for BpmCombobox";
 
-    private BpmCombobox(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
-    }
-
-    private BpmCombobox(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId);
+    private BpmCombobox(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+        super(driver, wait, webElement, componentId);
     }
 
     static BpmCombobox create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new BpmCombobox(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new BpmCombobox(driver, wait, webElement, componentId);
     }
 
     static BpmCombobox create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new BpmCombobox(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new BpmCombobox(driver, wait, webElement, componentId);
     }
 
     @Override

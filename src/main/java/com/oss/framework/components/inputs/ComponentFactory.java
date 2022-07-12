@@ -17,7 +17,7 @@ public class ComponentFactory {
     }
 
     public static Input create(String componentId, ComponentType componentType, WebDriver webDriver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
+        DelayUtils.waitBy(wait, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         switch (componentType) {
             case BPM_COMBOBOX: {
                 return BpmCombobox.create(webDriver, wait, componentId);
@@ -68,6 +68,7 @@ public class ComponentFactory {
             case PHONE_FIELD: {
                 return PhoneField.create(webDriver, wait, componentId);
             }
+            case RADIO_BUTTONS:
             case RADIO_BUTTON: {
                 return RadioButton.create(webDriver, wait, componentId);
             }
@@ -103,7 +104,7 @@ public class ComponentFactory {
 
     public static Input createFromParent(String componentId, ComponentType componentType, WebDriver webDriver, WebDriverWait wait,
                                          WebElement parent) {
-        DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
+        DelayUtils.waitBy(wait, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         switch (componentType) {
             case BPM_COMBOBOX: {
                 return BpmCombobox.create(webDriver, wait, componentId);
@@ -188,24 +189,24 @@ public class ComponentFactory {
     }
 
     public static Input create(String componentId, WebDriver webDriver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
+        DelayUtils.waitBy(wait, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         ComponentType componentType = getComponentType(componentId, webDriver);
         return create(componentId, componentType, webDriver, wait);
     }
 
     public static Input createFromParent(String componentId, WebDriver webDriver, WebDriverWait wait, WebElement parent) {
-        DelayUtils.waitByXPath(wait, Input.createComponentPath(componentId));
+        DelayUtils.waitBy(wait, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         ComponentType componentType = getComponentTypeFromParent(componentId, parent);
         return createFromParent(componentId, componentType, webDriver, wait, parent);
     }
 
     private static ComponentType getComponentType(String componentId, WebDriver webDriver) {
-        WebElement webElement = webDriver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, componentId)));
+        WebElement webElement = webDriver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         return ComponentType.valueOf(webElement.getAttribute("data-input-type"));
     }
 
     private static ComponentType getComponentTypeFromParent(String componentId, WebElement parent) {
-        WebElement webElement = parent.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, componentId)));
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         return ComponentType.valueOf(webElement.getAttribute("data-input-type"));
     }
 }

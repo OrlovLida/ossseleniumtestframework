@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class HtmlEditor extends Input {
 
@@ -23,6 +24,7 @@ public class HtmlEditor extends Input {
         String xPath = String.format(HTML_EDITOR_COMPONENT_XPATH, widgetId);
         DelayUtils.waitByXPath(webDriverWait, xPath);
         WebElement webElement = webDriver.findElement(By.xpath(xPath));
+        WebElementUtils.moveToElement(webDriver, webElement);
         return new HtmlEditor(webDriver, webDriverWait, webElement);
     }
 

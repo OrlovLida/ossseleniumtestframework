@@ -7,25 +7,27 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class PasswordField extends Input {
 
     private static final String INPUT = ".//input";
 
-    private PasswordField(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
-    }
-
-    private PasswordField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId);
+    private PasswordField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+        super(driver, wait, webElement, componentId);
     }
 
     static PasswordField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new PasswordField(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new PasswordField(driver, wait, webElement, componentId);
     }
 
     static PasswordField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new PasswordField(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new PasswordField(driver, wait, webElement, componentId);
     }
 
     @Override

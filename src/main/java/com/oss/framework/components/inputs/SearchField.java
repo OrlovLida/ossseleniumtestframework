@@ -8,28 +8,30 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
 import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class SearchField extends Input {
     
     private static final String INPUT_XPATH = ".//input";
     
-    private SearchField(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
+    private SearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+        super(driver, wait, webElement, componentId);
     }
-
-    private SearchField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId);
-    }
-
+    
     static SearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new SearchField(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new SearchField(driver, wait, webElement, componentId);
     }
-
+    
     static SearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new SearchField(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new SearchField(driver, wait, webElement, componentId);
     }
-
+    
     @Override
     public void setValueContains(Data value) {
         webElement.click();

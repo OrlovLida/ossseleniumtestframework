@@ -10,10 +10,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public class Coordinates extends Input {
-
+    
     private static final String VALUE = "value";
     private final WebElement labelN = webElement.findElement(By.xpath(".//label[contains(@for,'-N')]"));
     private final WebElement inputN = webElement.findElement(By.xpath(".//input[contains(@id,'-N')]"));
@@ -22,44 +23,44 @@ public class Coordinates extends Input {
     private final WebElement inputDegrees = webElement.findElement(By.xpath(".//input[@name='degrees']"));
     private final WebElement inputMinutes = webElement.findElement(By.xpath(".//input[@name='minutes']"));
     private final WebElement inputSeconds = webElement.findElement(By.xpath(".//input[@name='seconds']"));
-
-    private Coordinates(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
+    
+    private Coordinates(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+        super(driver, wait, webElement, componentId);
     }
-
-    private Coordinates(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId);
-    }
-
+    
     static Coordinates create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new Coordinates(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new Coordinates(driver, wait, webElement, componentId);
     }
-
+    
     static Coordinates create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new Coordinates(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new Coordinates(driver, wait, webElement, componentId);
     }
-
+    
     @Override
     public void setValueContains(Data value) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
-
+    
     @Override
     public Data getValue() {
         List<String> getList = new ArrayList<>();
-
+        
         if (inputN.isSelected()) {
             getList.add(labelN.getText());
         } else if (inputS.isSelected()) {
             getList.add(labelS.getText());
         }
-
+        
         getList.add(inputDegrees.getAttribute(VALUE));
         getList.add(inputMinutes.getAttribute(VALUE));
         getList.add(inputSeconds.getAttribute(VALUE));
         return Data.createMultiData(getList);
     }
-
+    
     @Override
     public void setValue(Data value) {
         WebElementUtils.clickWebElement(driver, webElement);
@@ -73,7 +74,7 @@ public class Coordinates extends Input {
         inputMinutes.sendKeys(value.getStringValues().get(2));
         inputSeconds.sendKeys(value.getStringValues().get(3));
     }
-
+    
     @Override
     public void clear() {
         inputDegrees.sendKeys(Keys.CONTROL + "a");
@@ -83,10 +84,10 @@ public class Coordinates extends Input {
         inputSeconds.sendKeys(Keys.CONTROL + "a");
         inputSeconds.sendKeys(Keys.DELETE);
     }
-
+    
     @Override
     public String getLabel() {
         return webElement.findElement(By.xpath(".//label")).getText();
     }
-
+    
 }
