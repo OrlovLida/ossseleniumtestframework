@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -295,6 +296,17 @@ public class OldTable extends Widget implements TableInterface {
         getAdvancedSearch().fullTextSearch(text);
     }
 
+    public List<String> getColumnsHeaders() {
+        return new ArrayList<>(getColumns().keySet());
+    }
+
+    private Map<String, Column> getColumns() {
+        if (columns == null) {
+            columns = createColumnsFilters();
+        }
+        return columns;
+    }
+
     private Column getColumn(String columnLabel) {
         Map<String, Column> columnsMap = getColumns();
         if (columnsMap.containsKey(columnLabel)) {
@@ -307,7 +319,7 @@ public class OldTable extends Widget implements TableInterface {
     }
 
     private Map<String, Column> createColumnsFilters() {
-        Map<String, Column> columnMap = Maps.newHashMap();
+        Map<String, Column> columnMap = Maps.newLinkedHashMap();
         DelayUtils.waitForNestedElements(webDriverWait, webElement, TABLE_COMPONENT_XPATH);
         List<Column> columns2 =
                 webElement.findElements(By.cssSelector(COLUMNS_WITHOUT_CHECKBOX_CSS))
@@ -322,13 +334,6 @@ public class OldTable extends Widget implements TableInterface {
         String columnsWithLabelsNumberLog = String.format(NUMBER_OF_COLUMNS_WITH_LABEL_LOG_PATTERN, columnMap.size());
         log.debug(columnsWithLabelsNumberLog);
         return columnMap;
-    }
-
-    private Map<String, Column> getColumns() {
-        if (columns == null) {
-            columns = createColumnsFilters();
-        }
-        return columns;
     }
 
     private ActionsInterface getActionsInterface() {

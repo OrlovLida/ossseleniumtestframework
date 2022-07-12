@@ -91,7 +91,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
         if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
-           return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+            return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
         } else {
             return "";
         }

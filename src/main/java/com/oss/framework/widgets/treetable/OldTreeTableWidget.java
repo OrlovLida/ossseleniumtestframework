@@ -66,7 +66,15 @@ public class OldTreeTableWidget extends Widget {
         createTable().callActionByLabel(groupLabel, actionLabel);
     }
 
-    public void callActionById(String groupId, String actionId){
+    public String getCellValue(int index, String attributeLabel) {
+        return createTable().getCellValue(index, attributeLabel);
+    }
+
+    public int getRowNumber(String value, String attributeLabel) {
+        return createTable().getRowNumber(value, attributeLabel);
+    }
+
+    public void callActionById(String groupId, String actionId) {
         createTable().callAction(groupId, actionId);
     }
 

@@ -14,7 +14,7 @@ import com.oss.framework.utils.WebElementUtils;
 public class HtmlEditor extends Input {
 
     private static final String HTML_EDITOR_COMPONENT_XPATH = "//div[@" + CSSUtils.TEST_ID + "='%s']";
-    private static final String INPUT_XPATH = ".//div[contains(@role, 'textbox')]";
+    private static final String INPUT_XPATH = ".//div[contains(@class, 'component-border')]/div";
 
     public HtmlEditor(WebDriver webDriver, WebDriverWait webDriverWait, WebElement component) {
         super(webDriver, webDriverWait, component);
