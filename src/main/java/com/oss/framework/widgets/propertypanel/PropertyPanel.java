@@ -89,13 +89,6 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         attributesChooser.clickApply();
     }
 
-    public Map<String, String> getPropertiesValuesToMap() {
-        Map<String, WebElement> properties = getPropertiesMap();
-
-        return properties.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> getPropertyValue(e.getValue().toString())));
-    }
-
     @Override
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
