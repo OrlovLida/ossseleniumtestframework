@@ -73,7 +73,6 @@ public class OldTreeTableWidget extends Widget {
     }
 
     public int getRowNumber(String value, String attributeLabel) {
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(CONTAINS_TEXT_PATTERN, value));
         return createTable().getRowNumber(value, attributeLabel);
     }
 

@@ -89,16 +89,11 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         attributesChooser.clickApply();
     }
 
-    public List<String> getPropertiesToList() {
-        Map<String, WebElement> properties = getPropertiesMap();
-        return new ArrayList<>(properties.keySet());
-    }
-
-    public Map<String, String> getPropertiesValuesToList() {
+    public Map<String, String> getPropertiesValuesToMap() {
         Map<String, WebElement> properties = getPropertiesMap();
 
         return properties.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> getPropertyText(e.getValue())));
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> getPropertyValue(e.getValue().toString())));
     }
 
     @Override
@@ -119,14 +114,6 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     public void callAction(String groupId, String actionId) {
         ActionsContainer actionsContainer = ActionsContainer.createFromParent(webElement, this.driver, this.webDriverWait);
         actionsContainer.callActionById(groupId, actionId);
-    }
-
-    private String getPropertyText(WebElement webElement) {
-        if (!webElement.findElements(By.xpath(PROPERTY_VALUE_PATH)).isEmpty()) {
-            return webElement.findElement(By.xpath(PROPERTY_VALUE_PATH)).getText();
-        } else {
-            return "";
-        }
     }
 
     private DragAndDrop.DraggableElement getDraggableElement(String id) {

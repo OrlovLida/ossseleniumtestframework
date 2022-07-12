@@ -234,15 +234,6 @@ public class OldTable extends Widget implements TableInterface {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
     }
 
-    public List<String> getRowValues(int index) {
-        List<String> columnHeaders = getActiveColumnHeaders();
-        List<String> rowValues = new ArrayList<>();
-        for (int i = 0; i <= columnHeaders.size(); i++) {
-            rowValues.add(getCellValue(index, columnHeaders.get(i)));
-        }
-        return rowValues;
-    }
-
     public void unselectRow(String attributeLabel, String value) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         getColumn(attributeLabel).unselectCellByValue(value);
@@ -309,7 +300,7 @@ public class OldTable extends Widget implements TableInterface {
         return new ArrayList<>(getColumns().keySet());
     }
 
-    public Map<String, Column> getColumns() {
+    private Map<String, Column> getColumns() {
         if (columns == null) {
             columns = createColumnsFilters();
         }
