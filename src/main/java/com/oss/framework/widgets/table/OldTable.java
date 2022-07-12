@@ -377,7 +377,7 @@ public class OldTable extends Widget implements TableInterface {
         return advancedSearch;
     }
 
-    public static class Column {
+    private static class Column {
         private static final String FLEX_CLASS = "flex";
         private static final String LABEL_ATTRIBUTE = "label";
         private static final String CELL_ROW_XPATH = ".//div[contains(@class, 'Cell Row')]";
