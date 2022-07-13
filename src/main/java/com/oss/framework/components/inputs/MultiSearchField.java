@@ -21,20 +21,20 @@ public class MultiSearchField extends Input {
     private static final String TAGS_INPUT_LABEL_CSS = ".tags-input__label";
     private static final String INPUT_LABEL_CSS = ".oss-input__input-label";
 
-    private MultiSearchField(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
-    }
-
-    private MultiSearchField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId);
+    private MultiSearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+        super(driver, wait, webElement, componentId);
     }
 
     static MultiSearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new MultiSearchField(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new MultiSearchField(driver, wait, webElement, componentId);
     }
 
     static MultiSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new MultiSearchField(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new MultiSearchField(driver, wait, webElement, componentId);
     }
 
     @Override

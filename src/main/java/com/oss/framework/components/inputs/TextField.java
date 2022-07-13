@@ -8,27 +8,29 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public class TextField extends Input {
 
     private static final String INPUT = ".//input";
+    private static final String ASTERISK_XPATH = ".//span[@class='asterisk']";
 
-    private TextField(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
-    }
-
-    private TextField(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId);
+    private TextField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+        super(driver, wait, webElement, componentId);
     }
 
     static TextField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new TextField(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new TextField(driver, wait, webElement, componentId);
     }
 
     static TextField create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new TextField(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new TextField(driver, wait, webElement, componentId);
     }
 
     @Override
@@ -62,6 +64,6 @@ public class TextField extends Input {
     }
 
     public boolean isMandatory() {
-        return !webElement.findElements(By.xpath(".//span[@class='asterisk']")).isEmpty();
+        return !webElement.findElements(By.xpath(ASTERISK_XPATH)).isEmpty();
     }
 }

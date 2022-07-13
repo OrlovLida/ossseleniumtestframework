@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.data.Data;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class FileChooser extends Input {
     public static final String DELETE_CLASS = "delete";
@@ -20,33 +21,35 @@ public class FileChooser extends Input {
     private static final String INPUT_XPATH = "//input[@type='file']";
     private static final String UPLOAD_SUCCESS_XPATH = "//span[@class='uploadStatus'][text()='Upload success']";
     private static final String POPUP_XPATH = "//ul[@class='UploadedFiles']";
-
-    private FileChooser(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
+    
+    private FileChooser(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+        super(driver, wait, webElement, componentId);
     }
-
+    
     public static FileChooser create(WebDriver driver, WebDriverWait wait, String componentId) {
         DelayUtils.waitByXPath(wait, "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']");
-        return new FileChooser(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new FileChooser(driver, wait, webElement, componentId);
     }
-
+    
     @Override
     public void setValueContains(Data value) {
         throw new UnsupportedOperationException("Method not implemented for the File Chooser");
     }
-
+    
     @Override
     public Data getValue() {
         List<String> names = new ArrayList<>();
         DelayUtils.waitByXPath(webDriverWait, POPUP_XPATH);
-
+        
         List<WebElement> fileNames = webElement.findElements(By.className(FILE_NAME_CLASS));
-        for (WebElement fileName : fileNames) {
+        for (WebElement fileName: fileNames) {
             names.add(fileName.getText());
         }
         return Data.createMultiData(names);
     }
-
+    
     @Override
     public void setValue(Data value) {
         DelayUtils.waitByElement(webDriverWait, this.webElement);
@@ -58,7 +61,7 @@ public class FileChooser extends Input {
         ((JavascriptExecutor) driver).executeScript("delete HTMLInputElement.prototype.click");
         DelayUtils.waitByXPath(webDriverWait, UPLOAD_SUCCESS_XPATH);
     }
-
+    
     @Override
     public void clear() {
         DelayUtils.waitByXPath(webDriverWait, POPUP_XPATH);
@@ -67,7 +70,7 @@ public class FileChooser extends Input {
             attachments.findElement(By.className(DELETE_CLASS)).click();
         }
     }
-
+    
     public String getStatus() {
         DelayUtils.waitByXPath(webDriverWait, POPUP_XPATH);
         WebElement importStatus = driver.findElement(By.xpath(UPLOAD_STATUS_XPATH));

@@ -17,18 +17,19 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public abstract class Input {
-
-    static final String DEFAULT = "default";
-    static final String TEXT = "text";
-    static final String POINTER = "pointer";
-    static final String NOT_ALLOWED = "not-allowed";
-    static final String CANNOT_FIND_MOUSE_COURSE_EXCEPTION = "Cannot find mouse course for your input";
+    
+    private static final String DEFAULT = "default";
+    private static final String TEXT = "text";
+    private static final String POINTER = "pointer";
+    private static final String NOT_ALLOWED = "not-allowed";
+    private static final String CANNOT_FIND_MOUSE_COURSE_EXCEPTION = "Cannot find mouse course for your input";
     private static final String LABEL = ".//label";
+    static final String NOT_SUPPORTED_EXCEPTION = "Not supported for this type of input";
     protected final WebDriver driver;
     protected final WebDriverWait webDriverWait;
     protected final WebElement webElement;
     protected final String componentId;
-
+    
     Input(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
@@ -36,120 +37,109 @@ public abstract class Input {
         this.componentId = null;
     }
 
-    Input(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
+    Input(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, String componentId) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
-        this.webElement = driver.findElement(By.xpath(createComponentPath(componentId)));
+        this.webElement = webElement;
         this.componentId = componentId;
     }
-
-    Input(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        this.driver = driver;
-        this.webDriverWait = webDriverWait;
-        this.webElement = parent.findElement(By.xpath("." + createComponentPath(componentId)));
-        this.componentId = componentId;
-    }
-
-    static String createComponentPath(String componentId) {
-        return "//*[@" + CSSUtils.TEST_ID + "='" + componentId + "']";
-    }
-
+    
     public final void hover() {
         Actions action = new Actions(this.driver);
         action.moveToElement(webElement).build().perform();
     }
-
+    
     public final void click() {
         WebElementUtils.clickWebElement(driver, webElement);
         DelayUtils.sleep();
     }
-
+    
     public final void doubleClick() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).doubleClick().perform();
         DelayUtils.sleep();
     }
-
+    
     public final void clearByAction() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).doubleClick().sendKeys(Keys.DELETE).perform();
         DelayUtils.sleep();
     }
-
+    
     public MouseCursor cursor() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).build().perform();
         String cursor = webElement.findElement(By.xpath(".//input")).getCssValue("cursor");
         return getMouseCursor(cursor);
-
+        
     }
-
+    
     public final List<String> getHint() {
         Tooltip tooltip = Tooltip.create(driver, webDriverWait, componentId);
         return tooltip.getMessages();
     }
-
+    
     public final List<String> getMessages() {
         InputMessage messages = new InputMessage(this.webElement);
         return messages.getMessages();
     }
-
+    
     public abstract void setValueContains(Data value);
-
+    
     public abstract Data getValue();
-
+    
     public abstract void setValue(Data value);
-
+    
     public abstract void clear();
-
+    
     public String getLabel() {
         WebElement label = webElement.findElement(By.xpath(LABEL));
         return label.getText();
     }
-
+    
     public final void setMultiStringValue(List<String> values) {
         this.setValue(Data.createMultiData(values));
     }
-
+    
     public final void setMultiStringValueContains(List<String> values) {
         this.setValueContains(Data.createMultiData(values));
     }
-
+    
     public final void setSingleStringValue(String value) {
         this.setValue(Data.createSingleData(value));
     }
-
+    
     public final void setSingleStringValueContains(String value) {
         this.setValueContains(Data.createSingleData(value));
     }
-
+    
     public final String getStringValue() {
         return getValue().getStringValue();
     }
-
+    
     public final List<String> getStringValues() {
         return getValue().getStringValues();
     }
-
+    
     MouseCursor getMouseCursor(String cursor) {
         switch (cursor) {
-            case DEFAULT: {
-                return MouseCursor.DEFAULT;
-            }
-            case TEXT: {
-                return MouseCursor.TEXT;
-            }
-            case POINTER: {
-                return MouseCursor.POINTER;
-            }
-            case NOT_ALLOWED: {
-                return MouseCursor.NOT_ALLOWED;
-            }
-            default:
+        case DEFAULT: {
+            return MouseCursor.DEFAULT;
+        }
+        case TEXT: {
+            return MouseCursor.TEXT;
+        }
+        case POINTER: {
+            return MouseCursor.POINTER;
+        }
+        case NOT_ALLOWED: {
+            return MouseCursor.NOT_ALLOWED;
+        }
+        default:
         }
         throw new IllegalArgumentException(CANNOT_FIND_MOUSE_COURSE_EXCEPTION);
     }
-
+    
     public enum ComponentType {
         BPM_COMBOBOX,
         CHECKBOX,
@@ -167,7 +157,11 @@ public abstract class Input {
         OBJECT_SEARCH_FIELD,
         PASSWORD_FIELD,
         PHONE_FIELD,
-        RADIO_BUTTON,
+        /**
+         * RADIO_BUTTON should be replace with RADIO_BUTTONS, enum RADIO_BUTTON will be deleted in 3.0.x release
+         */
+        @Deprecated RADIO_BUTTON,
+        RADIO_BUTTONS,
         SCRIPT_COMPONENT,
         SEARCH_BOX,
         SEARCHBOX,
@@ -177,11 +171,11 @@ public abstract class Input {
         TAGS,
         TEXT_AREA,
         TEXT_FIELD,
-        TIME
+        TIME;
     }
-
+    
     public enum MouseCursor {
         NOT_ALLOWED, DEFAULT, TEXT, POINTER
     }
-
+    
 }

@@ -4,42 +4,42 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class TextArea extends Input {
 
     private static final String TEXT_AREA = ".//textarea";
 
-    private TextArea(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
-    }
-
-    private TextArea(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId);
+    private TextArea(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+         super(driver, wait, webElement, componentId);
     }
 
     static TextArea create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new TextArea(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new TextArea(driver, wait, webElement, componentId);
     }
 
     static TextArea createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new TextArea(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new TextArea(driver, wait, webElement, componentId);
     }
 
     @Override
     public MouseCursor cursor() {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(webElement).build().perform();
+        WebElementUtils.moveToElement(driver, webElement);
         String cursor = webElement.findElement(By.xpath(TEXT_AREA)).getCssValue("cursor");
         return getMouseCursor(cursor);
     }
 
     @Override
     public void setValueContains(Data value) {
-        throw new UnsupportedOperationException("Set value contains is not supported in TextArea");
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override
