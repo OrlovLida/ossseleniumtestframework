@@ -27,7 +27,7 @@ public class CommentTextField extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override

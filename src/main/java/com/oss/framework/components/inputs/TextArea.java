@@ -39,7 +39,7 @@ public class TextArea extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        throw new UnsupportedOperationException("Set value contains is not supported in TextArea");
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override

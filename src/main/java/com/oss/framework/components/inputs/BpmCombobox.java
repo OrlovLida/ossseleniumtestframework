@@ -16,7 +16,6 @@ public class BpmCombobox extends Input {
     private static final String OPTION = ".//option[@value='%s']";
     private static final String OPTION_CONTAINS = ".//option[contains(@value, '%s')]";
     private static final String SELECT = ".//select";
-    private static final String METHOD_NOT_IMPLEMENTED = "Method not implemented for BpmCombobox";
 
     private BpmCombobox(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
@@ -46,7 +45,7 @@ public class BpmCombobox extends Input {
 
     @Override
     public Data getValue() {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override
@@ -61,7 +60,7 @@ public class BpmCombobox extends Input {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENTED);
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
 
     }
 }
