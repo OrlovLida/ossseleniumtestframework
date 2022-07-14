@@ -18,7 +18,7 @@ public class DropdownList {
     private static final String INPUT_XPATH = ".//div[@class='dropdown__search']//input | .//div[@class='search-cont']//input";
     private static final String BY_ID_PATTERN = ".portal [" + CSSUtils.TEST_ID + "='%s'],.portal #%s";
     private static final String BY_TEXT_PATTERN = "//div[starts-with(@class, 'portal')]//*[text()='%s']";
-    private static final String BY_TITLE_PATTERN = ".//div[@title='%s']";
+    private static final String BY_TITLE_PATTERN = ".portal [title='%s']";
     private static final String BY_TEXT_CONTAINS_PATTERN = "//div[starts-with(@class, 'portal')]//*[contains(text(), '%s')]";
 
     private final WebDriver driver;
@@ -45,9 +45,9 @@ public class DropdownList {
     }
 
     public void selectOptionByTitle(String title) {
-        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TITLE_PATTERN, title))));
+        DelayUtils.waitByElement(wait, driver.findElement(By.cssSelector(String.format(BY_TITLE_PATTERN, title))));
         WebElement foundedElement =
-                dropdownListElement.findElement(By.xpath(String.format(BY_TITLE_PATTERN, title)));
+                driver.findElement(By.cssSelector(String.format(BY_TITLE_PATTERN, title)));
         foundedElement.click();
     }
 

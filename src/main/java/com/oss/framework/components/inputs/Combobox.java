@@ -61,7 +61,7 @@ public class Combobox extends Input {
         webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
-        dropdownList.selectOption(value.getStringValue());
+        dropdownList.selectOptionByTitle(value.getStringValue());
     }
 
     @Override
