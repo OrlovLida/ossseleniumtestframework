@@ -8,30 +8,32 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class ScriptComponent extends Input {
 
     private static final String XPATH = ".//div[@class='CodeMirror-code']";
 
-    private ScriptComponent(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        super(driver, webDriverWait, componentId);
-    }
-
-    private ScriptComponent(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        super(parent, driver, webDriverWait, componentId);
+    private ScriptComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, String componentId) {
+        super(driver, webDriverWait, webElement, componentId);
     }
 
     static ScriptComponent create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new ScriptComponent(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new ScriptComponent(driver, wait, webElement, componentId);
     }
 
     static ScriptComponent create(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new ScriptComponent(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new ScriptComponent(driver, wait, webElement, componentId);
     }
 
     @Override
     public void setValueContains(Data value) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override

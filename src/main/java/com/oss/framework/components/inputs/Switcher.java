@@ -6,35 +6,37 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class Switcher extends Input {
 
-    private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private static final String SWITCHER_CLASS = "switcher-inner";
 
-    private Switcher(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        super(driver, webDriverWait, componentId);
-    }
-
-    private Switcher(WebElement parent, WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        super(parent, driver, webDriverWait, componentId);
+    private Switcher(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, String componentId) {
+        super(driver, webDriverWait, webElement, componentId);
     }
 
     static Switcher create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new Switcher(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new Switcher(driver, wait, webElement, componentId);
     }
 
     static Switcher createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        return new Switcher(parent, driver, wait, componentId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new Switcher(driver, wait, webElement, componentId);
     }
 
     @Override
     public void setValueContains(Data value) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override
     public Data getValue() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override
@@ -44,18 +46,18 @@ public class Switcher extends Input {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override
     public String getLabel() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     private void setSwitcherValue(Data value) {
         Boolean valueToSet = Boolean.valueOf(value.getStringValue());
         if (!valueToSet.equals(isSwitched())) {
-            this.webElement.findElement(By.className("switcher-inner")).click();
+            this.webElement.findElement(By.className(SWITCHER_CLASS)).click();
         }
     }
 

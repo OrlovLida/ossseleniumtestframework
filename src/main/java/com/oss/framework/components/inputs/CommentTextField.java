@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public class CommentTextField extends Input {
@@ -14,17 +15,19 @@ public class CommentTextField extends Input {
     private static final String TEXT_FIELD_XPATH = ".//ancestor::div[@class='TextField clearfix']";
     private static final String ACCEPT_BUTTON_CSS = ".fa-check";
 
-    CommentTextField(WebDriver driver, WebDriverWait webDriverWait, String componentId) {
-        super(driver, webDriverWait, componentId);
+    private CommentTextField(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, String componentId) {
+        super(driver, webDriverWait, webElement, componentId);
     }
 
     static CommentTextField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        return new CommentTextField(driver, wait, componentId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new CommentTextField(driver, wait, webElement, componentId);
     }
 
     @Override
     public void setValueContains(Data value) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
     @Override

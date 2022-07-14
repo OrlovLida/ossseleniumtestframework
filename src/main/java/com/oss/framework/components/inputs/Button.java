@@ -35,6 +35,12 @@ public class Button {
         return new Button(driver, button);
     }
 
+    public static Button createById(WebDriver driver, String componentClass, String buttonId) {
+        WebElement button = driver.findElement(
+                By.cssSelector("." + componentClass + " [" + CSSUtils.TEST_ID + "='" + buttonId + "']"));
+        return new Button(driver, button);
+    }
+
     public void click() {
         WebElementUtils.clickWebElement(webDriver, webElement);
     }

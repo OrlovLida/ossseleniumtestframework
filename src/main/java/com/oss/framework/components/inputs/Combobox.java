@@ -13,28 +13,29 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public class Combobox extends Input {
-
+    
     private static final String INPUT_XPATH = ".//input";
     private static final String LABEL_XPATH = ".//label";
-    private static final String COMBOBOX_INPUT_XPATH = ".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]";
+    private static final String COMBOBOX_INPUT_XPATH =
+            ".//input[contains(@class,'oss-input__input')] | .//input[contains(@id,'domain-combobox-input')]";
     private static final String CLEAR_BUTTON_SELECTOR = "[aria-label='CLOSE']";
-
-    private Combobox(WebDriver driver, WebDriverWait wait, String componentId) {
-        super(driver, wait, componentId);
+    
+    private Combobox(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
+        super(driver, wait, webElement, componentId);
     }
-
-    private Combobox(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
-        super(parent, driver, wait, componentId);
-    }
-
+    
     static Combobox create(WebDriver driver, WebDriverWait wait, String comboboxId) {
-        return new Combobox(driver, wait, comboboxId);
+        WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(comboboxId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new Combobox(driver, wait, webElement, comboboxId);
     }
-
+    
     static Combobox createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String comboboxId) {
-        return new Combobox(parent, driver, wait, comboboxId);
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(comboboxId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new Combobox(driver, wait, webElement, comboboxId);
     }
-
+    
     @Override
     public void setValueContains(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, INPUT_XPATH);
@@ -45,14 +46,14 @@ public class Combobox extends Input {
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionContains(value.getStringValue());
     }
-
+    
     @Override
     public Data getValue() {
         WebElement input =
                 webElement.findElement(By.xpath(COMBOBOX_INPUT_XPATH));
         return Data.createSingleData(input.getAttribute("value"));
     }
-
+    
     @Override
     public void setValue(Data value) {
         DelayUtils.waitForNestedElements(this.webDriverWait, webElement, INPUT_XPATH);
@@ -63,7 +64,7 @@ public class Combobox extends Input {
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.selectOptionByTitle(value.getStringValue());
     }
-
+    
     @Override
     public void clear() {
         if (isClearIconPresent()) {
@@ -75,19 +76,19 @@ public class Combobox extends Input {
             input.sendKeys(Keys.DELETE);
         }
     }
-
+    
     @Override
     public String getLabel() {
         WebElement label = webElement.findElement(By.xpath(LABEL_XPATH));
         return label.getText();
     }
-
+    
     private boolean isClearIconPresent() {
         return !webElement.findElements(By.cssSelector(CLEAR_BUTTON_SELECTOR)).isEmpty();
     }
-
+    
     private String createDropdownList() {
         return "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "-dropdown']";
     }
-
+    
 }
