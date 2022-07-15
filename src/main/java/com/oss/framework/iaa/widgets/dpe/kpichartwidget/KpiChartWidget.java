@@ -1,6 +1,7 @@
 package com.oss.framework.iaa.widgets.dpe.kpichartwidget;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -32,6 +33,7 @@ public class KpiChartWidget extends Widget {
     private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
     private static final String HIDDEN_Y_AXIS_PATH = "//*[@display = 'none' and contains (@class,'amcharts-v')]";
     private static final String VISIBLE_Y_AXIS_PATH = "//*[not (contains(@display, 'none')) and contains (@class,'amcharts-v')]";
+    private static final String VISIBLE_Y_AXIS_VALUES_XPATH = "//*[@data-testid='amchart-label-y' and not (contains(@display, 'none')) and not (contains(@opacity, '0'))]";
     private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='last-sample-time' and not(contains(@display, 'none'))]";
     private static final String TIME_ZONE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='timezone' and not(contains(@display, 'none'))]";
     private static final String ZOOM_OUT_BUTTON_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-zoomout-button']";
@@ -39,6 +41,7 @@ public class KpiChartWidget extends Widget {
     private static final String MOVE_MOUSE_OVER = "Moving mouse over: ";
     private static final String ELEMENT_PRESENT_AND_VISIBLE = "Element is present and visible: ";
     private static final String LEGEND_WITH_TXT_XPATH = ".//div[@class='legendWrapper']//*[contains(text(), '%s')]";
+    private static final String TREND_LINE_ON_CHART_XPATH = ".//*[contains(@class, 'amcharts-trendline')]";
 
     private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
         super(driver, webDriverWait, widgetId, widget);
@@ -77,6 +80,10 @@ public class KpiChartWidget extends Widget {
         return linesCount;
     }
 
+    public int countTrendLines() {
+        return this.webElement.findElements(By.xpath(TREND_LINE_ON_CHART_XPATH)).size();
+    }
+
     public int countPieCharts() {
         int pieChartsCount = this.webElement.findElements(By.xpath(PIE_CHART_PATH)).size();
         log.debug("Number of visible Pie Charts is: {}", pieChartsCount);
@@ -89,16 +96,31 @@ public class KpiChartWidget extends Widget {
         return pointsCount;
     }
 
+    /**
+     * @deprecated (functionality is no more available, to remove after update OSSPlatformPages)
+     */
+    @Deprecated
     public int countVisibleYAxis() {
         int visibleYAxis = this.webElement.findElements(By.xpath(VISIBLE_Y_AXIS_PATH)).size();
         log.debug("Visible Y axis count: {}", visibleYAxis);
         return visibleYAxis;
     }
 
+    /**
+     * @deprecated (functionality is no more available, to remove after update OSSPlatformPages)
+     */
+    @Deprecated
     public int countHiddenYAxis() {
         int hiddenYAxis = this.webElement.findElements(By.xpath(HIDDEN_Y_AXIS_PATH)).size();
         log.debug("Hidden Y axis count: {}", hiddenYAxis);
         return hiddenYAxis;
+    }
+
+    public List<String> allYaxisVisibleValues() {
+        return this.webElement.findElements(By.xpath(VISIBLE_Y_AXIS_VALUES_XPATH))
+                .stream()
+                .map(WebElement::getText)
+                .collect(Collectors.toList());
     }
 
     public int countVisibleLastSampleTime() {
@@ -155,7 +177,7 @@ public class KpiChartWidget extends Widget {
     }
 
     public boolean isTopNBarChartIsPresent(String barChartId) {
-        return !this.webElement.findElements(By.xpath(".//*[@data-testid='" + barChartId + "']")).isEmpty();
+        return WebElementUtils.isElementPresent(this.webElement, By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + barChartId + "']"));
     }
 
     public void doubleClickTopNBar(String barChartId) {

@@ -3,32 +3,34 @@ package com.oss.framework.iaa.widgets.dpe.toolbarpanel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.oss.framework.components.inputs.Button;
 import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class KpiToolbarPanel extends Widget {
 
     static final String KPI_TOOLBAR_PATH = "//div[@class='toolbarPanel']";
-    private static final Logger log = LoggerFactory.getLogger(KpiToolbarPanel.class);
     private static final String APPLY_BUTTON_ID = "apply-button";
-    private static final String DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH = ".//div[@data-testid='dropdown_list_type_display_data']";
+    private static final String DISPLAY_TYPE_DROPDOWN_BUTTON_XPATH = ".//div[@" + CSSUtils.TEST_ID + "='dropdown_list_type_display_data']";
     private static final String TOP_N_BUTTON_ID = "top-n-button";
     private static final String OPTIONS_BUTTON_ID = "options-menu-button";
     private static final String LAYOUT_BUTTON_ID = "layout-button";
-    private static final String OPENED_TOP_N_PANEL_XPATH = "//div[@class='window']/div[@data-testid='drill-down-menu']";
-    private static final String OPENED_OPTIONS_PANEL_XPATH = "//div[@class='window']/div[@data-testid='options-menu']";
-    private static final String OPENED_LAYOUT_PANEL_XPATH = "//div[@class='window']/div[@data-testid='layout-template-menu']";
+    private static final String WINDOW_CONTENT_XPATH = "//div[@class='window']/div";
+    private static final String OPENED_TOP_N_PANEL_XPATH = WINDOW_CONTENT_XPATH + "[@" + CSSUtils.TEST_ID + "='drill-down-menu']";
+    private static final String OPENED_OPTIONS_PANEL_XPATH = WINDOW_CONTENT_XPATH + "[@" + CSSUtils.TEST_ID + "='options-menu']";
+    private static final String OPENED_LAYOUT_PANEL_XPATH = WINDOW_CONTENT_XPATH + "[@" + CSSUtils.TEST_ID + "='layout-template-menu']";
     private static final String EXPORT_BUTTON_ID = "export-button";
-    private static final String OPENED_EXPORT_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='export-menu']";
-    private static final String OPENED_FILTERS_PANEL_XPATH = ".//div[@class='window']/div[@data-testid='filter-menu']";
+    private static final String OPENED_EXPORT_PANEL_XPATH = "." + WINDOW_CONTENT_XPATH + "[@" + CSSUtils.TEST_ID + "='export-menu']";
+    private static final String OPENED_FILTERS_PANEL_XPATH = "." + WINDOW_CONTENT_XPATH + "[@" + CSSUtils.TEST_ID + "='filter-menu']";
     private static final String FILTER_BUTTON_ID = "filter-button";
-    private static final String CLICK_BTN = "Clicking button: ";
     private static final String WIDGET_ID = "_Data_View";
+    private static final String OPENED_OPTIONS_SIDE_PANEL_CSS = ".expanded[" + CSSUtils.TEST_ID + "='dockedPanel-right']";
+    private static final String OPTIONS_SIDE_PANEL_BUTTON_LABEL = "Options";
+    private static final String INACTIVE_ELEMENT_CSS = ".inactive";
 
     private KpiToolbarPanel(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -80,12 +82,24 @@ public class KpiToolbarPanel extends Widget {
         return FiltersPanel.create(driver);
     }
 
-    public void clickApply() {
-        Button applyButton = Button.createById(driver, APPLY_BUTTON_ID);
-        DelayUtils.sleep(5000);
-        applyButton.click();
+    public OptionsSidePanel openOptionsSidePanel() {
+        if (!isOptionsSidePanelOpen()) {
+            clickOptionsSidePanelButton();
+        }
+        return OptionsSidePanel.create(driver, webDriverWait);
+    }
 
-        log.debug(CLICK_BTN + "Apply");
+    private void clickOptionsSidePanelButton() {
+        Button.createByLabel(driver, OPTIONS_SIDE_PANEL_BUTTON_LABEL).click();
+    }
+
+    private boolean isOptionsSidePanelOpen() {
+        return WebElementUtils.isElementPresent(webElement, By.cssSelector(OPENED_OPTIONS_SIDE_PANEL_CSS));
+    }
+
+    public void clickApply() {
+        DelayUtils.waitForElementDisappear(webDriverWait, By.cssSelector(INACTIVE_ELEMENT_CSS));
+        Button.createById(driver, APPLY_BUTTON_ID).click();
     }
 
     public void selectDisplayType(String displayTypeId) {
@@ -95,47 +109,42 @@ public class KpiToolbarPanel extends Widget {
     }
 
     private boolean isTopNPanelOpen() {
-        return !driver.findElements(By.xpath(OPENED_TOP_N_PANEL_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.xpath(OPENED_TOP_N_PANEL_XPATH));
     }
 
     private void clickTopNButton() {
         Button.createById(driver, TOP_N_BUTTON_ID).click();
-        log.debug(CLICK_BTN + "TopN");
     }
 
     private boolean isOptionsPanelOpen() {
-        return !driver.findElements(By.xpath(OPENED_OPTIONS_PANEL_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.xpath(OPENED_OPTIONS_PANEL_XPATH));
     }
 
     private void clickOptionsButton() {
         Button.createById(driver, OPTIONS_BUTTON_ID).click();
-        log.debug(CLICK_BTN + "Options");
     }
 
     private boolean isLayoutPanelOpen() {
-        return !driver.findElements(By.xpath(OPENED_LAYOUT_PANEL_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.xpath(OPENED_LAYOUT_PANEL_XPATH));
     }
 
     private void clickLayoutButton() {
         Button.createById(driver, LAYOUT_BUTTON_ID).click();
-        log.debug(CLICK_BTN + "Layout");
     }
 
     private boolean isExportPanelOpen() {
-        return !driver.findElements(By.xpath(OPENED_EXPORT_PANEL_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.xpath(OPENED_EXPORT_PANEL_XPATH));
     }
 
     private void clickExportButton() {
         Button.createById(driver, EXPORT_BUTTON_ID).click();
-        log.debug(CLICK_BTN + "Export");
     }
 
     private boolean isFilterPanelOpen() {
-        return !driver.findElements(By.xpath(OPENED_FILTERS_PANEL_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.xpath(OPENED_FILTERS_PANEL_XPATH));
     }
 
     private void clickFilterButton() {
         Button.createById(driver, FILTER_BUTTON_ID).click();
-        log.debug(CLICK_BTN + "Filters");
     }
 }
