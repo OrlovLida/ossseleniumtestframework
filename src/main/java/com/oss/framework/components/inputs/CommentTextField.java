@@ -38,7 +38,6 @@ public class CommentTextField extends Input {
     @Override
     public void setValue(Data value) {
         clear();
-        WebElementUtils.clickWebElement(driver, textField());
         textField().sendKeys(value.getStringValue());
         acceptInputValue();
     }
