@@ -12,7 +12,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.alerts.InputMessage;
 import com.oss.framework.components.data.Data;
 import com.oss.framework.components.tooltip.Tooltip;
-import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
@@ -145,6 +144,7 @@ public abstract class Input {
         CHECKBOX,
         COMBOBOX,
         COMMENT_TEXT_FIELD,
+        OLD_TEXT_FIELD_APP,
         COORDINATES,
         DATE,
         DATE_TIME,
@@ -171,7 +171,7 @@ public abstract class Input {
         TAGS,
         TEXT_AREA,
         TEXT_FIELD,
-        TIME;
+        TIME
     }
     
     public enum MouseCursor {
