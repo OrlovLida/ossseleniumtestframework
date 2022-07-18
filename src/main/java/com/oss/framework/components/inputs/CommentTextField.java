@@ -12,7 +12,7 @@ import com.oss.framework.utils.WebElementUtils;
 
 public class CommentTextField extends Input {
 
-    private static final String TEXT_FIELD_XPATH = ".//ancestor::div[@class='TextField clearfix']";
+    private static final String TEXT_FIELD_XPATH = ".//div[starts-with(@class, 'textFieldCont')]";
     private static final String ACCEPT_BUTTON_CSS = ".fa-check";
 
     private CommentTextField(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, String componentId) {
@@ -32,21 +32,21 @@ public class CommentTextField extends Input {
 
     @Override
     public Data getValue() {
-        return Data.createSingleData(webElement.getText());
+        return Data.createSingleData(textField().getText());
     }
 
     @Override
     public void setValue(Data value) {
         clear();
-        webElement.sendKeys(value.getStringValue());
+        textField().sendKeys(value.getStringValue());
         acceptInputValue();
     }
 
     @Override
     public void clear() {
-        WebElementUtils.clickWebElement(driver, webElement);
-        webElement.sendKeys(Keys.CONTROL + "a");
-        webElement.sendKeys(Keys.DELETE);
+        WebElementUtils.clickWebElement(driver, textField());
+        textField().sendKeys(Keys.CONTROL + "a");
+        textField().sendKeys(Keys.DELETE);
     }
 
     private WebElement textField() {
@@ -54,6 +54,6 @@ public class CommentTextField extends Input {
     }
 
     private void acceptInputValue() {
-        WebElementUtils.clickWebElement(driver, textField().findElement(By.cssSelector(ACCEPT_BUTTON_CSS)));
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(ACCEPT_BUTTON_CSS)));
     }
 }
