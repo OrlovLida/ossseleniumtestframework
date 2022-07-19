@@ -183,7 +183,9 @@ public class TabsWidget extends Widget implements TabsInterface {
     
     private boolean isMorePresent() {
         DelayUtils.waitForNestedElements(webDriverWait, createTabs(), TABS_CONTAINER_XPATH);
-        List<WebElement> isMore = createTabs().findElements(By.xpath(DROPDOWN_TAB_XPATH));
+        List<WebElement> isMore = createTabs()
+                .findElement(By.cssSelector(TABS_HEADER_CSS))
+                .findElements(By.xpath(DROPDOWN_TAB_XPATH));
         return !isMore.isEmpty();
     }
     
