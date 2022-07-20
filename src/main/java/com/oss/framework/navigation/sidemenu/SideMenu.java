@@ -102,8 +102,7 @@ public class SideMenu {
     }
 
     private WebElement moveToElement(String xpath) {
-        List<WebElement> foundElements = driver.findElements(By.xpath(xpath));
-        WebElement foundElement = foundElements.get(foundElements.size() - 1);
+        WebElement foundElement = findLastElement(xpath);
         WebElementUtils.moveToElement(driver, foundElement);
         return foundElement;
     }
@@ -142,8 +141,7 @@ public class SideMenu {
 
     private void waitForClickedAction(String testid) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
-        List<WebElement> elementList = driver.findElements(By.xpath(actionXpath));
-        WebElement action = elementList.get(elementList.size() - 1);
+        WebElement action = findLastElement(actionXpath);
         WebDriverWait shortWait = new WebDriverWait(driver, 15);
         try {
             shortWait.until(ExpectedConditions.attributeContains(action, CLASS, IS_ACTIVE));
@@ -162,7 +160,7 @@ public class SideMenu {
             shortWait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, IS_EXPANDED));
         } catch (TimeoutException e) {
             LOGGER.warn("Path not expanded after first click. Retrying.");
-            clickOnElement(driver.findElement(By.xpath(pathXpath)));
+            clickOnElement(findLastElement(pathXpath));
             shortWait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, IS_EXPANDED));
         }
         LOGGER.info("{} expanded.", path);
@@ -171,12 +169,11 @@ public class SideMenu {
     private boolean isPathExpanded(String path) {
         String pathXpath = String.format(ACTION_NAME_PATH_PATTERN, path);
         searchWithRetry(pathXpath);
-        WebElement pathElement = driver.findElement(By.xpath(pathXpath));
-        return pathElement.findElement(By.className("own-chevron")).getAttribute("aria-label").equals("Collapse");
+        return findLastElement(pathXpath).findElement(By.className("own-chevron")).getAttribute("aria-label").equals("Collapse");
     }
 
     private boolean isHoverModeOn() {
-        return !driver.findElements(By.xpath(HOVER_MODE_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(driver, By.xpath(HOVER_MODE_XPATH));
     }
 
     private void turnOffHoverMode() {
@@ -184,5 +181,10 @@ public class SideMenu {
             WebElement menuButton = driver.findElement(By.cssSelector(SIDE_MENU_BUTTON_CSS));
             WebElementUtils.clickWithRetry(driver, menuButton, By.cssSelector(OPEN_SIDE_MENU_CSS));
         }
+    }
+
+    private WebElement findLastElement(String pathXpath) {
+        List<WebElement> pathElements = driver.findElements(By.xpath(pathXpath));
+        return pathElements.get(pathElements.size() - 1);
     }
 }
