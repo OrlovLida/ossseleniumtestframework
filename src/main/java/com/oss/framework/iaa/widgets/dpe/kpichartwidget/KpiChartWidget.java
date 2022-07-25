@@ -20,20 +20,20 @@ public class KpiChartWidget extends Widget {
 
     private static final Logger log = LoggerFactory.getLogger(KpiChartWidget.class);
 
-    private static final String KPI_CHART_WIDGET_PATH = "//*[@" + CSSUtils.TEST_ID + "='am-chart-wrapper']";
     private static final String KPI_CHART_WIDGET_ID = "am-chart-wrapper";
-
+    private static final String KPI_CHART_WIDGET_PATH = "//*[@" + CSSUtils.TEST_ID + "='" + KPI_CHART_WIDGET_ID + "']";
     private static final String CHART_COLUMN_PATH = ".//*[name()='g' and (@role='listitem')]";
     private static final String LINE_CHART_TYPE_XPATH = ".//*[@data-series-type='line']";
     private static final String PARTIAL_CHART_ID = ".//*[starts-with(@" + CSSUtils.TEST_ID + ", 'amchart-series') and not(contains(@" + CSSUtils.TEST_ID + ", 'shadow'))]";
-
     private static final String PIE_CHART_PATH = ".//*[contains(@class, 'amcharts-PieChart-group')]";
     private static final String TOP_N_NAVIGATION_BAR_PATH = ".//*[@class='amcharts-Container amcharts-Component amcharts-NavigationBar']";
+    private static final String TOP_N_BAR_CHART = ".//*[@" + CSSUtils.TEST_ID + "='amchart-series-y-selected']";
+    private static final String TOP_N_FIRST_BAR = TOP_N_BAR_CHART + "//*[@role='menuitem'][1]";
     private static final String LEGEND_PATH = "//*[starts-with(@class,'amcharts-Container amcharts-Component amcharts-Legend')]";
     private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
     private static final String HIDDEN_Y_AXIS_PATH = "//*[@display = 'none' and contains (@class,'amcharts-v')]";
     private static final String VISIBLE_Y_AXIS_PATH = "//*[not (contains(@display, 'none')) and contains (@class,'amcharts-v')]";
-    private static final String VISIBLE_Y_AXIS_VALUES_XPATH = "//*[@data-testid='amchart-label-y' and not (contains(@display, 'none')) and not (contains(@opacity, '0'))]";
+    private static final String VISIBLE_Y_AXIS_VALUES_XPATH = "//*[@" + CSSUtils.TEST_ID + "='amchart-label-y' and not (contains(@display, 'none')) and not (contains(@opacity, '0'))]";
     private static final String LAST_SAMPLE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='last-sample-time' and not(contains(@display, 'none'))]";
     private static final String TIME_ZONE_DISPLAYED_PATH = ".//*[@" + CSSUtils.TEST_ID + "='timezone' and not(contains(@display, 'none'))]";
     private static final String ZOOM_OUT_BUTTON_PATH = ".//*[@" + CSSUtils.TEST_ID + "='amchart-zoomout-button']";
@@ -42,6 +42,8 @@ public class KpiChartWidget extends Widget {
     private static final String ELEMENT_PRESENT_AND_VISIBLE = "Element is present and visible: ";
     private static final String LEGEND_WITH_TXT_XPATH = ".//div[@class='legendWrapper']//*[contains(text(), '%s')]";
     private static final String TREND_LINE_ON_CHART_XPATH = ".//*[contains(@class, 'amcharts-trendline')]";
+    private static final String SAMPLE_XPATH = "//*[contains(@class,'amcharts-Container amcharts-Series-bullets')]//*[@class='amcharts-Sprite-group amcharts-Circle-group']";
+    private static final String CHARTS_XPATH = ".//*[@data-testid='am-chart']";
 
     private KpiChartWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement widget) {
         super(driver, webDriverWait, widgetId, widget);
@@ -49,7 +51,7 @@ public class KpiChartWidget extends Widget {
 
     public static KpiChartWidget create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitByXPath(wait, KPI_CHART_WIDGET_PATH);
-        WebElement widget = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + KPI_CHART_WIDGET_ID + "']"));
+        WebElement widget = driver.findElement(By.xpath(KPI_CHART_WIDGET_PATH));
 
         return new KpiChartWidget(driver, wait, KPI_CHART_WIDGET_ID, widget);
     }
@@ -59,6 +61,10 @@ public class KpiChartWidget extends Widget {
         log.debug(ELEMENT_PRESENT_AND_VISIBLE + "Chart");
     }
 
+    /**
+     * @deprecated (to remove after release 3.0.x)
+     */
+    @Deprecated
     public void hoverMouseOverPoint() {
         int size = countSamples();
         log.trace("Number of samples: {}", size);
@@ -97,7 +103,7 @@ public class KpiChartWidget extends Widget {
     }
 
     /**
-     * @deprecated (functionality is no more available, to remove after update OSSPlatformPages)
+     * @deprecated (functionality is no more available, to remove after release 3.0.x)
      */
     @Deprecated
     public int countVisibleYAxis() {
@@ -107,7 +113,7 @@ public class KpiChartWidget extends Widget {
     }
 
     /**
-     * @deprecated (functionality is no more available, to remove after update OSSPlatformPages)
+     * @deprecated (functionality is no more available, to remove after release 3.0.x)
      */
     @Deprecated
     public int countHiddenYAxis() {
@@ -176,10 +182,22 @@ public class KpiChartWidget extends Widget {
         log.debug("Clicking first data series on legend");
     }
 
+    /**
+     * @deprecated (to remove after release 3.0.x)
+     */
+    @Deprecated
     public boolean isTopNBarChartIsPresent(String barChartId) {
         return WebElementUtils.isElementPresent(this.webElement, By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + barChartId + "']"));
     }
 
+    public boolean isTopNBarChartIsPresent() {
+        return WebElementUtils.isElementPresent(this.webElement, By.xpath(TOP_N_BAR_CHART));
+    }
+
+    /**
+     * @deprecated (to remove after release 3.0.x)
+     */
+    @Deprecated
     public void doubleClickTopNBar(String barChartId) {
         WebElement barInTopNBarChart = this.webElement.findElement(By.xpath(".//*[@data-testid='" + barChartId + "']//*[@role='menuitem'][1]"));
         Actions action = new Actions(driver);
@@ -188,8 +206,16 @@ public class KpiChartWidget extends Widget {
         log.debug("Double clicking on bar in TopN BarChart");
     }
 
+    public void doubleClickTopNBar() {
+        WebElement barInTopNBarChart = this.webElement.findElement(By.xpath(TOP_N_FIRST_BAR));
+        Actions action = new Actions(driver);
+        action.moveToElement(barInTopNBarChart).click(barInTopNBarChart).build().perform();
+        action.doubleClick(barInTopNBarChart).build().perform();
+        log.debug("Double clicking on bar in TopN BarChart");
+    }
+
     public boolean isTopNNavigationBarPresent() {
-        return !this.webElement.findElements(By.xpath(TOP_N_NAVIGATION_BAR_PATH)).isEmpty();
+        return WebElementUtils.isElementPresent(this.webElement, By.xpath(TOP_N_NAVIGATION_BAR_PATH));
     }
 
     public void zoomDataView() {
@@ -199,20 +225,20 @@ public class KpiChartWidget extends Widget {
     }
 
     public boolean isZoomOutButtonPresent() {
-        return this.webElement.findElements(By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH)).isEmpty();
+        return WebElementUtils.isElementPresent(this.webElement, By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH));
     }
 
     public void clickZoomOut() {
-        this.webElement.findElement(By.xpath(ZOOM_OUT_BUTTON_PATH)).click();
+        clickElement(this.webElement.findElement(By.xpath(ZOOM_OUT_BUTTON_PATH)));
         log.debug("Clicking Zoom Out button");
     }
 
     public int countCharts() {
-        return driver.findElements(By.xpath(".//*[@data-testid='am-chart']")).size();
+        return driver.findElements(By.xpath(CHARTS_XPATH)).size();
     }
 
     private int countSamples() {
-        List<WebElement> numberOfSamples = webElement.findElements(By.xpath("//*[contains(@class,'amcharts-Container amcharts-Series-bullets')]//*[@class='amcharts-Sprite-group amcharts-Circle-group']"));
+        List<WebElement> numberOfSamples = webElement.findElements(By.xpath(SAMPLE_XPATH));
         return numberOfSamples.size() - 1;
     }
 
