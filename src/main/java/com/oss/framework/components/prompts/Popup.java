@@ -6,6 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.contextactions.ActionsInterface;
+import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.tree.TreeComponent;
@@ -95,5 +97,10 @@ public class Popup {
                 .elementToBeClickable(this.webElement.findElement(By.xpath(String.format(BUTTON_BY_LABEL_PATTERN, label)))));
         button.click();
         wait.until(ExpectedConditions.invisibilityOf(button));
+    }
+
+    public void clickButtonById(String buttonId) {
+        ActionsInterface buttonContainer = ButtonContainer.createFromParent(webElement, driver, wait);
+        buttonContainer.callActionById(buttonId);
     }
 }
