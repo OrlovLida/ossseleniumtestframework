@@ -11,13 +11,13 @@ import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class Popup {
 
     private static final String POPUP_CSS_SELECTOR = ".popupContainer,.prompt-view";
     private static final String POPUP_TITLE_XPATH = ".//span[@class='popupTitle']";
     private static final String BUTTON_BY_LABEL_PATTERN = ".//a[contains(text(),'%s')]";
-    private static final String COMPONENT_BY_ID_PATTERN = "//*[@" + CSSUtils.TEST_ID + "='%s']";
 
     protected final WebDriver driver;
     protected final WebDriverWait wait;
@@ -44,14 +44,14 @@ public class Popup {
      */
     @Deprecated
     public Input setComponentValue(String componentId, String value, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, String.format(COMPONENT_BY_ID_PATTERN, componentId));
+        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(componentId));
         Input input = getComponent(componentId, componentType);
         input.setSingleStringValue(value);
         return input;
     }
 
     public Input setComponentValue(String componentId, String value) {
-        DelayUtils.waitForNestedElements(wait, webElement, String.format(COMPONENT_BY_ID_PATTERN, componentId));
+        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(componentId));
         Input input = getComponent(componentId);
         input.setSingleStringValue(value);
         return input;
@@ -62,13 +62,13 @@ public class Popup {
      */
     @Deprecated
     public void deleteComponentValue(String componentId, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, String.format(COMPONENT_BY_ID_PATTERN, componentId));
+        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(componentId));
         Input input = getComponent(componentId, componentType);
         input.clear();
     }
 
     public void deleteComponentValue(String componentId) {
-        DelayUtils.waitForNestedElements(wait, webElement, String.format(COMPONENT_BY_ID_PATTERN, componentId));
+        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(componentId));
         Input input = getComponent(componentId);
         input.clear();
     }
@@ -95,5 +95,11 @@ public class Popup {
                 .elementToBeClickable(this.webElement.findElement(By.xpath(String.format(BUTTON_BY_LABEL_PATTERN, label)))));
         button.click();
         wait.until(ExpectedConditions.invisibilityOf(button));
+    }
+
+    public void clickButtonById(String actionId) {
+        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(actionId));
+        WebElement button = webElement.findElement(By.xpath(CSSUtils.getElementCssSelector(actionId)));
+        WebElementUtils.clickWebElement(driver, button);
     }
 }
