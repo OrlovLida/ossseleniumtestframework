@@ -597,10 +597,10 @@ public class TableComponent {
         }
 
         private boolean isExpandPresent() {
-            if (!cellElement.findElements(By.cssSelector(TREE_NODE_EXPAND_DISABLED_CSS)).isEmpty())
-                return false;
-            else
+            if (cellElement.findElements(By.cssSelector(TREE_NODE_EXPAND_DISABLED_CSS)).isEmpty()){
                 return (!cellElement.findElements(By.cssSelector(TREE_NODE_EXPAND_CSS)).isEmpty());
+            }
+                return false;
         }
 
         private boolean isCellExpanded() {
@@ -678,7 +678,7 @@ public class TableComponent {
             return getFirstCell().isCellExpanded();
         }
 
-        public boolean isPlusIconOnRow() {
+        public boolean isExpandPresent() {
             return getFirstCell().isExpandPresent();
         }
 

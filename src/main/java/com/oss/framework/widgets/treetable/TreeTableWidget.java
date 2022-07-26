@@ -172,8 +172,8 @@ public class TreeTableWidget extends Widget implements TableInterface {
         return SelectionBarComponent.create(this.driver, this.webDriverWait, id);
     }
 
-    public boolean canRowBeExpanded(int index) {
-        return getTableComponent().getRow(index).isPlusIconOnRow();
+    public boolean isExpandPresent(int index) {
+        return getTableComponent().getRow(index).isExpandPresent();
     }
 
     @Override
