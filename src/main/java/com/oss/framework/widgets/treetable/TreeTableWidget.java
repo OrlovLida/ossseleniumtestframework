@@ -306,4 +306,3 @@ public class TreeTableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clickApply();
     }
 }
-
