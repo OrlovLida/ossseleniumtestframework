@@ -7,7 +7,6 @@
 package com.oss.framework.widgets.treetable;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -22,7 +21,6 @@ import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
-import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
@@ -39,8 +37,6 @@ public class TreeTableWidget extends Widget implements TableInterface {
     private static final int REFRESH_INTERVAL = 2000;
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
     private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "='%s'] " + TABLE_CONTENT_CSS;
-    private static final String TREE_ROW_LABEL = ".//p[contains(@class,'TreeViewLabel')]";
-    private TreeComponent treeComponent;
 
     private TreeTableWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -70,14 +66,6 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     public void selectNode(int index) {
         getTableComponent().selectRow(index);
-    }
-
-    public TreeComponent.Node getNodeByLabelsPath(String labels) {
-        return getTreeComponent().getNodeByLabelsPath(labels);
-    }
-
-    public Optional<TreeComponent.Node> findNodeByLabelsPath(String labels) {
-        return getTreeComponent().findNodeByLabelsPath(labels);
     }
 
     public void unselectNode(int index) {
@@ -236,10 +224,6 @@ public class TreeTableWidget extends Widget implements TableInterface {
         getContextActions().callActionByLabel(groupLabel, actionLabel);
     }
 
-    private String getLabel() {
-        return this.webElement.findElement(By.xpath(TREE_ROW_LABEL)).getText();
-    }
-
     @Override
     public void doRefreshWhileNoData(int waitTime, String refreshId) {
         long currentTime = System.currentTimeMillis();
@@ -304,13 +288,6 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     private TableComponent getTableComponent() {
         return TableComponent.create(driver, webDriverWait, id);
-    }
-
-    private TreeComponent getTreeComponent() {
-        if (treeComponent == null) {
-            treeComponent = TreeComponent.create(driver, webDriverWait, webElement);
-        }
-        return treeComponent;
     }
 
     private void openAdvancedSearch() {
