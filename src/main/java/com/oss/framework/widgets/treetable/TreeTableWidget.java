@@ -19,6 +19,7 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.search.AdvancedSearch;
+import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -149,6 +150,30 @@ public class TreeTableWidget extends Widget implements TableInterface {
     @Override
     public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
         getTableComponent().getRow(value, attributeLabel).selectRow();
+    }
+
+    public String getSelectedObjectCount() {
+        return getSelectionBarComponent().getSelectedObjectsCount();
+    }
+
+    public void showOnlySelectedRows() {
+        getSelectionBarComponent().showSelected();
+    }
+
+    public void showAllRows() {
+        getSelectionBarComponent().showAll();
+    }
+
+    public void unselectAllRows() {
+        getSelectionBarComponent().unselectAll();
+    }
+
+    private SelectionBarComponent getSelectionBarComponent() {
+        return SelectionBarComponent.create(this.driver, this.webDriverWait, id);
+    }
+
+    public boolean isExpandPresent(int index) {
+        return getTableComponent().getRow(index).isExpandPresent();
     }
 
     @Override
