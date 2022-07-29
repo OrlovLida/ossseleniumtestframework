@@ -232,7 +232,7 @@ public class TreeComponent {
                 if (!popups.isEmpty()) {
                     return Optional.of(Popup.create(driver, webDriverWait));
                 }
-                DelayUtils.waitForElementDisappear(webDriverWait, nodeElement.findElement(By.xpath(SPIN_XPATH)));
+                DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.cssSelector(ARIA_LABEL_MINUS_CSS));
                 return Optional.empty();
             } else
                 throw new NoSuchElementException("Expand Next Level is not available for Node " + getLabel());
