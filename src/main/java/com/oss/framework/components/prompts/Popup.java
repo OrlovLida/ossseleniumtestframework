@@ -62,13 +62,13 @@ public class Popup {
      */
     @Deprecated
     public void deleteComponentValue(String componentId, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(componentId));
+        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         Input input = getComponent(componentId, componentType);
         input.clear();
     }
 
     public void deleteComponentValue(String componentId) {
-        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(componentId));
+        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         Input input = getComponent(componentId);
         input.clear();
     }
