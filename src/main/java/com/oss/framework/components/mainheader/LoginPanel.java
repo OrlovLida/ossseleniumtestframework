@@ -69,6 +69,7 @@ public class LoginPanel {
         if (!currentGroup.equals(groupName)) {
             input.setSingleStringValue(groupName);
             DelayUtils.waitForPageToLoad(driver, wait);
+            acceptPopup();
         } else {
             close();
         }
