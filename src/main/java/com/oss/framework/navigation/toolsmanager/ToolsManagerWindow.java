@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 
 import static com.oss.framework.utils.DragAndDrop.dragAndDrop;
 
@@ -132,15 +133,17 @@ public class ToolsManagerWindow {
 
     public void changeCategoryOrder(String categoryName, int position) {
         List<Category> categories = getCategories();
-        Category sourceCategory = getCategoryByName(categoryName);
+        DragAndDrop.DraggableElement sourceCategory = getCategoryByName(categoryName).getDragElement();
         Category target = categories.get(position);
-        dragAndDrop(sourceCategory.getDragElement(), target.getDropElement(), driver);
+        dragAndDrop(sourceCategory, target.getDropElement(), driver);
+        sourceCategory.waitUntilElementRecalculate(wait);
     }
 
     public void changeSubcategoryOrder(String categoryName, String subcategoryName, int position) {
-        Subcategory source = getSubcategoryByName(subcategoryName, categoryName);
+        DragAndDrop.DraggableElement source = getSubcategoryByName(subcategoryName, categoryName).getDragElement();
         Subcategory target = getSubcategories(categoryName).get(position);
-        dragAndDrop(source.getDragElement(), target.getDropElement(), driver);
+        dragAndDrop(source, target.getDropElement(), driver);
+        source.waitUntilElementRecalculate(wait);
     }
 
     public void changeApplicationOrder(String categoryName, String applicationName, int position) {

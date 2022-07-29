@@ -206,8 +206,9 @@ public class TableComponent {
         List<Header> headers = getHeaders();
         Header sourceHeader = headers.stream().filter(h -> h.getColumnId().equals(columnId))
                 .findFirst().orElseThrow(() -> new RuntimeException("Cant find column: " + columnId));
-        Header targetHeader = headers.get(position);
-        DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader.getDropElement(), driver);
+        DropElement targetHeader = headers.get(position).getDropElement();
+        DragAndDrop.dragAndDrop(sourceHeader.getDragElement(), targetHeader, driver);
+        targetHeader.waitUntilElementRecalculate(webDriverWait);
     }
 
     public List<String> getColumnIds() {
