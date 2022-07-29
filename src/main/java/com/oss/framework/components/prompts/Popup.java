@@ -44,14 +44,14 @@ public class Popup {
      */
     @Deprecated
     public Input setComponentValue(String componentId, String value, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(componentId));
+        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         Input input = getComponent(componentId, componentType);
         input.setSingleStringValue(value);
         return input;
     }
 
     public Input setComponentValue(String componentId, String value) {
-        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(componentId));
+        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         Input input = getComponent(componentId);
         input.setSingleStringValue(value);
         return input;
