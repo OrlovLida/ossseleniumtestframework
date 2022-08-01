@@ -4,21 +4,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class InputMessage {
-
-    private static final String ERROR_MESSAGE_LIST_XPATH = ".//div[@class='error-message-list']";
-
+    
+    private static final String TEXT_CONTENT = "textContent";
+    private static final String LI_TAG = ".//li";
+    private static final String DATA_PARENT_TEST_ID_PATTERN = "[data-parent-testid='%s']";
     private final WebElement webElement;
-
-    public InputMessage(WebElement webElement) {
+    
+    private InputMessage(WebElement webElement) {
         this.webElement = webElement;
     }
-
+    
+    public static InputMessage create(WebDriver driver, String inputId) {
+        WebElement webElement = driver.findElement(By.cssSelector(String.format(DATA_PARENT_TEST_ID_PATTERN, inputId)));
+        return new InputMessage(webElement);
+    }
+    
     public List<String> getMessages() {
         List<WebElement> messages =
-                webElement.findElement(By.xpath(ERROR_MESSAGE_LIST_XPATH)).findElements(By.xpath(".//li"));
-        return messages.stream().map(message -> message.getAttribute("textContent")).collect(Collectors.toList());
+                webElement.findElements(By.xpath(LI_TAG));
+        return messages.stream().map(message -> message.getAttribute(TEXT_CONTENT)).collect(Collectors.toList());
     }
 }

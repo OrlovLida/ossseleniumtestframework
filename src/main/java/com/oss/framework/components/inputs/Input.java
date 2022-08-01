@@ -79,7 +79,7 @@ public abstract class Input {
     }
     
     public final List<String> getMessages() {
-        InputMessage messages = new InputMessage(this.webElement);
+        InputMessage messages = InputMessage.create(driver, componentId);
         return messages.getMessages();
     }
     
