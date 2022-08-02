@@ -98,8 +98,8 @@ public class Popup {
     }
 
     public void clickButtonById(String actionId) {
-        DelayUtils.waitForNestedElements(wait, webElement, CSSUtils.getElementCssSelector(actionId));
-        WebElement button = webElement.findElement(By.xpath(CSSUtils.getElementCssSelector(actionId)));
+        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(actionId)));
+        WebElement button = webElement.findElement(By.cssSelector(CSSUtils.getElementCssSelector(actionId)));
         WebElementUtils.clickWebElement(driver, button);
     }
 }
