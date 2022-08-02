@@ -73,6 +73,10 @@ public class Card {
         getActionsInterface().callActionById(actionId);
     }
 
+    public void callActionById(String groupId, String actionId) {
+        getActionsInterface().callActionById(groupId, actionId);
+    }
+
     private ActionsInterface getActionsInterface() {
         DelayUtils.waitForPageToLoad(driver, wait);
         DelayUtils.waitForPresence(wait, By.cssSelector(CONTEXT_ACTIONS_CSS));
