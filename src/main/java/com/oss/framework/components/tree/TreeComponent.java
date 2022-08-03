@@ -95,10 +95,10 @@ public class TreeComponent {
             List<Node> nodes = getVisibleNodes();
             node = getNode(isLabel, tempPath, nodes);
             
+            if (!node.isPresent()) {
+                node = scrollToNode(isLabel, node, tempPath);
+            }
             if (i != pathElements.size() - 1) {
-                if (!node.isPresent()) {
-                    node = scrollToNode(isLabel, node, tempPath);
-                }
                 node.ifPresent(Node::expandNode);
                 currentPath.append(".");
             }
@@ -279,7 +279,7 @@ public class TreeComponent {
             advancedSearch.clickApply();
             DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className(OSS_ICON_CLASS));
         }
-
+        
         public void searchByAttribute(String attributeId, String value) {
             AdvancedSearch advancedSearch = openAdvancedSearch();
             advancedSearch.setFilter(attributeId, value);
