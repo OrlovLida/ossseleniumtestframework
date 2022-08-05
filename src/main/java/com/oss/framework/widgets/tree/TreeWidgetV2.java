@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,6 +103,9 @@ public class TreeWidgetV2 extends Widget {
 
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         advancedSearch = getAdvancedSearch();
+        List<String> attributes = new ArrayList<>();
+        attributes.add(attributeId);
+        advancedSearch.selectAttributes(attributes);
         advancedSearch.setFilter(attributeId, componentType, value);
         advancedSearch.clickApply();
     }
