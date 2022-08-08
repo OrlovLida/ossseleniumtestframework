@@ -18,7 +18,7 @@ public class Button {
     }
 
     public static Button createByLabel(WebDriver driver, String label) {
-        WebElement button = driver.findElement(By.xpath(".//*[text()='" + label + "']"));
+        WebElement button = driver.findElement(By.xpath(".//*[@title='" + label + "'] |  .//*[text()='" + label + "']"));
         return new Button(driver, button);
     }
 
