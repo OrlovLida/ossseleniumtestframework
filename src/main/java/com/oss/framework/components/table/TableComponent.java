@@ -30,6 +30,9 @@ import com.oss.framework.utils.DragAndDrop.DropElement;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.table.TableRow;
 
+import static com.oss.framework.utils.WebElementUtils.clickWebElement;
+import static com.oss.framework.utils.WebElementUtils.isElementPresent;
+
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
     private static final String EMPTY_DATA_ROW_XPATH = ".//div[contains(@class, 'empty_data_row')]";
@@ -43,6 +46,7 @@ public class TableComponent {
     private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s'] ." + TABLE_COMPONENT_CLASS;
     private static final String TABLE_COMPONENT_ID_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s']." + TABLE_COMPONENT_CLASS;
     private static final String COLUMN_MANAGER_BUTTON = ".table-component__management-btn button";
+    private static final By ATTRIBUTES_CHOOSER_OPENED = By.xpath("//div[@id='attributes-management']");
 
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
@@ -183,14 +187,16 @@ public class TableComponent {
     }
 
     public AttributesChooser getAttributesChooser() {
-        Actions action = new Actions(this.driver);
-        action.click(getColumnsManagement()).perform();
+        if (!isElementPresent(driver, ATTRIBUTES_CHOOSER_OPENED)) {
+            clickWebElement(driver, getColumnsManagement());
+        }
         return AttributesChooser.create(this.driver, this.webDriverWait);
     }
 
     public ListAttributesChooser getListAttributesChooser() {
-        Actions action = new Actions(this.driver);
-        action.click(getColumnsManagement()).perform();
+        if (!isElementPresent(driver, ATTRIBUTES_CHOOSER_OPENED)) {
+            clickWebElement(driver, getColumnsManagement());
+        }
         return ListAttributesChooser.create(this.driver, this.webDriverWait);
     }
 
