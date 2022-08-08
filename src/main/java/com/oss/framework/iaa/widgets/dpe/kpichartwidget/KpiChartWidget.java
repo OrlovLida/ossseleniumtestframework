@@ -225,7 +225,7 @@ public class KpiChartWidget extends Widget {
     }
 
     public boolean isZoomOutButtonPresent() {
-        return WebElementUtils.isElementPresent(this.webElement, By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH));
+        return !WebElementUtils.isElementPresent(this.webElement, By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH));
     }
 
     public void clickZoomOut() {
