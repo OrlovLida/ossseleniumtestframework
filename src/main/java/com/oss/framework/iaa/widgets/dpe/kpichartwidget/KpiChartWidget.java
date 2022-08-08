@@ -224,8 +224,16 @@ public class KpiChartWidget extends Widget {
         log.debug("Zooming Data View with offset x = 100, y = 100");
     }
 
+    /**
+     * @deprecated (to remove after release 3.0.x - use isZoomOutButtonHidden)
+     */
+    @Deprecated
     public boolean isZoomOutButtonPresent() {
-        return !WebElementUtils.isElementPresent(this.webElement, By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH));
+        return !isZoomOutButtonHidden();
+    }
+
+    public boolean isZoomOutButtonHidden() {
+        return WebElementUtils.isElementPresent(this.webElement, By.xpath(ZOOM_OUT_HIDDEN_BUTTON_PATH));
     }
 
     public void clickZoomOut() {
