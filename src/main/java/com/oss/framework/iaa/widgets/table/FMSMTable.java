@@ -62,10 +62,8 @@ public class FMSMTable extends Widget {
     }
     
     public static class Cell {
-        private static final String OSS_ICON_CLASS = "OSSIcon";
-        private static final String OSS_ICON_CLASS_XPATH = "//i[contains(@class, '" + OSS_ICON_CLASS + "')]";
+        private static final String OSS_ICON_CLASS = ".OSSIcon";
         private static final String OSS_ICON_VALUE = "title";
-        private static final String OSS_ICON_VALUE_XPATH = ".//span[@" + OSS_ICON_VALUE + "]";
         private static final String CELL_PATTERN = "//div[@" + CSSUtils.TEST_ID + "='%s']";
         
         private final WebElement cellElement;
@@ -88,17 +86,17 @@ public class FMSMTable extends Widget {
         }
         
         private boolean isIconPresent() {
-            return !cellElement.findElements(By.xpath(OSS_ICON_VALUE_XPATH + OSS_ICON_CLASS_XPATH)).isEmpty();
+            return !cellElement.findElements(By.cssSelector(OSS_ICON_CLASS)).isEmpty();
         }
         
         private String getAttributeValue() {
-            return cellElement.findElement(By.xpath(OSS_ICON_VALUE_XPATH)).getAttribute(OSS_ICON_VALUE);
+            return cellElement.findElement(By.cssSelector(OSS_ICON_CLASS)).getAttribute(OSS_ICON_VALUE);
         }
         
         public void waitForExpectedValue(WebDriverWait wait, String value) {
             if (isIconPresent()) {
                 DelayUtils.sleep(2000);
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//span[@title='" + value + "']")));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@title='" + value + "']")));
             } else {
                 DelayUtils.sleep(2000);
                 wait.until(ExpectedConditions.textToBePresentInElement(cellElement, value));

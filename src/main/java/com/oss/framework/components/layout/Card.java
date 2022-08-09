@@ -50,14 +50,14 @@ public class Card {
     public void maximizeCard() {
         DelayUtils.waitForPageToLoad(driver, wait);
         WebElement resizeButton = cardElement.findElement(By.xpath(MAXIMIZE_CHART_BUTTON_XPATH));
-        resizeButton.click();
+        WebElementUtils.clickWebElement(driver, resizeButton);
         log.debug("Clicking maximize button");
     }
 
     public void minimizeCard() {
         DelayUtils.waitForPageToLoad(driver, wait);
         WebElement resizeButton = cardElement.findElement(By.xpath(MINIMIZE_CHART_BUTTON_XPATH));
-        resizeButton.click();
+        WebElementUtils.clickWebElement(driver, resizeButton);
         log.debug("Clicking minimize button");
     }
 

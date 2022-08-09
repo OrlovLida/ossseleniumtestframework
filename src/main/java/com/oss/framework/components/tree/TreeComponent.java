@@ -159,7 +159,7 @@ public class TreeComponent {
     }
     
     public static class Node {
-        private static final String DATA_GUID_ATTR = "data-guid";
+        private static final String DATA_PATH_ATTR = "data-path";
         private static final String DATA_PATH_LABEL_ATTR = "data-label-path";
         private static final String FILTERS_BUTTON_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='filters-panel-button']";
         private static final String ADVANCED_SEARCH_PANEL_ID = "advanced-search_panel";
@@ -188,7 +188,7 @@ public class TreeComponent {
         
         private static Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement nodeElement) {
             DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.cssSelector(LABEL_NODE_CSS));
-            String nodeId = CSSUtils.getAttributeValue(DATA_GUID_ATTR, nodeElement);
+            String nodeId = CSSUtils.getAttributeValue(DATA_PATH_ATTR, nodeElement);
             return new Node(driver, webDriverWait, nodeElement, nodeId);
         }
         
