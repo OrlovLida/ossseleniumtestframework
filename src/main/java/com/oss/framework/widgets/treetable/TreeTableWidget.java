@@ -252,7 +252,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
     }
 
 /**
- * @Depracated  method will be removed in 3.0.x release, use instead getCellValueById,
+ * @Depracated  method will be removed in 3.0.x release, use instead getCellValue,
  */
     @Override
     @Deprecated

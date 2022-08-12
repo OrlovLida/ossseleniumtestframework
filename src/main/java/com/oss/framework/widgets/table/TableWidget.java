@@ -176,7 +176,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     /**
-     * @Depracated  method will be removed in 3.0.x release, use instead getCellValueById,
+     * @Depracated  method will be removed in 3.0.x release, use instead getCellValue
      */
     @Deprecated
     public String getCellValueById(int row, String columnId) {
