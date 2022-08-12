@@ -96,8 +96,8 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public int getRowNumber(String value, String attributeLabel) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
+    public int getRowNumber(String value, String columnId) {
+        return getTableComponent().getRow(value, columnId).getIndex();
     }
 
     @Override
