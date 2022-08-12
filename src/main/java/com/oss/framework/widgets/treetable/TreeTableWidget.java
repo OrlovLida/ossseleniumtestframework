@@ -143,13 +143,15 @@ public class TreeTableWidget extends Widget implements TableInterface {
     }
 
     @Override
-    public int getRowNumber(String value, String attributeLabel) {
-        return 0;
+    public int getRowNumber(String value, String columnId) {
+        return getTableComponent().getRow(value, columnId).getIndex();
     }
 
     @Override
-    public void selectRowByAttributeValueWithLabel(String attributeLabel, String value) {
-        getTableComponent().getRow(value, attributeLabel).selectRow();
+    public void selectRowByAttributeValueWithLabel(String columnLabel, String value) {
+        TableComponent tableComponent = getTableComponent();
+        int columnIndex = tableComponent.getColumnHeaders().indexOf(columnLabel);
+        getTableComponent().getRow(value, tableComponent.getColumnIds().get(columnIndex)).selectRow();
     }
 
     public String getSelectedObjectCount() {
@@ -236,7 +238,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     @Override
     public Multimap<String, String> getAppliedFilters() {
-        return null;
+       return getAdvancedSearch().getAppliedFilters();
     }
 
     @Override
@@ -249,7 +251,11 @@ public class TreeTableWidget extends Widget implements TableInterface {
         return getTableComponent().getVisibleRows();
     }
 
+/**
+ * @Depracated  method will be removed in 3.0.x release, use instead getCellValueById,
+ */
     @Override
+    @Deprecated
     public String getCellValueById(int row, String columnId) {
         return getTableComponent().getCellValue(row, columnId);
     }
