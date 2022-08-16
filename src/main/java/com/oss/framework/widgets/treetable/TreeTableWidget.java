@@ -127,6 +127,10 @@ public class TreeTableWidget extends Widget implements TableInterface {
         getTableComponent().changeColumnsOrder(columnLabel, position);
     }
 
+    public void unselectRowByAttributeValue(String attributeId, String value) {
+        getTableComponent().getRow(value, attributeId).unselectRow();
+    }
+
     @Override
     public void selectRowByAttributeValue(String attributeId, String value) {
         getTableComponent().getRow(value, attributeId).selectRow();
@@ -251,9 +255,9 @@ public class TreeTableWidget extends Widget implements TableInterface {
         return getTableComponent().getVisibleRows();
     }
 
-/**
- * @Depracated  method will be removed in 3.0.x release, use instead getCellValue,
- */
+    /**
+     * @deprecated (method will be removed in 3.0.x release, use instead getCellValue, )
+     */
     @Override
     @Deprecated
     public String getCellValueById(int row, String columnId) {
