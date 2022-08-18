@@ -41,7 +41,7 @@ public class MultiSearchField extends Input {
     public MouseCursor cursor() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).build().perform();
-        String cursor = webElement.findElement(By.className("md-input")).getCssValue("cursor");
+        String cursor = webElement.findElement(By.className("oss-input__input")).getCssValue("cursor");
         return getMouseCursor(cursor);
     }
 
