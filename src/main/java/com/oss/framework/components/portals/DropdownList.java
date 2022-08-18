@@ -20,6 +20,7 @@ public class DropdownList {
     private static final String BY_TEXT_PATTERN = "//div[starts-with(@class, 'portal')]//*[text()='%s']";
     private static final String BY_TITLE_PATTERN = ".portal [title='%s']";
     private static final String BY_TEXT_CONTAINS_PATTERN = "//div[starts-with(@class, 'portal')]//*[contains(text(), '%s')]";
+    private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -59,10 +60,13 @@ public class DropdownList {
     }
 
     public void selectOptionById(String optionId) {
-        DelayUtils.waitBy(wait, By.cssSelector(String.format(BY_ID_PATTERN, optionId, optionId)));
-        WebElement foundedElement = driver.findElement(By.cssSelector(String.format(BY_ID_PATTERN, optionId, optionId)));
+        WebElement foundedElement = getOptionById(optionId);
         WebElementUtils.clickWebElement(driver, foundedElement);
     }
+
+  public String getOptionLabel(String optionId){
+      return   getOptionById(optionId).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+  }
 
     public void selectOptions(List<String> optionsId) {
         optionsId.forEach(this::selectOptionById);
@@ -89,4 +93,10 @@ public class DropdownList {
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
     }
+
+    private WebElement getOptionById(String optionId) {
+        DelayUtils.waitBy(wait, By.cssSelector(String.format(BY_ID_PATTERN, optionId, optionId)));
+        return driver.findElement(By.cssSelector(String.format(BY_ID_PATTERN, optionId, optionId)));
+    }
+
 }

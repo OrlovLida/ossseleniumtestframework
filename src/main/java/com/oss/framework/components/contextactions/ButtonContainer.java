@@ -26,6 +26,7 @@ public class ButtonContainer implements ActionsInterface {
     private static final String GROUP_PATTERN = ".//a[text()='%s'] | .//*[text()='%s']";
     private static final String BUTTON_BY_LABEL_PATTERN = "//a[text()='%s'] | //*[text()='%s']/ancestor::button | //*[@aria-label='%s']";
     private static final String BUTTON_BY_ID_PATTERN = "//*[@" + CSSUtils.TEST_ID + "='%s'] | //*[@id='%s'] | //*[@data-widget-id='%s']";
+    private static final String NOT_IMPLEMENTED_EXCEPTION = "Not implemented method in ButtonContainer";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -76,6 +77,21 @@ public class ButtonContainer implements ActionsInterface {
     public void callActionById(String groupLabel, String actionId) {
         clickGroup(groupLabel);
         callActionById(actionId);
+    }
+
+    @Override
+    public String getGroupActionLabel(String groupId) {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
+    }
+
+    @Override
+    public String getActionLabel(String actionId) {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
+    }
+
+    @Override
+    public String getActionLabel(String groupId, String actionId) {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
     }
 
     public boolean isElementPresent(String id) {

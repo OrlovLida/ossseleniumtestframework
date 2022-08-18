@@ -66,7 +66,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String CLASS_ATTRIBUTE = "class";
     private static final String HEADER_SELECTION_CSS = ".Header_SELECTION";
     private static final String SELECT_ALL_OBJECTS_IS_NOT_AVAILABLE_EXCEPTION = "Select All Objects is not available";
-
+    
     private AdvancedSearch advancedSearch;
     private Map<String, Column> columns;
     
@@ -312,6 +312,18 @@ public class OldTable extends Widget implements TableInterface {
         headerSelectionColumn.unselectAllRows();
     }
     
+    public String getGroupActionLabel(String groupId) {
+        return getActionsInterface().getGroupActionLabel(groupId);
+    }
+    
+    public String getActionLabel(String actionId) {
+        return getActionsInterface().getActionLabel(actionId);
+    }
+    
+    public String getActionLabel(String groupId, String actionId) {
+        return getActionsInterface().getActionLabel(groupId, actionId);
+    }
+    
     private Column getHeaderSelectionColumn() {
         return webElement.findElements(By.cssSelector(HEADER_SELECTION_CSS)).stream()
                 .map(headerSelection -> new Column(headerSelection, webDriverWait, driver)).findFirst()
@@ -409,7 +421,7 @@ public class OldTable extends Widget implements TableInterface {
         private static final String CELL_ALREADY_SELECTED_LOG = "The cell you want to select is already selected.";
         private static final String CELL_ALREADY_UNSELECTED_LOG = "The cell you want to unselect is already unselected.";
         private static final String CHECKBOX_ALL_CSS = ".checkbox";
-
+        
         private final WebElement columnElement;
         private final WebDriverWait wait;
         private final WebDriver driver;

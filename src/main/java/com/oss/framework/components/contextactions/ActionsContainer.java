@@ -23,6 +23,7 @@ public class ActionsContainer implements ActionsInterface {
     private static final String MORE_GROUP_ID = "moreActions";
     private static final String CONTEXT_ACTIONS_CLASS = "actionsContainer--default";
     private static final String GROUP_ALL_PATTERN = ".//div[@id='%s'] | .//div[text()= '%s'] | .//div[@id= '" + MORE_GROUP_ID + "']";
+    private static final String ACTION_ALL_PATTERN = ".//a[@id='%s'] | .//div[@id= '" + MORE_GROUP_ID + "']";
     private static final String GROUP_PATTERN = ".//div[@id='%s'] | .//div[text()='%s']";
     private static final String UNSUPPORTED_EXCEPTION = "Method not implemented for Actions Container.";
     private static final String NO_ACTION_EXCEPTION = "No active Context Action.";
@@ -62,12 +63,7 @@ public class ActionsContainer implements ActionsInterface {
     
     @Override
     public void callActionById(String id) {
-        if (isElementPresent(webElement, By.id(id))) {
-            clickWebElement(webElement.findElement(By.id(id)));
-        } else {
-            clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(ACTIONS_DROPDOWN_CLASS));
-            DropdownList.create(webDriver, webDriverWait).selectOptionById(id);
-        }
+        clickWebElement(getAction(By.id(id), String.format(ACTION_ALL_PATTERN, id)));
     }
     
     @Override
@@ -78,24 +74,21 @@ public class ActionsContainer implements ActionsInterface {
     
     public String getGroupActionLabel(String groupId) {
         String xpath = String.format(GROUP_PATTERN, groupId, groupId);
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_ALL_PATTERN, groupId, groupId));
-        if (isElementPresent(webElement, By.xpath(xpath))) {
-            return webElement.findElement(By.xpath(xpath)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
-        } else {
-            clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(ACTIONS_DROPDOWN_CLASS));
-            return webDriver.findElement(By.xpath(xpath)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
-        }
+        return getAction(By.xpath(xpath), String.format(GROUP_ALL_PATTERN, groupId, groupId)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+    }
+    
+    public String getActionLabel(String groupId, String actionId) {
+        clickOnGroup(groupId);
+        return DropdownList.create(webDriver, webDriverWait).getOptionLabel(actionId);
+    }
+    
+    public String getActionLabel(String actionId) {
+        return getAction(By.id(actionId), String.format(ACTION_ALL_PATTERN, actionId)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
     }
     
     private void clickOnGroup(String group) {
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, String.format(GROUP_ALL_PATTERN, group, group));
-        if (isElementPresent(webElement, By.xpath(String.format(GROUP_PATTERN, group, group)))) {
-            clickWithRetry(webElement.findElement(By.xpath(String.format(GROUP_PATTERN, group, group))),
-                    By.className(ACTIONS_DROPDOWN_CLASS));
-        } else {
-            clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(ACTIONS_DROPDOWN_CLASS));
-            DropdownList.create(webDriver, webDriverWait).selectOptionById(group);
-        }
+        clickWithRetry(getAction(By.xpath(String.format(GROUP_PATTERN, group, group)), String.format(GROUP_ALL_PATTERN, group, group)),
+                By.className(ACTIONS_DROPDOWN_CLASS));
     }
     
     private void clickWebElement(WebElement webElement) {
@@ -108,5 +101,16 @@ public class ActionsContainer implements ActionsInterface {
     
     private boolean isElementPresent(WebElement webElement, By by) {
         return WebElementUtils.isElementPresent(webElement, by);
+    }
+    
+    private WebElement getAction(By by, String xpathWait) {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, xpathWait);
+        if (isElementPresent(webElement, by)) {
+            return webElement.findElement(by);
+        } else {
+            clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(ACTIONS_DROPDOWN_CLASS));
+            return webDriver.findElement(by);
+            
+        }
     }
 }
