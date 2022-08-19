@@ -1,9 +1,11 @@
 package com.oss.framework.components.tree;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -13,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.prompts.Popup;
@@ -34,9 +37,10 @@ public class TreeComponent {
     private static final String COLLAPSER_BUTTON_XPATH = ".//div[@class = 'tree-node-expand-icon tree-node-expand-icon--expanded']";
     private static final String NODE_CHECKBOX_XPATH = ".//div[contains(@class,'tree-node-selection')]//input";
     private static final String NODE_CHECKBOX_LABEL_XPATH = ".//div[contains(@class,'tree-node-selection')]//label";
-    private static final String SPIN_XPATH = ".//i[contains(@class,'fa-spin')]";
     private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
     private static final String TREE_COMPONENT_NOT_TREE_COMPONENT_LOADER_CSSS = ".tree-component:not(.tree-component--loader)";
+    private static final String CANNOT_FIND_NODE_EXCEPTION = "Cannot find Node ";
+    private static final String DATA_PATH_LABEL_ATTR = "data-label-path";
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
@@ -62,17 +66,26 @@ public class TreeComponent {
     }
     
     public Node getNodeByPath(String path) {
-        return findNodeByPath(path).orElseThrow(() -> new NoSuchElementException("Cannot find Node " + path));
+        return findNodeByPath(path).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + path));
     }
     
     public Node getNodeByLabelsPath(String labels) {
-        return findNodeByLabelsPath(labels).orElseThrow(() -> new NoSuchElementException("Cannot find Node " + labels));
+        return findNodeByLabelsPath(labels).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + labels));
     }
     
     public List<Node> getVisibleNodes() {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         return this.treeComponentElement.findElements(By.xpath("." + getNodeClassPath())).stream()
                 .map(node -> Node.create(driver, webDriverWait, node)).collect(Collectors.toList());
+    }
+    
+    public Set<String> getNodeChildren(String labels) {
+        Node root = findNodeByLabelsPath(labels).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + labels));
+        root.expandNode();
+        List<Node> visibleChildren = getNodesByPathContains(labels);
+        Set<String> allChildren = visibleChildren.stream().map(Node::getLabel).collect(Collectors.toCollection(HashSet::new));
+        allChildren.addAll(getAllVisibleChildren(visibleChildren, labels));
+        return allChildren;
     }
     
     public Optional<Node> findNodeByLabelsPath(String labels) {
@@ -83,6 +96,17 @@ public class TreeComponent {
     private Optional<Node> findNodeByPath(String path) {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(path));
         return getNodeByPath(pathElements, false);
+    }
+    
+    private List<Node> getNodesByPathContains(String labels) {
+        return treeComponentElement.findElements(By.cssSelector("[" + DATA_PATH_LABEL_ATTR + "^='" + labels + ".']")).stream()
+                .map(child -> Node.create(driver, webDriverWait, child))
+                .collect(Collectors.toList());
+    }
+    
+    private Node getLastVisibleNode(List<Node> visibleNodes) {
+       return visibleNodes.get(visibleNodes.size() - 1);
+
     }
     
     private Optional<Node> getNodeByPath(List<String> pathElements, boolean isLabel) {
@@ -108,17 +132,30 @@ public class TreeComponent {
     
     private Optional<Node> scrollToNode(boolean isLabel, Optional<Node> node, String tempPath) {
         List<Node> nodes = getVisibleNodes();
-        Node lastNode = nodes.get(nodes.size() - 1);
+        Node lastNode = getLastVisibleNode(nodes);
         Node tempNode = null;
         while (!node.isPresent() && !lastNode.equals(tempNode)) {
             lastNode.moveToNode();
             nodes = getVisibleNodes();
             node = getNode(isLabel, tempPath, nodes);
             tempNode = lastNode;
-            lastNode = nodes.get(nodes.size() - 1);
+            lastNode = getLastVisibleNode(nodes);
         }
         return node;
     }
+    
+    private Set<String> getAllVisibleChildren(List<Node> nodes, String pathLabels) {
+        Node lastNode = getLastVisibleNode(nodes);
+        lastNode.moveToNode();
+        Set<String> allChildren = Sets.newHashSet();
+        while (!lastNode.equals(getLastVisibleNode(getNodesByPathContains(pathLabels)))) {
+            allChildren.addAll(getNodesByPathContains(pathLabels).stream().map(Node::getLabel).collect(Collectors.toList()));
+            lastNode = getLastVisibleNode(getNodesByPathContains(pathLabels));
+            lastNode.moveToNode();
+        }
+        return allChildren;
+    }
+
     
     private Optional<Node> getNode(boolean isLabel, String tempPath, List<Node> nodes) {
         Optional<Node> node;
@@ -160,7 +197,6 @@ public class TreeComponent {
     
     public static class Node {
         private static final String DATA_PATH_ATTR = "data-path";
-        private static final String DATA_PATH_LABEL_ATTR = "data-label-path";
         private static final String FILTERS_BUTTON_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='filters-panel-button']";
         private static final String ADVANCED_SEARCH_PANEL_ID = "advanced-search_panel";
         private static final String DECORATOR_ICON_CSS = ".icon-wrapper";
@@ -174,6 +210,7 @@ public class TreeComponent {
         private static final String ARIA_LABEL_ADD_CSS = "[aria-label='ADD']";
         private static final String LABEL_NODE_CSS = ".OSSRichText";
         private static final String OSS_ICON_CLASS = "OSSIcon";
+        private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
@@ -253,7 +290,7 @@ public class TreeComponent {
         
         public String getLabel() {
             WebElement richText = nodeElement.findElement(By.className(NODE_LABEL_CLASS));
-            return richText.getText();
+            return richText.getAttribute(TEXT_CONTENT_ATTRIBUTE);
         }
         
         public void callAction(String groupId, String actionId) {
