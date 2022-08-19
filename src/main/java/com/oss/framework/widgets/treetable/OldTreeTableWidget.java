@@ -95,6 +95,10 @@ public class OldTreeTableWidget extends Widget {
         advancedSearch.clickApply();
     }
     
+    public boolean hasNoData() {
+        return createTable().hasNoData();
+    }
+    
     private OldTable createTable() {
         return OldTable.createById(driver, webDriverWait, id);
     }
