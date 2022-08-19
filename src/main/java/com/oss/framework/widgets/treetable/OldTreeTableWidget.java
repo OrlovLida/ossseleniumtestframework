@@ -72,6 +72,18 @@ public class OldTreeTableWidget extends Widget {
         createTable().callActionByLabel(groupLabel, actionLabel);
     }
     
+    public String getGroupActionLabel(String groupId) {
+        return createTable().getGroupActionLabel(groupId);
+    }
+    
+    public String getActionLabel(String groupId, String actionId) {
+        return createTable().getActionLabel(groupId, actionId);
+    }
+    
+    public String getActionLabel(String actionId) {
+        return createTable().getActionLabel(actionId);
+    }
+    
     public String getCellValue(int index, String attributeLabel) {
         return createTable().getCellValue(index, attributeLabel);
     }
@@ -97,6 +109,10 @@ public class OldTreeTableWidget extends Widget {
     
     public boolean hasNoData() {
         return createTable().hasNoData();
+    }
+    
+    public List<String> getColumnsHeader() {
+        return createTable().getColumnsHeaders();
     }
     
     private OldTable createTable() {
