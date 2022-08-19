@@ -49,10 +49,6 @@ public class Switcher extends Input {
         throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
-    @Override
-    public String getLabel() {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
-    }
 
     private void setSwitcherValue(Data value) {
         Boolean valueToSet = Boolean.valueOf(value.getStringValue());
