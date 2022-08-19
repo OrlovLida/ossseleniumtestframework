@@ -2,6 +2,8 @@ package com.oss.framework.widgets.tree;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -149,6 +151,10 @@ public class TreeWidgetV2 extends Widget {
 
     public String getSelectedObjectCount() {
         return getSelectionBarComponent().getSelectedObjectsCount();
+    }
+
+    public Set<String> getNodeChildren(String labels){
+       return getTreeComponent().getNodeChildren(labels);
     }
 
     private TreeComponent getTreeComponent() {
