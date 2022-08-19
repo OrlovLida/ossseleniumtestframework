@@ -99,7 +99,7 @@ public class OldTreeTableWidget extends Widget {
         return OldTable.createById(driver, webDriverWait, id);
     }
     
-    public AdvancedSearch getAdvancedSearch() {
+    private AdvancedSearch getAdvancedSearch() {
         return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
     }
     
