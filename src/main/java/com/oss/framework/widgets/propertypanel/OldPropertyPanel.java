@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.propertypanel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
     private static final String PROPERTY_ATTRIBUTES_NAME_CSS = ".Col_PropertyName";
     private static final String PROPERTY_VALUES_CSS = ".Col_PropertyValue";
+    private static final String PROPERTY_CSS = ".item-label";
     private static final String CELL_CSS = ".Cell";
     private static final String ROW_CSS = ".row";
 
@@ -30,6 +32,14 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     public static OldPropertyPanel createById(WebDriver driver, WebDriverWait wait, String widgetId) {
         Widget.waitForWidgetById(wait, widgetId);
         return new OldPropertyPanel(driver, wait, widgetId);
+    }
+
+    public List<String> getVisibleAttributes() {
+        List<String> propertyLabel = new ArrayList<>();
+        for (WebElement element : getProperties()) {
+            propertyLabel.add(element.getText());
+        }
+        return propertyLabel;
     }
     
     @Override
@@ -65,5 +75,9 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
 
     public int countRows() {
         return webElement.findElements(By.cssSelector(ROW_CSS)).size();
+    }
+
+    private List<WebElement> getProperties() {
+        return this.webElement.findElements(By.cssSelector(PROPERTY_CSS));
     }
 }
