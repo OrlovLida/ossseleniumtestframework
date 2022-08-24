@@ -35,11 +35,11 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public List<String> getVisibleAttributes() {
-        List<String> propertyId = new ArrayList<>();
+        List<String> propertyLabel = new ArrayList<>();
         for (WebElement element : getProperties()) {
-            propertyId.add(element.getText());
+            propertyLabel.add(element.getText());
         }
-        return propertyId;
+        return propertyLabel;
     }
     
     @Override
