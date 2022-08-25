@@ -31,9 +31,9 @@ public class ToolsManagerWindow {
     private static final String CATEGORY_BOX_CSS = ".category-box";
     private static final String BY_TEXT_PATTERN = "//*[text()='%s']";
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private WebElement toolsManager;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement toolsManager;
 
     private ToolsManagerWindow(WebDriver driver, WebDriverWait wait, WebElement toolsManager) {
         this.driver = driver;
@@ -127,8 +127,17 @@ public class ToolsManagerWindow {
     }
 
     public void openApplication(String categoryName, String applicationName) {
-        Application application = getApplication(applicationName, categoryName);
-        application.openApplication();
+        getApplication(applicationName, categoryName).openApplication();
+    }
+
+    public void openApplication(String categoryName, String subcategoryName, String applicationName) {
+        Subcategory subcategory = getSubcategoryByName(subcategoryName, categoryName);
+        subcategory.clickShowAll();
+        subcategory.getApplications().stream().filter(application -> application.getApplicationName()
+                        .equals(applicationName))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_APPLICATION_WITH_NAME_EXCEPTION + applicationName))
+                .openApplication();
     }
 
     public void changeCategoryOrder(String categoryName, int position) {
