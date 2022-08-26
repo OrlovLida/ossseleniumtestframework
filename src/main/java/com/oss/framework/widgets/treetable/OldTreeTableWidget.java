@@ -114,6 +114,14 @@ public class OldTreeTableWidget extends Widget {
     public List<String> getColumnsHeader() {
         return createTable().getColumnsHeaders();
     }
+
+    public void selectPredefinedFilter(String filterName){
+        createTable().selectPredefinedFilter(filterName);
+    }
+
+    public List<String> getSelectedPredefinedFilter(){
+       return createTable().getSelectedPredefinedFilters();
+    }
     
     private OldTable createTable() {
         return OldTable.createById(driver, webDriverWait, id);

@@ -24,6 +24,7 @@ public class Card {
     private static final String ACTIONS_CONTAINER_CSS = ".actionsContainer";
     private static final String WINDOW_TOOLBAR_CSS = ".windowToolbar";
     private static final String CONTEXT_ACTIONS_CSS = WINDOW_TOOLBAR_CSS + "," + ACTIONS_CONTAINER_CSS;
+    private static final String CARD_HEADER_LABEL_CSS = ".card-header__label";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -75,6 +76,10 @@ public class Card {
 
     public void callActionById(String groupId, String actionId) {
         getActionsInterface().callActionById(groupId, actionId);
+    }
+
+    public String getCardName(){
+      return   cardElement.findElement(By.cssSelector(CARD_HEADER_LABEL_CSS)).getText();
     }
 
     private ActionsInterface getActionsInterface() {
