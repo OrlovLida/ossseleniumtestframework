@@ -1,6 +1,5 @@
 package com.oss.framework.widgets.table;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,7 +118,7 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
-        if(!CSSUtils.isElementPresent(driver, attributeId)) {
+        if (!CSSUtils.isElementPresent(driver, attributeId)) {
             advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
         }
         setFilterContains(attributeId, componentType, value);
@@ -181,7 +180,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     /**
-     * @Depracated  method will be removed in 3.0.x release, use instead getCellValue
+     * @Depracated method will be removed in 3.0.x release, use instead getCellValue
      */
     @Deprecated
     public String getCellValueById(int row, String columnId) {

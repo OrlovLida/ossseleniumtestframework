@@ -1,10 +1,8 @@
 package com.oss.framework.widgets.tree;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -107,7 +105,7 @@ public class TreeWidgetV2 extends Widget {
 
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         advancedSearch = getAdvancedSearch();
-        if(!CSSUtils.isElementPresent(driver, attributeId)) {
+        if (!CSSUtils.isElementPresent(driver, attributeId)) {
             advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
         }
         advancedSearch.setFilter(attributeId, componentType, value);
@@ -159,8 +157,8 @@ public class TreeWidgetV2 extends Widget {
         return getSelectionBarComponent().getSelectedObjectsCount();
     }
 
-    public Set<String> getNodeChildren(String labels){
-       return getTreeComponent().getNodeChildren(labels);
+    public Set<String> getNodeChildren(String labels) {
+        return getTreeComponent().getNodeChildren(labels);
     }
 
     private TreeComponent getTreeComponent() {
