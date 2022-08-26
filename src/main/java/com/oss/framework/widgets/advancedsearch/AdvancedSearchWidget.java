@@ -37,13 +37,7 @@ public class AdvancedSearchWidget extends Widget {
     }
     
     public void setFilter(String componentId, String value) {
-        AdvancedSearch advancedSearch = getAdvancedSearch();
-        if (!CSSUtils.isElementPresent(driver,componentId)) {
-            List<String> attributes = new ArrayList<>();
-            attributes.add(componentId);
-            advancedSearch.selectAttributes(attributes);
-        }
-        advancedSearch.setFilter(componentId, value);
+        getAdvancedSearch().setFilter(componentId, value);
     }
     
     /**
