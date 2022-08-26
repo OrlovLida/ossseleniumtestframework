@@ -18,12 +18,12 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     
     private static final String PROPERTY_NAME_PATH = ".//li[@class='row']//div[@class='item-label']//span[text()='%s']";
     private static final String PROPERTY_VALUE_PATH = "./ancestor::li[@class='row']//div[@class='item-value']";
-    private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
     private static final String PROPERTY_ATTRIBUTES_NAME_CSS = ".Col_PropertyName";
     private static final String PROPERTY_VALUES_CSS = ".Col_PropertyValue";
     private static final String PROPERTY_CSS = ".item-label";
     private static final String CELL_CSS = ".Cell";
     private static final String ROW_CSS = ".row";
+    private static final String LINK_CSS = "a[href]";
 
     private OldPropertyPanel(WebDriver driver, WebDriverWait wait, String widgetId) {
         super(driver, wait, widgetId);
@@ -49,7 +49,7 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public void clickLink(String propertyName) {
-        getPropertyElement(propertyName).click();
+        getPropertyElement(propertyName).findElement(By.cssSelector(LINK_CSS)).click();
     }
 
     @Override
