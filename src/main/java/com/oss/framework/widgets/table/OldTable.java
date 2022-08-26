@@ -294,6 +294,13 @@ public class OldTable extends Widget implements TableInterface {
         predefinedFilter.selectPredefinedFilter();
     }
     
+    public List<String> getSelectedPredefinedFilters() {
+        List<PredefinedFilter> predefinedFilters = driver.findElements(By.cssSelector(".ToggleButton")).stream()
+                .map(element -> PredefinedFilter.createPredefinedFilter(driver, webDriverWait, element))
+                .filter(PredefinedFilter::isFilterSelected).collect(Collectors.toList());
+        return predefinedFilters.stream().map(PredefinedFilter::getLabel).collect(Collectors.toList());
+    }
+    
     public void fullTextSearch(String text) {
         getAdvancedSearch().fullTextSearch(text);
     }
@@ -627,6 +634,12 @@ public class OldTable extends Widget implements TableInterface {
             return new PredefinedFilter(driver, predefinedFilter);
         }
         
+        private static PredefinedFilter createPredefinedFilter(WebDriver driver, WebDriverWait wait, WebElement predefinedFilter) {
+            DelayUtils.waitForPageToLoad(driver, wait);
+            DelayUtils.waitByXPath(wait, TOGGLE_BUTTON_XPATH);
+            return new PredefinedFilter(driver, predefinedFilter);
+        }
+        
         private void selectPredefinedFilter() {
             if (!isFilterSelected()) {
                 Actions action = new Actions(driver);
@@ -636,6 +649,10 @@ public class OldTable extends Widget implements TableInterface {
         
         private boolean isFilterSelected() {
             return predefinedFilterElement.getAttribute(CLASS_ATTRIBUTE).contains("active");
+        }
+
+        private String getLabel(){
+         return    predefinedFilterElement.findElement(By.cssSelector(".btnLabel")).getText();
         }
     }
     
