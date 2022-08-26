@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
@@ -119,9 +120,7 @@ public class TableWidget extends Widget implements TableInterface {
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
         if(!CSSUtils.isElementPresent(driver, attributeId)) {
-            List<String> attributes = new ArrayList<>();
-            attributes.add(attributeId);
-            advancedSearch.selectAttributes(attributes);
+            advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
         }
         setFilterContains(attributeId, componentType, value);
         confirmFilter();

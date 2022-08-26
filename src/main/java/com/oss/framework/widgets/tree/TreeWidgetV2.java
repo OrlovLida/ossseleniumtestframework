@@ -10,6 +10,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.Lists;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.inputs.Input;
@@ -107,9 +108,7 @@ public class TreeWidgetV2 extends Widget {
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         advancedSearch = getAdvancedSearch();
         if(!CSSUtils.isElementPresent(driver, attributeId)) {
-            List<String> attributes = new ArrayList<>();
-            attributes.add(attributeId);
-            advancedSearch.selectAttributes(attributes);
+            advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
         }
         advancedSearch.setFilter(attributeId, componentType, value);
         advancedSearch.clickApply();
