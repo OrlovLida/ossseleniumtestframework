@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
@@ -117,6 +118,9 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
+        if (!CSSUtils.isElementPresent(driver, attributeId)) {
+            advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
+        }
         setFilterContains(attributeId, componentType, value);
         confirmFilter();
     }
@@ -176,7 +180,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     @Override
     /**
-     * @Depracated  method will be removed in 3.0.x release, use instead getCellValue
+     * @Depracated method will be removed in 3.0.x release, use instead getCellValue
      */
     @Deprecated
     public String getCellValueById(int row, String columnId) {

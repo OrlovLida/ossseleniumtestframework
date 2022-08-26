@@ -356,7 +356,7 @@ public class TreeComponent {
             return !nodeElement.findElements(By.cssSelector(TREE_NODE_BADGE_CSS)).isEmpty();
         }
         
-        boolean isExpandNextLevelPresent() {
+        public boolean isExpandNextLevelPresent() {
             return !nodeElement.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
         }
         

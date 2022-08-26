@@ -3,12 +3,12 @@ package com.oss.framework.widgets.tree;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.Lists;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.inputs.Input;
@@ -17,6 +17,7 @@ import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.components.tree.TreeComponent.Node;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -104,6 +105,9 @@ public class TreeWidgetV2 extends Widget {
 
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         advancedSearch = getAdvancedSearch();
+        if (!CSSUtils.isElementPresent(driver, attributeId)) {
+            advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
+        }
         advancedSearch.setFilter(attributeId, componentType, value);
         advancedSearch.clickApply();
     }
@@ -153,8 +157,8 @@ public class TreeWidgetV2 extends Widget {
         return getSelectionBarComponent().getSelectedObjectsCount();
     }
 
-    public Set<String> getNodeChildren(String labels){
-       return getTreeComponent().getNodeChildren(labels);
+    public Set<String> getNodeChildren(String labels) {
+        return getTreeComponent().getNodeChildren(labels);
     }
 
     private TreeComponent getTreeComponent() {
