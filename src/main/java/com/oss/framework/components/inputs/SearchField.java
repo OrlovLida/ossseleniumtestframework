@@ -56,10 +56,6 @@ public class SearchField extends Input {
         input.sendKeys(Keys.DELETE);
     }
 
-    @Override
-    public String getLabel() {
-        return webElement.findElement(By.tagName("span")).getText();
-    }
 
     private void typeValue(Data value) {
         DelayUtils.waitForClickability(webDriverWait, webElement);

@@ -134,7 +134,7 @@ public class TabsWidget extends Widget implements TabsInterface {
         return false;
     }
     
-    private List<String> getTabLabels() {
+    public List<String> getTabLabels() {
         List<String> labels = Lists.newArrayList();
         for (WebElement element: createTabs().findElements(By.xpath(CHILD_TABS_XPATH))) {
             labels.add(element.getText());

@@ -1,16 +1,17 @@
 package com.oss.framework.widgets.propertypanel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
@@ -20,6 +21,7 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
     private static final String PROPERTY_ATTRIBUTES_NAME_CSS = ".Col_PropertyName";
     private static final String PROPERTY_VALUES_CSS = ".Col_PropertyValue";
+    private static final String PROPERTY_CSS = ".item-label";
     private static final String CELL_CSS = ".Cell";
     private static final String ROW_CSS = ".row";
 
@@ -31,15 +33,30 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
         Widget.waitForWidgetById(wait, widgetId);
         return new OldPropertyPanel(driver, wait, widgetId);
     }
-    
+
+    public List<String> getVisibleAttributes() {
+        List<String> propertyLabel = new ArrayList<>();
+        for (WebElement element : getProperties()) {
+            propertyLabel.add(element.getText());
+        }
+        return propertyLabel;
+    }
+
+    private WebElement getPropertyElement(String propertyName) {
+        WebElement propertyNameWebElement = this.webElement.findElement(By.xpath(String.format(PROPERTY_NAME_PATH, propertyName)));
+        WebElementUtils.moveToElement(driver, propertyNameWebElement);
+        return propertyNameWebElement.findElement(By.xpath(PROPERTY_VALUE_PATH));
+    }
+
+    public void clickLink(String propertyName) {
+        getPropertyElement(propertyName).click();
+    }
+
     @Override
     public String getPropertyValue(String propertyName) {
-        WebElement propertyNameWebElement = this.webElement.findElement(By.xpath(String.format(PROPERTY_NAME_PATH, propertyName)));
-        ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, propertyNameWebElement);
-        WebElement propertyValueElement = propertyNameWebElement.findElement(By.xpath(PROPERTY_VALUE_PATH));
-        return propertyValueElement.getText();
+        return getPropertyElement(propertyName).getText();
     }
-    
+
     public Map<String, String> getPropertyNamesToValues() {
         Map<String, String> properties = new HashMap<>();
         List<String> propertyNames = getPropertyNames();
@@ -65,5 +82,9 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
 
     public int countRows() {
         return webElement.findElements(By.cssSelector(ROW_CSS)).size();
+    }
+
+    private List<WebElement> getProperties() {
+        return this.webElement.findElements(By.cssSelector(PROPERTY_CSS));
     }
 }

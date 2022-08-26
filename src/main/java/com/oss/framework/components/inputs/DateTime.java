@@ -19,10 +19,13 @@ import com.oss.framework.utils.WebElementUtils;
 
 public class DateTime extends Input {
     
-    private static final String XPATH_CLOCK_ICON = ".//button//i[@class='OSSIcon fa fa-calendar']";
+    private static final String CALENDAR_ICON_XPATH = ".//button//i[@class='OSSIcon fa fa-calendar']";
+    private static final String CLOCK_ICON_ID = "data-time-picker-time";
     private static final String INPUT = ".//input";
     private static final String DATE_TIME_PICKER_ID = "dateTimePicker";
-    
+    private static final String DAY_PICKER_CLASS = "DayPicker";
+    private static final String TIME_PICKER_CLASS = "timePicker";
+
     private DateTime(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
     }
@@ -75,25 +78,26 @@ public class DateTime extends Input {
     
     public void chooseDate(String date) {
         clickCalendar();
+        DelayUtils.waitBy(webDriverWait, By.className(DAY_PICKER_CLASS));
         DatePicker.create(driver, webDriverWait, DATE_TIME_PICKER_ID).chooseDate(date);
     }
     
     public void clickCalendar() {
         Actions actions = new Actions(driver);
-        WebElement calendar = webElement.findElement(By.xpath(XPATH_CLOCK_ICON));
+        WebElement calendar = webElement.findElement(By.xpath(CALENDAR_ICON_XPATH));
         actions.moveToElement(webElement).click(calendar).build().perform();
-        DelayUtils.sleep();
     }
     
     public void chooseTime(String time) {
         clickTime();
+        DelayUtils.waitBy(webDriverWait, By.className(TIME_PICKER_CLASS));
         TimePicker.create(driver, webDriverWait).chooseTime(time);
         clickTime();
     }
     
     private void clickTime() {
-        WebElement clock = this.webElement.findElement(By.xpath(XPATH_CLOCK_ICON));
+        WebElement clock = webElement.findElement(By.cssSelector(CSSUtils.getElementCssSelector(CLOCK_ICON_ID)));
         clock.click();
-        DelayUtils.sleep();
+
     }
 }
