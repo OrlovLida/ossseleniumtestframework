@@ -26,7 +26,7 @@ public class SearchPanel {
     private static final String APPLY_BTN_PATH = ".//a[text()='Apply']";
     private static final String CANCEL_BTN_PATH = ".//a[text()='Cancel']";
     private static final String SAVE_BTN_PATH = ".//a[text()='Save']";
-    private static final String BTN_TOGGLE_FILTERS_PATH = ".//button[@class='btn-toggle-filters']";
+    private static final String BTN_TOGGLE_FILTERS_PATH = "//*[contains(@class, 'btn-toggle-filters')]";
 
     private static final String SAVE_BUTTONS_DROPDOWN_PATH = ".//div[@" + CSSUtils.TEST_ID + "='save-buttons-dropdown']";
     private static final String SAVE_AS_NEW_FILTER_BTN_ID = "save_as_new_filter";
