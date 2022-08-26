@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 
 public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
@@ -41,15 +41,22 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
         }
         return propertyLabel;
     }
-    
+
+    private WebElement getPropertyElement(String propertyName) {
+        WebElement propertyNameWebElement = this.webElement.findElement(By.xpath(String.format(PROPERTY_NAME_PATH, propertyName)));
+        WebElementUtils.moveToElement(driver, propertyNameWebElement);
+        return propertyNameWebElement.findElement(By.xpath(PROPERTY_VALUE_PATH));
+    }
+
+    public void clickLink(String propertyName) {
+        getPropertyElement(propertyName).click();
+    }
+
     @Override
     public String getPropertyValue(String propertyName) {
-        WebElement propertyNameWebElement = this.webElement.findElement(By.xpath(String.format(PROPERTY_NAME_PATH, propertyName)));
-        ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, propertyNameWebElement);
-        WebElement propertyValueElement = propertyNameWebElement.findElement(By.xpath(PROPERTY_VALUE_PATH));
-        return propertyValueElement.getText();
+        return getPropertyElement(propertyName).getText();
     }
-    
+
     public Map<String, String> getPropertyNamesToValues() {
         Map<String, String> properties = new HashMap<>();
         List<String> propertyNames = getPropertyNames();
