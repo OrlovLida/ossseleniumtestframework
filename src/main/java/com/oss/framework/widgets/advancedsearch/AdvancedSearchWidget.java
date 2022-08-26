@@ -1,5 +1,8 @@
 package com.oss.framework.widgets.advancedsearch;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -34,7 +37,13 @@ public class AdvancedSearchWidget extends Widget {
     }
     
     public void setFilter(String componentId, String value) {
-        getAdvancedSearch().setFilter(componentId, value);
+        AdvancedSearch advancedSearch = getAdvancedSearch();
+        if (!CSSUtils.isElementPresent(driver,componentId)) {
+            List<String> attributes = new ArrayList<>();
+            attributes.add(componentId);
+            advancedSearch.selectAttributes(attributes);
+        }
+        advancedSearch.setFilter(componentId, value);
     }
     
     /**

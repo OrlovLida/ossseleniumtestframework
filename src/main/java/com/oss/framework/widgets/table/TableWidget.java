@@ -1,5 +1,6 @@
 package com.oss.framework.widgets.table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,6 +118,11 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
+        if(!CSSUtils.isElementPresent(driver, attributeId)) {
+            List<String> attributes = new ArrayList<>();
+            attributes.add(attributeId);
+            advancedSearch.selectAttributes(attributes);
+        }
         setFilterContains(attributeId, componentType, value);
         confirmFilter();
     }

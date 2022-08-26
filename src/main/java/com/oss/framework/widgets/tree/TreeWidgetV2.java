@@ -16,6 +16,7 @@ import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.tree.TreeComponent;
 import com.oss.framework.components.tree.TreeComponent.Node;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -103,9 +104,11 @@ public class TreeWidgetV2 extends Widget {
 
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         advancedSearch = getAdvancedSearch();
-        List<String> attributes = new ArrayList<>();
-        attributes.add(attributeId);
-        advancedSearch.selectAttributes(attributes);
+        if(!CSSUtils.isElementPresent(driver, attributeId)) {
+            List<String> attributes = new ArrayList<>();
+            attributes.add(attributeId);
+            advancedSearch.selectAttributes(attributes);
+        }
         advancedSearch.setFilter(attributeId, componentType, value);
         advancedSearch.clickApply();
     }
