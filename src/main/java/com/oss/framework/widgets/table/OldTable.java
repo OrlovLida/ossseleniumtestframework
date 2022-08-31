@@ -22,6 +22,8 @@ import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.components.inputs.Input.ComponentType;
+import com.oss.framework.components.pagination.OldPaginationComponent;
+import com.oss.framework.components.pagination.PaginationComponent;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
@@ -263,37 +265,35 @@ public class OldTable extends Widget implements TableInterface {
     public int countRows(String anyLabelInTable) {
         return getColumn(anyLabelInTable).countRows();
     }
-    
+
     public void selectRowByPartialNameAndIndex(String partialName, int index) {
         String xpath = String.format(FIND_BY_PARTIAL_NAME_AND_INDEX_PATTERN, partialName, index);
         driver.findElement(By.xpath(xpath)).click();
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
     }
-    
+
     public int getTotalCount() {
-        List<WebElement> rowsCounterSpans = webElement
-                .findElements(By.xpath(ROWS_COUNTER_SPANS_XPATH));
-        try {
-            return Integer.parseInt(rowsCounterSpans.get(rowsCounterSpans.size() - 2).getText());
-        } catch (NumberFormatException e) {
-            log.warn(CANNOT_GET_COUNT_WARN);
-            return 0;
-        }
+        return getPagination().getTotalCount();
     }
-    
+
+    public void goToNextPage() {
+        getPagination().goOnNextPage();
+    }
+
     public void setPageSize(int pageOption) {
-        WebElement pagination = webElement
-                .findElement(By.className(PAGINATION_CLASS));
-        pagination.findElement(By.xpath(BUTTON_XPATH)).click();
-        pagination.findElement(By.xpath(String.format(PAGE_OPTION_PATTERN, pageOption))).click();
+        getPagination().changeRowsCount(pageOption);
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
     }
-    
+
+    private PaginationComponent getPagination() {
+        return OldPaginationComponent.createFromParent(this.webElement);
+    }
+
     public void selectPredefinedFilter(String filterName) {
         PredefinedFilter predefinedFilter = PredefinedFilter.createPredefinedFilter(driver, webDriverWait, filterName);
         predefinedFilter.selectPredefinedFilter();
     }
-    
+
     public List<String> getSelectedPredefinedFilters() {
         List<PredefinedFilter> predefinedFilters = driver.findElements(By.cssSelector(".ToggleButton")).stream()
                 .map(element -> PredefinedFilter.createPredefinedFilter(driver, webDriverWait, element))
