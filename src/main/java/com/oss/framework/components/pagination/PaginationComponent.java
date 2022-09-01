@@ -9,7 +9,7 @@ public class PaginationComponent {
             ".//div[contains(@class, 'pageSizeOptions')]//span[contains(@class, 'pageSize')]";
     
     private static final String DATA_COUNT_SELECTOR = ".rowsCounter > span:last-child";
-    private static final String RAGE_OF_ROWS_SELECTOR = ".rowsCounter > span:nth-child(2)";
+    private static final String RANGE_OF_ROWS_SELECTOR = ".rowsCounter > span:nth-child(2)";
     
     private static final String NEXT_PAGE_SELECTOR = ".pagination > span:last-child";
     private static final String PREV_PAGE_SELECTOR = ".pagination > span:nth-child(2)";
@@ -21,8 +21,8 @@ public class PaginationComponent {
     private static final String PAGINATION_DROPDOWN_XPATH = ".//ul[@class= 'dropdown-menu show']";
     
     private final WebElement paginationComponentElement;
-    
-    private PaginationComponent(WebElement paginationComponentElement) {
+
+    protected PaginationComponent(WebElement paginationComponentElement) {
         this.paginationComponentElement = paginationComponentElement;
     }
     
@@ -55,48 +55,62 @@ public class PaginationComponent {
     public void goOnPrevPage() {
         getPrevPageButton().click();
     }
-    
+
     public void goOnFirstPage() {
         getFirstPageButton().click();
     }
-    
+
     public int getTotalCount() {
         String totalCount = this.paginationComponentElement.findElement(By.cssSelector(DATA_COUNT_SELECTOR)).getText();
         return Integer.parseInt(totalCount);
     }
-    
+
+    /**
+     * @deprecated (typo in method name use : getBottomRangeOfRows ; to remove with release 3.0.x)
+     */
+    @Deprecated
     public int getBottomRageOfRows() {
-        String range = getRageOfRows();
-        String topRage = range.split("-")[0].trim();
-        return Integer.parseInt(topRage);
+        return getBottomRangeOfRows();
     }
-    
+
+    public int getBottomRangeOfRows() {
+        String bottomRange = getRangeOfRows().split("-")[0].trim();
+        return Integer.parseInt(bottomRange);
+    }
+
+    /**
+     * @deprecated (typo in method name use : getTopRangeOfRows ; to remove with release 3.0.x)
+     */
+    @Deprecated
     public int getTopRageOfRows() {
-        String range = getRageOfRows();
-        String topRage = range.split("-")[1].trim();
-        return Integer.parseInt(topRage);
+        return getTopRangeOfRows();
     }
-    
+
+    public int getTopRangeOfRows() {
+        String topRange = getRangeOfRows().split("-")[1].trim();
+        return Integer.parseInt(topRange);
+    }
+
     public int getRowsCount() {
         String pageSize = paginationComponentElement.findElement(By.className(PAGE_SIZE_CLASS)).getText();
         return Integer.parseInt(pageSize);
     }
-    
+
     public void changeRowsCount(int pageSizeOption) {
         openSizeOption();
         getPageOption(pageSizeOption).click();
     }
-    
-    private String getRageOfRows() {
-        return this.paginationComponentElement.findElement(By.cssSelector(RAGE_OF_ROWS_SELECTOR)).getText();
+
+    private String getRangeOfRows() {
+        return this.paginationComponentElement.findElement(By.cssSelector(RANGE_OF_ROWS_SELECTOR)).getText();
     }
     
-    private boolean isButtonPresent(WebElement element) {
+    protected boolean isButtonPresent(WebElement element) {
         String cssAttribute = "class";
         String classDisabled = "disabled";
         return !element.getAttribute(cssAttribute).contains(classDisabled);
     }
-    
+
     private WebElement getNextPageButton() {
         return this.paginationComponentElement.findElement(By.cssSelector(NEXT_PAGE_SELECTOR));
     }
