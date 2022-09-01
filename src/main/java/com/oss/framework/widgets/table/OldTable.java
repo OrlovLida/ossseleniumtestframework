@@ -35,12 +35,10 @@ public class OldTable extends Widget implements TableInterface {
     
     private static final Logger log = LoggerFactory.getLogger(OldTable.class);
     private static final String TABLE_COLUMN_CLASS = "OSSTableColumn";
-    private static final String PAGINATION_CLASS = "OSSPagination";
     private static final String ACTIONS_CONTAINER_CSS = ".actionsContainer";
     private static final String TABLE_COLUMNS_SETTINGS_ICON_CLASS = "OSSTableColumnsSettingsIcon";
     private static final String STICKY_COLUMNS_SETTINGS_CLASS = "OSSStickyColumnsSettings";
     private static final int REFRESH_INTERVAL = 2000;
-    private static final String ROWS_COUNTER_SPANS_XPATH = ".//div[@class='rowsCounter']//span";
     private static final String TABLE_COMPONENT_XPATH = ".//div[contains(@class, 'OSSTableComponent')]";
     private static final String COLUMNS_WITHOUT_CHECKBOX_CSS = ".OSSTableColumn:not(.Col_SELECTION)";
     private static final String HREF_CSS = "[href]";
@@ -49,16 +47,13 @@ public class OldTable extends Widget implements TableInterface {
             "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='AppComponentContainer']/div";
     private static final String ANCESTOR_XPATH = ".//ancestor::div[contains(@class,'card-shadow')]";
     private static final String NO_DATA_XPATH = ".//h3[contains(@class,'noDataWithColumns')]";
-    private static final String BUTTON_XPATH = ".//button";
     private static final String AVAILABLE_COLUMNS_LOG = "Available columns:";
     private static final String NUMBER_OF_COLUMNS_LOG_PATTERN = "Number of columns: %s";
     private static final String NUMBER_OF_COLUMNS_WITH_LABEL_LOG_PATTERN = "Number of columns with label: %s";
-    private static final String CANNOT_GET_COUNT_WARN = "Problem with getting table object count. Value is not a number.";
     private static final String NOT_SUPPORTED_TYPE_EXCEPTION = "Old table widget supports TEXT_FIELD only.";
     private static final String NOT_IMPLEMENTED_EXCEPTION = "Not implemented method in OldTable";
     private static final String NO_AVAILABLE_ROWS = "There are no available rows";
     private static final String CANNOT_FIND_COLUMN_EXCEPTION_PATTERN = "Cannot find a column with label = %s";
-    private static final String PAGE_OPTION_PATTERN = ".//li[text()='%s']";
     private static final String CONTAINS_TEXT_PATTERN = "//*[contains(text(),'%s')]";
     private static final String FIND_BY_PARTIAL_NAME_AND_INDEX_PATTERN =
             "(//div[contains(@class, 'Col_ColumnId_Name')]//div[contains(text(), '%s')])[%d]";
