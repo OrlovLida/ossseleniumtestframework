@@ -48,36 +48,84 @@ public class TreeTableWidget extends Widget implements TableInterface {
         return new TreeTableWidget(driver, wait, widgetId);
     }
 
+    /**
+     * @deprecated standardizing the nomenclature of methods, please use expandRow(String columnId, String value). Method will be removed in 3.0.x release
+     */
+    @Deprecated
     public void expandNode(String value, String columnId) {
-        getTableComponent().getRow(value, columnId).expandRow();
+        expandRow(value, columnId);
     }
 
+    /**
+     * @deprecated standardizing the nomenclature of methods, please use expandRow(String columnId, String value). Method will be removed in 3.0.x release
+     */
+    @Deprecated
     public void expandNode(int index) {
-        getTableComponent().getRow(index).expandRow();
+        expandRow(index);
     }
 
     public boolean isRowExpanded(int index) {
         return getTableComponent().getRow(index).isRowExpanded();
     }
 
+    /**
+     * @deprecated duplicated method, please use selectRowByAttributeValue(String attributeId, String value). Method will be removed in 3.0.x release
+     */
+    @Deprecated
     public void selectNode(String value, String columnId) {
-        getTableComponent().getRow(value, columnId).selectRow();
+        selectRowByAttributeValue(columnId, value);
     }
 
+    /**
+     * @deprecated duplicated method, please use selectRow(int index). Method will be removed in 3.0.x release
+     */
+    @Deprecated
     public void selectNode(int index) {
-        getTableComponent().selectRow(index);
+        selectRow(index);
     }
 
+    /**
+     * @deprecated duplicated method, please use unselectRow(int index). Method will be removed in 3.0.x release
+     */
+    @Deprecated
     public void unselectNode(int index) {
+        unselectRow(index);
+    }
+
+    /**
+     * @deprecated standardizing the nomenclature of methods, please use collapseRow(String columnId, String value). Method will be removed in 3.0.x release
+     */
+    @Deprecated
+    public void collapseNode(String value, String columnId) {
+        collapseRow(value, columnId);
+    }
+
+    /**
+     * @deprecated standardizing the nomenclature of methods, please use collapseRow(int index).Method will be removed in 3.0.x release
+     */
+    @Deprecated
+    public void collapseNode(int index) {
+        collapseRow(index);
+    }
+
+    public void expandRow(int index) {
+        getTableComponent().getRow(index).expandRow();
+    }
+
+    public void expandRow(String value, String columnId) {
+        getTableComponent().getRow(value, columnId).expandRow();
+    }
+
+    public void unselectRow(int index) {
         getTableComponent().unselectRow(index);
     }
 
-    public void collapseNode(String value, String columnId) {
-        getTableComponent().getRow(value, columnId).collapseRow();
+    public void collapseRow(int index) {
+        getTableComponent().getRow(index).collapseRow();
     }
 
-    public void collapseNode(int index) {
-        getTableComponent().getRow(index).collapseRow();
+    public void collapseRow(String value, String columnId) {
+        getTableComponent().getRow(value, columnId).collapseRow();
     }
 
     public void callActionById(String groupId, String actionId) {
@@ -242,7 +290,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     @Override
     public Multimap<String, String> getAppliedFilters() {
-       return getAdvancedSearch().getAppliedFilters();
+        return getAdvancedSearch().getAppliedFilters();
     }
 
     @Override
