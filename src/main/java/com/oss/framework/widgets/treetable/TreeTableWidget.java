@@ -53,7 +53,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
      */
     @Deprecated
     public void expandNode(String value, String columnId) {
-        getTableComponent().getRow(value, columnId).expandRow();
+        expandRow(value, columnId);
     }
 
     /**
@@ -61,7 +61,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
      */
     @Deprecated
     public void expandNode(int index) {
-        getTableComponent().getRow(index).expandRow();
+        expandRow(index);
     }
 
     public boolean isRowExpanded(int index) {
@@ -73,7 +73,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
      */
     @Deprecated
     public void selectNode(String value, String columnId) {
-        getTableComponent().getRow(value, columnId).selectRow();
+        selectRowByAttributeValue(columnId, value);
     }
 
     /**
@@ -81,7 +81,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
      */
     @Deprecated
     public void selectNode(int index) {
-        getTableComponent().selectRow(index);
+        selectRow(index);
     }
 
     /**
@@ -89,7 +89,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
      */
     @Deprecated
     public void unselectNode(int index) {
-        getTableComponent().unselectRow(index);
+        unselectRow(index);
     }
 
     /**
@@ -97,7 +97,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
      */
     @Deprecated
     public void collapseNode(String value, String columnId) {
-        getTableComponent().getRow(value, columnId).collapseRow();
+        collapseRow(value, columnId);
     }
 
     /**
@@ -105,11 +105,11 @@ public class TreeTableWidget extends Widget implements TableInterface {
      */
     @Deprecated
     public void collapseNode(int index) {
-        getTableComponent().getRow(index).collapseRow();
+        collapseRow(index);
     }
 
     public void expandRow(int index) {
-        getTableComponent().getRow(index).collapseRow();
+        getTableComponent().getRow(index).expandRow();
     }
 
     public void expandRow(String value, String columnId) {
