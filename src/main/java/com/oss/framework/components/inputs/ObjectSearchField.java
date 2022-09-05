@@ -25,24 +25,27 @@ public class ObjectSearchField extends Input {
     private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
     private static final String INPUT = ".//input";
     private static final String ADVANCED_SEARCH_ID = "advancedSearch";
-    
+    private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] input:not([disabled])";
+
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
     }
-    
+
     static ObjectSearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
+        DelayUtils.waitForPresence(wait, By.cssSelector(String.format(NOT_DISABLED_INPUT_PATTERN, componentId)));
         WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         WebElementUtils.moveToElement(driver, webElement);
         return new ObjectSearchField(driver, wait, webElement, componentId);
     }
-    
+
     public static ObjectSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait,
-            String componentId) {
+                                                     String componentId) {
+        DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(String.format(NOT_DISABLED_INPUT_PATTERN, componentId)));
         WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         WebElementUtils.moveToElement(driver, webElement);
         return new ObjectSearchField(driver, wait, webElement, componentId);
     }
-    
+
     public void setValue(Data value, boolean isContains) {
         if (!isSingleComponent()) {
             WebElementUtils.clickWebElement(driver, webElement);
@@ -61,12 +64,12 @@ public class ObjectSearchField extends Input {
             chooseFirstResult();
         }
     }
-    
+
     @Override
     public void setValueContains(Data value) {
         setValue(value, true);
     }
-    
+
     @Override
     public Data getValue() {
         if (isSingleComponent()) {
@@ -78,12 +81,12 @@ public class ObjectSearchField extends Input {
         }
         return Data.createSingleData("");
     }
-    
+
     @Override
     public void setValue(Data value) {
         setValue(value, false);
     }
-    
+
     @Override
     public void clear() {
         if (isSingleComponent()) {
@@ -94,31 +97,31 @@ public class ObjectSearchField extends Input {
         List<WebElement> closeButtons = webElement.findElements(By.xpath(OSF_VALUE_CLEAR_BTN));
         closeButtons.forEach(WebElement::click);
     }
-    
+
     @Override
     public String getLabel() {
         return webElement.findElement(By.xpath(OSF_LABEL)).getText();
     }
-    
+
     public AdvancedSearchWidget openAdvancedSearchWidget() {
         WebElement searchPlus = webElement.findElement(By.xpath(SEARCH_PLUS_ICON_XPATH));
         searchPlus.click();
         return AdvancedSearchWidget.createById(driver, webDriverWait, ADVANCED_SEARCH_ID);
     }
-    
+
     private boolean isSingleComponent() {
         return !webElement.findElement(By.xpath(".//./ancestor::div[contains(@class,'component')]"))
                 .findElements(By.className(OSF_SINGLE)).isEmpty();
     }
-    
+
     private boolean isMultiComponentEmpty() {
         return !webElement.findElements(By.className("md-input-empty")).isEmpty();
     }
-    
+
     private void chooseFirstResult() {
         DelayUtils.sleep(1500);
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
     }
-    
+
 }
