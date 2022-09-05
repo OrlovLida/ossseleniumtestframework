@@ -129,9 +129,7 @@ public class OldActionsContainer implements ActionsInterface {
 
     private void callActionByXpath(String actionXpath) {
         DelayUtils.waitForPageToLoad(driver, wait);
-        WebElement action = getAction(actionXpath);
-        clickWebElement(action);
-
+        clickWebElement(getAction(actionXpath));
     }
 
     private void callActionFromKebab(String actionId) {
