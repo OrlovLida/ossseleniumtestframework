@@ -3,6 +3,7 @@ package com.oss.framework.components.table;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -84,6 +85,11 @@ public class TableComponent {
     public void clickRow(int index) {
         Row row = getRow(index);
         row.clickRow();
+    }
+
+    public void clickLink(int index, String columnId) {
+        Cell cell = Cell.createFromParent(driver, webElement, index, columnId);
+        cell.clickLink();
     }
 
     public void selectAll() {
@@ -169,6 +175,10 @@ public class TableComponent {
 
     public void setColumnWidth(String columnId, String columnWidth) {
         getHeaderByIndex(columnId).openSettings().setDefaultColumnWidth(columnWidth);
+    }
+
+    public void setLinkPattern(String columnId, String linkPattern) {
+        getHeaderByIndex(columnId).openSettings().setLinkPattern(linkPattern);
     }
 
     public void resizeColumn(String columnId, int size) {
@@ -470,6 +480,12 @@ public class TableComponent {
             apply();
         }
 
+        private void setLinkPattern(String linkPattern) {
+            selectAdministrationTab();
+            ComponentFactory.create("link_pattern", Input.ComponentType.TEXT_FIELD, driver, webDriverWait).setSingleStringValue(linkPattern);
+            apply();
+        }
+
         private void apply() {
             WebElement applyButton = this.webElement.findElements(By.className(BUTTON_CLASS)).stream()
                     .filter(button -> button.getText().equals(APPLY_BUTTON_LABEL)).findFirst()
@@ -489,6 +505,10 @@ public class TableComponent {
         private static final String MINUS = "MINUS";
         private static final String ADD = "ADD";
         private static final String TREE_NODE_EXPAND_DISABLED_CSS = TREE_NODE_EXPAND_CSS + "--disabled";
+        private static final String LONG_TEXT_WRAPPER_CSS = ".long-text__wrapper";
+        private static final String TEXT_CONTENT = "textContent";
+        private static final String LINK_IS_NOT_AVAILABLE_EXCEPTION = "Link is not available";
+        private static final String A_HREF_CSS = "span a[href]";
 
         private final WebDriver driver;
         private final WebElement cellElement;
@@ -556,7 +576,7 @@ public class TableComponent {
                 }
                 return "false";
             }
-            return cellElement.getAttribute("textContent");
+            return cellElement.findElement(By.cssSelector(LONG_TEXT_WRAPPER_CSS)).getAttribute(TEXT_CONTENT);
         }
 
         private int getIndex() {
@@ -604,10 +624,10 @@ public class TableComponent {
         }
 
         private boolean isExpandPresent() {
-            if (cellElement.findElements(By.cssSelector(TREE_NODE_EXPAND_DISABLED_CSS)).isEmpty()){
+            if (cellElement.findElements(By.cssSelector(TREE_NODE_EXPAND_DISABLED_CSS)).isEmpty()) {
                 return (!cellElement.findElements(By.cssSelector(TREE_NODE_EXPAND_CSS)).isEmpty());
             }
-                return false;
+            return false;
         }
 
         private boolean isCellExpanded() {
@@ -624,6 +644,15 @@ public class TableComponent {
 
         private boolean isCheckBox() {
             return CHECKBOX_COLUMN_ID.equals(columnId);
+        }
+
+        private void clickLink() {
+            Optional<WebElement> cellLink = cellElement.findElements(By.cssSelector(A_HREF_CSS)).stream()
+                    .findFirst();
+            if (cellLink.isPresent()) {
+                cellLink.get().click();
+            } else
+                throw new NoSuchElementException(LINK_IS_NOT_AVAILABLE_EXCEPTION);
         }
     }
 
