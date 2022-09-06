@@ -324,7 +324,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     public AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
-            advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
+            advancedSearch = AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
         }
         return advancedSearch;
     }
