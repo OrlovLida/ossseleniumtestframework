@@ -47,7 +47,7 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        search(value).selectOptionContains(value.getStringValue());
+        search(value.getStringValue()).selectOptionContains(value.getStringValue());
         webElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, SEARCH_ID))).click();
     }
 
@@ -58,7 +58,11 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValue(Data value) {
-        search(value).selectOption(value.getStringValue());
+        if (value.isList()) {
+            setMultiValue(value);
+        } else {
+            setSingleValue(value.getStringValue());
+        }
         webElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, SEARCH_ID))).click();
     }
 
@@ -81,12 +85,20 @@ public class MultiSearchField extends Input {
         return "//div[@" + CSSUtils.TEST_ID + "='" + componentId + "-dropdown']";
     }
 
-    private DropdownList search(Data value) {
+    private DropdownList search(String value) {
         WebElementUtils.clickWithRetry(driver, webElement, By.xpath(createDropdownList()));
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
-        dropdownList.search(value.getStringValue());
+        dropdownList.search(value);
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         return dropdownList;
+    }
+
+    private void setSingleValue(String value) {
+        search(value).selectOption(value);
+    }
+
+    private void setMultiValue(Data values) {
+        values.getStringValues().forEach(this::setSingleValue);
     }
 }

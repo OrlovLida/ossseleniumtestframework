@@ -25,8 +25,7 @@ public class ObjectSearchField extends Input {
     private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
     private static final String INPUT = ".//input";
     private static final String ADVANCED_SEARCH_ID = "advancedSearch";
-    private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] input:not([disabled])";
-
+private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] input:not([disabled])";
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
     }
@@ -38,9 +37,7 @@ public class ObjectSearchField extends Input {
         return new ObjectSearchField(driver, wait, webElement, componentId);
     }
 
-    public static ObjectSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait,
-                                                     String componentId) {
-        DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(String.format(NOT_DISABLED_INPUT_PATTERN, componentId)));
+    public static ObjectSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(String.format(NOT_DISABLED_INPUT_PATTERN, componentId)));
         WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         WebElementUtils.moveToElement(driver, webElement);
         return new ObjectSearchField(driver, wait, webElement, componentId);
@@ -48,20 +45,9 @@ public class ObjectSearchField extends Input {
 
     public void setValue(Data value, boolean isContains) {
         if (!isSingleComponent()) {
-            WebElementUtils.clickWebElement(driver, webElement);
-            WebElement innerInput = driver.findElement(By.xpath(OSF_INNER_INPUT));
-            innerInput.sendKeys(value.getStringValue());
-            DelayUtils.waitForSpinners(webDriverWait, webElement);
-            DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
-            chooseFirstResult();
-            WebElementUtils.clickWebElement(driver, webElement);
+            setValueForMultiComponent(value);
         } else {
-            clear();
-            DelayUtils.sleep(1000);
-            webElement.findElement(By.xpath(INPUT)).sendKeys(value.getStringValue());
-            DelayUtils.waitForSpinners(webDriverWait, webElement);
-            DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
-            chooseFirstResult();
+            setSingleValue(value.getStringValue(), webElement.findElement(By.xpath(INPUT)));
         }
     }
 
@@ -110,8 +96,7 @@ public class ObjectSearchField extends Input {
     }
 
     private boolean isSingleComponent() {
-        return !webElement.findElement(By.xpath(".//./ancestor::div[contains(@class,'component')]"))
-                .findElements(By.className(OSF_SINGLE)).isEmpty();
+        return !webElement.findElement(By.xpath(".//./ancestor::div[contains(@class,'component')]")).findElements(By.className(OSF_SINGLE)).isEmpty();
     }
 
     private boolean isMultiComponentEmpty() {
@@ -119,9 +104,32 @@ public class ObjectSearchField extends Input {
     }
 
     private void chooseFirstResult() {
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
+        DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
         DelayUtils.sleep(1500);
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
     }
 
+    private void setValueForMultiComponent(Data value) {
+        WebElementUtils.clickWebElement(driver, webElement);
+        WebElement search = driver.findElement(By.xpath(OSF_INNER_INPUT));
+        if (value.isList()) {
+            setMultiValues(value, search);
+        } else {
+            setSingleValue(value.getStringValue(), search);
+        }
+        WebElementUtils.clickWebElement(driver, webElement);
+    }
+
+    private void setMultiValues(Data values, WebElement search) {
+        values.getStringValues().forEach(value -> setSingleValue(value, search));
+    }
+
+    private void setSingleValue(String singleValue, WebElement input) {
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
+        input.sendKeys(singleValue);
+        chooseFirstResult();
+    }
 }
