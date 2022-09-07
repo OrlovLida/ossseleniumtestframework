@@ -25,7 +25,7 @@ public class ObjectSearchField extends Input {
     private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
     private static final String INPUT = ".//input";
     private static final String ADVANCED_SEARCH_ID = "advancedSearch";
-private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] input:not([disabled])";
+private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] .md-input-cont:not(.md-input-disabled)";
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
     }
@@ -37,7 +37,8 @@ private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] inp
         return new ObjectSearchField(driver, wait, webElement, componentId);
     }
 
-    public static ObjectSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(String.format(NOT_DISABLED_INPUT_PATTERN, componentId)));
+    public static ObjectSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(String.format(NOT_DISABLED_INPUT_PATTERN, componentId)));
         WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         WebElementUtils.moveToElement(driver, webElement);
         return new ObjectSearchField(driver, wait, webElement, componentId);
@@ -104,9 +105,8 @@ private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] inp
     }
 
     private void chooseFirstResult() {
-        DelayUtils.waitForSpinners(webDriverWait, webElement);
         DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
-        DelayUtils.sleep(1500);
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
     }
