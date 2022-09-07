@@ -95,7 +95,6 @@ public class TabsWidget extends Widget implements TabsInterface {
     @Override
     public void callActionByLabel(String actionLabel) {
         getActionsInterface().callActionByLabel(actionLabel);
-        getActionsInterface().getActionLabel()
     }
     
     @Override
