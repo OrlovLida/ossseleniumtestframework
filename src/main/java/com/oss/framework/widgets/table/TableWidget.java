@@ -178,10 +178,10 @@ public class TableWidget extends Widget implements TableInterface {
                 .filter(TableRow::isSelected).collect(Collectors.toList());
     }
 
-    @Override
     /**
-     * @Depracated method will be removed in 3.0.x release, use instead getCellValue
+     * @deprecated method will be removed in 3.0.x release, use instead getCellValue
      */
+    @Override
     @Deprecated
     public String getCellValueById(int row, String columnId) {
         return getCellValue(row, columnId);
@@ -189,6 +189,10 @@ public class TableWidget extends Widget implements TableInterface {
 
     public void clickRow(int row) {
         getTableComponent().clickRow(row);
+    }
+
+    public void clickLink(int index, String columnId) {
+        getTableComponent().clickLink(index, columnId);
     }
 
     public ActionsContainer getContextActions() {
@@ -234,6 +238,10 @@ public class TableWidget extends Widget implements TableInterface {
 
     public void setColumnWidth(String columnId, String columnWidth) {
         getTableComponent().setColumnWidth(columnId, columnWidth);
+    }
+
+    public void setLinkPattern(String columnId, String linkPattern) {
+        getTableComponent().setLinkPattern(columnId, linkPattern);
     }
 
     public void clearAllFilters() {
@@ -324,7 +332,7 @@ public class TableWidget extends Widget implements TableInterface {
 
     public AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
-            advancedSearch = AdvancedSearch.createByClass(driver, webDriverWait, AdvancedSearch.SEARCH_COMPONENT_CLASS);
+            advancedSearch = AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
         }
         return advancedSearch;
     }
