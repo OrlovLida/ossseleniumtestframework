@@ -113,6 +113,7 @@ public class TreeWidgetV2 extends Widget {
 
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         advancedSearch = getAdvancedSearch();
+        advancedSearch.openSearchPanel();
         if (!CSSUtils.isElementPresent(driver, attributeId)) {
             advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
         }
