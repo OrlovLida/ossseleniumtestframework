@@ -80,21 +80,12 @@ public class TreeComponent {
                 .map(node -> Node.create(driver, webDriverWait, node)).collect(Collectors.toList());
     }
 
-    public Set<String> getNodeChildrenByLabelsPath(String labels) {
+    public Set<String> getNodeChildren(String labels, boolean isLabel) {
         Node root = findNodeByLabelsPath(labels).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + labels));
         root.expandNode();
-        List<Node> visibleChildren = getNodesByPathContains(labels, true);
+        List<Node> visibleChildren = getNodesByPathContains(labels, isLabel);
         Set<String> allChildren = visibleChildren.stream().map(Node::getLabel).collect(Collectors.toCollection(HashSet::new));
-        allChildren.addAll(getAllVisibleChildren(visibleChildren, labels, true));
-        return allChildren;
-    }
-
-    public Set<String> getNodeChildrenByPath(String pathIds) {
-        Node root = findNodeByPath(pathIds).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + pathIds));
-        root.expandNode();
-        List<Node> visibleChildren = getNodesByPathContains(pathIds, false);
-        Set<String> allChildren = visibleChildren.stream().map(Node::getLabel).collect(Collectors.toCollection(HashSet::new));
-        allChildren.addAll(getAllVisibleChildren(visibleChildren, pathIds, false));
+        allChildren.addAll(getAllVisibleChildren(visibleChildren, labels, isLabel));
         return allChildren;
     }
 
