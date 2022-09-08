@@ -80,7 +80,7 @@ public class TreeComponent {
                 .map(node -> Node.create(driver, webDriverWait, node)).collect(Collectors.toList());
     }
 
-    public Set<String> getNodeChildren(String labels) {
+    public Set<String> getNodeChildrenByLabelsPath(String labels) {
         Node root = findNodeByLabelsPath(labels).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + labels));
         root.expandNode();
         List<Node> visibleChildren = getNodesByPathContains(labels, true);
@@ -108,13 +108,13 @@ public class TreeComponent {
         return getNodeByPath(pathElements, false);
     }
 
-    private List<Node> getNodesByPathContains(String labels, boolean isLabel) {
+    private List<Node> getNodesByPathContains(String path, boolean isLabel) {
         if (isLabel) {
-            return treeComponentElement.findElements(By.cssSelector("[" + DATA_PATH_LABEL_ATTR + "^='" + labels + ".']")).stream()
+            return treeComponentElement.findElements(By.cssSelector("[" + DATA_PATH_LABEL_ATTR + "^='" + path + ".']")).stream()
                     .map(child -> Node.create(driver, webDriverWait, child))
                     .collect(Collectors.toList());
         } else {
-            return treeComponentElement.findElements(By.cssSelector("[" + DATA_PATH_ATTR + "^='" + labels + ".']")).stream()
+            return treeComponentElement.findElements(By.cssSelector("[" + DATA_PATH_ATTR + "^='" + path + ".']")).stream()
                     .map(child -> Node.create(driver, webDriverWait, child))
                     .collect(Collectors.toList());
         }
@@ -161,13 +161,13 @@ public class TreeComponent {
         return node;
     }
 
-    private Set<String> getAllVisibleChildren(List<Node> nodes, String pathLabels, boolean isLabel) {
+    private Set<String> getAllVisibleChildren(List<Node> nodes, String path, boolean isLabel) {
         Node lastNode = getLastVisibleNode(nodes);
         lastNode.moveToNode();
         Set<String> allChildren = Sets.newHashSet();
-        while (!lastNode.equals(getLastVisibleNode(getNodesByPathContains(pathLabels, isLabel)))) {
-            allChildren.addAll(getNodesByPathContains(pathLabels, isLabel).stream().map(Node::getLabel).collect(Collectors.toList()));
-            lastNode = getLastVisibleNode(getNodesByPathContains(pathLabels, isLabel));
+        while (!lastNode.equals(getLastVisibleNode(getNodesByPathContains(path, isLabel)))) {
+            allChildren.addAll(getNodesByPathContains(path, isLabel).stream().map(Node::getLabel).collect(Collectors.toList()));
+            lastNode = getLastVisibleNode(getNodesByPathContains(path, isLabel));
             lastNode.moveToNode();
         }
         return allChildren;
