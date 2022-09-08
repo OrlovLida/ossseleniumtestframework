@@ -166,7 +166,7 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public Set<String> getNodeChildrenByLabelsPath(String labels) {
-        return getTreeComponent().getNodeChildren(labels);
+        return getTreeComponent().getNodeChildrenByLabelsPath(labels);
     }
     public Set<String> getNodeChildrenByPath(String path) {
         return getTreeComponent().getNodeChildrenByPath(path);
