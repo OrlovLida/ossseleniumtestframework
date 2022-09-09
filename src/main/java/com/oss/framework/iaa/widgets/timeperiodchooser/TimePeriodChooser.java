@@ -74,7 +74,7 @@ public class TimePeriodChooser extends Widget {
     }
 
     public boolean isCloseIconPresent() {
-        return WebElementUtils.isElementPresent(driver, By.cssSelector(CLOSE_ICON_CSS));
+        return WebElementUtils.isElementPresent(webElement, By.cssSelector(CLOSE_ICON_CSS));
     }
 
     public enum TimePeriodChooserOption {
