@@ -181,6 +181,11 @@ public class TableComponent {
         getHeaderByIndex(columnId).openSettings().setLinkPattern(linkPattern);
     }
 
+    public String getDefaultColumnWidth(String columnId) {
+        getHeaderByIndex(columnId).openSettings();
+        return getHeaderByIndex(columnId).getHeaderSettings().getDefaultColumnWidth();
+    }
+
     public void resizeColumn(String columnId, int size) {
         Header header = Header.createHeader(this.driver, this.webDriverWait, this.webElement, columnId);
         header.resize(size);
@@ -447,6 +452,12 @@ public class TableComponent {
         private static HeaderSettings createHeaderSettings(WebDriver driver, WebDriverWait webDriverWait) {
             WebElement webElement = driver.findElement(By.xpath(COLUMN_PANEL_SETTINGS_XPATH));
             return new HeaderSettings(driver, webDriverWait, webElement);
+        }
+
+        public String getDefaultColumnWidth() {
+            selectAdministrationTab();
+            Input input = ComponentFactory.create(SIZE_DEFAULT_INPUT_ID, Input.ComponentType.TEXT_FIELD, driver, webDriverWait);
+            return input.getValue().getStringValue();
         }
 
         private List<WebElement> sortButtons() {
