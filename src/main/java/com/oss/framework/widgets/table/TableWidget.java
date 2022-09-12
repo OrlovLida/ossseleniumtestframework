@@ -240,6 +240,10 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().setColumnWidth(columnId, columnWidth);
     }
 
+    public String getDefaultColumnWidth(String columnId) {
+        return getTableComponent().getDefaultColumnWidth(columnId);
+    }
+
     public void setLinkPattern(String columnId, String linkPattern) {
         getTableComponent().setLinkPattern(columnId, linkPattern);
     }
