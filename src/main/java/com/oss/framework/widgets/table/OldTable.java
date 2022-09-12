@@ -187,6 +187,10 @@ public class OldTable extends Widget implements TableInterface {
         setFilterContains(attributeId, value);
         confirmFilter();
     }
+
+    public void clearFilters() {
+        getAdvancedSearch().clearAllFilters();
+    }
     
     @Override
     public void callAction(String actionId) {
