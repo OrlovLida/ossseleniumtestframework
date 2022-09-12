@@ -13,6 +13,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
@@ -37,6 +38,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
     private static final int REFRESH_INTERVAL = 2000;
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
     private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "='%s'] " + TABLE_CONTENT_CSS;
+    private AdvancedSearch advancedSearch;
 
     private TreeTableWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -238,6 +240,9 @@ public class TreeTableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         openAdvancedSearch();
+        if (!CSSUtils.isElementPresent(driver, attributeId)) {
+            advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
+        }
         setFilterContains(attributeId, componentType, value);
         confirmFilter();
     }
@@ -250,6 +255,9 @@ public class TreeTableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttribute(String attributeId, String value) {
         openAdvancedSearch();
+        if (!CSSUtils.isElementPresent(driver, attributeId)) {
+            advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
+        }
         setFilterContains(attributeId, value);
         confirmFilter();
     }
@@ -316,10 +324,6 @@ public class TreeTableWidget extends Widget implements TableInterface {
         getTableComponent().clickRow(row);
     }
 
-    public AdvancedSearch getAdvancedSearch() {
-        return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
-    }
-
     public PaginationComponent getPagination() {
         return getTableComponent().getPaginationComponent();
     }
@@ -362,5 +366,12 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     private void confirmFilter() {
         getAdvancedSearch().clickApply();
+    }
+
+    public AdvancedSearch getAdvancedSearch() {
+        if (advancedSearch == null) {
+            advancedSearch = AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
+        }
+        return advancedSearch;
     }
 }
