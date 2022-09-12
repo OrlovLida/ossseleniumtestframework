@@ -46,7 +46,8 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String TOOLBAR_CONTENT_CSS = ".toolbarComponent";
     private static final String HEADER_ACTION_CSS =
             TABS_HEADER_CSS + " " + TOOLBAR_CONTENT_CSS + "," + TABS_HEADER_CSS + " " + ACTIONS_CONTAINER_CSS;
-    private static final String TAB_MORE_DROPDOWN = ".tabsContainerTabBtnDropdown";
+    private static final String TAB_MORE_DROPDOWN_CSS = ".tabsContainerTabBtnDropdown";
+    private static final String TEXT_CONTENT = "textContent";
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
@@ -82,7 +83,6 @@ public class TabsWidget extends Widget implements TabsInterface {
         WebElement tabToRemove = getTab(String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel));
         webDriverWait.until(ExpectedConditions.elementToBeClickable(tabToRemove));
         tabToRemove.findElement(By.xpath(REMOVE_TAB_XPATH)).click();
-
     }
 
     @Override
@@ -141,12 +141,11 @@ public class TabsWidget extends Widget implements TabsInterface {
                 .collect(Collectors.toList());
         if (isMorePresent()) {
             clickMoreTab();
-            List<String> tabsDropdown = driver.findElements(By.cssSelector(TAB_MORE_DROPDOWN)).stream()
-                    .map(WebElement::getText)
+            List<String> tabsDropdown = driver.findElements(By.cssSelector(TAB_MORE_DROPDOWN_CSS)).stream()
+                    .map(tab->tab.getAttribute(TEXT_CONTENT))
                     .collect(Collectors.toList());
             tabsLabel.addAll(tabsDropdown);
         }
-
         return tabsLabel;
     }
 
@@ -236,11 +235,11 @@ public class TabsWidget extends Widget implements TabsInterface {
     }
 
     private void clickMoreTab() {
-        WebElement moreTab = createTabs().findElement(By.xpath(DROPDOWN_TAB_XPATH));
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(moreTab));
-        if (!WebElementUtils.isElementPresent(driver, By.cssSelector(TAB_MORE_DROPDOWN))) {
+        if (!WebElementUtils.isElementPresent(driver, By.cssSelector(TAB_MORE_DROPDOWN_CSS))) {
+            WebElement moreTab = createTabs().findElement(By.xpath(DROPDOWN_TAB_XPATH));
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(moreTab));
             moreTab.click();
         }
-        DelayUtils.waitForPresence(webDriverWait, By.cssSelector(TAB_MORE_DROPDOWN));
+        DelayUtils.waitForPresence(webDriverWait, By.cssSelector(TAB_MORE_DROPDOWN_CSS));
     }
 }
