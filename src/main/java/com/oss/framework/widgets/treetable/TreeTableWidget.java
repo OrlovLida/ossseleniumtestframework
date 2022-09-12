@@ -368,7 +368,7 @@ public class TreeTableWidget extends Widget implements TableInterface {
         getAdvancedSearch().clickApply();
     }
 
-    private AdvancedSearch getAdvancedSearch() {
+    public AdvancedSearch getAdvancedSearch() {
         if (advancedSearch == null) {
             advancedSearch = AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
         }
