@@ -17,9 +17,11 @@ public class WidgetChooser {
     private static final String TEXT_LABEL = ".//p[text()='%s']";
     private final WebDriver driver;
     private final WebElement widgetChooserElement;
+    private final WebDriverWait wait;
 
-    private WidgetChooser(WebDriver driver, WebElement widgetChooser) {
+    private WidgetChooser(WebDriver driver, WebDriverWait wait, WebElement widgetChooser) {
         this.driver = driver;
+        this.wait = wait;
         this.widgetChooserElement = widgetChooser;
     }
 
@@ -27,7 +29,7 @@ public class WidgetChooser {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         DelayUtils.waitByXPath(webDriverWait, ID_ADD_WIDGET_XPATH);
         WebElement widgetChooser = driver.findElement(By.xpath(ID_ADD_WIDGET_XPATH));
-        return new WidgetChooser(driver, widgetChooser);
+        return new WidgetChooser(driver, webDriverWait, widgetChooser);
     }
 
     public void clickAdd() {
@@ -45,7 +47,7 @@ public class WidgetChooser {
     }
 
     private WebElement getWidgetByLabel(String widgetLabel) {
-        DelayUtils.waitForNestedElements(new WebDriverWait(driver, 10), widgetChooserElement,By.xpath(String.format(TEXT_LABEL, widgetLabel)));
+        DelayUtils.waitForNestedElements(wait, widgetChooserElement, By.xpath(String.format(TEXT_LABEL, widgetLabel)));
         return widgetChooserElement.findElement(By.xpath(String.format(TEXT_LABEL, widgetLabel)));
     }
 
