@@ -166,8 +166,12 @@ public class TreeWidgetV2 extends Widget {
         return getSelectionBarComponent().getSelectedObjectsCount();
     }
 
-    public Set<String> getNodeChildren(String labels) {
-        return getTreeComponent().getNodeChildren(labels);
+    public Set<String> getNodeChildrenByLabelsPath(String labels) {
+        return getTreeComponent().getNodeChildren(labels, true);
+    }
+
+    public Set<String> getNodeChildrenByPath(String path) {
+        return getTreeComponent().getNodeChildren(path, false);
     }
 
     private TreeComponent getTreeComponent() {

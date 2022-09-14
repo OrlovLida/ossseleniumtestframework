@@ -133,6 +133,9 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttribute(String attributeId, String value) {
         openAdvancedSearch();
+        if (!CSSUtils.isElementPresent(driver, attributeId)) {
+            advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
+        }
         setFilterContains(attributeId, value);
         confirmFilter();
     }
@@ -238,6 +241,10 @@ public class TableWidget extends Widget implements TableInterface {
 
     public void setColumnWidth(String columnId, String columnWidth) {
         getTableComponent().setColumnWidth(columnId, columnWidth);
+    }
+
+    public String getDefaultColumnWidth(String columnId) {
+        return getTableComponent().getDefaultColumnWidth(columnId);
     }
 
     public void setLinkPattern(String columnId, String linkPattern) {
