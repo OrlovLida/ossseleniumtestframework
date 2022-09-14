@@ -13,7 +13,7 @@ public class WidgetChooser {
     private static final String ID_ADD_WIDGET_XPATH = "//div[@class='add-widget']";
     private static final String BUTTON_ADD_CSS = " .oss-button__inner--primary";
     private static final String CANCEL_BUTTON_XPATH = "./a[contains(@class,'btn-flat')]";
-    private static final String TEXT_TYPE = ".//p[text()=' %s']";
+    private static final String TEXT_TYPE = ".//p[text()='%s']";
     private static final String TEXT_LABEL = ".//p[text()='%s']";
     private final WebDriver driver;
     private final WebElement widgetChooserElement;
@@ -45,6 +45,7 @@ public class WidgetChooser {
     }
 
     private WebElement getWidgetByLabel(String widgetLabel) {
+        DelayUtils.waitForNestedElements(new WebDriverWait(driver, 10), widgetChooserElement,By.xpath(String.format(TEXT_LABEL, widgetLabel)));
         return widgetChooserElement.findElement(By.xpath(String.format(TEXT_LABEL, widgetLabel)));
     }
 
