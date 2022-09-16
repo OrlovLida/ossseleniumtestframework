@@ -212,6 +212,16 @@ public class TableWidget extends Widget implements TableInterface {
         getAdvancedSearch().unselectAttributes(attributeIds);
     }
 
+    public void setDefaultASSetting() {
+        openAdvancedSearch();
+        getAdvancedSearch().backToDefault();
+    }
+
+    public void changeASAttributeOrderById(String attributeId, int position) {
+        openAdvancedSearch();
+        getAdvancedSearch().changeASAttributeOrderById(attributeId, position);
+    }
+
     public List<String> getAllVisibleFilters() {
         openAdvancedSearch();
         List<String> filters = getAdvancedSearch().getAllVisibleFilters();
