@@ -208,6 +208,10 @@ public class TreeTableWidget extends Widget implements TableInterface {
         getTableComponent().getRow(value, tableComponent.getColumnIds().get(columnIndex)).selectRow();
     }
 
+    public void clickLink(int index, String columnId) {
+        getTableComponent().clickLink(index, columnId);
+    }
+
     public String getSelectedObjectCount() {
         return getSelectionBarComponent().getSelectedObjectsCount();
     }
