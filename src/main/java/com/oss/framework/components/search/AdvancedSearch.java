@@ -134,8 +134,8 @@ public class AdvancedSearch {
         openSearchPanel().clickBackToDefault();
     }
 
-    public void changeASAttributeOrderById(String attributeId, int position) {
-        openSearchPanel().changeASAttributeOrderById(attributeId, position);
+    public void changeAttributesOrderById(String attributeId, int position) {
+        openSearchPanel().changeAttributesOrder(attributeId, position);
     }
 
     public Input getComponent(String componentId, ComponentType componentType) {
@@ -246,7 +246,7 @@ public class AdvancedSearch {
         DelayUtils.waitBy(this.wait, By.cssSelector(ADVANCED_SEARCH_CSS));
         WebElement searchPanel = driver.findElement(By.cssSelector(ADVANCED_SEARCH_CSS));
         DelayUtils.waitForSpinners(wait, searchPanel);
-        return SearchPanel.createSearchPanel(this.driver, this.wait);
+        return SearchPanel.create(this.driver, this.wait);
     }
 
     private SearchPanel getFiltersBox() {

@@ -45,15 +45,15 @@ public class SearchPanel {
         this.webElement = webElement;
     }
 
-    public static SearchPanel createSearchPanel(WebDriver driver, WebDriverWait wait) {
-        WebElement webElement =
-                driver.findElement(By.cssSelector(ADVANCED_SEARCH_PANEL_CSS));
-        return new SearchPanel(driver, wait, webElement);
-    }
-
     public static SearchPanel createFilterBox(WebDriver driver, WebDriverWait wait) {
         WebElement webElement =
                 driver.findElement(By.cssSelector(FILTER_BOX_CSS));
+        return new SearchPanel(driver, wait, webElement);
+    }
+
+    public static SearchPanel create(WebDriver driver, WebDriverWait wait) {
+        WebElement webElement =
+                driver.findElement(By.cssSelector(ADVANCED_SEARCH_PANEL_CSS));
         return new SearchPanel(driver, wait, webElement);
     }
 
@@ -107,7 +107,7 @@ public class SearchPanel {
         webElement.findElement(By.xpath(".//*[@" + CSSUtils.TEST_ID + "= 'backToDefaultAllButton']")).click();
     }
 
-    void changeASAttributeOrderById(String attributeId, int position) {
+    void changeAttributesOrder(String attributeId, int position) {
         DragAndDrop.dragAndDrop(getDraggableElement(attributeId), getDropElement(position), driver);
     }
 
