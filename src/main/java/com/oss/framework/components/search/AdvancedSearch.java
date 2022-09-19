@@ -134,7 +134,7 @@ public class AdvancedSearch {
         openSearchPanel().clickBackToDefault();
     }
 
-    public void changeAttributesOrderById(String attributeId, int position) {
+    public void changeAttributesOrder(String attributeId, int position) {
         openSearchPanel().changeAttributesOrder(attributeId, position);
     }
 
