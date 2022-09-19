@@ -29,6 +29,7 @@ public class ActionsContainer implements ActionsInterface {
     private static final String NO_ACTION_EXCEPTION = "No active Context Action.";
     private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
     private static final String ACTIONS_DROPDOWN_CLASS = "actionsDropdown";
+
     private final WebElement webElement;
     private final WebDriver webDriver;
     private final WebDriverWait webDriverWait;
@@ -109,7 +110,7 @@ public class ActionsContainer implements ActionsInterface {
             return webElement.findElement(by);
         } else {
             clickWithRetry(webElement.findElement(By.id(MORE_GROUP_ID)), By.className(ACTIONS_DROPDOWN_CLASS));
-            return webDriver.findElement(by);
+            return webDriver.findElement(By.className(ACTIONS_DROPDOWN_CLASS)).findElement(by);
             
         }
     }
