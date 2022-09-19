@@ -45,7 +45,7 @@ public class SearchPanel {
         this.webElement = webElement;
     }
 
-    public static SearchPanel createFilterBox(WebDriver driver, WebDriverWait wait) {
+    protected static SearchPanel createFilterBox(WebDriver driver, WebDriverWait wait) {
         WebElement webElement =
                 driver.findElement(By.cssSelector(FILTER_BOX_CSS));
         return new SearchPanel(driver, wait, webElement);
