@@ -15,7 +15,7 @@ import com.oss.framework.utils.WebElementUtils;
 public class DropdownList {
     
     public static final String PORTAL_CLASS = "portal";
-    private static final String INPUT_XPATH = ".//div[@class='dropdown__search']//input | .//div[@class='search-cont']//input";
+    private static final String INPUT_CSS = ".portal .dropdown__search input, .portal .search-cont input";
     private static final String BY_ID_PATTERN = ".portal [" + CSSUtils.TEST_ID + "='%s'],.portal #%s";
     private static final String BY_TEXT_PATTERN = "//div[starts-with(@class, 'portal')]//*[text()='%s']";
     private static final String BY_TITLE_PATTERN = ".portal [title='%s']";
@@ -82,13 +82,13 @@ public class DropdownList {
     
     public void search(String value) {
         clear();
-        WebElement input = dropdownListElement.findElement(By.xpath(INPUT_XPATH));
+        WebElement input = driver.findElement(By.cssSelector(INPUT_CSS));
         WebElementUtils.clickWebElement(driver, input);
         input.sendKeys(value);
     }
     
     public void clear() {
-        WebElement input = dropdownListElement.findElement(By.xpath(INPUT_XPATH));
+        WebElement input = driver.findElement(By.cssSelector(INPUT_CSS));
         WebElementUtils.clickWebElement(driver, input);
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
