@@ -63,11 +63,12 @@ public class CustomSelect extends Input {
 
     @Override
     public void clear() {
-        List<WebElement> closeButtons = webElement.findElements(By.xpath(CLOSE_XPATH));
-        closeButtons.forEach(this::clearSingle);
+        while (!elementsToClose().isEmpty()) {
+            WebElementUtils.clickWebElement(driver, elementsToClose().get(0));
+        }
     }
 
-    private void clearSingle(WebElement closeButton) {
-        WebElementUtils.clickWebElement(driver, closeButton);
+    private List<WebElement> elementsToClose() {
+        return webElement.findElements(By.xpath(CLOSE_XPATH));
     }
 }
