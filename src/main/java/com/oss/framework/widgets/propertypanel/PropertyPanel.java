@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
@@ -118,6 +119,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private AttributesChooser getAttributesChooser() {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.className(PROPERTIES_FILTER_PANEL_CLASS));
         webElement.findElement(By.className(PROPERTIES_FILTER_PANEL_CLASS)).click();
         openActionSettings();
         return AttributesChooser.create(driver, webDriverWait);
