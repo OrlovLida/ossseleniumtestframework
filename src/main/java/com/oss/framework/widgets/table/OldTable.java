@@ -63,6 +63,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String CLASS_ATTRIBUTE = "class";
     private static final String HEADER_SELECTION_CSS = ".Header_SELECTION";
     private static final String SELECT_ALL_OBJECTS_IS_NOT_AVAILABLE_EXCEPTION = "Select All Objects is not available";
+
     private static final String DATA_ICON_NAME_ATTRIBUTE = "data-icon-name";
 
     private AdvancedSearch advancedSearch;
@@ -427,6 +428,8 @@ public class OldTable extends Widget implements TableInterface {
         private static final String CANNOT_FIND_CELL_EXCEPTION = "Cannot find a cell with the provided value.";
         private static final String CELL_ALREADY_SELECTED_LOG = "The cell you want to select is already selected.";
         private static final String CELL_ALREADY_UNSELECTED_LOG = "The cell you want to unselect is already unselected.";
+        private static final String CELL_STILL_UNSELECTED_LOG = "The cell you want to select is still unselected. Retrying...";
+        private static final String CELL_STILL_SELECTED_LOG = "The cell you want to unselect is still selected. Retrying...";
         private static final String CHECKBOX_ALL_CSS = ".checkbox";
 
         private final WebElement columnElement;
@@ -464,19 +467,39 @@ public class OldTable extends Widget implements TableInterface {
         }
 
         private void unselectCell(WebElement cell) {
-            if (!isSelected(cell)) {
+            boolean isSelected = isSelected(cell);
+            if (!isSelected) {
                 log.debug(CELL_ALREADY_UNSELECTED_LOG);
                 return;
             }
+            isSelected = clickCellAndGetSelectedStatus(cell);
+            int i = 0;
+            while (i < 5 && isSelected) {
+                log.info(CELL_STILL_SELECTED_LOG);
+                isSelected = clickCellAndGetSelectedStatus(cell);
+                i++;
+            }
+        }
+
+        private boolean clickCellAndGetSelectedStatus(WebElement cell) {
             WebElementUtils.clickWebElement(driver, cell);
+            DelayUtils.waitForPageToLoad(driver, wait);
+            return isSelected(cell);
         }
 
         private void selectCell(WebElement cell) {
-            if (isSelected(cell)) {
+            boolean isSelected = isSelected(cell);
+            if (isSelected) {
                 log.debug(CELL_ALREADY_SELECTED_LOG);
                 return;
             }
-            WebElementUtils.clickWebElement(driver, cell);
+            isSelected = clickCellAndGetSelectedStatus(cell);
+            int i = 0;
+            while (i < 5 && !isSelected) {
+                log.info(CELL_STILL_UNSELECTED_LOG);
+                isSelected = clickCellAndGetSelectedStatus(cell);
+                i++;
+            }
         }
 
         private boolean isSelected(WebElement cell) {
@@ -567,25 +590,25 @@ public class OldTable extends Widget implements TableInterface {
         private String formatIconText(WebElement cell, String iconTitleOrName) {
             return (getCellText(cell) + " " + iconTitleOrName.trim());
         }
-
+        
         private WebElement getCellByIndex(int index) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_XPATH));
             return cells.get(index);
         }
-
+        
         private WebElement getCell(String value) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
             return cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst()
                     .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
         }
-
+        
         private int countRows() {
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_XPATH));
             return cells.size();
         }
-
+        
         private void setValue(String value) {
             WebElement input = columnElement.findElement(By.xpath(INPUT_XPATH));
             Actions action = new Actions(driver);
