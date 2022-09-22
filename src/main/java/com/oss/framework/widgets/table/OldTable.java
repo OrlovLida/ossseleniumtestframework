@@ -44,7 +44,7 @@ public class OldTable extends Widget implements TableInterface {
     private static final String HREF_CSS = "[href]";
     private static final String CONTEXT_ACTIONS_CONTAINER_CSS = ".windowToolbar," + ACTIONS_CONTAINER_CSS;
     private static final String TABLE_IN_ACTIVE_TAB_XPATH =
-            "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='AppComponentContainer']/div";
+            "//div[@data-attributename='TableTabsApp']//div[contains(@class,'tabsContainerSingleContent active')]//div[@class='table-app-wrapper']";
     private static final String ANCESTOR_XPATH = ".//ancestor::div[contains(@class,'card-shadow')]";
     private static final String NO_DATA_XPATH = ".//h3[contains(@class,'noDataWithColumns')]";
     private static final String AVAILABLE_COLUMNS_LOG = "Available columns:";
