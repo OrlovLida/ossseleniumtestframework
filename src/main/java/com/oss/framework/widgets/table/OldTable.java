@@ -64,6 +64,8 @@ public class OldTable extends Widget implements TableInterface {
     private static final String HEADER_SELECTION_CSS = ".Header_SELECTION";
     private static final String SELECT_ALL_OBJECTS_IS_NOT_AVAILABLE_EXCEPTION = "Select All Objects is not available";
 
+    private static final String DATA_ICON_NAME_ATTRIBUTE = "data-icon-name";
+
     private AdvancedSearch advancedSearch;
     private Map<String, Column> columns;
 
@@ -550,7 +552,7 @@ public class OldTable extends Widget implements TableInterface {
             WebElement cell = getCellByIndex(index);
             WebElementUtils.moveToElement(driver, cell);
             if (isIconPresent(cell)) {
-                return (getCellText(cell) + " " + getIconTitles(index)).trim();
+                return getIconText(cell, index);
             }
             return getCellText(cell);
         }
@@ -559,31 +561,54 @@ public class OldTable extends Widget implements TableInterface {
             return !cell.findElements(By.xpath(".//i")).isEmpty();
         }
 
-        private String getIconTitles(int cellIndex) {
-            List<WebElement> textIcons = getCellByIndex(cellIndex).findElements(By.className(TEXT_ICON_CLASS));
-            List<String> iconTitles = textIcons.stream().map(icon -> icon.getAttribute("title")).collect(Collectors.toList());
-
-            return String.join(",", iconTitles);
+        private boolean isIconTitlePresent(WebElement cell) {
+            return !cell.findElements(By.xpath(".//i[@title]")).isEmpty();
         }
 
+        private String getDataIconNames(int cellIndex) {
+            return getIconAttribute(cellIndex, By.cssSelector("[" + DATA_ICON_NAME_ATTRIBUTE + "]"), DATA_ICON_NAME_ATTRIBUTE);
+        }
+
+        private String getIconTitles(int cellIndex) {
+            return getIconAttribute(cellIndex, By.className(TEXT_ICON_CLASS), "title");
+        }
+
+        private String getIconAttribute(int cellIndex, By by, String attributeName) {
+            List<WebElement> icons = getCellByIndex(cellIndex).findElements(by);
+            List<String> iconsAttributes = icons.stream().map(icon -> icon.getAttribute(attributeName)).collect(Collectors.toList());
+
+            return String.join(",", iconsAttributes);
+        }
+
+        private String getIconText(WebElement cell, int index) {
+            if (!isIconTitlePresent(cell)) {
+                return formatIconText(cell, getDataIconNames(index));
+            }
+            return formatIconText(cell, getIconTitles(index));
+        }
+
+        private String formatIconText(WebElement cell, String iconTitleOrName) {
+            return (getCellText(cell) + " " + iconTitleOrName.trim());
+        }
+        
         private WebElement getCellByIndex(int index) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_XPATH));
             return cells.get(index);
         }
-
+        
         private WebElement getCell(String value) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
             return cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst()
                     .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
         }
-
+        
         private int countRows() {
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_XPATH));
             return cells.size();
         }
-
+        
         private void setValue(String value) {
             WebElement input = columnElement.findElement(By.xpath(INPUT_XPATH));
             Actions action = new Actions(driver);
