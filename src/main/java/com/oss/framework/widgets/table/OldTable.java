@@ -87,8 +87,12 @@ public class OldTable extends Widget implements TableInterface {
         return createById(driver, wait, tableIdFromActiveTab);
     }
 
-    private static boolean isElementPresent(WebElement window, By by) {
-        return WebElementUtils.isElementPresent(window, by);
+    private static boolean isElementDisplayed(WebElement window, By by) {
+        boolean isElementPresent = WebElementUtils.isElementPresent(window, by);
+        if (isElementPresent) {
+            return window.findElement(by).isDisplayed();
+        }
+        return false;
     }
 
     @Override
@@ -377,7 +381,7 @@ public class OldTable extends Widget implements TableInterface {
     private ActionsInterface getActionsInterface() {
         WebElement window = webElement.findElement(By.xpath(ANCESTOR_XPATH));
         DelayUtils.waitForNestedElements(webDriverWait, window, By.cssSelector(CONTEXT_ACTIONS_CONTAINER_CSS));
-        boolean isNewActionContainer = isElementPresent(window, By.cssSelector(ACTIONS_CONTAINER_CSS));
+        boolean isNewActionContainer = isElementDisplayed(window, By.cssSelector(ACTIONS_CONTAINER_CSS));
         if (isNewActionContainer) {
             return ActionsContainer.createFromParent(window, driver, webDriverWait);
         } else {
@@ -590,25 +594,25 @@ public class OldTable extends Widget implements TableInterface {
         private String formatIconText(WebElement cell, String iconTitleOrName) {
             return (getCellText(cell) + " " + iconTitleOrName.trim());
         }
-        
+
         private WebElement getCellByIndex(int index) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_XPATH));
             return cells.get(index);
         }
-        
+
         private WebElement getCell(String value) {
             moveToHeader();
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
             return cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst()
                     .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
         }
-        
+
         private int countRows() {
             List<WebElement> cells = columnElement.findElements(By.xpath(CELL_XPATH));
             return cells.size();
         }
-        
+
         private void setValue(String value) {
             WebElement input = columnElement.findElement(By.xpath(INPUT_XPATH));
             Actions action = new Actions(driver);
