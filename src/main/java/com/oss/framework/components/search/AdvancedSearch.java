@@ -76,6 +76,10 @@ public class AdvancedSearch {
         return parseTags(getTags().getTags());
     }
 
+    public List<String> getAppliedQuickFilters() {
+        return getTags().getTags();
+    }
+
     public void clearFullText() {
         WebElement fullTextSearch = getFullTextSearch();
         fullTextSearch.sendKeys(Keys.CONTROL + "a");

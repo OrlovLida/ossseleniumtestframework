@@ -142,7 +142,7 @@ public class TabsWidget extends Widget implements TabsInterface {
         if (isMorePresent()) {
             clickMoreTab();
             List<String> tabsDropdown = driver.findElements(By.cssSelector(TAB_MORE_DROPDOWN_CSS)).stream()
-                    .map(tab->tab.getAttribute(TEXT_CONTENT))
+                    .map(tab -> tab.getAttribute(TEXT_CONTENT))
                     .collect(Collectors.toList());
             tabsLabel.addAll(tabsDropdown);
         }
@@ -161,7 +161,7 @@ public class TabsWidget extends Widget implements TabsInterface {
                         .xpath(String.format(TABS_PATTERN, id)));
     }
 
-    private ActionsInterface getActionsInterface() {
+    public ActionsInterface getActionsInterface() {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         DelayUtils.waitForNestedElements(webDriverWait, createTabs(), By.cssSelector(CONTEXT_ACTIONS_CSS));
         boolean isHeaderActionPresent = isElementPresent(createTabs(),
