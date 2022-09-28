@@ -37,6 +37,8 @@ public class Wizard {
     private static final String WIZARD_STEPS_CSS = ".simple-progress-bar-step";
     private static final String ACTIVE_STEP_CSS = ".simple-progress-bar-step--active";
     private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
+    private static final String ANCESTOR_XPATH = ".//ancestor::div[contains(@class,'card-shadow')]";
+    private static final String CARD_HEADER_LABEL_CSS = ".card-header__label";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement webElement;
@@ -188,6 +190,10 @@ public class Wizard {
 
     public TableComponent getTableComponent(String tableComponentId) {
         return TableComponent.createById(driver, wait, tableComponentId);
+    }
+
+    public String getWizardName(){
+       return webElement.findElement(By.xpath(ANCESTOR_XPATH)).findElement(By.cssSelector(CARD_HEADER_LABEL_CSS)).getText();
     }
 
     private void clickButton(String xpath) {
