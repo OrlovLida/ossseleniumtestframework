@@ -129,6 +129,7 @@ private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] .md
     private void setSingleValue(String singleValue, WebElement input) {
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
+        DelayUtils.waitForClickability(webDriverWait, webElement.findElement(By.cssSelector("input")));
         input.sendKeys(singleValue);
         chooseFirstResult();
     }
