@@ -130,7 +130,7 @@ public class ObjectSearchField extends Input {
     private void setSingleValue(String singleValue, WebElement input) {
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
-        DelayUtils.waitForClickability(webDriverWait, webElement.findElement(By.cssSelector("input")));
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
         input.sendKeys(singleValue);
         chooseFirstResult();
     }
