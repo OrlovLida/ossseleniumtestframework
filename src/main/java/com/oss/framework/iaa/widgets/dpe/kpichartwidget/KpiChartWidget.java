@@ -30,6 +30,7 @@ public class KpiChartWidget extends Widget {
     private static final String TOP_N_BAR_CHART = ".//*[@" + CSSUtils.TEST_ID + "='amchart-series-y-selected']";
     private static final String TOP_N_FIRST_BAR = TOP_N_BAR_CHART + "//*[@role='menuitem'][1]";
     private static final String LEGEND_PATH = "//*[starts-with(@class,'amcharts-Container amcharts-Component amcharts-Legend')]";
+    private static final String COMMON_LEGEND_CONTAINER_CSS = ".common-legend-container";
     private static final String DATA_SERIES_POINT_PATH = "//*[@class='amcharts-Sprite-group amcharts-Circle-group' and @stroke-width='2']";
     private static final String HIDDEN_Y_AXIS_PATH = "//*[@display = 'none' and contains (@class,'amcharts-v')]";
     private static final String VISIBLE_Y_AXIS_PATH = "//*[not (contains(@display, 'none')) and contains (@class,'amcharts-v')]";
@@ -147,6 +148,10 @@ public class KpiChartWidget extends Widget {
 
     public boolean isLegendPresent(String partialText) {
         return WebElementUtils.isElementPresent(driver, By.xpath(String.format(LEGEND_WITH_TXT_XPATH, partialText)));
+    }
+
+    public boolean isCommonLegendPresent() {
+        return WebElementUtils.isElementPresent(driver, By.cssSelector(COMMON_LEGEND_CONTAINER_CSS));
     }
 
     private List<WebElement> getLegendContainsText(String text) {

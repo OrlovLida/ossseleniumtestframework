@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
@@ -23,7 +24,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String PROPERTIES_FILTER_PANEL_CLASS = "actionsGroup-settings";
     private static final String INPUT = ".//input";
     private static final String PROPERTY_CSS = ".propertyPanelRow";
-    private static final String PROPERTY_NAME_CSS = ".propertyPanelRow-label";
+    private static final String PROPERTY_NAME_CSS = ".propertyPanelRow-label .long-text__wrapper";
     private static final String PROPERTY_VALUE_CSS = ".propertyPanelRow-value";
     private static final String DRAGGABLE_ELEMENT_CSS = ".btn-drag";
     private static final String ID_ATTRIBUTE = "id";
@@ -62,7 +63,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public void changePropertyOrder(String id, int position) {
-        DragAndDrop.dragAndDrop(getDraggableElement(id), getDropElement(position), 0, -5, driver);
+         DragAndDrop.dragAndDrop(getDraggableElement(id), getDropElement(position), driver);
     }
 
     public void hideEmpty() {
@@ -118,6 +119,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private AttributesChooser getAttributesChooser() {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.className(PROPERTIES_FILTER_PANEL_CLASS));
         webElement.findElement(By.className(PROPERTIES_FILTER_PANEL_CLASS)).click();
         openActionSettings();
         return AttributesChooser.create(driver, webDriverWait);

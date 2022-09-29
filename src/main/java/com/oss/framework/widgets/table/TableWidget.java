@@ -202,6 +202,10 @@ public class TableWidget extends Widget implements TableInterface {
         return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
     }
 
+    public List<String> getAppliedQuickFilters() {
+        return getAdvancedSearch().getAppliedQuickFilters();
+    }
+
     public void selectVisibilitySearchAttributes(List<String> attributeIds) {
         openAdvancedSearch();
         getAdvancedSearch().selectAttributes(attributeIds);
