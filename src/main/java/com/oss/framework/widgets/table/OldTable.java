@@ -171,6 +171,10 @@ public class OldTable extends Widget implements TableInterface {
         return getColumn(attributeLabel).getValueCell(index);
     }
 
+    public String getCellTextValue(int index, String attributeLabel) {
+        return getColumn(attributeLabel).getCellTextValue(index);
+    }
+
     @Override
     public void searchByAttribute(String attributeId, ComponentType componentType, String value) {
         openAdvancedSearch();
@@ -558,6 +562,12 @@ public class OldTable extends Widget implements TableInterface {
             if (isIconPresent(cell)) {
                 return getIconText(cell, index);
             }
+            return getCellText(cell);
+        }
+
+        private String getCellTextValue(int index) {
+            WebElement cell = getCellByIndex(index);
+            WebElementUtils.moveToElement(driver, cell);
             return getCellText(cell);
         }
 
