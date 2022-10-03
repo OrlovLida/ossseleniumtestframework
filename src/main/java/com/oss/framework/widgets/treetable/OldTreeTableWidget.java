@@ -39,7 +39,7 @@ public class OldTreeTableWidget extends Widget {
         List<String> visibleNodes = new ArrayList<>();
         int tableObjectsCount = createTable().countRows(attributeNameLabel);
         for (int i = 0; i < tableObjectsCount; i++) {
-            String cellValue = createTable().getCellValue(i, attributeNameLabel);
+            String cellValue = createTable().getCellTextValue(i, attributeNameLabel);
             visibleNodes.add(cellValue);
         }
         return visibleNodes;
@@ -83,39 +83,50 @@ public class OldTreeTableWidget extends Widget {
     public String getActionLabel(String actionId) {
         return createTable().getActionLabel(actionId);
     }
-    
+
     public String getCellValue(int index, String attributeLabel) {
         return createTable().getCellValue(index, attributeLabel);
     }
-    
+
     public int getRowNumber(String value, String attributeLabel) {
         return createTable().getRowNumber(value, attributeLabel);
     }
-    
+
+    public void setPageSize(int pageOption) {
+        createTable().setPageSize(pageOption);
+    }
+
     public void callActionById(String groupId, String actionId) {
         createTable().callAction(groupId, actionId);
     }
-    
+
     public void fullTextSearch(String text) {
         getAdvancedSearch().fullTextSearch(text);
     }
-    
+
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         AdvancedSearch advancedSearch = getAdvancedSearch();
         advancedSearch.openSearchPanel();
         advancedSearch.setFilter(attributeId, componentType, value);
         advancedSearch.clickApply();
     }
-    
+
+    public void searchByAttribute(String attributeId, String value) {
+        AdvancedSearch advancedSearch = getAdvancedSearch();
+        advancedSearch.openSearchPanel();
+        advancedSearch.setFilter(attributeId, value);
+        advancedSearch.clickApply();
+    }
+
     public boolean hasNoData() {
         return createTable().hasNoData();
     }
-    
+
     public List<String> getColumnsHeader() {
         return createTable().getColumnsHeaders();
     }
 
-    public void selectPredefinedFilter(String filterName){
+    public void selectPredefinedFilter(String filterName) {
         createTable().selectPredefinedFilter(filterName);
     }
 
