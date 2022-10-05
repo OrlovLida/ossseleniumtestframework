@@ -1,15 +1,5 @@
 package com.oss.framework.wizard;
 
-import java.util.List;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.inputs.ComponentFactory;
@@ -20,6 +10,17 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Wizard {
 
@@ -192,8 +193,8 @@ public class Wizard {
         return TableComponent.createById(driver, wait, tableComponentId);
     }
 
-    public String getWizardName(){
-       return webElement.findElement(By.xpath(ANCESTOR_XPATH)).findElement(By.cssSelector(CARD_HEADER_LABEL_CSS)).getText();
+    public String getWizardName() {
+        return webElement.findElement(By.xpath(ANCESTOR_XPATH)).findElement(By.cssSelector(CARD_HEADER_LABEL_CSS)).getText();
     }
 
     private void clickButton(String xpath) {
@@ -227,6 +228,12 @@ public class Wizard {
 
     public String getCurrentStepTitle() {
         return getCurrentStep().getText();
+    }
+
+    public List<String> getWizardStepsTitles() {
+        if (isStepsPresent())
+            return getWizardSteps().stream().map(WebElement::getText).collect(Collectors.toList());
+        else return Collections.emptyList();
     }
 
     public boolean isNextStepPresent() {
