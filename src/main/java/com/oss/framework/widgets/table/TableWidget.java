@@ -3,6 +3,8 @@ package com.oss.framework.widgets.table;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.management.DescriptorKey;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -19,6 +21,7 @@ import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
+import com.sun.org.glassfish.gmbal.Description;
 
 public class TableWidget extends Widget implements TableInterface {
     public static final String TABLE_WIDGET_CLASS = "TableWidget";
@@ -266,7 +269,15 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getAttributesChooser();
     }
 
+    /**
+     * @deprecated (This method will be deleted in 3.0.x. Use method countRows instead)
+     */
+    @Deprecated
     public int getRowsNumber() {
+        return countRows();
+    }
+
+    public int countRows() {
         return getTableComponent().getVisibleRows().size();
     }
 
