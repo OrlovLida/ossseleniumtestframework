@@ -12,6 +12,11 @@ import com.oss.framework.utils.WebElementUtils;
 public class Switcher extends Input {
 
     private static final String SWITCHER_CLASS = "switcher-inner";
+    private static final String TEXT_CONTENT = "textContent";
+    private static final String SWITCHER_OFF_TEXT = ".switcher-offText";
+    private static final String SWITCHER_ON_TEXT = ".switcher-onText";
+    private static final String INPUT_XPATH = ".//input";
+    private static final String VALUE = "value";
 
     private Switcher(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, String componentId) {
         super(driver, webDriverWait, webElement, componentId);
@@ -36,7 +41,7 @@ public class Switcher extends Input {
 
     @Override
     public Data getValue() {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
+        return Data.createSingleData(this.webElement.findElement(By.xpath(INPUT_XPATH)).getAttribute(VALUE));
     }
 
     @Override
@@ -49,6 +54,13 @@ public class Switcher extends Input {
         throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
     }
 
+    public String getOffLabel() {
+        return webElement.findElement(By.cssSelector(SWITCHER_OFF_TEXT)).getAttribute(TEXT_CONTENT);
+    }
+
+    public String getOnLabel() {
+        return webElement.findElement(By.cssSelector(SWITCHER_ON_TEXT)).getAttribute(TEXT_CONTENT);
+    }
 
     private void setSwitcherValue(Data value) {
         Boolean valueToSet = Boolean.valueOf(value.getStringValue());
@@ -58,7 +70,7 @@ public class Switcher extends Input {
     }
 
     private boolean isSwitched() {
-        String switched = this.webElement.findElement(By.xpath(".//input")).getAttribute("value");
+        String switched = this.webElement.findElement(By.xpath(INPUT_XPATH)).getAttribute(VALUE);
         return switched.equals("true");
     }
 }
