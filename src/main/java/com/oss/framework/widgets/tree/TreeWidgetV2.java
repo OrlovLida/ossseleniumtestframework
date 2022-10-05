@@ -56,7 +56,15 @@ public class TreeWidgetV2 extends Widget {
         return getVisibleNodes().get(nodeNumber);
     }
 
+    /**
+     * @deprecated standardizing the nomenclature of methods, please use fullTextSearch(String text). Method will be removed in 3.0.x release
+     */
+    @Deprecated
     public void typeIntoSearch(String text) {
+        fullTextSearch(text);
+    }
+
+    public void fullTextSearch(String text) {
         getAdvancedSearch().fullTextSearch(text);
     }
 
@@ -105,6 +113,7 @@ public class TreeWidgetV2 extends Widget {
 
     public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
         advancedSearch = getAdvancedSearch();
+        advancedSearch.openSearchPanel();
         if (!CSSUtils.isElementPresent(driver, attributeId)) {
             advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
         }
@@ -157,8 +166,12 @@ public class TreeWidgetV2 extends Widget {
         return getSelectionBarComponent().getSelectedObjectsCount();
     }
 
-    public Set<String> getNodeChildren(String labels) {
-        return getTreeComponent().getNodeChildren(labels);
+    public Set<String> getNodeChildrenByLabelsPath(String labels) {
+        return getTreeComponent().getNodeChildren(labels, true);
+    }
+
+    public Set<String> getNodeChildrenByPath(String path) {
+        return getTreeComponent().getNodeChildren(path, false);
     }
 
     private TreeComponent getTreeComponent() {

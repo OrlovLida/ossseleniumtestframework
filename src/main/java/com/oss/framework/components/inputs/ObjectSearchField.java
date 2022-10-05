@@ -25,25 +25,26 @@ public class ObjectSearchField extends Input {
     private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
     private static final String INPUT = ".//input";
     private static final String ADVANCED_SEARCH_ID = "advancedSearch";
-private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] input:not([disabled])";
+    private static final String OSF_NOT_DISABLED_CSS = ".md-input-cont:not(.md-input-disabled)";
+
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
     }
 
     static ObjectSearchField create(WebDriver driver, WebDriverWait wait, String componentId) {
-        DelayUtils.waitForPresence(wait, By.cssSelector(String.format(NOT_DISABLED_INPUT_PATTERN, componentId)));
         WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         WebElementUtils.moveToElement(driver, webElement);
         return new ObjectSearchField(driver, wait, webElement, componentId);
     }
 
-    public static ObjectSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(String.format(NOT_DISABLED_INPUT_PATTERN, componentId)));
+    public static ObjectSearchField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
         WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         WebElementUtils.moveToElement(driver, webElement);
         return new ObjectSearchField(driver, wait, webElement, componentId);
     }
 
     public void setValue(Data value, boolean isContains) {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
         if (!isSingleComponent()) {
             setValueForMultiComponent(value);
         } else {
@@ -75,6 +76,7 @@ private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] inp
 
     @Override
     public void clear() {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
         if (isSingleComponent()) {
             WebElement input = webElement.findElement(By.xpath(INPUT));
             input.sendKeys(Keys.CONTROL + "a");
@@ -104,9 +106,8 @@ private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] inp
     }
 
     private void chooseFirstResult() {
-        DelayUtils.waitForSpinners(webDriverWait, webElement);
         DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
-        DelayUtils.sleep(1500);
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
     }
@@ -129,6 +130,7 @@ private static final String NOT_DISABLED_INPUT_PATTERN = "[data-testid='%s'] inp
     private void setSingleValue(String singleValue, WebElement input) {
         input.sendKeys(Keys.CONTROL + "a");
         input.sendKeys(Keys.DELETE);
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
         input.sendKeys(singleValue);
         chooseFirstResult();
     }

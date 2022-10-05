@@ -136,6 +136,9 @@ public class TableWidget extends Widget implements TableInterface {
     @Override
     public void searchByAttribute(String attributeId, String value) {
         openAdvancedSearch();
+        if (!CSSUtils.isElementPresent(driver, attributeId)) {
+            advancedSearch.selectAttributes(Lists.newArrayList(attributeId));
+        }
         setFilterContains(attributeId, value);
         confirmFilter();
     }
@@ -181,10 +184,10 @@ public class TableWidget extends Widget implements TableInterface {
                 .filter(TableRow::isSelected).collect(Collectors.toList());
     }
 
-    @Override
     /**
-     * @Depracated method will be removed in 3.0.x release, use instead getCellValue
+     * @deprecated method will be removed in 3.0.x release, use instead getCellValue
      */
+    @Override
     @Deprecated
     public String getCellValueById(int row, String columnId) {
         return getCellValue(row, columnId);
@@ -194,8 +197,16 @@ public class TableWidget extends Widget implements TableInterface {
         getTableComponent().clickRow(row);
     }
 
+    public void clickLink(int index, String columnId) {
+        getTableComponent().clickLink(index, columnId);
+    }
+
     public ActionsContainer getContextActions() {
         return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
+    }
+
+    public List<String> getAppliedQuickFilters() {
+        return getAdvancedSearch().getAppliedQuickFilters();
     }
 
     public void selectVisibilitySearchAttributes(List<String> attributeIds) {
@@ -237,6 +248,14 @@ public class TableWidget extends Widget implements TableInterface {
 
     public void setColumnWidth(String columnId, String columnWidth) {
         getTableComponent().setColumnWidth(columnId, columnWidth);
+    }
+
+    public String getDefaultColumnWidth(String columnId) {
+        return getTableComponent().getDefaultColumnWidth(columnId);
+    }
+
+    public void setLinkPattern(String columnId, String linkPattern) {
+        getTableComponent().setLinkPattern(columnId, linkPattern);
     }
 
     public void clearAllFilters() {

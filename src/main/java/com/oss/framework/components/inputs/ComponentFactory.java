@@ -28,6 +28,9 @@ public class ComponentFactory {
             case COMBOBOX: {
                 return Combobox.create(webDriver, wait, componentId);
             }
+            case CUSTOM_SELECT: {
+                return CustomSelect.create(webDriver, wait, componentId);
+            }
             case OLD_TEXT_FIELD_APP:
             case COMMENT_TEXT_FIELD: {
                 return CommentTextField.create(webDriver, wait, componentId);
@@ -115,6 +118,9 @@ public class ComponentFactory {
             }
             case COMBOBOX: {
                 return Combobox.createFromParent(parent, webDriver, wait, componentId);
+            }
+            case CUSTOM_SELECT: {
+                return CustomSelect.createFromParent(parent, webDriver, wait, componentId);
             }
             case OLD_TEXT_FIELD_APP:
             case COMMENT_TEXT_FIELD: {

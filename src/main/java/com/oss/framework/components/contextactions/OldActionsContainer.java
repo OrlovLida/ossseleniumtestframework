@@ -28,6 +28,7 @@ public class OldActionsContainer implements ActionsInterface {
     private static final String DROPDOWN_PATTERN = "//a[@class='dropdown']//div[text()='%s']";
     private static final String DROPDOWN_LIST = ".portal .widgetList";
     private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
+    private static final String WIDGET_LABEL_CSS = ".widgetLabel";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -102,7 +103,7 @@ public class OldActionsContainer implements ActionsInterface {
     @Override
     public String getActionLabel(String actionId) {
         String actionXpath = String.format(ACTION_BY_ID_PATTERN, actionId, actionId, actionId);
-        return getAction(actionXpath).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+        return getAction(actionXpath).findElement(By.cssSelector(WIDGET_LABEL_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
     }
 
     @Override

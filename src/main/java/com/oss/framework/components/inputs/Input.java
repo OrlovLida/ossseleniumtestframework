@@ -143,6 +143,7 @@ public abstract class Input {
         BPM_COMBOBOX,
         CHECKBOX,
         COMBOBOX,
+        CUSTOM_SELECT,
         COMMENT_TEXT_FIELD,
         OLD_TEXT_FIELD_APP,
         COORDINATES,

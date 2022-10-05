@@ -26,7 +26,7 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public class TreeComponent {
-    
+
     private static final String TREE_CLASS = "tree-component";
     private static final String NODE_CLASS = "tree-node";
     private static final String NODE_LABEL_CLASS = "OSSRichText";
@@ -41,74 +41,83 @@ public class TreeComponent {
     private static final String TREE_COMPONENT_NOT_TREE_COMPONENT_LOADER_CSSS = ".tree-component:not(.tree-component--loader)";
     private static final String CANNOT_FIND_NODE_EXCEPTION = "Cannot find Node ";
     private static final String DATA_PATH_LABEL_ATTR = "data-label-path";
+    private static final String DATA_PATH_ATTR = "data-path";
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
-    
+
     private TreeComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement treeComponentElement) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.treeComponentElement = treeComponentElement;
     }
-    
+
     public static TreeComponent create(WebDriver driver, WebDriverWait webDriverWait, WebElement parent) {
         DelayUtils.waitForNestedElements(webDriverWait, parent, By.cssSelector(TREE_COMPONENT_NOT_TREE_COMPONENT_LOADER_CSSS));
         WebElement treeComponent = parent.findElement(By.className(TREE_CLASS));
         return new TreeComponent(driver, webDriverWait, treeComponent);
     }
-    
+
     public void expandNodeByPath(String path) {
         getNodeByPath(path).expandNode();
     }
-    
+
     public void toggleNodeByPath(String path) {
         getNodeByPath(path).toggleNode();
     }
-    
+
     public Node getNodeByPath(String path) {
         return findNodeByPath(path).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + path));
     }
-    
+
     public Node getNodeByLabelsPath(String labels) {
         return findNodeByLabelsPath(labels).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + labels));
     }
-    
+
     public List<Node> getVisibleNodes() {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         return this.treeComponentElement.findElements(By.xpath("." + getNodeClassPath())).stream()
                 .map(node -> Node.create(driver, webDriverWait, node)).collect(Collectors.toList());
     }
-    
-    public Set<String> getNodeChildren(String labels) {
-        Node root = findNodeByLabelsPath(labels).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + labels));
+
+    public Set<String> getNodeChildren(String path, boolean isLabel) {
+        List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(path));
+        Node root = getNodeByPath(pathElements, isLabel).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_NODE_EXCEPTION + path));
         root.expandNode();
-        List<Node> visibleChildren = getNodesByPathContains(labels);
+        List<Node> visibleChildren = getNodesByPathContains(path, isLabel);
         Set<String> allChildren = visibleChildren.stream().map(Node::getLabel).collect(Collectors.toCollection(HashSet::new));
-        allChildren.addAll(getAllVisibleChildren(visibleChildren, labels));
+        allChildren.addAll(getAllVisibleChildren(visibleChildren, path, isLabel));
         return allChildren;
     }
-    
+
     public Optional<Node> findNodeByLabelsPath(String labels) {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(labels));
         return getNodeByPath(pathElements, true);
     }
-    
+
     private Optional<Node> findNodeByPath(String path) {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(path));
         return getNodeByPath(pathElements, false);
     }
-    
-    private List<Node> getNodesByPathContains(String labels) {
-        return treeComponentElement.findElements(By.cssSelector("[" + DATA_PATH_LABEL_ATTR + "^='" + labels + ".']")).stream()
-                .map(child -> Node.create(driver, webDriverWait, child))
-                .collect(Collectors.toList());
-    }
-    
-    private Node getLastVisibleNode(List<Node> visibleNodes) {
-       return visibleNodes.get(visibleNodes.size() - 1);
+
+    private List<Node> getNodesByPathContains(String path, boolean isLabel) {
+        if (isLabel) {
+            return treeComponentElement.findElements(By.cssSelector("[" + DATA_PATH_LABEL_ATTR + "^='" + path + ".']")).stream()
+                    .map(child -> Node.create(driver, webDriverWait, child))
+                    .collect(Collectors.toList());
+        } else {
+            return treeComponentElement.findElements(By.cssSelector("[" + DATA_PATH_ATTR + "^='" + path + ".']")).stream()
+                    .map(child -> Node.create(driver, webDriverWait, child))
+                    .collect(Collectors.toList());
+        }
 
     }
-    
+
+    private Node getLastVisibleNode(List<Node> visibleNodes) {
+        return visibleNodes.get(visibleNodes.size() - 1);
+
+    }
+
     private Optional<Node> getNodeByPath(List<String> pathElements, boolean isLabel) {
         scrollToFirstNode();
         StringBuilder currentPath = new StringBuilder();
@@ -118,7 +127,7 @@ public class TreeComponent {
             String tempPath = currentPath.toString();
             List<Node> nodes = getVisibleNodes();
             node = getNode(isLabel, tempPath, nodes);
-            
+
             if (!node.isPresent()) {
                 node = scrollToNode(isLabel, node, tempPath);
             }
@@ -129,7 +138,7 @@ public class TreeComponent {
         }
         return node;
     }
-    
+
     private Optional<Node> scrollToNode(boolean isLabel, Optional<Node> node, String tempPath) {
         List<Node> nodes = getVisibleNodes();
         Node lastNode = getLastVisibleNode(nodes);
@@ -143,20 +152,19 @@ public class TreeComponent {
         }
         return node;
     }
-    
-    private Set<String> getAllVisibleChildren(List<Node> nodes, String pathLabels) {
+
+    private Set<String> getAllVisibleChildren(List<Node> nodes, String path, boolean isLabel) {
         Node lastNode = getLastVisibleNode(nodes);
         lastNode.moveToNode();
         Set<String> allChildren = Sets.newHashSet();
-        while (!lastNode.equals(getLastVisibleNode(getNodesByPathContains(pathLabels)))) {
-            allChildren.addAll(getNodesByPathContains(pathLabels).stream().map(Node::getLabel).collect(Collectors.toList()));
-            lastNode = getLastVisibleNode(getNodesByPathContains(pathLabels));
+        while (!lastNode.equals(getLastVisibleNode(getNodesByPathContains(path, isLabel)))) {
+            allChildren.addAll(getNodesByPathContains(path, isLabel).stream().map(Node::getLabel).collect(Collectors.toList()));
+            lastNode = getLastVisibleNode(getNodesByPathContains(path, isLabel));
             lastNode.moveToNode();
         }
         return allChildren;
     }
 
-    
     private Optional<Node> getNode(boolean isLabel, String tempPath, List<Node> nodes) {
         Optional<Node> node;
         if (isLabel) {
@@ -168,35 +176,34 @@ public class TreeComponent {
         }
         return node;
     }
-    
+
     private void scrollToFirstNode() {
         if (!isScrollPresent())
             return;
         CustomScrolls scrolls = getCustomScrolls();
         if (scrolls.getVerticalBarHeight() == 0)
             return;
-        
+
         int translateY = scrolls.getTranslateYValue();
         if (translateY == 0)
             return;
-        
+
         scrolls.scrollVertically(-translateY);
     }
-    
+
     private boolean isScrollPresent() {
         return !treeComponentElement.findElements(By.cssSelector(CUSTOM_SCROLLBARS_CSS)).isEmpty();
     }
-    
+
     private CustomScrolls getCustomScrolls() {
         return CustomScrolls.create(driver, webDriverWait, treeComponentElement);
     }
-    
+
     private String getNodeClassPath() {
         return "//div[@class='" + NODE_CLASS + "']";
     }
-    
+
     public static class Node {
-        private static final String DATA_PATH_ATTR = "data-path";
         private static final String FILTERS_BUTTON_XPATH = ".//*[@" + CSSUtils.TEST_ID + "='filters-panel-button']";
         private static final String ADVANCED_SEARCH_PANEL_ID = "advanced-search_panel";
         private static final String DECORATOR_ICON_CSS = ".icon-wrapper";
@@ -215,39 +222,39 @@ public class TreeComponent {
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
         private final String nodeId;
-        
+
         private Node(WebDriver driver, WebDriverWait webDriverWait, WebElement node, String nodeId) {
             this.driver = driver;
             this.webDriverWait = webDriverWait;
             this.nodeElement = node;
             this.nodeId = nodeId;
         }
-        
+
         private static Node create(WebDriver driver, WebDriverWait webDriverWait, WebElement nodeElement) {
             DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.cssSelector(LABEL_NODE_CSS));
             String nodeId = CSSUtils.getAttributeValue(DATA_PATH_ATTR, nodeElement);
             return new Node(driver, webDriverWait, nodeElement, nodeId);
         }
-        
+
         public String getPath() {
             return nodeId;
         }
-        
+
         String getPathLabel() {
             return CSSUtils.getAttributeValue(DATA_PATH_LABEL_ATTR, nodeElement);
         }
-        
+
         public boolean isToggled() {
             WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_XPATH));
             return input.isSelected();
         }
-        
+
         public void toggleNode() {
             moveToNode();
             WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
             input.click();
         }
-        
+
         public void expandNode() {
             if (!isExpanded()) {
                 moveToNode();
@@ -256,7 +263,7 @@ public class TreeComponent {
                 DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.cssSelector(ARIA_LABEL_MINUS_CSS));
             }
         }
-        
+
         public Optional<Popup> expandNextLevel() {
             if (isExpandNextLevelPresent()) {
                 moveToNode();
@@ -274,7 +281,7 @@ public class TreeComponent {
             } else
                 throw new NoSuchElementException("Expand Next Level is not available for Node " + getLabel());
         }
-        
+
         public void collapseNode() {
             if (isExpanded()) {
                 moveToNode();
@@ -283,83 +290,83 @@ public class TreeComponent {
                 DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.cssSelector(ARIA_LABEL_ADD_CSS));
             }
         }
-        
+
         public boolean isExpanded() {
             return nodeElement.findElements(By.xpath(EXPANDER_ICON_XPATH)).isEmpty();
         }
-        
+
         public String getLabel() {
             WebElement richText = nodeElement.findElement(By.className(NODE_LABEL_CLASS));
             return richText.getAttribute(TEXT_CONTENT_ATTRIBUTE);
         }
-        
+
         public void callAction(String groupId, String actionId) {
             WebElementUtils.moveToElement(driver, nodeElement);
             InlineMenu menu = InlineMenu.create(nodeElement, driver, webDriverWait);
             menu.callAction(groupId, actionId);
         }
-        
+
         public void callAction(String actionId) {
             moveToNode();
             InlineMenu menu = InlineMenu.create(nodeElement, driver, webDriverWait);
             menu.callAction(actionId);
         }
-        
+
         public AdvancedSearch openAdvancedSearch() {
             clickFilter();
             return AdvancedSearch.createById(driver, webDriverWait, ADVANCED_SEARCH_PANEL_ID);
         }
-        
+
         public void searchByAttribute(String attributeId, Input.ComponentType componentType, String value) {
             AdvancedSearch advancedSearch = openAdvancedSearch();
             advancedSearch.setFilter(attributeId, componentType, value);
             advancedSearch.clickApply();
             DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className(OSS_ICON_CLASS));
         }
-        
+
         public void searchByAttribute(String attributeId, String value) {
             AdvancedSearch advancedSearch = openAdvancedSearch();
             advancedSearch.setFilter(attributeId, value);
             advancedSearch.clickApply();
             DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.className(OSS_ICON_CLASS));
         }
-        
+
         public int countDecorators() {
             return nodeElement.findElements(By.cssSelector(DECORATOR_ICON_CSS)).size();
         }
-        
+
         public DecoratorStatus getDecoratorStatus() {
             if (countDecorators() != 0) {
                 String style = nodeElement.findElement(By.cssSelector(DECORATOR_ICON_CSS)).getAttribute("style");
                 switch (style) {
-                case GREEN: {
-                    return DecoratorStatus.GREEN;
-                }
-                case PURPLE: {
-                    return DecoratorStatus.PURPLE;
-                }
-                case RED: {
-                    return DecoratorStatus.RED;
-                }
-                default:
+                    case GREEN: {
+                        return DecoratorStatus.GREEN;
+                    }
+                    case PURPLE: {
+                        return DecoratorStatus.PURPLE;
+                    }
+                    case RED: {
+                        return DecoratorStatus.RED;
+                    }
+                    default:
                 }
                 throw new IllegalArgumentException(CANNOT_MAP_TO_COLOR_EXCEPTION);
             }
             return DecoratorStatus.NONE;
         }
-        
+
         public String getBadge() {
             return nodeElement.findElement(By.cssSelector(TREE_NODE_BADGE_CSS)).getText();
         }
-        
+
         public boolean isBadgePresent() {
             return !nodeElement.findElements(By.cssSelector(TREE_NODE_BADGE_CSS)).isEmpty();
         }
-        
+
         public boolean isExpandNextLevelPresent() {
             return !nodeElement.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
         }
-        
+
         private void clickFilter() {
             if (isFilterButtonPresent()) {
                 WebElement filterButton = nodeElement.findElement(By.xpath(FILTERS_BUTTON_XPATH));
@@ -367,15 +374,15 @@ public class TreeComponent {
             } else
                 throw new NoSuchElementException("Filter Node is not available for Node " + getLabel());
         }
-        
+
         private boolean isFilterButtonPresent() {
             return !nodeElement.findElements(By.xpath(FILTERS_BUTTON_XPATH)).isEmpty();
         }
-        
+
         private void moveToNode() {
             WebElementUtils.moveToElement(driver, nodeElement);
         }
-        
+
         @Override
         public boolean equals(Object o) {
             if (this == o)
@@ -385,15 +392,15 @@ public class TreeComponent {
             Node node = (Node) o;
             return Objects.equals(nodeId, node.nodeId);
         }
-        
+
         @Override
         public int hashCode() {
             return Objects.hash(nodeId);
         }
-        
+
         public enum DecoratorStatus {
             GREEN, PURPLE, RED, NONE
         }
-        
+
     }
 }
