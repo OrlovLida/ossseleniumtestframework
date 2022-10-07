@@ -111,6 +111,14 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getCellValue(rowIndex, columnId);
     }
 
+    public boolean isValuePresent(String value, String columnId) {
+        return getTableComponent().isValuePresent(value, columnId);
+    }
+
+    public boolean isValuePresentContains(String value, String columnId) {
+        return getTableComponent().isValuePresentContains(value, columnId);
+    }
+
     public boolean isCellValueBold(int row, String columnId) {
         return getTableComponent().isCellValueBold(row, columnId);
     }

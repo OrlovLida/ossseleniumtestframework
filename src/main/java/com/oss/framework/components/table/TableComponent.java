@@ -46,6 +46,7 @@ public class TableComponent {
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
     private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s'] ." + TABLE_COMPONENT_CLASS;
     private static final String TABLE_COMPONENT_ID_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s']." + TABLE_COMPONENT_CLASS;
+    private static final String CELLS_IN_COLUMN_PATTERN = ".table-component__cell[data-col='%s']";
     private static final String COLUMN_MANAGER_BUTTON = ".table-component__management-btn button";
     private static final By ATTRIBUTES_CHOOSER_OPENED = By.xpath("//div[@id='attributes-management']");
 
@@ -106,10 +107,18 @@ public class TableComponent {
     }
 
     public Optional<Integer> getRowIndex(String value, String columnId) {
-        List<Cell> cells = webElement.findElements(By.cssSelector(".table-component__cell[data-col='" + columnId + "']")).stream()
-                .map(cell -> Cell.createCell(driver, cell)).collect(Collectors.toList());
-        Optional<Cell> cell = cells.stream().filter(c -> c.getText().equals(value)).findFirst();
+        Optional<Cell> cell = getCells(columnId).stream().filter(c -> c.getText().equals(value)).findFirst();
         return cell.map(Cell::getIndex);
+    }
+
+    public Optional<Integer> getRowIndexContains(String value, String columnId) {
+        Optional<Cell> cell = getCells(columnId).stream().filter(c -> c.getText().contains(value)).findFirst();
+        return cell.map(Cell::getIndex);
+    }
+
+    private List<Cell> getCells(String columnId) {
+        return webElement.findElements(By.cssSelector(String.format(CELLS_IN_COLUMN_PATTERN, columnId))).stream()
+                .map(cell -> Cell.createCell(driver, cell)).collect(Collectors.toList());
     }
 
     public Row getRow(String value, String columnId) {
@@ -130,6 +139,14 @@ public class TableComponent {
                 .map(Integer::parseInt).sorted().collect(Collectors.toList());
 
         return rowIds.stream().map(index -> new Row(this.driver, this.webDriverWait, this.webElement, index)).collect(Collectors.toList());
+    }
+
+    public boolean isValuePresent(String value, String columnId) {
+        return getRowIndex(value, columnId).isPresent();
+    }
+
+    public boolean isValuePresentContains(String value, String columnId) {
+        return getRowIndexContains(value, columnId).isPresent();
     }
 
     public void scrollHorizontally(int offset) {
