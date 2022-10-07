@@ -106,12 +106,12 @@ public class TableComponent {
         return !webElement.findElements(By.xpath(EMPTY_DATA_ROW_XPATH)).isEmpty();
     }
 
-    public Optional<Integer> getRowIndex(String value, String columnId) {
+    private Optional<Integer> getRowIndex(String value, String columnId) {
         Optional<Cell> cell = getCells(columnId).stream().filter(c -> c.getText().equals(value)).findFirst();
         return cell.map(Cell::getIndex);
     }
 
-    public Optional<Integer> getRowIndexContains(String value, String columnId) {
+    private Optional<Integer> getRowIndexContains(String value, String columnId) {
         Optional<Cell> cell = getCells(columnId).stream().filter(c -> c.getText().contains(value)).findFirst();
         return cell.map(Cell::getIndex);
     }
