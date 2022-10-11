@@ -54,24 +54,28 @@ public class OldTreeTableWidget extends Widget {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
         createTable().selectRow(rowNumber);
     }
-    
+
     public void unselectNode(String value, String attributeNameLabel) {
         createTable().unselectRow(attributeNameLabel, value);
     }
-    
+
     public void collapseNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
         new Node(driver, webDriverWait, rowNumber).collapseNode();
     }
-    
+
+    public void collapseNode(int rowNumber) {
+        new Node(driver, webDriverWait, rowNumber).collapseNode();
+    }
+
     public void callActionById(String id) {
         createTable().callAction(id);
     }
-    
+
     public void callActionByLabel(String groupLabel, String actionLabel) {
         createTable().callActionByLabel(groupLabel, actionLabel);
     }
-    
+
     public String getGroupActionLabel(String groupId) {
         return createTable().getGroupActionLabel(groupId);
     }
@@ -118,6 +122,10 @@ public class OldTreeTableWidget extends Widget {
         advancedSearch.clickApply();
     }
 
+    public void clickClearAll() {
+        getAdvancedSearch().clickClearAll();
+    }
+
     public boolean hasNoData() {
         return createTable().hasNoData();
     }
@@ -162,13 +170,11 @@ public class OldTreeTableWidget extends Widget {
         }
         
         private void expandNode() {
-            
             WebElement node = getNodeExpandIcons().get(row);
             if (!isExpanded(node)) {
                 wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH))));
                 node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH)).click();
                 DelayUtils.waitForPageToLoad(driver, wait);
-                
             }
         }
         

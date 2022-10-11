@@ -156,6 +156,7 @@ public abstract class Input {
         MULTI_SEARCHBOX,
         NUMBER_FIELD,
         OBJECT_SEARCH_FIELD,
+        OBJECT_SEARCH_FIELD_REST,
         PASSWORD_FIELD,
         PHONE_FIELD,
         /**
