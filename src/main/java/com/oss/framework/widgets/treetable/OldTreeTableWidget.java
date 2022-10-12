@@ -8,6 +8,7 @@ package com.oss.framework.widgets.treetable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -52,7 +53,7 @@ public class OldTreeTableWidget extends Widget {
 
     public void expandNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
-        new Node(driver, webDriverWait, rowNumber).expandNode();
+        Node.createNode(driver, webDriverWait, rowNumber).expandNode();
     }
 
     public void selectNode(String value, String attributeNameLabel) {
@@ -66,18 +67,12 @@ public class OldTreeTableWidget extends Widget {
 
     public void collapseNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
-        new Node(driver, webDriverWait, rowNumber).collapseNode();
+        Node.createNode(driver, webDriverWait, rowNumber).collapseNode();
     }
 
     public void collapseNode(int rowNumber) {
-        new Node(driver, webDriverWait, rowNumber).collapseNode();
-    }
-
-    public void collapseNodeIfPresent(int rowNumber) {
-        Node node = new Node(driver, webDriverWait, rowNumber);
-        if (node.isExpandIconPresent()) {
-            node.collapseNode();
-        }
+        Node node = Node.createNode(driver, webDriverWait, rowNumber);
+        node.collapseNode();
     }
 
     public void callActionById(String id) {
@@ -166,45 +161,56 @@ public class OldTreeTableWidget extends Widget {
         private static final String TREE_NODE_EXPAND_ICON_XPATH = ".//i[contains(@class,'tree-node-expand-icon')]";
         private static final String TREE_NODE_ADD_ICON_XPATH = ".//i[@aria-label='ADD']";
         private static final String TREE_NODE_MINUS_ICON_XPATH = ".//i[@aria-label='MINUS']";
-        private final int row;
+        private static final String FIRST_COLUMN = ".//div[starts-with(@class,'OSSTableColumn OSSTableTreeColumn') and contains(@class, 'leftSticky')]";
+        private static final String CELL_ROW = ".//div[starts-with(@class,'Cell Row')]";
+        private static final String CANNOT_FIND_ROW_EXCEPTION = "Cannot find row for given value.";
+        private final WebElement nodeElement;
         private final WebDriver driver;
         private final WebDriverWait wait;
 
-        Node(WebDriver driver, WebDriverWait wait, int row) {
+        private Node(WebDriver driver, WebDriverWait wait, WebElement nodeElement) {
             this.driver = driver;
             this.wait = wait;
-            this.row = row;
+            this.nodeElement = nodeElement;
         }
 
-        private List<WebElement> getNodeExpandIcons() {
-            DelayUtils.waitBy(wait, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
-            return driver.findElements(By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
+        static Node createNode(WebDriver driver, WebDriverWait wait, int row) {
+            WebElement firstColumn = driver.findElement(By.xpath(FIRST_COLUMN));
+            List<WebElement> nodes = firstColumn.findElements(By.xpath(CELL_ROW));
+            if (nodes.size() < row) {
+                throw new NoSuchElementException(CANNOT_FIND_ROW_EXCEPTION);
+            }
+            WebElement node = nodes.get(row);
+            return new Node(driver, wait, node);
         }
+
+//        private List<WebElement> getNodeExpandIcons() {
+//            DelayUtils.waitBy(wait, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
+//            return node.findElements(By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
+//        }
 
         private void expandNode() {
-            WebElement node = getNodeExpandIcons().get(row);
-            if (!isExpanded(node)) {
-                wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH))));
-                node.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH)).click();
+            if (isExpandIconPresent() && !isExpanded()) {
+                wait.until(ExpectedConditions.elementToBeClickable(nodeElement.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH))));
+                nodeElement.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH)).click();
                 DelayUtils.waitForPageToLoad(driver, wait);
             }
         }
 
         private void collapseNode() {
-            WebElement node = getNodeExpandIcons().get(row);
-            if (isExpanded(node)) {
-                wait.until(ExpectedConditions.elementToBeClickable(node.findElement(By.xpath(TREE_NODE_MINUS_ICON_XPATH))));
-                node.findElement(By.xpath(TREE_NODE_MINUS_ICON_XPATH)).click();
+            if (isExpandIconPresent() && isExpanded()) {
+                wait.until(ExpectedConditions.elementToBeClickable(nodeElement.findElement(By.xpath(TREE_NODE_MINUS_ICON_XPATH))));
+                nodeElement.findElement(By.xpath(TREE_NODE_MINUS_ICON_XPATH)).click();
                 DelayUtils.waitForPageToLoad(driver, wait);
             }
         }
 
         private boolean isExpandIconPresent() {
-            return WebElementUtils.isElementPresent(driver, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
+            return WebElementUtils.isElementPresent(nodeElement, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
         }
 
-        private boolean isExpanded(WebElement node) {
-            List<WebElement> notExpandedNode = node.findElements(By.xpath(TREE_NODE_ADD_ICON_XPATH));
+        private boolean isExpanded() {
+            List<WebElement> notExpandedNode = nodeElement.findElements(By.xpath(TREE_NODE_ADD_ICON_XPATH));
             return notExpandedNode.isEmpty();
         }
     }
