@@ -18,6 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.table.OldTable;
 
@@ -25,16 +26,16 @@ import com.oss.framework.widgets.table.OldTable;
  * @author Comarch
  */
 public class OldTreeTableWidget extends Widget {
-    
+
     private OldTreeTableWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
     }
-    
+
     public static OldTreeTableWidget create(WebDriver driver, WebDriverWait wait, String dataAttributeName) {
         Widget.waitForWidgetById(wait, dataAttributeName);
         return new OldTreeTableWidget(driver, wait, dataAttributeName);
     }
-    
+
     public List<String> getAllVisibleNodes(String attributeNameLabel) {
         List<String> visibleNodes = new ArrayList<>();
         int tableObjectsCount = createTable().countRows(attributeNameLabel);
@@ -44,12 +45,16 @@ public class OldTreeTableWidget extends Widget {
         }
         return visibleNodes;
     }
-    
+
+    public boolean isValuePresent(String attributeNameLabel, String value) {
+        return createTable().isValuePresent(attributeNameLabel, value);
+    }
+
     public void expandNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
         new Node(driver, webDriverWait, rowNumber).expandNode();
     }
-    
+
     public void selectNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
         createTable().selectRow(rowNumber);
@@ -68,6 +73,13 @@ public class OldTreeTableWidget extends Widget {
         new Node(driver, webDriverWait, rowNumber).collapseNode();
     }
 
+    public void collapseNodeIfPresent(int rowNumber) {
+        Node node = new Node(driver, webDriverWait, rowNumber);
+        if (node.isExpandIconPresent()) {
+            node.collapseNode();
+        }
+    }
+
     public void callActionById(String id) {
         createTable().callAction(id);
     }
@@ -79,11 +91,11 @@ public class OldTreeTableWidget extends Widget {
     public String getGroupActionLabel(String groupId) {
         return createTable().getGroupActionLabel(groupId);
     }
-    
+
     public String getActionLabel(String groupId, String actionId) {
         return createTable().getActionLabel(groupId, actionId);
     }
-    
+
     public String getActionLabel(String actionId) {
         return createTable().getActionLabel(actionId);
     }
@@ -138,18 +150,18 @@ public class OldTreeTableWidget extends Widget {
         createTable().selectPredefinedFilter(filterName);
     }
 
-    public List<String> getSelectedPredefinedFilter(){
-       return createTable().getSelectedPredefinedFilters();
+    public List<String> getSelectedPredefinedFilter() {
+        return createTable().getSelectedPredefinedFilters();
     }
-    
+
     private OldTable createTable() {
         return OldTable.createById(driver, webDriverWait, id);
     }
-    
+
     private AdvancedSearch getAdvancedSearch() {
         return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
     }
-    
+
     public static class Node {
         private static final String TREE_NODE_EXPAND_ICON_XPATH = ".//i[contains(@class,'tree-node-expand-icon')]";
         private static final String TREE_NODE_ADD_ICON_XPATH = ".//i[@aria-label='ADD']";
@@ -157,18 +169,18 @@ public class OldTreeTableWidget extends Widget {
         private final int row;
         private final WebDriver driver;
         private final WebDriverWait wait;
-        
+
         Node(WebDriver driver, WebDriverWait wait, int row) {
             this.driver = driver;
             this.wait = wait;
             this.row = row;
         }
-        
+
         private List<WebElement> getNodeExpandIcons() {
             DelayUtils.waitBy(wait, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
             return driver.findElements(By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
         }
-        
+
         private void expandNode() {
             WebElement node = getNodeExpandIcons().get(row);
             if (!isExpanded(node)) {
@@ -177,7 +189,7 @@ public class OldTreeTableWidget extends Widget {
                 DelayUtils.waitForPageToLoad(driver, wait);
             }
         }
-        
+
         private void collapseNode() {
             WebElement node = getNodeExpandIcons().get(row);
             if (isExpanded(node)) {
@@ -186,11 +198,15 @@ public class OldTreeTableWidget extends Widget {
                 DelayUtils.waitForPageToLoad(driver, wait);
             }
         }
-        
+
+        private boolean isExpandIconPresent() {
+            return WebElementUtils.isElementPresent(driver, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
+        }
+
         private boolean isExpanded(WebElement node) {
             List<WebElement> notExpandedNode = node.findElements(By.xpath(TREE_NODE_ADD_ICON_XPATH));
             return notExpandedNode.isEmpty();
         }
     }
-    
+
 }
