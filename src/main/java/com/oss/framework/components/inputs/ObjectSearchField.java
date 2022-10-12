@@ -53,6 +53,11 @@ public class ObjectSearchField extends Input {
         }
     }
 
+    public void setFirstResult(String value) {
+        setSingleValueWebElement(value, By.xpath(INPUT));
+        chooseFirstResult();
+    }
+
     @Override
     public void setValueContains(Data value) {
         setValue(value, true);
@@ -129,11 +134,15 @@ public class ObjectSearchField extends Input {
     }
 
     private void setSingleValueWebElement(String singleValue, By by, boolean isContains) {
+        setSingleValueWebElement(singleValue, by);
+        chooseResult(singleValue, isContains);
+    }
+
+    private void setSingleValueWebElement(String singleValue, By by) {
         webElement.findElement(by).sendKeys(Keys.CONTROL + "a");
         webElement.findElement(by).sendKeys(Keys.DELETE);
         DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
         webElement.findElement(by).sendKeys(singleValue);
-        chooseResult(singleValue, isContains);
     }
 
     private void chooseResult(String singleValue, boolean isContains) {
@@ -145,5 +154,12 @@ public class ObjectSearchField extends Input {
             return;
         }
         dropdownList.selectOption(singleValue);
+    }
+
+    private void chooseFirstResult() {
+        DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
+        List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
+        dropdownElement.get(0).click();
     }
 }
