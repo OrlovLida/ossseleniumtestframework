@@ -184,11 +184,6 @@ public class OldTreeTableWidget extends Widget {
             return new Node(driver, wait, node);
         }
 
-//        private List<WebElement> getNodeExpandIcons() {
-//            DelayUtils.waitBy(wait, By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
-//            return node.findElements(By.xpath(TREE_NODE_EXPAND_ICON_XPATH));
-//        }
-
         private void expandNode() {
             if (isExpandIconPresent() && !isExpanded()) {
                 wait.until(ExpectedConditions.elementToBeClickable(nodeElement.findElement(By.xpath(TREE_NODE_ADD_ICON_XPATH))));
