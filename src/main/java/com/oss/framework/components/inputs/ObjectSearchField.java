@@ -53,7 +53,7 @@ public class ObjectSearchField extends Input {
         }
     }
 
-    public void chooseFirstResult(String value) {
+    public void setFirstResult(String value) {
         setSingleValueWebElement(value, By.xpath(INPUT));
         chooseFirstResult();
     }
