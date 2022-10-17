@@ -16,7 +16,7 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public abstract class Input {
-    
+
     private static final String DEFAULT = "default";
     private static final String TEXT = "text";
     private static final String POINTER = "pointer";
@@ -28,7 +28,7 @@ public abstract class Input {
     protected final WebDriverWait webDriverWait;
     protected final WebElement webElement;
     protected final String componentId;
-    
+
     Input(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
@@ -42,103 +42,103 @@ public abstract class Input {
         this.webElement = webElement;
         this.componentId = componentId;
     }
-    
+
     public final void hover() {
         Actions action = new Actions(this.driver);
         action.moveToElement(webElement).build().perform();
     }
-    
+
     public final void click() {
         WebElementUtils.clickWebElement(driver, webElement);
         DelayUtils.sleep();
     }
-    
+
     public final void doubleClick() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).doubleClick().perform();
         DelayUtils.sleep();
     }
-    
+
     public final void clearByAction() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).doubleClick().sendKeys(Keys.DELETE).perform();
         DelayUtils.sleep();
     }
-    
+
     public MouseCursor cursor() {
         Actions action = new Actions(driver);
         action.moveToElement(webElement).build().perform();
         String cursor = webElement.findElement(By.xpath(".//input")).getCssValue("cursor");
         return getMouseCursor(cursor);
-        
+
     }
-    
+
     public final List<String> getHint() {
         Tooltip tooltip = Tooltip.create(driver, webDriverWait, componentId);
         return tooltip.getMessages();
     }
-    
+
     public final List<String> getMessages() {
         InputMessage messages = InputMessage.create(driver, componentId);
         return messages.getMessages();
     }
-    
+
     public abstract void setValueContains(Data value);
-    
+
     public abstract Data getValue();
-    
+
     public abstract void setValue(Data value);
-    
+
     public abstract void clear();
-    
+
     public String getLabel() {
         WebElement label = webElement.findElement(By.xpath(LABEL));
         return label.getText();
     }
-    
+
     public final void setMultiStringValue(List<String> values) {
         this.setValue(Data.createMultiData(values));
     }
-    
+
     public final void setMultiStringValueContains(List<String> values) {
         this.setValueContains(Data.createMultiData(values));
     }
-    
+
     public final void setSingleStringValue(String value) {
         this.setValue(Data.createSingleData(value));
     }
-    
+
     public final void setSingleStringValueContains(String value) {
         this.setValueContains(Data.createSingleData(value));
     }
-    
+
     public final String getStringValue() {
         return getValue().getStringValue();
     }
-    
+
     public final List<String> getStringValues() {
         return getValue().getStringValues();
     }
-    
+
     MouseCursor getMouseCursor(String cursor) {
         switch (cursor) {
-        case DEFAULT: {
-            return MouseCursor.DEFAULT;
-        }
-        case TEXT: {
-            return MouseCursor.TEXT;
-        }
-        case POINTER: {
-            return MouseCursor.POINTER;
-        }
-        case NOT_ALLOWED: {
-            return MouseCursor.NOT_ALLOWED;
-        }
-        default:
+            case DEFAULT: {
+                return MouseCursor.DEFAULT;
+            }
+            case TEXT: {
+                return MouseCursor.TEXT;
+            }
+            case POINTER: {
+                return MouseCursor.POINTER;
+            }
+            case NOT_ALLOWED: {
+                return MouseCursor.NOT_ALLOWED;
+            }
+            default:
         }
         throw new IllegalArgumentException(CANNOT_FIND_MOUSE_COURSE_EXCEPTION);
     }
-    
+
     public enum ComponentType {
         BPM_COMBOBOX,
         CHECKBOX,
@@ -159,10 +159,6 @@ public abstract class Input {
         OBJECT_SEARCH_FIELD_REST,
         PASSWORD_FIELD,
         PHONE_FIELD,
-        /**
-         * RADIO_BUTTON should be replace with RADIO_BUTTONS, enum RADIO_BUTTON will be deleted in 3.0.x release
-         */
-        @Deprecated RADIO_BUTTON,
         RADIO_BUTTONS,
         SCRIPT_COMPONENT,
         SEARCH_BOX,
@@ -175,9 +171,9 @@ public abstract class Input {
         TEXT_FIELD,
         TIME
     }
-    
+
     public enum MouseCursor {
         NOT_ALLOWED, DEFAULT, TEXT, POINTER
     }
-    
+
 }

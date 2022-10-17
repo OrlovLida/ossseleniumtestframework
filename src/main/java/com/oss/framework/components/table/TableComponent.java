@@ -106,11 +106,7 @@ public class TableComponent {
         return !webElement.findElements(By.xpath(EMPTY_DATA_ROW_XPATH)).isEmpty();
     }
 
-    /**
-     * @deprecated will be changed to private in 3.0.x release
-     */
-    @Deprecated
-    public Optional<Integer> getRowIndex(String value, String columnId) {
+    private Optional<Integer> getRowIndex(String value, String columnId) {
         Optional<Cell> cell = getCells(columnId).stream().filter(c -> c.getText().equals(value)).findFirst();
         return cell.map(Cell::getIndex);
     }

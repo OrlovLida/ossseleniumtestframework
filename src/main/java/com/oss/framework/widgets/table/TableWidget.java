@@ -189,15 +189,6 @@ public class TableWidget extends Widget implements TableInterface {
                 .filter(TableRow::isSelected).collect(Collectors.toList());
     }
 
-    /**
-     * @deprecated method will be removed in 3.0.x release, use instead getCellValue
-     */
-    @Override
-    @Deprecated
-    public String getCellValueById(int row, String columnId) {
-        return getCellValue(row, columnId);
-    }
-
     public void clickRow(int row) {
         getTableComponent().clickRow(row);
     }

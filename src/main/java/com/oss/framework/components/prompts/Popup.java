@@ -39,17 +39,6 @@ public class Popup {
         return this.webElement.findElement(By.xpath(POPUP_TITLE_XPATH)).getText();
     }
 
-    /**
-     * @deprecated (to remove with next release 3.0.x - componentType will be chosen automatically)
-     */
-    @Deprecated
-    public Input setComponentValue(String componentId, String value, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
-        Input input = getComponent(componentId, componentType);
-        input.setSingleStringValue(value);
-        return input;
-    }
-
     public Input setComponentValue(String componentId, String value) {
         DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         Input input = getComponent(componentId);
@@ -57,28 +46,10 @@ public class Popup {
         return input;
     }
 
-    /**
-     * @deprecated (to remove with next release 3.0.x - componentType will be chosen automatically)
-     */
-    @Deprecated
-    public void deleteComponentValue(String componentId, Input.ComponentType componentType) {
-        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
-        Input input = getComponent(componentId, componentType);
-        input.clear();
-    }
-
     public void deleteComponentValue(String componentId) {
         DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         Input input = getComponent(componentId);
         input.clear();
-    }
-
-    /**
-     * @deprecated (to remove with next release 3.0.x - componentType will be chosen automatically)
-     */
-    @Deprecated
-    public Input getComponent(String componentId, Input.ComponentType componentType) {
-        return ComponentFactory.create(componentId, componentType, this.driver, this.wait);
     }
 
     public Input getComponent(String componentId) {

@@ -73,8 +73,7 @@ public class ComponentFactory {
             case PHONE_FIELD: {
                 return PhoneField.create(webDriver, wait, componentId);
             }
-            case RADIO_BUTTONS:
-            case RADIO_BUTTON: {
+            case RADIO_BUTTONS: {
                 return RadioButton.create(webDriver, wait, componentId);
             }
             case SCRIPT_COMPONENT: {
@@ -165,8 +164,7 @@ public class ComponentFactory {
             case PHONE_FIELD: {
                 return PhoneField.createFromParent(parent, webDriver, wait, componentId);
             }
-            case RADIO_BUTTONS:
-            case RADIO_BUTTON: {
+            case RADIO_BUTTONS: {
                 return RadioButton.create(webDriver, wait, componentId);
             }
             case SCRIPT_COMPONENT: {
