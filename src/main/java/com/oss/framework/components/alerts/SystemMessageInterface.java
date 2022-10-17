@@ -16,7 +16,5 @@ public interface SystemMessageInterface {
     void clickMessageLink();
     
     void waitForMessageDisappear();
-    
-    @Deprecated
-    boolean isErrorDisplayed(boolean printErrors);
+
 }

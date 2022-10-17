@@ -258,11 +258,6 @@ public class OldTable extends Widget implements TableInterface {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
     }
 
-    @Override
-    public String getCellValueById(int row, String columnId) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
-    }
-
     public void unselectRow(String attributeLabel, String value) {
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
         getColumn(attributeLabel).unselectCellByValue(value);

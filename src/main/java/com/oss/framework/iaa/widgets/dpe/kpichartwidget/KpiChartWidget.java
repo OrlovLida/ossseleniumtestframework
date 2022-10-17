@@ -62,19 +62,6 @@ public class KpiChartWidget extends Widget {
         log.debug(ELEMENT_PRESENT_AND_VISIBLE + "Chart");
     }
 
-    /**
-     * @deprecated (to remove after release 3.0.x)
-     */
-    @Deprecated
-    public void hoverMouseOverPoint() {
-        int size = countSamples();
-        log.trace("Number of samples: {}", size);
-        String pointXpath = "(//*[contains(@class,'amcharts-Container amcharts-Series-bullets')]//*[@class='amcharts-Sprite-group amcharts-Circle-group'])[" + (size / 2) + "]";
-
-        clickElement(findElementByXpath(pointXpath));
-        DelayUtils.sleep();
-    }
-
     public int countColumns() {
         int columnsCount = this.webElement.findElements(By.xpath(CHART_COLUMN_PATH)).size();
         log.debug("Columns count: {}", columnsCount);
@@ -101,26 +88,6 @@ public class KpiChartWidget extends Widget {
         int pointsCount = this.webElement.findElements(By.xpath(DATA_SERIES_POINT_PATH)).size();
         log.debug("Visible points count: {}", pointsCount);
         return pointsCount;
-    }
-
-    /**
-     * @deprecated (functionality is no more available, to remove after release 3.0.x)
-     */
-    @Deprecated
-    public int countVisibleYAxis() {
-        int visibleYAxis = this.webElement.findElements(By.xpath(VISIBLE_Y_AXIS_PATH)).size();
-        log.debug("Visible Y axis count: {}", visibleYAxis);
-        return visibleYAxis;
-    }
-
-    /**
-     * @deprecated (functionality is no more available, to remove after release 3.0.x)
-     */
-    @Deprecated
-    public int countHiddenYAxis() {
-        int hiddenYAxis = this.webElement.findElements(By.xpath(HIDDEN_Y_AXIS_PATH)).size();
-        log.debug("Hidden Y axis count: {}", hiddenYAxis);
-        return hiddenYAxis;
     }
 
     public List<String> allYaxisVisibleValues() {
@@ -187,28 +154,8 @@ public class KpiChartWidget extends Widget {
         log.debug("Clicking first data series on legend");
     }
 
-    /**
-     * @deprecated (to remove after release 3.0.x)
-     */
-    @Deprecated
-    public boolean isTopNBarChartIsPresent(String barChartId) {
-        return WebElementUtils.isElementPresent(this.webElement, By.xpath(".//*[@" + CSSUtils.TEST_ID + "='" + barChartId + "']"));
-    }
-
     public boolean isTopNBarChartIsPresent() {
         return WebElementUtils.isElementPresent(this.webElement, By.xpath(TOP_N_BAR_CHART));
-    }
-
-    /**
-     * @deprecated (to remove after release 3.0.x)
-     */
-    @Deprecated
-    public void doubleClickTopNBar(String barChartId) {
-        WebElement barInTopNBarChart = this.webElement.findElement(By.xpath(".//*[@data-testid='" + barChartId + "']//*[@role='menuitem'][1]"));
-        Actions action = new Actions(driver);
-        action.moveToElement(barInTopNBarChart).click(barInTopNBarChart).build().perform();
-        action.doubleClick(barInTopNBarChart).build().perform();
-        log.debug("Double clicking on bar in TopN BarChart");
     }
 
     public void doubleClickTopNBar() {
@@ -227,14 +174,6 @@ public class KpiChartWidget extends Widget {
         Actions actions = new Actions(driver);
         actions.dragAndDropBy(this.webElement, 100, 100).build().perform();
         log.debug("Zooming Data View with offset x = 100, y = 100");
-    }
-
-    /**
-     * @deprecated (to remove after release 3.0.x - use isZoomOutButtonHidden)
-     */
-    @Deprecated
-    public boolean isZoomOutButtonPresent() {
-        return !isZoomOutButtonHidden();
     }
 
     public boolean isZoomOutButtonHidden() {

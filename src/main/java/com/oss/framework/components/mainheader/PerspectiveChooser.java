@@ -9,7 +9,6 @@ package com.oss.framework.components.mainheader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.wizard.Wizard;
 
@@ -54,7 +53,7 @@ public class PerspectiveChooser {
     public void setPlanPerspective(String processCodeOrName) {
         setPerspective(PLAN);
         Wizard planChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
-        planChooser.getComponent(EXISTING_PROJECTS_INPUT_ID, Input.ComponentType.SEARCH_FIELD).setSingleStringValueContains(processCodeOrName);
+        planChooser.getComponent(EXISTING_PROJECTS_INPUT_ID).setSingleStringValueContains(processCodeOrName);
         planChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
         wait.until(url -> driver.getCurrentUrl().contains(PLAN.toUpperCase()));
     }
@@ -62,8 +61,8 @@ public class PerspectiveChooser {
     public void setPlanDatePerspective(String date) {
         setPerspective(PLAN);
         Wizard dataChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
-        dataChooser.setComponentValue(PLAN_CONTEXT_RADIOBUTTON_ID, DATE, Input.ComponentType.RADIO_BUTTON);
-        dataChooser.setComponentValue(DATE_INPUT_ID, date, Input.ComponentType.RADIO_BUTTON);
+        dataChooser.setComponentValue(PLAN_CONTEXT_RADIOBUTTON_ID, DATE);
+        dataChooser.setComponentValue(DATE_INPUT_ID, date);
         dataChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
         wait.until(url -> driver.getCurrentUrl().contains(date));
     }

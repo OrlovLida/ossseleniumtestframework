@@ -58,14 +58,6 @@ public class TreeWidgetV2 extends Widget {
         return getVisibleNodes().get(nodeNumber);
     }
 
-    /**
-     * @deprecated standardizing the nomenclature of methods, please use fullTextSearch(String text). Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void typeIntoSearch(String text) {
-        fullTextSearch(text);
-    }
-
     public void fullTextSearch(String text) {
         getAdvancedSearch().fullTextSearch(text);
     }

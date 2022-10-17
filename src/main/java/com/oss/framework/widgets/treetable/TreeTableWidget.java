@@ -50,64 +50,8 @@ public class TreeTableWidget extends Widget implements TableInterface {
         return new TreeTableWidget(driver, wait, widgetId);
     }
 
-    /**
-     * @deprecated standardizing the nomenclature of methods, please use expandRow(String columnId, String value). Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void expandNode(String value, String columnId) {
-        expandRow(value, columnId);
-    }
-
-    /**
-     * @deprecated standardizing the nomenclature of methods, please use expandRow(String columnId, String value). Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void expandNode(int index) {
-        expandRow(index);
-    }
-
     public boolean isRowExpanded(int index) {
         return getTableComponent().getRow(index).isRowExpanded();
-    }
-
-    /**
-     * @deprecated duplicated method, please use selectRowByAttributeValue(String attributeId, String value). Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void selectNode(String value, String columnId) {
-        selectRowByAttributeValue(columnId, value);
-    }
-
-    /**
-     * @deprecated duplicated method, please use selectRow(int index). Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void selectNode(int index) {
-        selectRow(index);
-    }
-
-    /**
-     * @deprecated duplicated method, please use unselectRow(int index). Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void unselectNode(int index) {
-        unselectRow(index);
-    }
-
-    /**
-     * @deprecated standardizing the nomenclature of methods, please use collapseRow(String columnId, String value). Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void collapseNode(String value, String columnId) {
-        collapseRow(value, columnId);
-    }
-
-    /**
-     * @deprecated standardizing the nomenclature of methods, please use collapseRow(int index).Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void collapseNode(int index) {
-        collapseRow(index);
     }
 
     public void expandRow(int index) {
@@ -313,15 +257,6 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     public List<TableRow> getAllRows() {
         return getTableComponent().getVisibleRows();
-    }
-
-    /**
-     * @deprecated (method will be removed in 3.0.x release, use instead getCellValue, )
-     */
-    @Override
-    @Deprecated
-    public String getCellValueById(int row, String columnId) {
-        return getTableComponent().getCellValue(row, columnId);
     }
 
     public void clickRow(int row) {
