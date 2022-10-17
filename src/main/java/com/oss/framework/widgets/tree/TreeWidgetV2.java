@@ -48,8 +48,10 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public void selectNode(int nodeNumber) {
-        List<Node> nodes = getTreeComponent().getVisibleNodes();
-        nodes.get(nodeNumber).toggleNode();
+        Node node = getTreeComponent().getVisibleNodes().get(nodeNumber);
+        if (!node.isToggled()) {
+            node.toggleNode();
+        }
     }
 
     public Node getNode(int nodeNumber) {
