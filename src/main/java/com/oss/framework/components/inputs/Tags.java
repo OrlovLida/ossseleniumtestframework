@@ -1,19 +1,18 @@
 package com.oss.framework.components.inputs;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.oss.framework.components.data.Data;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.data.Data;
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Tags extends Input {
     private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
@@ -46,7 +45,7 @@ public class Tags extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        WebElementUtils.clickWebElement(driver, webElement);
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_CSS)));
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
@@ -61,7 +60,7 @@ public class Tags extends Input {
 
     @Override
     public void setValue(Data value) {
-        WebElementUtils.clickWebElement(driver, webElement);
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_CSS)));
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
