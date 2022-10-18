@@ -103,7 +103,7 @@ public class TableComponent {
     }
 
     public boolean hasNoData() {
-        return !webElement.findElements(By.xpath(EMPTY_DATA_ROW_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(webElement, By.xpath(EMPTY_DATA_ROW_XPATH));
     }
 
     private Optional<Integer> getRowIndex(String value, String columnId) {

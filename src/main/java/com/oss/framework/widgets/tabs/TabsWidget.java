@@ -37,7 +37,7 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String CONTEXT_ACTIONS_CSS = WINDOW_TOOLBAR_CSS + "," + ACTIONS_CONTAINER_CSS;
     private static final String TABS_PATTERN = "//div[@" + CSSUtils.TEST_ID + "= '%s']";
     private static final String TAB_BY_LABEL_PATTERN = ".//*[contains(text(),'%s')] | .//*[@class='tab-label'][contains(text(),'%s')]";
-    private static final String TAB_BY_ID_PATTERN = ".//a[@id='%s'] | .//a[@data-testid='%s']";
+    private static final String TAB_BY_ID_PATTERN = ".//a[@id='%s'] | .//*[@data-testid='%s']";
     private static final String ACTIVE_TAB_CONTENT = ".//div[@data-testid='%s']//div[contains(@class,'tabsContainerSingleContent active')]";
     private static final String REMOVE_TAB_XPATH = ".//*[@title='Remove tab']";
     private static final String ANCESTOR_PATTERN = "(%s)//ancestor::a";
