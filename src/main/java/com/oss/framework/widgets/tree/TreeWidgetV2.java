@@ -39,6 +39,10 @@ public class TreeWidgetV2 extends Widget {
         return getTreeComponent().getVisibleNodes();
     }
 
+    public boolean hasNoData() {
+        return getTreeComponent().hasNoData();
+    }
+
     public Node getNode(String label) {
         Optional<Node> node = getVisibleNodes().stream().filter(n -> n.getLabel().equals(label)).findFirst();
         if (node.isPresent()) {
