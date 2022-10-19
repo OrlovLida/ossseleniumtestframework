@@ -1,5 +1,17 @@
 package com.oss.framework.wizard;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.ButtonContainer;
 import com.oss.framework.components.inputs.ComponentFactory;
@@ -10,17 +22,6 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Wizard {
 
@@ -50,17 +51,6 @@ public class Wizard {
         this.wait = wait;
         this.webElement = webElement;
         this.wizardId = wizardId;
-    }
-
-    /**
-     * @deprecated (to remove with next release 3.0.x, please use method createByComponentId ( WebDriver driver, WebDriverWait wait, String wizardId))
-     */
-    @Deprecated
-    public static Wizard createWizard(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, OSS_WINDOW_XPATH);
-        WebElement webElement = driver.findElement(By.xpath(OSS_WINDOW_XPATH));
-        String wizardId = CSSUtils.getAttributeValue(CSSUtils.TEST_ID, webElement);
-        return new Wizard(driver, wait, webElement, wizardId);
     }
 
     public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String wizardId) {
