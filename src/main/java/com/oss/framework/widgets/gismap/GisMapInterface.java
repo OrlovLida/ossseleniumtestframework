@@ -19,4 +19,10 @@ public interface GisMapInterface {
     void dragAndDropObject(int xSource, int ySource, int xDestination, int yDestination);
 
     TreeComponent getLayersTree();
+
+    boolean isCanvasPresent();
+
+    String getStringObjectFromCanvas();
+
+    void setMap(String mapLabel);
 }
