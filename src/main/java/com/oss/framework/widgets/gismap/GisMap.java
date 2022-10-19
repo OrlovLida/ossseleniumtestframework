@@ -111,7 +111,7 @@ public class GisMap implements GisMapInterface {
     }
 
     @Override
-    public String getStringObjectFromCanvas() {
+    public String getCanvasObject() {
         WebElement canvas = gisMapElement.findElement(By.xpath(CANVAS_XPATH));
         return ((JavascriptExecutor) driver)
                 .executeScript("return arguments[0].toDataURL('image/png').substring(21);", canvas).toString();

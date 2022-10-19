@@ -22,7 +22,7 @@ public interface GisMapInterface {
 
     boolean isCanvasPresent();
 
-    String getStringObjectFromCanvas();
+    String getCanvasObject();
 
     void setMap(String mapLabel);
 }
