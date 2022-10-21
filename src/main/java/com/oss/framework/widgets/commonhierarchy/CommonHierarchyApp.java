@@ -68,7 +68,7 @@ public class CommonHierarchyApp extends Widget {
             searchIfAvailable(pathLabels.length, valueLabel);
             List<WebElement> rowCandidates = webElement.findElements(By.xpath(deepestHorizontalSectionPath +
                     SINGLE_CHOOSABLE_ELEMENT_PATH));
-            makeActionOnCorrectElement(valueLabel, rowCandidates, actionName);
+            callAction(valueLabel, rowCandidates, actionName);
             DelayUtils.waitForPageToLoad(driver, webDriverWait);
         }
     }
@@ -97,7 +97,7 @@ public class CommonHierarchyApp extends Widget {
         callAction(valueLabels, "Select", pathLabels);
     }
 
-    private void makeActionOnCorrectElement(String valueLabel, List<WebElement> rowCandidates, String action) {
+    private void callAction(String valueLabel, List<WebElement> rowCandidates, String action) {
         Optional<WebElement> actionButton = rowCandidates.stream()
                 .filter(row -> row.getText().contains(valueLabel))
                 .map(row -> row.findElements(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + action + "']")).stream()
