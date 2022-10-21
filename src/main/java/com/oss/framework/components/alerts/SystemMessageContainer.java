@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
 
 /**
  * @author Gabriela Kasza
@@ -67,14 +66,16 @@ public class SystemMessageContainer implements SystemMessageInterface {
     @Override
     public List<Message> getMessages() {
         log.debug("Starting getting messages");
-        if (isSystemMessagePresent()) {
+        try {
+            DelayUtils.waitBy(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
             expandSystemMessagesContainer();
             List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
             log.debug("Found {} system messages", messageItems.size());
             return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
+        } catch (TimeoutException e) {
+            log.debug("No system message found");
+            return Collections.emptyList();
         }
-        log.debug("No system message found");
-        return Collections.emptyList();
     }
 
     @Override
@@ -136,10 +137,6 @@ public class SystemMessageContainer implements SystemMessageInterface {
         } catch (NoSuchElementException | TimeoutException e) {
             log.warn("Cannot click close button in system message");
         }
-    }
-
-    private boolean isSystemMessagePresent() {
-        return WebElementUtils.isElementPresent(driver, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
     }
 
     private Message toMessage(WebElement messageItem) {
