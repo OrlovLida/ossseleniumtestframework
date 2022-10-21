@@ -6,6 +6,7 @@
  */
 package com.oss.framework.components.alerts;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,12 +65,17 @@ public class SystemMessageContainer implements SystemMessageInterface {
 
     @Override
     public List<Message> getMessages() {
-        log.info("Starting getting messages");
-        DelayUtils.waitForPresence(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
-        expandSystemMessagesContainer();
-        List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
-        log.info("Found {} system messages", messageItems.size());
-        return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
+        log.debug("Starting getting messages");
+        try {
+            DelayUtils.waitBy(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
+            expandSystemMessagesContainer();
+            List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
+            log.debug("Found {} system messages", messageItems.size());
+            return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
+        } catch (TimeoutException e) {
+            log.debug("No system message found");
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -98,14 +104,14 @@ public class SystemMessageContainer implements SystemMessageInterface {
     }
 
     public List<String> getErrors() {
-        log.info("Checking errors");
+        log.debug("Checking errors");
         DelayUtils.waitForPageToLoad(driver, wait);
         expandSystemMessagesContainer();
         List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
-        log.info("Found {} system messages", messageItems.size());
+        log.debug("Found {} system messages", messageItems.size());
         List<Message> messages = messageItems.stream().map(this::toMessage).collect(Collectors.toList()).stream()
                 .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER)).collect(Collectors.toList());
-        log.info("Found {} error messages", messages.size());
+        log.debug("Found {} error messages", messages.size());
         return messages.stream().map(Message::getText).collect(Collectors.toList());
     }
 
