@@ -1,6 +1,7 @@
 package com.oss.framework.widgets.commonhierarchy;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -8,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 
@@ -20,10 +22,9 @@ public class CommonHierarchyApp extends Widget {
     private static final String HORIZONTAL_SECTION_PATTERN = "//div[@class='CommonHierarchyAppList horizontal'][%d]";
     private static final String SEARCH_FIELD_PATH = "//input[contains(@class, 'form-control SearchText')]";
     private static final String SINGLE_CHOOSABLE_ELEMENT_PATH = "//ul[(@class = 'levelElementsList')]//li[@class='levelElement']";
-    private static final String ACTION_BUTTON_PATH = ".//button[contains(@class, 'squareButton')]";
+    private static final String ACTION_BUTTON_CSS = "button.squareButton";
     private static final String COMPONENT_CLASS_NAME = "CommonHierarchyApp";
     private static final String ELEMENT_TO_CLICK_PATTERN = "//span[text()='%s']";
-    private static final String SEARCH_RESULT_XPATH = "(//div[@class='CommonHierarchyApp']//span[text()='%s'])";
 
     private CommonHierarchyApp(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -97,14 +98,13 @@ public class CommonHierarchyApp extends Widget {
     }
 
     private void makeActionOnCorrectElement(String valueLabel, List<WebElement> rowCandidates, String action) {
-        for (WebElement correctRowCandidate : rowCandidates) {
-            String elementText = correctRowCandidate.getText();
-            if (elementText.contains(valueLabel) && elementText.contains(action)) {
-                WebElement optionButton = correctRowCandidate.findElement(By.xpath(ACTION_BUTTON_PATH));
-                optionButton.click();
-                DelayUtils.waitForPageToLoad(driver, webDriverWait);
-            }
-        }
+        Optional<WebElement> actionButton = rowCandidates.stream()
+                .filter(row -> row.getText().contains(valueLabel))
+                .map(row -> row.findElements(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + action + "']")).stream()
+                        .findFirst()
+                        .orElse(row.findElement(By.cssSelector(ACTION_BUTTON_CSS))))
+                .findFirst();
+        actionButton.ifPresent(WebElement::click);
     }
 
     private void searchIfAvailable(int depthLevel, String phraseToSearchFor) {
@@ -124,19 +124,5 @@ public class CommonHierarchyApp extends Widget {
         return !webElement.findElements(By.xpath(horizontalSectionPath + SEARCH_FIELD_PATH)).isEmpty();
     }
 
-    private void setValue(int hierarchyLevel, String value) {
-        webElement.click();
-        DelayUtils.sleep();//wait for cursor
-        webElement.findElement(By.xpath("(.//input)[" + hierarchyLevel + "]"))
-                .sendKeys(value);
-        this.webElement.findElement(By.xpath("(.//button)")).click();
-        this.webElement.findElement(By.xpath("(.//button)")).click();
-        DelayUtils.sleep();
-    }
 
-    private void selectObject(String value) {
-        String searchResultXpath = String.format(SEARCH_RESULT_XPATH, value);
-        DelayUtils.waitByXPath(webDriverWait, searchResultXpath);
-        webElement.findElement(By.xpath(searchResultXpath)).click();
-    }
 }
