@@ -259,6 +259,10 @@ public class TreeTableWidget extends Widget implements TableInterface {
         return getTableComponent().getVisibleRows();
     }
 
+    public TableComponent.Row getRow(int index) {
+        return getTableComponent().getRow(index);
+    }
+
     public void clickRow(int row) {
         getTableComponent().clickRow(row);
     }

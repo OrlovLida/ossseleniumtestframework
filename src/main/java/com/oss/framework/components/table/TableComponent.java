@@ -44,6 +44,7 @@ public class TableComponent {
     private static final String DATA_COL = "data-col";
     private static final String NOT_CELL_CHECKBOX_CSS = ":not(.table-component__cell__checkbox)";
     private static final String CELL_ROW_PATTERN = "[" + DATA_ROW + "='%s']";
+    private static final String CONTEXT_ACTIONS_CELL = "[" + CSSUtils.TEST_ID + "= 'cell-row-%s-col-contextActions']";
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
     private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s'] ." + TABLE_COMPONENT_CLASS;
     private static final String TABLE_COMPONENT_ID_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s']." + TABLE_COMPONENT_CLASS;
@@ -798,13 +799,19 @@ public class TableComponent {
         }
 
         public void callAction(String groupId, String actionId) {
-            Actions actions = new Actions(driver);
-            actions.moveToElement(tableComponent).build().perform();
-
-            InlineMenu menu = InlineMenu.create(tableComponent, driver, webDriverWait);
-            menu.callAction(groupId, actionId);
+            WebElement action = getContextActionsCellElement();
+            moveToElement(driver, action);
+            InlineMenu.create(action, driver, webDriverWait).callAction(groupId, actionId);
         }
 
-    }
+        public void callAction(String actionId) {
+            WebElement action = getContextActionsCellElement();
+            moveToElement(driver, action);
+            InlineMenu.create(action, driver, webDriverWait).callAction(actionId);
+        }
 
+        private WebElement getContextActionsCellElement() {
+            return tableComponent.findElement(By.cssSelector(String.format(CONTEXT_ACTIONS_CELL, index)));
+        }
+    }
 }
