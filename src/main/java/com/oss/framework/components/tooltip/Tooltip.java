@@ -22,7 +22,7 @@ public class Tooltip {
 
     public static Tooltip create(WebDriver driver, WebDriverWait wait, String componentId) {
         WebElement component = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + componentId + "']"));
-        DelayUtils.waitBy(wait, By.xpath("//div[@class='form-hint']"));
+        DelayUtils.waitBy(wait, By.className("form-hint"));
         WebElement toolTip = component.findElement(By.className("form-hint"));
         return new Tooltip(driver, toolTip);
     }

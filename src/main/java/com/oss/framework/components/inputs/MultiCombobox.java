@@ -21,8 +21,8 @@ public class MultiCombobox extends Input {
     private static final String TITLE_ITEM_EQUAL_XPATH = ".//div[@title='%s']";
     private static final String CLEAR_XPATH =
             ".//div[@" + CSSUtils.TEST_ID + "='%s-input']//i[contains(@class,'OSSIcon ossfont-close button-close')]";
-    private static final String LABEL_XPATH = ".//span[@class='oss-input__input-label']";
-    private static final String TAGS_XPATH = ".//div[@class='tags-input__tag']";
+    private static final String LABEL_CSS = "span.oss-input__input-label";
+    private static final String TAGS_CLASS = "tags-input__tag";
     private static final String TAGS_LABEL = "tags-input__label";
 
     private MultiCombobox(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
@@ -62,7 +62,7 @@ public class MultiCombobox extends Input {
 
     @Override
     public Data getValue() {
-        List<WebElement> dataValues = webElement.findElements(By.xpath(TAGS_XPATH));
+        List<WebElement> dataValues = webElement.findElements(By.className(TAGS_CLASS));
         List<String> values = dataValues.stream().map(value -> value.findElement(By.className(TAGS_LABEL)).getText())
                 .collect(Collectors.toList());
         return Data.createMultiData(values);
@@ -90,7 +90,7 @@ public class MultiCombobox extends Input {
 
     @Override
     public String getLabel() {
-        return webElement.findElement(By.xpath(LABEL_XPATH)).getAttribute("textContent");
+        return webElement.findElement(By.cssSelector(LABEL_CSS)).getAttribute("textContent");
     }
 
     private void acceptStringValue(WebElement input) {
