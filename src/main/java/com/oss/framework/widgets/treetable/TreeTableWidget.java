@@ -259,6 +259,10 @@ public class TreeTableWidget extends Widget implements TableInterface {
         return getTableComponent().getVisibleRows();
     }
 
+    public TableComponent.Row getRow(int index) {
+        return getTableComponent().getRow(index);
+    }
+
     public void clickRow(int row) {
         getTableComponent().clickRow(row);
     }
@@ -285,6 +289,9 @@ public class TreeTableWidget extends Widget implements TableInterface {
 
     public ActionsContainer getContextActions() {
         return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
+    }
+    public void setCellValue(int row, String columnId, String value){
+        getTableComponent().setCellValue(row, columnId, value);
     }
 
     private TableComponent getTableComponent() {
