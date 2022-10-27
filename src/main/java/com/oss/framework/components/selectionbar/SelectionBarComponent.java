@@ -84,7 +84,7 @@ public class SelectionBarComponent {
     }
 
     private boolean isShowSelectedPresent() {
-        return WebElementUtils.isElementPresent(widget, By.cssSelector(SHOW_ONLY_SELECTED_BUTTON_ACTIVE_XPATH));
+        return WebElementUtils.isElementPresent(widget, By.xpath(SHOW_ONLY_SELECTED_BUTTON_ACTIVE_XPATH));
     }
 
     private boolean isUnselectAllPresent() {
