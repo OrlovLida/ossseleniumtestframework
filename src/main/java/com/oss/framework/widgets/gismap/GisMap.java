@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.components.tree.TreeComponent;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
@@ -32,9 +33,9 @@ public class GisMap implements GisMapInterface {
         this.gisMapElement = gisMapElement;
     }
 
-    public static GisMapInterface create(WebDriver driver, WebDriverWait wait) {
+    public static GisMapInterface create(WebDriver driver, WebDriverWait wait, String widgetId) {
         DelayUtils.waitBy(wait, By.className(GIS_MAP_CLASS));
-        WebElement gisMap = driver.findElement(By.className(GIS_MAP_CLASS));
+        WebElement gisMap = driver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
         return new GisMap(driver, wait, gisMap);
     }
 
