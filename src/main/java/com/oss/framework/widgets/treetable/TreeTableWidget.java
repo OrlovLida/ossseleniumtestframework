@@ -290,8 +290,13 @@ public class TreeTableWidget extends Widget implements TableInterface {
     public ActionsContainer getContextActions() {
         return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
     }
-    public void setCellValue(int row, String columnId, String value){
+
+    public void setCellValue(int row, String columnId, String value) {
         getTableComponent().setCellValue(row, columnId, value);
+    }
+
+    public boolean isValuePresent(String value, String columnId) {
+        return getTableComponent().isValuePresent(value, columnId);
     }
 
     private TableComponent getTableComponent() {
