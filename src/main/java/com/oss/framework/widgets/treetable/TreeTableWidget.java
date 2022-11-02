@@ -325,4 +325,12 @@ public class TreeTableWidget extends Widget implements TableInterface {
         }
         return advancedSearch;
     }
+
+    public void selectAllRows() {
+        getTableComponent().selectAll();
+    }
+
+    public Boolean isHeaderCheckboxSelected() {
+        return getTableComponent().isHeaderCheckboxSelected();
+    }
 }

@@ -111,6 +111,10 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getCellValue(rowIndex, columnId);
     }
 
+    public Boolean isHeaderCheckboxSelected() {
+        return getTableComponent().isHeaderCheckboxSelected();
+    }
+
     public boolean isValuePresent(String value, String columnId) {
         return getTableComponent().isValuePresent(value, columnId);
     }
