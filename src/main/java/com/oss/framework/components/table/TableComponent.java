@@ -99,6 +99,10 @@ public class TableComponent {
         Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).click();
     }
 
+    public Boolean isHeaderCheckboxSelected() {
+        return Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).findElement(By.xpath(".//input")).isSelected();
+    }
+
     public void unselectRow(int index) {
         Row row = getRow(index);
         row.unselectRow();
@@ -215,7 +219,7 @@ public class TableComponent {
         return cell.getText();
     }
 
-    public void setCellValue(int row, String columnId, String value){
+    public void setCellValue(int row, String columnId, String value) {
         Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
         cell.setValue(value);
     }

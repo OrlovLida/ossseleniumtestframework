@@ -290,7 +290,8 @@ public class TreeTableWidget extends Widget implements TableInterface {
     public ActionsContainer getContextActions() {
         return ActionsContainer.createFromParent(this.webElement, this.driver, this.webDriverWait);
     }
-    public void setCellValue(int row, String columnId, String value){
+
+    public void setCellValue(int row, String columnId, String value) {
         getTableComponent().setCellValue(row, columnId, value);
     }
 
@@ -319,5 +320,13 @@ public class TreeTableWidget extends Widget implements TableInterface {
             advancedSearch = AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
         }
         return advancedSearch;
+    }
+
+    public void selectAllRows() {
+        getTableComponent().selectAll();
+    }
+
+    public Boolean isHeaderCheckboxSelected() {
+        return getTableComponent().isHeaderCheckboxSelected();
     }
 }
