@@ -142,7 +142,7 @@ public class EditableList extends Widget {
         }
 
         public Cell getCell(String columnId) {
-            DelayUtils.waitByXPath(wait, String.format(CELL_PATTERN, columnId));
+            DelayUtils.waitForPresence(wait, By.xpath(String.format(CELL_PATTERN, columnId)));
             WebElement cell = webElement.findElement(By.xpath(String.format(CELL_PATTERN, columnId)));
             return new Cell(driver, wait, cell);
         }
