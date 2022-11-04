@@ -38,7 +38,6 @@ public class InlineForm {
     }
 
     public void clickButtonByLabel(String label) {
-        DelayUtils.waitForPresence(wait, By.xpath("//a[contains(@class,'CommonButton btn') and text()='" + label + "']"));
         WebElement button = this.webElement.findElement(By.xpath(".//a[contains(text(),'" + label + "')]"));
         button.click();
     }
