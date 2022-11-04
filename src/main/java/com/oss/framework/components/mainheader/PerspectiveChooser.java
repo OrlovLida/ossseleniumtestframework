@@ -21,7 +21,7 @@ public class PerspectiveChooser {
     private static final String PLAN = "Plan";
     private static final String WITH_REMOVE = "With removed";
     private static final String WITHOUT_REMOVED = "Without removed";
-    private static final String CURRENT_TASK = "Current task";
+    private static final String CURRENT_TASK = "Display my current Task";
     private static final String PLAN_CONTEXT_WIZARD_ID = "plaPlanChooserView_prompt-card";
     private static final String EXISTING_PROJECTS_INPUT_ID = "searchBoxId";
     private static final String SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID = "plaPlanChooserView_planChooserFormButtons-1";
