@@ -197,7 +197,6 @@ public class EditableList extends Widget {
             private static final String EDIT_XPATH = ".//ancestor::div[contains(@class, 'list__cell--editable')]//i[@aria-label='EDIT']";
             private static final String CHECKBOX_INPUT_XPATH = ".//input[@type='checkbox']";
             private static final String CHECKBOX_INPUT_ATTRIBUTE_NAME = "value";
-            private static final String SAVE_BUTTON_XPATH = "//a[contains(@class,'CommonButton btn') and text()='Save']";
             private final WebDriver driver;
             private final WebDriverWait wait;
             private final WebElement webElement;
@@ -236,7 +235,6 @@ public class EditableList extends Widget {
                     Input component = inlineForm.getComponent(componentId);
                     DelayUtils.sleep(500);
                     component.setSingleStringValue(value);
-                    DelayUtils.waitForPresence(wait, By.xpath(SAVE_BUTTON_XPATH));
                     inlineForm.clickButtonByLabel(SAVE_BUTTON);
                     return;
                 }
