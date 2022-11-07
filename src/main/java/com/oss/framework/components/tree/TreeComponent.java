@@ -217,7 +217,7 @@ public class TreeComponent {
         private static final String POPUP_CONTAINER_CSS = ".popupContainer";
         private static final String ARIA_LABEL_MINUS_CSS = "[aria-label='MINUS']";
         private static final String ARIA_LABEL_ADD_CSS = "[aria-label='ADD']";
-        private static final String LABEL_NODE_CSS = ".OSSRichText";
+        private static final String LABEL_NODE_CSS = ".OSSRichText,.more-button";
         private static final String OSS_ICON_CLASS = "OSSIcon";
         private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
         private final WebDriver driver;
