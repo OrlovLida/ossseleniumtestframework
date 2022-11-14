@@ -53,7 +53,7 @@ public class OldTreeTableWidget extends Widget {
 
     public void expandNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
-        Node.createNode(driver, webDriverWait, rowNumber).expandNode();
+        Node.createNode(driver, webDriverWait, webElement, rowNumber).expandNode();
     }
 
     public void selectNode(String value, String attributeNameLabel) {
@@ -67,11 +67,11 @@ public class OldTreeTableWidget extends Widget {
 
     public void collapseNode(String value, String attributeNameLabel) {
         int rowNumber = createTable().getRowNumber(value, attributeNameLabel);
-        Node.createNode(driver, webDriverWait, rowNumber).collapseNode();
+        Node.createNode(driver, webDriverWait, webElement, rowNumber).collapseNode();
     }
 
     public void collapseNode(int rowNumber) {
-        Node node = Node.createNode(driver, webDriverWait, rowNumber);
+        Node node = Node.createNode(driver, webDriverWait, webElement, rowNumber);
         node.collapseNode();
     }
 
@@ -174,8 +174,8 @@ public class OldTreeTableWidget extends Widget {
             this.nodeElement = nodeElement;
         }
 
-        static Node createNode(WebDriver driver, WebDriverWait wait, int row) {
-            WebElement firstColumn = driver.findElement(By.xpath(FIRST_COLUMN));
+        static Node createNode(WebDriver driver, WebDriverWait wait, WebElement widget, int row) {
+            WebElement firstColumn = widget.findElement(By.xpath(FIRST_COLUMN));
             List<WebElement> nodes = firstColumn.findElements(By.xpath(CELL_ROW));
             if (nodes.size() < row) {
                 throw new NoSuchElementException(CANNOT_FIND_ROW_EXCEPTION);
