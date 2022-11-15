@@ -6,16 +6,6 @@
  */
 package com.oss.framework.widgets.list;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.categorylist.CategoryList;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.ComponentFactory;
@@ -25,6 +15,15 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 /**
  * @author Gabriela Kasza
@@ -143,7 +142,7 @@ public class EditableList extends Widget {
         }
 
         public Cell getCell(String columnId) {
-            DelayUtils.waitByXPath(wait, String.format(CELL_PATTERN, columnId));
+            DelayUtils.waitForPresence(wait, By.xpath(String.format(CELL_PATTERN, columnId)));
             WebElement cell = webElement.findElement(By.xpath(String.format(CELL_PATTERN, columnId)));
             return new Cell(driver, wait, cell);
         }

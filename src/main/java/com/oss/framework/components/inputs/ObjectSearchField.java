@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
@@ -46,10 +47,15 @@ public class ObjectSearchField extends Input {
     public void setValue(Data value, boolean isContains) {
         DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
         if (!isSingleComponent()) {
-            setValueForMultiComponent(value);
+            setValueForMultiComponent(value, isContains);
         } else {
-            setSingleValue(value.getStringValue(), webElement.findElement(By.xpath(INPUT)));
+            setSingleValueWebElement(value.getStringValue(), By.xpath(INPUT), isContains);
         }
+    }
+
+    public void setFirstResult(String value) {
+        setSingleValueWebElement(value, By.xpath(INPUT));
+        chooseFirstResult();
     }
 
     @Override
@@ -105,33 +111,55 @@ public class ObjectSearchField extends Input {
         return !webElement.findElements(By.className("md-input-empty")).isEmpty();
     }
 
+    private void setValueForMultiComponent(Data value, boolean isContains) {
+        WebElementUtils.clickWebElement(driver, webElement);
+        if (value.isList()) {
+            setMultiValues(value, By.xpath(OSF_INNER_INPUT), isContains);
+        } else {
+            setSingleValueDriver(value.getStringValue(), By.xpath(OSF_INNER_INPUT), isContains);
+        }
+        WebElementUtils.clickWebElement(driver, webElement);//TODO change to ESC after OSSWEB-20623
+    }
+
+    private void setMultiValues(Data values, By by, boolean isContains) {
+        values.getStringValues().forEach(value -> setSingleValueDriver(value, by, isContains));
+    }
+
+    private void setSingleValueDriver(String singleValue, By by, boolean isContains) {
+        driver.findElement(by).sendKeys(Keys.CONTROL + "a");
+        driver.findElement(by).sendKeys(Keys.DELETE);
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
+        driver.findElement(by).sendKeys(singleValue);
+        chooseResult(singleValue, isContains);
+    }
+
+    private void setSingleValueWebElement(String singleValue, By by, boolean isContains) {
+        setSingleValueWebElement(singleValue, by);
+        chooseResult(singleValue, isContains);
+    }
+
+    private void setSingleValueWebElement(String singleValue, By by) {
+        webElement.findElement(by).sendKeys(Keys.CONTROL + "a");
+        webElement.findElement(by).sendKeys(Keys.DELETE);
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
+        webElement.findElement(by).sendKeys(singleValue);
+    }
+
+    private void chooseResult(String singleValue, boolean isContains) {
+        DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
+        DelayUtils.waitForSpinners(webDriverWait, webElement);
+        DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
+        if (isContains) {
+            dropdownList.selectOptionContains(singleValue);
+            return;
+        }
+        dropdownList.selectOption(singleValue);
+    }
+
     private void chooseFirstResult() {
         DelayUtils.waitByXPath(webDriverWait, OSF_DROP_DOWN_LIST);
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
-    }
-
-    private void setValueForMultiComponent(Data value) {
-        WebElementUtils.clickWebElement(driver, webElement);
-        WebElement search = driver.findElement(By.xpath(OSF_INNER_INPUT));
-        if (value.isList()) {
-            setMultiValues(value, search);
-        } else {
-            setSingleValue(value.getStringValue(), search);
-        }
-        WebElementUtils.clickWebElement(driver, webElement);
-    }
-
-    private void setMultiValues(Data values, WebElement search) {
-        values.getStringValues().forEach(value -> setSingleValue(value, search));
-    }
-
-    private void setSingleValue(String singleValue, WebElement input) {
-        input.sendKeys(Keys.CONTROL + "a");
-        input.sendKeys(Keys.DELETE);
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
-        input.sendKeys(singleValue);
-        chooseFirstResult();
     }
 }

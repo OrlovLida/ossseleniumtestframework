@@ -3,6 +3,7 @@ package com.oss.framework.widgets.table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -167,6 +168,21 @@ public class OldTable extends Widget implements TableInterface {
         getColumn(attributeLabel).selectCellByValue(value);
     }
 
+    public void selectRowContains(String attributeLabel, String value) {
+        waitForWidgetById(webDriverWait, id);
+        getColumn(attributeLabel).selectCellByValueContains(value);
+    }
+
+    public boolean isValuePresent(String attributeLabel, String value) {
+        waitForWidgetById(webDriverWait, id);
+        return getColumn(attributeLabel).getOptionalCell(value).isPresent();
+    }
+
+    public boolean isValuePresentContains(String attributeLabel, String value) {
+        waitForWidgetById(webDriverWait, id);
+        return getColumn(attributeLabel).getOptionalCellContains(value).isPresent();
+    }
+
     public String getCellValue(int index, String attributeLabel) {
         return getColumn(attributeLabel).getValueCell(index);
     }
@@ -239,11 +255,6 @@ public class OldTable extends Widget implements TableInterface {
 
     @Override
     public List<TableRow> getSelectedRows() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
-    }
-
-    @Override
-    public String getCellValueById(int row, String columnId) {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED_EXCEPTION);
     }
 
@@ -470,6 +481,10 @@ public class OldTable extends Widget implements TableInterface {
             selectCell(getCell(value));
         }
 
+        private void selectCellByValueContains(String value) {
+            selectCell(getCellContains(value));
+        }
+
         private void unselectCellByValue(String value) {
             unselectCell(getCell(value));
         }
@@ -612,10 +627,24 @@ public class OldTable extends Widget implements TableInterface {
         }
 
         private WebElement getCell(String value) {
+            return getOptionalCell(value).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
+        }
+
+        private Optional<WebElement> getOptionalCell(String value) {
+            return getCellsList().stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst();
+        }
+
+        private WebElement getCellContains(String value) {
+            return getOptionalCellContains(value).orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
+        }
+
+        private Optional<WebElement> getOptionalCellContains(String value) {
+            return getCellsList().stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().contains(value)).findFirst();
+        }
+
+        private List<WebElement> getCellsList() {
             moveToHeader();
-            List<WebElement> cells = columnElement.findElements(By.xpath(CELL_ROW_XPATH));
-            return cells.stream().filter(cell -> cell.findElement(By.xpath(RICH_TEXT_XPATH)).getText().equals(value)).findFirst()
-                    .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CELL_EXCEPTION));
+            return columnElement.findElements(By.xpath(CELL_ROW_XPATH));
         }
 
         private int countRows() {

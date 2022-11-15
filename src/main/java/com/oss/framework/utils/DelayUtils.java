@@ -91,21 +91,27 @@ public class DelayUtils {
     public static void waitForElementDisappear(WebDriverWait wait, By by) {
         waitForNumberOfElementsToBe(wait, by, 0);
     }
-    
+
     public static void waitForVisibility(WebDriverWait wait, List<WebElement> webElements) {
         wait.until(ExpectedConditions.visibilityOfAllElements(webElements));
     }
-    
+
     public static void waitForClickability(WebDriverWait wait, WebElement webelement) {
         wait.until(ExpectedConditions.elementToBeClickable(webelement));
     }
-    
+
     public static void waitForPageToLoad(WebDriver driver, WebDriverWait wait) {
+        if (!isPageLoaded(driver, wait, 120000)) {
+            log.warn("Page did not load for a two minutes!");
+        }
+    }
+
+    public static boolean isPageLoaded(WebDriver driver, WebDriverWait wait, int expectedTime) {
         DelayUtils.sleep(1000);
         waitByXPath(wait, OSS_APP_XPATH);
         List<WebElement> newList = listOfLoaders(driver);
         long startTime = System.currentTimeMillis();
-        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < 120000)) {
+        while ((!newList.isEmpty()) && ((System.currentTimeMillis() - startTime) < expectedTime)) {
             try {
                 wait.until(ExpectedConditions.invisibilityOfAllElements(newList));
             } catch (TimeoutException | ScriptTimeoutException e) {
@@ -114,9 +120,7 @@ public class DelayUtils {
             DelayUtils.sleep(500);
             newList = listOfLoaders(driver);
         }
-        if ((System.currentTimeMillis() - startTime) > 120000) {
-            log.warn("Page did not load for a two minutes!");
-        }
+        return (System.currentTimeMillis() - startTime) <= expectedTime;
     }
     
     public static void waitForButtonDisappear(WebDriver driver, String buttonXpath) {

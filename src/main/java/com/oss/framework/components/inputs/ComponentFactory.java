@@ -63,7 +63,8 @@ public class ComponentFactory {
             case NUMBER_FIELD: {
                 return NumberField.create(webDriver, wait, componentId);
             }
-            case OBJECT_SEARCH_FIELD: {
+            case OBJECT_SEARCH_FIELD:
+            case OBJECT_SEARCH_FIELD_REST: {
                 return ObjectSearchField.create(webDriver, wait, componentId);
             }
             case PASSWORD_FIELD: {
@@ -72,8 +73,7 @@ public class ComponentFactory {
             case PHONE_FIELD: {
                 return PhoneField.create(webDriver, wait, componentId);
             }
-            case RADIO_BUTTONS:
-            case RADIO_BUTTON: {
+            case RADIO_BUTTONS: {
                 return RadioButton.create(webDriver, wait, componentId);
             }
             case SCRIPT_COMPONENT: {
@@ -154,7 +154,8 @@ public class ComponentFactory {
             case NUMBER_FIELD: {
                 return NumberField.createFromParent(parent, webDriver, wait, componentId);
             }
-            case OBJECT_SEARCH_FIELD: {
+            case OBJECT_SEARCH_FIELD:
+            case OBJECT_SEARCH_FIELD_REST: {
                 return ObjectSearchField.createFromParent(parent, webDriver, wait, componentId);
             }
             case PASSWORD_FIELD: {
@@ -163,8 +164,7 @@ public class ComponentFactory {
             case PHONE_FIELD: {
                 return PhoneField.createFromParent(parent, webDriver, wait, componentId);
             }
-            case RADIO_BUTTONS:
-            case RADIO_BUTTON: {
+            case RADIO_BUTTONS: {
                 return RadioButton.create(webDriver, wait, componentId);
             }
             case SCRIPT_COMPONENT: {

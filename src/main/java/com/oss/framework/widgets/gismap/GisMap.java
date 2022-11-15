@@ -1,6 +1,7 @@
 package com.oss.framework.widgets.gismap;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,13 +11,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.contextactions.ActionsInterface;
 import com.oss.framework.components.contextactions.OldActionsContainer;
 import com.oss.framework.components.tree.TreeComponent;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class GisMap implements GisMapInterface {
 
-    private static final String GIS_MAP_XPATH = "//div[@class='simple-card-container']";
+    private static final String GIS_MAP_CLASS = "simple-card-container";
     private static final String GIS_MAP_SEARCH_XPATH = "//input[@class='form-control mapSearchInput']";
     private static final String CANVAS_XPATH = "//canvas";
+    private static final String MAP_CHOOSER_WRAPPER_CLASS = "mapChooserWrapper";
+    private static final String CHOOSE_MAP_PATTERN = ".//div[text()='%s']";
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -28,10 +33,15 @@ public class GisMap implements GisMapInterface {
         this.gisMapElement = gisMapElement;
     }
 
-    public static GisMapInterface create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, GIS_MAP_XPATH);
-        WebElement gisMap = driver.findElement(By.xpath(GIS_MAP_XPATH));
+    public static GisMapInterface create(WebDriver driver, WebDriverWait wait, String widgetId) {
+        DelayUtils.waitBy(wait, By.className(GIS_MAP_CLASS));
+        WebElement gisMap = driver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
         return new GisMap(driver, wait, gisMap);
+    }
+
+    @Override
+    public boolean isCanvasPresent() {
+        return WebElementUtils.isElementPresent(gisMapElement, By.xpath(CANVAS_XPATH));
     }
 
     @Override
@@ -99,5 +109,23 @@ public class GisMap implements GisMapInterface {
     @Override
     public TreeComponent getLayersTree() {
         return TreeComponent.create(driver, wait, gisMapElement);
+    }
+
+    @Override
+    public String getCanvasObject() {
+        WebElement canvas = gisMapElement.findElement(By.xpath(CANVAS_XPATH));
+        return ((JavascriptExecutor) driver)
+                .executeScript("return arguments[0].toDataURL('image/png').substring(21);", canvas).toString();
+    }
+
+    @Override
+    public void setMap(String mapLabel) {
+        openMapChooser().findElement(By.xpath(String.format(CHOOSE_MAP_PATTERN, mapLabel))).click();
+    }
+
+    private WebElement openMapChooser() {
+        WebElement mapChooser = gisMapElement.findElement(By.className(MAP_CHOOSER_WRAPPER_CLASS));
+        mapChooser.click();
+        return mapChooser;
     }
 }

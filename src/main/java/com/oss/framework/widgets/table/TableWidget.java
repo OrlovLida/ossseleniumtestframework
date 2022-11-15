@@ -114,6 +114,18 @@ public class TableWidget extends Widget implements TableInterface {
         return getTableComponent().getCellValue(rowIndex, columnId);
     }
 
+    public Boolean isHeaderCheckboxSelected() {
+        return getTableComponent().isHeaderCheckboxSelected();
+    }
+
+    public boolean isValuePresent(String value, String columnId) {
+        return getTableComponent().isValuePresent(value, columnId);
+    }
+
+    public boolean isValuePresentContains(String value, String columnId) {
+        return getTableComponent().isValuePresentContains(value, columnId);
+    }
+
     public boolean isCellValueBold(int row, String columnId) {
         return getTableComponent().isCellValueBold(row, columnId);
     }
@@ -182,15 +194,6 @@ public class TableWidget extends Widget implements TableInterface {
     public List<TableRow> getSelectedRows() {
         return getTableComponent().getVisibleRows().stream()
                 .filter(TableRow::isSelected).collect(Collectors.toList());
-    }
-
-    /**
-     * @deprecated method will be removed in 3.0.x release, use instead getCellValue
-     */
-    @Override
-    @Deprecated
-    public String getCellValueById(int row, String columnId) {
-        return getCellValue(row, columnId);
     }
 
     public void clickRow(int row) {

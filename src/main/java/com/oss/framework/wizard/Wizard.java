@@ -1,6 +1,8 @@
 package com.oss.framework.wizard;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -49,17 +51,6 @@ public class Wizard {
         this.wait = wait;
         this.webElement = webElement;
         this.wizardId = wizardId;
-    }
-
-    /**
-     * @deprecated (to remove with next release 3.0.x, please use method createByComponentId ( WebDriver driver, WebDriverWait wait, String wizardId))
-     */
-    @Deprecated
-    public static Wizard createWizard(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitByXPath(wait, OSS_WINDOW_XPATH);
-        WebElement webElement = driver.findElement(By.xpath(OSS_WINDOW_XPATH));
-        String wizardId = CSSUtils.getAttributeValue(CSSUtils.TEST_ID, webElement);
-        return new Wizard(driver, wait, webElement, wizardId);
     }
 
     public static Wizard createByComponentId(WebDriver driver, WebDriverWait wait, String wizardId) {
@@ -192,8 +183,8 @@ public class Wizard {
         return TableComponent.createById(driver, wait, tableComponentId);
     }
 
-    public String getWizardName(){
-       return webElement.findElement(By.xpath(ANCESTOR_XPATH)).findElement(By.cssSelector(CARD_HEADER_LABEL_CSS)).getText();
+    public String getWizardName() {
+        return webElement.findElement(By.xpath(ANCESTOR_XPATH)).findElement(By.cssSelector(CARD_HEADER_LABEL_CSS)).getText();
     }
 
     private void clickButton(String xpath) {
@@ -227,6 +218,12 @@ public class Wizard {
 
     public String getCurrentStepTitle() {
         return getCurrentStep().getText();
+    }
+
+    public List<String> getWizardStepsTitles() {
+        if (isStepsPresent())
+            return getWizardSteps().stream().map(WebElement::getText).collect(Collectors.toList());
+        else return Collections.emptyList();
     }
 
     public boolean isNextStepPresent() {

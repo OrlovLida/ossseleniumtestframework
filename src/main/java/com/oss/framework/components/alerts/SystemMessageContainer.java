@@ -6,6 +6,7 @@
  */
 package com.oss.framework.components.alerts;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ import com.oss.framework.utils.DelayUtils;
  */
 
 public class SystemMessageContainer implements SystemMessageInterface {
-    
+
     private static final Logger log = LoggerFactory.getLogger(SystemMessageContainer.class);
     private static final String CLOSE_SINGLE_MESSAGE_BUTTON = ".//*[contains(@class,'closeButton')]";
     private static final String CLOSE_MESSAGE_CONTAINER_BUTTON = ".//i[@aria-label='Close']";
@@ -47,13 +48,13 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private WebDriver driver;
     private WebDriverWait wait;
     private WebElement messageContainer;
-    
+
     private SystemMessageContainer(WebDriver driver, WebDriverWait wait, WebElement messageContainer) {
         this.driver = driver;
         this.wait = wait;
         this.messageContainer = messageContainer;
     }
-    
+
     public static SystemMessageContainer create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPresence(wait, By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
         WebElement messageContainer = driver.findElement(By.xpath(PATH_TO_SYSTEM_MESSAGE_CONTAINER));
@@ -61,22 +62,27 @@ public class SystemMessageContainer implements SystemMessageInterface {
         builder.moveToElement(messageContainer).build().perform();
         return new SystemMessageContainer(driver, wait, messageContainer);
     }
-    
+
     @Override
     public List<Message> getMessages() {
-        log.info("Starting getting messages");
-        DelayUtils.waitForPresence(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
-        expandSystemMessagesContainer();
-        List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
-        log.info("Found {} system messages", messageItems.size());
-        return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
+        log.debug("Starting getting messages");
+        try {
+            DelayUtils.waitBy(wait, By.className(SYSTEM_MESSAGE_ITEM_CLASS));
+            expandSystemMessagesContainer();
+            List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
+            log.debug("Found {} system messages", messageItems.size());
+            return messageItems.stream().map(this::toMessage).collect(Collectors.toList());
+        } catch (TimeoutException e) {
+            log.debug("No system message found");
+            return Collections.emptyList();
+        }
     }
-    
+
     @Override
     public Optional<Message> getFirstMessage() {
         return getMessages().stream().findFirst();
     }
-    
+
     @Override
     public void close() {
         if (!messageContainer.findElements(By.xpath(CLOSE_MESSAGE_CONTAINER_BUTTON)).isEmpty()) {
@@ -85,46 +91,30 @@ public class SystemMessageContainer implements SystemMessageInterface {
             tryToClose(CLOSE_SINGLE_MESSAGE_BUTTON);
         }
     }
-    
+
     @Override
     public void clickMessageLink() {
         DelayUtils.waitForPresence(wait, By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
         messageContainer.findElement(By.xpath(".//a[contains(@href, '#')]")).click();
     }
-    
+
     @Override
     public void waitForMessageDisappear() {
         DelayUtils.waitForElementDisappear(wait, driver.findElement(By.className(SYSTEM_MESSAGE_ITEM_CLASS)));
     }
 
-    /**
-     * @deprecated (to remove with next release 3.0.x, method is redundant)
-     */
-    @Override
-    @Deprecated
-    public boolean isErrorDisplayed(boolean printErrors) {
-        List<String> errors = getErrors();
-        if (errors.isEmpty()) {
-            return false;
-        }
-        if (printErrors) {
-            printErrors(errors);
-        }
-        return true;
-    }
-    
     public List<String> getErrors() {
-        log.info("Checking errors");
+        log.debug("Checking errors");
         DelayUtils.waitForPageToLoad(driver, wait);
         expandSystemMessagesContainer();
         List<WebElement> messageItems = driver.findElements(By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
-        log.info("Found {} system messages", messageItems.size());
+        log.debug("Found {} system messages", messageItems.size());
         List<Message> messages = messageItems.stream().map(this::toMessage).collect(Collectors.toList()).stream()
                 .filter(message -> message.getMessageType().equals(SystemMessageContainer.MessageType.DANGER)).collect(Collectors.toList());
-        log.info("Found {} error messages", messages.size());
+        log.debug("Found {} error messages", messages.size());
         return messages.stream().map(Message::getText).collect(Collectors.toList());
     }
-    
+
     public void expandSystemMessagesContainer() {
         if (!messageContainer.findElements(By.xpath(PATH_TO_SHOW_MESSAGES)).isEmpty()) {
             log.debug("Clicking show button in system message");
@@ -134,15 +124,6 @@ public class SystemMessageContainer implements SystemMessageInterface {
         }
     }
 
-    /**
-     * @deprecated (to remove with next release 3.0.x, method is redundant)
-     */
-    @Deprecated
-    private void printErrors(List<String> messages) {
-        messages
-                .forEach(log::error);
-    }
-    
     private void tryToClose(String closeButtonXpath) {
         try {
             log.debug("Closing system message");
@@ -157,7 +138,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
             log.warn("Cannot click close button in system message");
         }
     }
-    
+
     private Message toMessage(WebElement messageItem) {
         DelayUtils.waitForPresence(wait, By.cssSelector(TEXT_CONTAINER_CSS));
         List<WebElement> messagesList = messageItem.findElements(By.xpath(MESSAGE_XPATH));
@@ -172,46 +153,46 @@ public class SystemMessageContainer implements SystemMessageInterface {
         String text = messageItem.findElement(By.cssSelector(TEXT_CONTAINER_CSS)).getText();
         return new Message(text, mapToMassageType(allClasses));
     }
-    
+
     private MessageType mapToMassageType(List<String> classes) {
-        for (String cssClass: classes) {
+        for (String cssClass : classes) {
             switch (cssClass) {
-            case SUCCESS_MESSAGE_TYPE_CLASS: {
-                return MessageType.SUCCESS;
-            }
-            case DANGER_MESSAGE_TYPE_CLASS: {
-                return MessageType.DANGER;
-            }
-            case INFO_MESSAGE_TYPE_CLASS: {
-                return MessageType.INFO;
-            }
-            case WARNING_MESSAGE_TYPE_CLASS: {
-                return MessageType.WARNING;
-            }
-            default:
+                case SUCCESS_MESSAGE_TYPE_CLASS: {
+                    return MessageType.SUCCESS;
+                }
+                case DANGER_MESSAGE_TYPE_CLASS: {
+                    return MessageType.DANGER;
+                }
+                case INFO_MESSAGE_TYPE_CLASS: {
+                    return MessageType.INFO;
+                }
+                case WARNING_MESSAGE_TYPE_CLASS: {
+                    return MessageType.WARNING;
+                }
+                default:
             }
         }
         throw new IllegalArgumentException(CANNOT_MAP_TO_MESSAGE_EXCEPTION);
     }
-    
+
     public enum MessageType {
         DANGER, WARNING, SUCCESS, INFO
     }
-    
+
     public static class Message {
-        
+
         private final String text;
         private final MessageType messageType;
-        
+
         private Message(String text, MessageType messageType) {
             this.text = text;
             this.messageType = messageType;
         }
-        
+
         public String getText() {
             return text;
         }
-        
+
         public MessageType getMessageType() {
             return messageType;
         }

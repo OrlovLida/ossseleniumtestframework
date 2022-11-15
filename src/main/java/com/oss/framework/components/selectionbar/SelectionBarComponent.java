@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class SelectionBarComponent {
 
@@ -47,7 +48,9 @@ public class SelectionBarComponent {
         if (!isActive()) {
             openSelectionBar();
         }
-        widget.findElement(By.cssSelector(UNSELECT_ALL_BUTTON_CSS)).click();
+        if (isUnselectAllPresent()) {
+            widget.findElement(By.cssSelector(UNSELECT_ALL_BUTTON_CSS)).click();
+        }
     }
 
     public void showSelected() {
@@ -81,6 +84,10 @@ public class SelectionBarComponent {
     }
 
     private boolean isShowSelectedPresent() {
-        return !widget.findElements(By.xpath(SHOW_ONLY_SELECTED_BUTTON_ACTIVE_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(widget, By.xpath(SHOW_ONLY_SELECTED_BUTTON_ACTIVE_XPATH));
+    }
+
+    private boolean isUnselectAllPresent() {
+        return WebElementUtils.isElementPresent(widget, By.cssSelector(UNSELECT_ALL_BUTTON_CSS));
     }
 }

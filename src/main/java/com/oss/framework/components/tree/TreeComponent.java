@@ -42,6 +42,7 @@ public class TreeComponent {
     private static final String CANNOT_FIND_NODE_EXCEPTION = "Cannot find Node ";
     private static final String DATA_PATH_LABEL_ATTR = "data-label-path";
     private static final String DATA_PATH_ATTR = "data-path";
+    private static final String HAS_NO_DATA_CLASS = "tree_no_data";
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement treeComponentElement;
@@ -56,6 +57,10 @@ public class TreeComponent {
         DelayUtils.waitForNestedElements(webDriverWait, parent, By.cssSelector(TREE_COMPONENT_NOT_TREE_COMPONENT_LOADER_CSSS));
         WebElement treeComponent = parent.findElement(By.className(TREE_CLASS));
         return new TreeComponent(driver, webDriverWait, treeComponent);
+    }
+
+    public boolean hasNoData() {
+        return WebElementUtils.isElementPresent(treeComponentElement, By.className(HAS_NO_DATA_CLASS));
     }
 
     public void expandNodeByPath(String path) {
@@ -110,12 +115,10 @@ public class TreeComponent {
                     .map(child -> Node.create(driver, webDriverWait, child))
                     .collect(Collectors.toList());
         }
-
     }
 
     private Node getLastVisibleNode(List<Node> visibleNodes) {
         return visibleNodes.get(visibleNodes.size() - 1);
-
     }
 
     private Optional<Node> getNodeByPath(List<String> pathElements, boolean isLabel) {
@@ -127,7 +130,6 @@ public class TreeComponent {
             String tempPath = currentPath.toString();
             List<Node> nodes = getVisibleNodes();
             node = getNode(isLabel, tempPath, nodes);
-
             if (!node.isPresent()) {
                 node = scrollToNode(isLabel, node, tempPath);
             }
@@ -192,7 +194,7 @@ public class TreeComponent {
     }
 
     private boolean isScrollPresent() {
-        return !treeComponentElement.findElements(By.cssSelector(CUSTOM_SCROLLBARS_CSS)).isEmpty();
+        return WebElementUtils.isElementPresent(treeComponentElement, By.cssSelector(CUSTOM_SCROLLBARS_CSS));
     }
 
     private CustomScrolls getCustomScrolls() {
@@ -215,7 +217,7 @@ public class TreeComponent {
         private static final String POPUP_CONTAINER_CSS = ".popupContainer";
         private static final String ARIA_LABEL_MINUS_CSS = "[aria-label='MINUS']";
         private static final String ARIA_LABEL_ADD_CSS = "[aria-label='ADD']";
-        private static final String LABEL_NODE_CSS = ".OSSRichText";
+        private static final String LABEL_NODE_CSS = ".OSSRichText,.more-button";
         private static final String OSS_ICON_CLASS = "OSSIcon";
         private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
         private final WebDriver driver;

@@ -33,6 +33,7 @@ import com.oss.framework.widgets.table.TableRow;
 
 import static com.oss.framework.utils.WebElementUtils.clickWebElement;
 import static com.oss.framework.utils.WebElementUtils.isElementPresent;
+import static com.oss.framework.utils.WebElementUtils.moveToElement;
 
 public class TableComponent {
     private static final String HEADERS_XPATH = ".//div[@class='sticky-table__header']/div";
@@ -43,9 +44,11 @@ public class TableComponent {
     private static final String DATA_COL = "data-col";
     private static final String NOT_CELL_CHECKBOX_CSS = ":not(.table-component__cell__checkbox)";
     private static final String CELL_ROW_PATTERN = "[" + DATA_ROW + "='%s']";
+    private static final String CONTEXT_ACTIONS_CELL = "[" + CSSUtils.TEST_ID + "= 'cell-row-%s-col-contextActions']";
     private static final String TABLE_CONTENT_CSS = ".sticky-table__content";
     private static final String TABLE_COMPONENT_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s'] ." + TABLE_COMPONENT_CLASS;
     private static final String TABLE_COMPONENT_ID_PATTERN = "[" + CSSUtils.TEST_ID + "= '%s']." + TABLE_COMPONENT_CLASS;
+    private static final String CELLS_IN_COLUMN_PATTERN = ".table-component__cell[data-col='%s']";
     private static final String COLUMN_MANAGER_BUTTON = ".table-component__management-btn button";
     private static final By ATTRIBUTES_CHOOSER_OPENED = By.xpath("//div[@id='attributes-management']");
 
@@ -96,20 +99,32 @@ public class TableComponent {
         Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).click();
     }
 
+    public Boolean isHeaderCheckboxSelected() {
+        return Header.getHeader(webElement, Cell.CHECKBOX_COLUMN_ID).findElement(By.xpath(".//input")).isSelected();
+    }
+
     public void unselectRow(int index) {
         Row row = getRow(index);
         row.unselectRow();
     }
 
     public boolean hasNoData() {
-        return !webElement.findElements(By.xpath(EMPTY_DATA_ROW_XPATH)).isEmpty();
+        return WebElementUtils.isElementPresent(webElement, By.xpath(EMPTY_DATA_ROW_XPATH));
     }
 
-    public Optional<Integer> getRowIndex(String value, String columnId) {
-        List<Cell> cells = webElement.findElements(By.cssSelector(".table-component__cell[data-col='" + columnId + "']")).stream()
-                .map(cell -> Cell.createCell(driver, cell)).collect(Collectors.toList());
-        Optional<Cell> cell = cells.stream().filter(c -> c.getText().equals(value)).findFirst();
+    private Optional<Integer> getRowIndex(String value, String columnId) {
+        Optional<Cell> cell = getCells(columnId).stream().filter(c -> c.getText().equals(value)).findFirst();
         return cell.map(Cell::getIndex);
+    }
+
+    private Optional<Integer> getRowIndexContains(String value, String columnId) {
+        Optional<Cell> cell = getCells(columnId).stream().filter(c -> c.getText().contains(value)).findFirst();
+        return cell.map(Cell::getIndex);
+    }
+
+    private List<Cell> getCells(String columnId) {
+        return webElement.findElements(By.cssSelector(String.format(CELLS_IN_COLUMN_PATTERN, columnId))).stream()
+                .map(cell -> Cell.createCell(driver, cell)).collect(Collectors.toList());
     }
 
     public Row getRow(String value, String columnId) {
@@ -130,6 +145,14 @@ public class TableComponent {
                 .map(Integer::parseInt).sorted().collect(Collectors.toList());
 
         return rowIds.stream().map(index -> new Row(this.driver, this.webDriverWait, this.webElement, index)).collect(Collectors.toList());
+    }
+
+    public boolean isValuePresent(String value, String columnId) {
+        return getRowIndex(value, columnId).isPresent();
+    }
+
+    public boolean isValuePresentContains(String value, String columnId) {
+        return getRowIndexContains(value, columnId).isPresent();
     }
 
     public void scrollHorizontally(int offset) {
@@ -194,6 +217,11 @@ public class TableComponent {
     public String getCellValue(int row, String columnId) {
         Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
         return cell.getText();
+    }
+
+    public void setCellValue(int row, String columnId, String value) {
+        Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
+        cell.setValue(value);
     }
 
     public boolean isCellValueBold(int row, String columnId) {
@@ -520,6 +548,10 @@ public class TableComponent {
         private static final String TEXT_CONTENT = "textContent";
         private static final String LINK_IS_NOT_AVAILABLE_EXCEPTION = "Link is not available";
         private static final String A_HREF_CSS = "span a[href]";
+        private static final String CELL_EDIT_BUTTON = "[data-testid='name-btn-cells-edit']";
+        private static final String INLINE_EDITOR_INPUT_ID = "-inline-editor-input";
+        private static final String SAVE_BUTTON_INLINE_EDITOR_CSS = "[data-testid='save-inline-editor']";
+        private static final String CELL_IS_NOT_EDITABLE_EXCEPTION = "Cell is not editable";
 
         private final WebDriver driver;
         private final WebElement cellElement;
@@ -665,6 +697,22 @@ public class TableComponent {
             } else
                 throw new NoSuchElementException(LINK_IS_NOT_AVAILABLE_EXCEPTION);
         }
+
+        private void setValue(String value) {
+            openInlineEditor();
+            WebDriverWait wait = new WebDriverWait(driver, 15);
+            ComponentFactory.create(columnId + INLINE_EDITOR_INPUT_ID, driver, wait).setSingleStringValue(value);
+            driver.findElement(By.cssSelector(SAVE_BUTTON_INLINE_EDITOR_CSS)).click();
+        }
+
+        private void openInlineEditor() {
+            moveToElement(driver, cellElement);
+            cellElement.findElements(By.cssSelector(CELL_EDIT_BUTTON)).stream()
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException(CELL_IS_NOT_EDITABLE_EXCEPTION))
+                    .click();
+        }
+
     }
 
     public static class Row implements TableRow {
@@ -755,13 +803,19 @@ public class TableComponent {
         }
 
         public void callAction(String groupId, String actionId) {
-            Actions actions = new Actions(driver);
-            actions.moveToElement(tableComponent).build().perform();
-
-            InlineMenu menu = InlineMenu.create(tableComponent, driver, webDriverWait);
-            menu.callAction(groupId, actionId);
+            WebElement action = getContextActionsCellElement();
+            moveToElement(driver, action);
+            InlineMenu.create(action, driver, webDriverWait).callAction(groupId, actionId);
         }
 
-    }
+        public void callAction(String actionId) {
+            WebElement action = getContextActionsCellElement();
+            moveToElement(driver, action);
+            InlineMenu.create(action, driver, webDriverWait).callAction(actionId);
+        }
 
+        private WebElement getContextActionsCellElement() {
+            return tableComponent.findElement(By.cssSelector(String.format(CONTEXT_ACTIONS_CELL, index)));
+        }
+    }
 }

@@ -1,5 +1,7 @@
 package com.oss.framework.components.mainheader;
 
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -8,9 +10,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
 
 public class Notifications implements NotificationsInterface {
 
@@ -57,7 +56,7 @@ public class Notifications implements NotificationsInterface {
         }
         String notificationText =
                 wait.until(ExpectedConditions
-                        .visibilityOf(driver.findElement(By.xpath(NOTIFICATION_LABEL_XPATH + NOTIFICATION_TEXT_CONTAINER_XPATH + "/span"))))
+                                .visibilityOf(driver.findElement(By.xpath(NOTIFICATION_LABEL_XPATH + NOTIFICATION_TEXT_CONTAINER_XPATH + "/span"))))
                         .getText();
         clickOnWebElement(driver.findElement(CLEAR_NOTIFICATION));
         closeNotificationContainer();
@@ -104,8 +103,7 @@ public class Notifications implements NotificationsInterface {
 
     private void openNotificationContainer() {
         if (!isElementPresent(driver, NOTIFICATION_OPENED)) {
-            clickOnWebElement(driver.findElement(NOTIFICATION_BUTTON));
-            DelayUtils.waitBy(wait, NOTIFICATION_OPENED);
+            WebElementUtils.clickWithRetry(driver, driver.findElement(NOTIFICATION_BUTTON), NOTIFICATION_OPENED);
         }
     }
 

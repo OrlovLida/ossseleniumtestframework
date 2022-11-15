@@ -169,22 +169,6 @@ public class OptionsPanel {
         return activeAggMethods;
     }
 
-    /**
-     * @deprecated Y axis options moved to OptionsSidePanel. To remove with release 3.0.x
-     */
-    @Deprecated
-    public void setYAxisOption(YAxisOption yAxisOption) {
-        moveOverElement(Y_AXIS_SETTINGS_PATH);
-        DelayUtils.waitForPageToLoad(driver, wait);
-
-        if (yAxisOption == YAxisOption.MANUAL) {
-            optionsPanelElement.findElement(By.xpath(createChooseYAxisOptionXPath("manual"))).click();
-        } else if (yAxisOption == YAxisOption.AUTO) {
-            optionsPanelElement.findElement(By.xpath(createChooseYAxisOptionXPath("auto"))).click();
-        }
-        log.debug("Setting Y axis option to: {}", yAxisOption);
-    }
-
     public void setMiscellaneousOption(MiscellaneousOption miscellaneousOption) {
         moveOverElement(MISCELLANEOUS_OPTIONS_PATH);
         DelayUtils.waitForPageToLoad(driver, wait);
@@ -253,28 +237,12 @@ public class OptionsPanel {
         moveOverElement(AGGREGATION_METHOD_CHOOSER_PATH);
     }
 
-    /**
-     * @deprecated Y axis options moved to OptionsSidePanel. To remove with release 3.0.x
-     */
-    @Deprecated
-    private String createChooseYAxisOptionXPath(String option) {
-        return String.format(Y_AXIS_SETTINGS_INPUT_PATH, option);
-    }
-
     public enum TimePeriodChooserOption {
         PERIOD, RANGE, LAST, MIDDLE, SMART, LATEST
     }
 
     public enum AggregationMethodOption {
         MIN, MAX, AVG, SUM, COUNT, NONE, AGG_STANDARD
-    }
-
-    /**
-     * @deprecated Y axis options moved to OptionsSidePanel. To remove with release 3.0.x
-     */
-    @Deprecated
-    public enum YAxisOption {
-        AUTO, MANUAL
     }
 
     public enum MiscellaneousOption {

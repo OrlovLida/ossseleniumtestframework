@@ -39,6 +39,10 @@ public class TreeWidgetV2 extends Widget {
         return getTreeComponent().getVisibleNodes();
     }
 
+    public boolean hasNoData() {
+        return getTreeComponent().hasNoData();
+    }
+
     public Node getNode(String label) {
         Optional<Node> node = getVisibleNodes().stream().filter(n -> n.getLabel().equals(label)).findFirst();
         if (node.isPresent()) {
@@ -48,20 +52,14 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public void selectNode(int nodeNumber) {
-        List<Node> nodes = getTreeComponent().getVisibleNodes();
-        nodes.get(nodeNumber).toggleNode();
+        Node node = getTreeComponent().getVisibleNodes().get(nodeNumber);
+        if (!node.isToggled()) {
+            node.toggleNode();
+        }
     }
 
     public Node getNode(int nodeNumber) {
         return getVisibleNodes().get(nodeNumber);
-    }
-
-    /**
-     * @deprecated standardizing the nomenclature of methods, please use fullTextSearch(String text). Method will be removed in 3.0.x release
-     */
-    @Deprecated
-    public void typeIntoSearch(String text) {
-        fullTextSearch(text);
     }
 
     public void fullTextSearch(String text) {
