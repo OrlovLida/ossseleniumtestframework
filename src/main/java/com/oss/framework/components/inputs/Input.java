@@ -151,6 +151,7 @@ public abstract class Input {
         DATE_TIME,
         DATE_TIME_RANGE,
         FILE_CHOOSER,
+        HTML_EDITOR,
         MULTI_COMBOBOX,
         MULTI_SEARCH_FIELD,
         MULTI_SEARCHBOX,

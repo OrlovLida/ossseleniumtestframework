@@ -50,6 +50,9 @@ public class ComponentFactory {
             case FILE_CHOOSER: {
                 return FileChooser.create(webDriver, wait, componentId);
             }
+            case HTML_EDITOR: {
+                return HtmlEditor.create(webDriver, wait, componentId);
+            }
             case MULTI_COMBOBOX: {
                 return MultiCombobox.create(webDriver, wait, componentId);
             }
@@ -140,6 +143,9 @@ public class ComponentFactory {
             }
             case FILE_CHOOSER: {
                 return FileChooser.create(webDriver, wait, componentId);
+            }
+            case HTML_EDITOR: {
+                return HtmlEditor.createFromParent(parent, webDriver, wait, componentId);
             }
             case MULTI_COMBOBOX: {
                 return MultiCombobox.createFromParent(parent, webDriver, wait, componentId);

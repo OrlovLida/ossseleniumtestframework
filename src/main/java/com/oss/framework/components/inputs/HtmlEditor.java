@@ -28,6 +28,14 @@ public class HtmlEditor extends Input {
         return new HtmlEditor(webDriver, webDriverWait, webElement);
     }
 
+    public static HtmlEditor createFromParent(WebElement parent, WebDriver webDriver, WebDriverWait webDriverWait, String widgetId) {
+        String xPath = String.format(HTML_EDITOR_COMPONENT_XPATH, widgetId);
+        DelayUtils.waitByXPath(webDriverWait, xPath);
+        WebElement webElement = parent.findElement(By.xpath(xPath));
+        WebElementUtils.moveToElement(webDriver, webElement);
+        return new HtmlEditor(webDriver, webDriverWait, webElement);
+    }
+
     @Override
     public void setValueContains(Data value) {
         setValue(value);
