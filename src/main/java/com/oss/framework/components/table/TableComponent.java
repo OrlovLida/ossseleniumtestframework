@@ -662,7 +662,7 @@ public class TableComponent {
         private void toggleCell(String character) {
             WebElement expandIcon = cellElement.findElement(By.cssSelector(TREE_NODE_EXPAND_CSS));
             WebElementUtils.clickWebElement(driver, expandIcon);
-            DelayUtils.waitForNestedElements(new WebDriverWait(driver, 10), expandIcon,
+            DelayUtils.waitForNestedElements(new WebDriverWait(driver, 20), expandIcon,
                     By.cssSelector("[" + ARIA_LABEL_ATTRIBUTE + "='" + character + "']"));
         }
 
