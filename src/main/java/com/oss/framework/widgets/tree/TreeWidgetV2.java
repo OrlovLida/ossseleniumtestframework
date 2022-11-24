@@ -135,6 +135,9 @@ public class TreeWidgetV2 extends Widget {
     public Optional<Node> findNodeByLabelsPath(String labels) {
         return getTreeComponent().findNodeByLabelsPath(labels);
     }
+    public Optional<Node> findNodeByPath(String path) {
+        return getTreeComponent().findNodeByPath(path);
+    }
 
     public PaginationComponent getPagination() {
         return PaginationComponent.createFromParent(webElement);
