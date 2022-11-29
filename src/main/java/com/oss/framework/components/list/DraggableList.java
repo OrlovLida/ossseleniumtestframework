@@ -6,17 +6,16 @@
  */
 package com.oss.framework.components.list;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.DragAndDrop;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Gabriela Kasza
@@ -59,6 +58,11 @@ public class DraggableList {
     public void drop(DragAndDrop.DraggableElement draggableElement) {
         WebElement target = dropdownListElement.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
         DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), driver);
+    }
+
+    public void drop(DragAndDrop.DraggableElement draggableElement, int xOffset, int yOffset) {
+        WebElement target = dropdownListElement.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
+        DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), xOffset, yOffset, driver);
     }
 
 }
