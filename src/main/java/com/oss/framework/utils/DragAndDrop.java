@@ -41,6 +41,11 @@ public class DragAndDrop {
                 .moveToElement(target.getWebElement())
                 .moveByOffset(xOffset, yOffset).pause(100).release().perform();
     }
+    public static void dragAndDrop(DraggableElement source,  int xOffset, int yOffset, WebDriver driver) {
+        Actions action = new Actions(driver);
+        action.moveToElement(source.getWebElement()).pause(100).clickAndHold(source.getWebElement()).pause(100)
+                .moveByOffset(xOffset, yOffset).pause(100).release().perform();
+    }
     
     public static void dragAndDrop(WebElement source, WebElement target, int pauseInMs, WebDriver driver) {
         Actions action = new Actions(driver);
