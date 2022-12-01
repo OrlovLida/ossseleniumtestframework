@@ -2,6 +2,7 @@ package com.oss.framework.components.table;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -662,7 +663,7 @@ public class TableComponent {
         private void toggleCell(String character) {
             WebElement expandIcon = cellElement.findElement(By.cssSelector(TREE_NODE_EXPAND_CSS));
             WebElementUtils.clickWebElement(driver, expandIcon);
-            DelayUtils.waitForNestedElements(new WebDriverWait(driver, 20), expandIcon,
+            DelayUtils.waitForNestedElements(new WebDriverWait(driver,  Duration.ofSeconds(20)), expandIcon,
                     By.cssSelector("[" + ARIA_LABEL_ATTRIBUTE + "='" + character + "']"));
         }
 
@@ -700,7 +701,7 @@ public class TableComponent {
 
         private void setValue(String value) {
             openInlineEditor();
-            WebDriverWait wait = new WebDriverWait(driver, 15);
+            WebDriverWait wait = new WebDriverWait(driver,  Duration.ofSeconds(15));
             ComponentFactory.create(columnId + INLINE_EDITOR_INPUT_ID, driver, wait).setSingleStringValue(value);
             driver.findElement(By.cssSelector(SAVE_BUTTON_INLINE_EDITOR_CSS)).click();
         }

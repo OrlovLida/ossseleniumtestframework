@@ -1,5 +1,7 @@
 package com.oss.framework.utils;
 
+import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -22,7 +24,7 @@ public class WebElementUtils {
     
     public static void clickWebElement(WebDriver driver, WebElement webElement) {
         moveToElement(driver, webElement);
-        new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(webElement));
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(webElement));
         Actions actions = new Actions(driver);
         actions.click(webElement).build().perform();
     }
@@ -33,7 +35,7 @@ public class WebElementUtils {
             LOGGER.warn(RETRY_WARN);
             clickWebElement(driver, elementToClick);
         }
-        DelayUtils.waitForPresence(new WebDriverWait(driver, 10), elementToWait);
+        DelayUtils.waitForPresence(new WebDriverWait(driver,  Duration.ofSeconds(10)), elementToWait);
     }
     
     public static boolean isElementPresent(WebDriver driver, By by) {
