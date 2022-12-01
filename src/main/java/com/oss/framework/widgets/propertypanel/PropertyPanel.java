@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -33,6 +34,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String ACTIONS_DROPDOWN_CLASS = "actionsDropdown";
     private static final String SEARCH_XPATH = "//ancestor::div[@" + CSSUtils.TEST_ID + "='PropertyPanelWidget-search']";
     private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
+    private static final String NO_PROPERTY_EXCEPTION = "Can not find property: ";
 
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id, WebElement propertyPanel) {
         super(driver, wait, id, propertyPanel);
@@ -63,7 +65,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     public void changePropertyOrder(String id, int position) {
-         DragAndDrop.dragAndDrop(getDraggableElement(id), getDropElement(position), driver);
+        DragAndDrop.dragAndDrop(getDraggableElement(id), getDropElement(position), driver);
     }
 
     public void hideEmpty() {
@@ -91,10 +93,14 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     @Override
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
-        if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
-            return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
-        } else {
-            return "";
+        try {
+            if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
+                return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+            } else {
+                return "";
+            }
+        } catch (NullPointerException e) {
+            throw new NoSuchElementException(NO_PROPERTY_EXCEPTION + propertyName);
         }
     }
 
@@ -139,6 +145,14 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         Map<String, WebElement> properties = Maps.newHashMap();
         for (WebElement element : getProperties()) {
             properties.put(element.getAttribute(ID_ATTRIBUTE), element);
+        }
+        return properties;
+    }
+
+    public Map<String, String> getPropertiesWithValueMap() {
+        Map<String, String> properties = Maps.newHashMap();
+        for (WebElement element : getProperties()) {
+            properties.put(element.getAttribute(ID_ATTRIBUTE), element.findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE));
         }
         return properties;
     }
