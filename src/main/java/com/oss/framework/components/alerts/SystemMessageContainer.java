@@ -6,6 +6,7 @@
  */
 package com.oss.framework.components.alerts;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -131,7 +132,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
             builder.moveToElement(messageContainer).moveByOffset(100, 20).build().perform();
             DelayUtils.sleep(100);
             builder.moveToElement(messageContainer).build().perform();
-            DelayUtils.waitForNestedElements(new WebDriverWait(driver, 5), messageContainer, closeButtonXpath);
+            DelayUtils.waitForNestedElements(new WebDriverWait(driver,  Duration.ofSeconds(5)), messageContainer, closeButtonXpath);
             builder.click(messageContainer.findElement(By.xpath(closeButtonXpath))).build().perform();
             log.debug("System message closed");
         } catch (NoSuchElementException | TimeoutException e) {

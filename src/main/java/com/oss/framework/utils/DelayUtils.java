@@ -1,5 +1,6 @@
 package com.oss.framework.utils;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +127,7 @@ public class DelayUtils {
     public static void waitForButtonDisappear(WebDriver driver, String buttonXpath) {
         DelayUtils.sleep(1000);
         List<WebElement> buttons = driver.findElements(By.xpath(buttonXpath));
-        waitForElementsDisappear(new WebDriverWait(driver, 90), buttons);
+        waitForElementsDisappear(new WebDriverWait(driver,  Duration.ofSeconds(90)), buttons);
     }
     
     public static void waitForSpinners(WebDriverWait webDriverWait, WebElement webElement) {
