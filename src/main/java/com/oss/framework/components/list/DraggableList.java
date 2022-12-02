@@ -28,6 +28,7 @@ public class DraggableList {
     private static final String DROPDOWN_LIST_LABEL_XPATH = ".//div[@class='categoryLabel']";
     private static final String DRAGGABLE_LIST_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String OBJECT_NOT_AVAILABLE_EXCEPTION = "Object not available on the list";
+    private static final String NEGATIVE_ARGUMENT_EXCEPTION = "Argument can not be a negative value.";
     private final WebDriver driver;
     private final WebElement dropdownListElement;
 
@@ -62,15 +63,18 @@ public class DraggableList {
     }
 
     public void drop(DragAndDrop.DraggableElement draggableElement, int position) {
+        if (position < 0) {
+            throw new IllegalArgumentException(NEGATIVE_ARGUMENT_EXCEPTION);
+        }
         WebElement targetDraggableList = dropdownListElement.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
         List<WebElement> rows = targetDraggableList.findElements(By.cssSelector(ROW_DATA_CSS_SELECTOR));
         if (rows.isEmpty()) {
             drop(draggableElement);
         } else {
-            try {
-                DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(rows.get(position)), driver);
-            } catch (IndexOutOfBoundsException e) {
+            if (position >= rows.size()) {
                 throw new NoSuchElementException(OBJECT_NOT_AVAILABLE_EXCEPTION);
+            } else {
+                DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(rows.get(position)), driver);
             }
         }
     }
