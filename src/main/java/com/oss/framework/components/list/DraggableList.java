@@ -21,6 +21,7 @@ import java.util.NoSuchElementException;
  * @author Gabriela Kasza
  */
 public class DraggableList {
+    public static final String ROW_DATA_CSS_SELECTOR = ".rowData";
     private static final String DRAG_BUTTON_XPATH = ".//div[contains(@class,'dragButton')]//div";
     private static final String DRAGGABLE_LIST_ROW_XPATH = ".//ul[contains(@class,'DraggableListRows')]";
     private static final String DRAGGABLE_ELEMENT_XPATH = ".//li[@class='listElement']";
@@ -60,9 +61,17 @@ public class DraggableList {
         DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), driver);
     }
 
-    public void drop(DragAndDrop.DraggableElement draggableElement, int xOffset, int yOffset) {
-        WebElement target = dropdownListElement.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
-        DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), xOffset, yOffset, driver);
+    public void drop(DragAndDrop.DraggableElement draggableElement, int position) {
+        WebElement targetDraggableList = dropdownListElement.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
+        List<WebElement> rows = targetDraggableList.findElements(By.cssSelector(ROW_DATA_CSS_SELECTOR));
+        if (rows.isEmpty()) {
+            drop(draggableElement);
+        } else {
+            try {
+                DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(rows.get(position)), driver);
+            } catch (IndexOutOfBoundsException e) {
+                throw new NoSuchElementException(OBJECT_NOT_AVAILABLE_EXCEPTION);
+            }
+        }
     }
-
 }
