@@ -6,6 +6,7 @@
  */
 package com.oss.framework.components.list;
 
+import com.google.common.base.Preconditions;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
@@ -28,7 +29,7 @@ public class DraggableList {
     private static final String DROPDOWN_LIST_LABEL_XPATH = ".//div[@class='categoryLabel']";
     private static final String DRAGGABLE_LIST_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String OBJECT_NOT_AVAILABLE_EXCEPTION = "Object not available on the list";
-    private static final String NEGATIVE_ARGUMENT_EXCEPTION = "Argument can not be a negative value.";
+    private static final String POSITION_OUT_OF_RANGE_EXCEPTION = "Position is out of Rows size range. Provided %1$d, but list size is: %2$d.";
     private final WebDriver driver;
     private final WebElement dropdownListElement;
 
@@ -63,19 +64,13 @@ public class DraggableList {
     }
 
     public void drop(DragAndDrop.DraggableElement draggableElement, int position) {
-        if (position < 0) {
-            throw new IllegalArgumentException(NEGATIVE_ARGUMENT_EXCEPTION);
-        }
         WebElement targetDraggableList = dropdownListElement.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
         List<WebElement> rows = targetDraggableList.findElements(By.cssSelector(ROW_DATA_CSS_SELECTOR));
         if (rows.isEmpty()) {
             drop(draggableElement);
         } else {
-            if (position >= rows.size()) {
-                throw new NoSuchElementException(OBJECT_NOT_AVAILABLE_EXCEPTION);
-            } else {
-                DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(rows.get(position)), driver);
-            }
+            Preconditions.checkArgument(position < rows.size() && position >= 0, POSITION_OUT_OF_RANGE_EXCEPTION, position, rows.size());
+            DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(rows.get(position)), driver);
         }
     }
 }
