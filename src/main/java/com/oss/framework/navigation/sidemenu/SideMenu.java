@@ -6,6 +6,7 @@
  */
 package com.oss.framework.navigation.sidemenu;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -142,7 +143,7 @@ public class SideMenu {
     private void waitForClickedAction(String testid) {
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
         WebElement action = findLastElement(actionXpath);
-        WebDriverWait shortWait = new WebDriverWait(driver, 15);
+        WebDriverWait shortWait = new WebDriverWait(driver,  Duration.ofSeconds(15));
         try {
             shortWait.until(ExpectedConditions.attributeContains(action, CLASS, IS_ACTIVE));
         } catch (TimeoutException e) {
@@ -155,7 +156,7 @@ public class SideMenu {
 
     private void waitForClickedPath(String path) {
         String pathXpath = String.format(ACTION_NAME_PATH_PATTERN, path);
-        WebDriverWait shortWait = new WebDriverWait(driver, 15);
+        WebDriverWait shortWait = new WebDriverWait(driver,  Duration.ofSeconds(15));
         try {
             shortWait.until(ExpectedConditions.attributeContains(By.xpath(pathXpath), CLASS, IS_EXPANDED));
         } catch (TimeoutException e) {
