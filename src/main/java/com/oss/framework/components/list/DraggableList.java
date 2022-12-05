@@ -6,28 +6,30 @@
  */
 package com.oss.framework.components.list;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import com.google.common.base.Preconditions;
 import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.DragAndDrop;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Gabriela Kasza
  */
 public class DraggableList {
+    public static final String ROW_DATA_CSS_SELECTOR = ".rowData";
     private static final String DRAG_BUTTON_XPATH = ".//div[contains(@class,'dragButton')]//div";
     private static final String DRAGGABLE_LIST_ROW_XPATH = ".//ul[contains(@class,'DraggableListRows')]";
     private static final String DRAGGABLE_ELEMENT_XPATH = ".//li[@class='listElement']";
     private static final String DROPDOWN_LIST_LABEL_XPATH = ".//div[@class='categoryLabel']";
     private static final String DRAGGABLE_LIST_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String OBJECT_NOT_AVAILABLE_EXCEPTION = "Object not available on the list";
+    private static final String POSITION_OUT_OF_RANGE_EXCEPTION = "Position is out of Rows size range. Provided %1$d, but list size is: %2$d.";
     private final WebDriver driver;
     private final WebElement dropdownListElement;
 
@@ -61,4 +63,14 @@ public class DraggableList {
         DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(target), driver);
     }
 
+    public void drop(DragAndDrop.DraggableElement draggableElement, int position) {
+        WebElement targetDraggableList = dropdownListElement.findElement(By.xpath(DRAGGABLE_LIST_ROW_XPATH));
+        List<WebElement> rows = targetDraggableList.findElements(By.cssSelector(ROW_DATA_CSS_SELECTOR));
+        if (rows.isEmpty()) {
+            drop(draggableElement);
+        } else {
+            Preconditions.checkArgument(position < rows.size() && position >= 0, POSITION_OUT_OF_RANGE_EXCEPTION, position, rows.size());
+            DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(rows.get(position)), driver);
+        }
+    }
 }
