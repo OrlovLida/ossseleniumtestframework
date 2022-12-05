@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.oss.framework.components.alerts.GlobalNotificationContainer;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.tree.TreeComponent;
@@ -50,6 +51,10 @@ public class Popup {
         DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         Input input = getComponent(componentId);
         input.clear();
+    }
+
+    public GlobalNotificationContainer getGlobalNotificationContainer() {
+        return GlobalNotificationContainer.createFromParent(webElement, wait);
     }
 
     public Input getComponent(String componentId) {

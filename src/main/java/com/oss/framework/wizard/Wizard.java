@@ -25,7 +25,6 @@ import com.oss.framework.widgets.Widget;
 
 public class Wizard {
 
-    private static final String OSS_WINDOW_XPATH = "//div[contains(@class,'OssWindow')]";
     private static final String NEXT_BUTTON_XPATH = ".//button[text()='Next']";
     private static final String NEXT_STEP_XPATH = ".//button[text()='Next Step']";
     private static final String ACCEPT_BUTTON_XPATH = ".//button[text()='Accept']";
