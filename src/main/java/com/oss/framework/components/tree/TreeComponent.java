@@ -100,7 +100,7 @@ public class TreeComponent {
         return getNodeByPath(pathElements, true);
     }
 
-    private Optional<Node> findNodeByPath(String path) {
+    public Optional<Node> findNodeByPath(String path) {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(path));
         return getNodeByPath(pathElements, false);
     }

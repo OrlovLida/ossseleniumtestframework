@@ -34,6 +34,7 @@ public class SearchPanel {
     private static final String ADVANCED_SEARCH_PANEL_CSS = ".advanced-search_panel";
     private static final String FILTER_BOX_CSS = ".filters-box";
     private static final String ATTRIBUTE_NAME_CSS = ".md-input .md-input-label-text";
+    private static final String ICON_DROPDOWN_ACTION_LIST_CLASS="icon-dropdown-action-list";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -127,7 +128,7 @@ public class SearchPanel {
 
     private void callSaveFilterAction(String actionId) {
         WebElement saveButton = this.webElement.findElement(By.xpath(SAVE_BUTTONS_DROPDOWN_PATH));
-        WebElementUtils.clickWebElement(driver, saveButton);
+        WebElementUtils.clickWithRetry(driver, saveButton, By.className(ICON_DROPDOWN_ACTION_LIST_CLASS));
         driver.findElement(By.xpath(".//a[@" + CSSUtils.TEST_ID + "='" + actionId + "']")).click();
     }
 

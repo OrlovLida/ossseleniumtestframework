@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -23,6 +22,8 @@ public class TreeWidget extends Widget {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TreeWidget.class);
     private static final String TREE_VIEW_CLASS = "TreeView";
+    private static final String SEARCH_XPATH = ".//div[contains(@class, 'ExtendedSearch')]";
+    private static final String SEARCH_INPUT_XPATH = SEARCH_XPATH + "//input";
     private static final String TREE_ROW_PATTERN = "//p[contains(@class,'TreeViewLabel')][text()='%s']//ancestor::div[starts-with(@class, 'TreeRow')]";
     private static final String TREE_ROW_CONTAINS_PATTERN = "//p[contains(@class,'TreeViewLabel')][contains(text(), '%s')]//ancestor::div[starts-with(@class, 'TreeRow')]";
     private static final String NO_TREE_ROWS_EXCEPTION = "Can't find any TreeRow.";
@@ -76,6 +77,10 @@ public class TreeWidget extends Widget {
         createTreeRow(String.format(TREE_ROW_PATTERN, treeRowName)).expandTreeRow();
     }
 
+    public boolean isExpanderIconPresent(String treeRowName) {
+        return createTreeRow(String.format(TREE_ROW_PATTERN, treeRowName)).isExpanderIconPresent();
+    }
+
     public void expandTreeRowContains(String treeRowName) {
         createTreeRow(String.format(TREE_ROW_CONTAINS_PATTERN, treeRowName)).expandTreeRow();
     }
@@ -95,9 +100,9 @@ public class TreeWidget extends Widget {
         actionsContainer.callActionById(id);
     }
 
-    public void callActionById(String groupLabel, String id) {
+    public void callActionById(String groupId, String id) {
         ActionsInterface actionsContainer = ActionsContainer.createFromParent(this.webElement, driver, webDriverWait);
-        actionsContainer.callActionById(groupLabel, id);
+        actionsContainer.callActionById(groupId, id);
     }
 
     public void search(String inputText) {
@@ -122,8 +127,8 @@ public class TreeWidget extends Widget {
     }
 
     private WebElement getSearchBox() {
-        DelayUtils.waitForNestedElements(webDriverWait, webElement, "//div[@class='TreeViewBar']");
-        return webElement.findElement(By.xpath("//div[@class='TreeViewBar']//input"));
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, SEARCH_XPATH);
+        return webElement.findElement(By.xpath(SEARCH_INPUT_XPATH));
     }
 
     private TreeRow createTreeRow(String treeRowXpath) {
@@ -147,18 +152,23 @@ public class TreeWidget extends Widget {
         }
 
         private static void clickOnWebElement(WebDriver webDriver, WebElement webElement) {
-            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
             WebElementUtils.clickWebElement(webDriver, webElement);
         }
 
         private void expandTreeRow() {
-            WebElement expandIcos = this.webElement.findElement(By.xpath(EXPAND_TREE_ROW));
-            clickOnWebElement(driver, expandIcos);
+            if (!isExpanded()) {
+                WebElement expandIcon = this.webElement.findElement(By.xpath(EXPAND_TREE_ROW));
+                clickOnWebElement(driver, expandIcon);
+            }
         }
 
         private boolean isExpanded() {
             WebElement expandElement = this.webElement.findElement(By.xpath(EXPAND_ICON));
             return expandElement.getAttribute(CLASS).contains("open");
+        }
+
+        private boolean isExpanderIconPresent() {
+            return WebElementUtils.isElementPresent(webElement, By.xpath(EXPAND_ICON));
         }
 
         private String getLabel() {

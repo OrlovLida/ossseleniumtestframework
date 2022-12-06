@@ -27,6 +27,7 @@ public class CategoryList {
     private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
     private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
     private static final String CATEGORY_LIST_ELEMENT_CSS = ".categoryListElement";
+    private static final String ICON_BY_ID_PATTERN = ".//button[@" + CSSUtils.TEST_ID + "= '%s']";
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -54,7 +55,12 @@ public class CategoryList {
     }
 
     public void callAction(String actionId) {
-        InlineMenu.create(categoryElement, driver, wait).callAction(actionId);
+        if (!categoryElement.findElements(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId))).isEmpty()) {
+            WebElement button = categoryElement.findElement(By.xpath(String.format(ICON_BY_ID_PATTERN, actionId)));
+            WebElementUtils.clickWebElement(driver, button);
+        } else {
+            InlineMenu.create(categoryElement, driver, wait).callAction(actionId);
+        }
     }
 
     public void expandCategory() {
