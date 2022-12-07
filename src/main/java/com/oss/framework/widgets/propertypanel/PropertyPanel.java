@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,6 +17,7 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
+import com.google.common.base.Preconditions;
 
 public class PropertyPanel extends Widget implements PropertyPanelInterface {
 
@@ -34,7 +34,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String ACTIONS_DROPDOWN_CLASS = "actionsDropdown";
     private static final String SEARCH_XPATH = "//ancestor::div[@" + CSSUtils.TEST_ID + "='PropertyPanelWidget-search']";
     private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
-    private static final String NO_PROPERTY_EXCEPTION = "Can not find property: ";
+    private static final String NO_PROPERTY_EXCEPTION = "Can not find property:";
 
     private PropertyPanel(WebDriver driver, WebDriverWait wait, String id, WebElement propertyPanel) {
         super(driver, wait, id, propertyPanel);
@@ -93,9 +93,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     @Override
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
-        if (!properties.containsKey(propertyName)) {
-            throw new NoSuchElementException(NO_PROPERTY_EXCEPTION + propertyName);
-        }
+        Preconditions.checkArgument(properties.containsKey(propertyName), NO_PROPERTY_EXCEPTION, propertyName);
         if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
             return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
         } else {
