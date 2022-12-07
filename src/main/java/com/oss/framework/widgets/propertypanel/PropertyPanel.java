@@ -93,14 +93,13 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
     @Override
     public String getPropertyValue(String propertyName) {
         Map<String, WebElement> properties = getPropertiesMap();
-        try {
-            if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
-                return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
-            } else {
-                return "";
-            }
-        } catch (NullPointerException e) {
+        if (!properties.containsKey(propertyName)) {
             throw new NoSuchElementException(NO_PROPERTY_EXCEPTION + propertyName);
+        }
+        if (!properties.get(propertyName).findElements(By.cssSelector(PROPERTY_VALUE_CSS)).isEmpty()) {
+            return properties.get(propertyName).findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+        } else {
+            return "";
         }
     }
 
@@ -149,7 +148,7 @@ public class PropertyPanel extends Widget implements PropertyPanelInterface {
         return properties;
     }
 
-    public Map<String, String> getPropertiesWithValueMap() {
+    public Map<String, String> getPropertyNamesToValues() {
         Map<String, String> properties = Maps.newHashMap();
         for (WebElement element : getProperties()) {
             properties.put(element.getAttribute(ID_ATTRIBUTE), element.findElement(By.cssSelector(PROPERTY_VALUE_CSS)).getAttribute(TEXT_CONTENT_ATTRIBUTE));
