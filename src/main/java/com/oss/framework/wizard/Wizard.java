@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -94,18 +92,6 @@ public class Wizard {
 
     public void clickAccept() {
         clickButton(ACCEPT_BUTTON_XPATH);
-    }
-
-    public void clickAcceptOldWizard() {
-        DelayUtils.waitForNestedElements(wait, webElement, ACCEPT_BUTTON_XPATH);
-        WebElement button = webElement.findElement(By.xpath(ACCEPT_BUTTON_XPATH));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
-        Actions actions = new Actions(driver);
-        actions.moveToElement(button).build().perform();
-        wait.until(ExpectedConditions.elementToBeClickable(button));
-        actions.moveToElement(button).clickAndHold(button).perform();
-        DelayUtils.sleep();
-        actions.release().perform();
     }
 
     public void clickCancel() {
