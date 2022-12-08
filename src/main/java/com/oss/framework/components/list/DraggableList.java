@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -30,19 +31,22 @@ public class DraggableList {
     private static final String DRAGGABLE_LIST_PATTERN = "div[" + CSSUtils.TEST_ID + "='%s']";
     private static final String OBJECT_NOT_AVAILABLE_EXCEPTION = "Object not available on the list";
     private static final String POSITION_OUT_OF_RANGE_EXCEPTION = "Position is out of Rows size range. Provided %1$d, but list size is: %2$d.";
+    private static final String CATEGORY_LIST_CSS = ".category";
     private final WebDriver driver;
     private final WebElement dropdownListElement;
+    private final WebDriverWait wait;
 
-    private DraggableList(WebDriver driver, WebElement dropdownListElement) {
+    private DraggableList(WebDriver driver, WebDriverWait wait, WebElement dropdownListElement) {
         this.driver = driver;
         this.dropdownListElement = dropdownListElement;
+        this.wait = wait;
     }
 
     public static DraggableList create(WebDriver driver, WebDriverWait wait, String componentId) {
         String selector = String.format(DRAGGABLE_LIST_PATTERN, componentId);
         DelayUtils.waitBy(wait, By.cssSelector(selector));
         WebElement dropdownList = driver.findElement(By.cssSelector(selector));
-        return new DraggableList(driver, dropdownList);
+        return new DraggableList(driver, wait, dropdownList);
     }
 
     private static boolean isContainsName(String componentName, WebElement dropdownList) {
@@ -71,6 +75,50 @@ public class DraggableList {
         } else {
             Preconditions.checkArgument(position < rows.size() && position >= 0, POSITION_OUT_OF_RANGE_EXCEPTION, position, rows.size());
             DragAndDrop.dragAndDrop(draggableElement, new DragAndDrop.DropElement(rows.get(position)), driver);
+        }
+    }
+
+    private CategoryList getCategory() {
+        return new CategoryList(driver, wait, dropdownListElement.findElement(By.cssSelector(CATEGORY_LIST_CSS)));
+    }
+
+    public void expandCategory() {
+        getCategory().expand();
+    }
+
+    public void collapseCategory() {
+        getCategory().collapse();
+    }
+
+    private static class CategoryList {
+        private static final String COLLAPSE_ICON_CSS = ".fa-chevron-up";
+        private static final String EXPAND_ICON_CSS = ".fa-chevron-down";
+        private final WebDriver driver;
+        private final WebElement categoryListElement;
+        private final WebDriverWait wait;
+
+        private CategoryList(WebDriver driver, WebDriverWait wait, WebElement categoryListElement) {
+            this.driver = driver;
+            this.categoryListElement = categoryListElement;
+            this.wait = wait;
+        }
+
+        private void expand() {
+            if (!isExpanded()) {
+                WebElementUtils.clickWebElement(driver, categoryListElement.findElement(By.cssSelector(EXPAND_ICON_CSS)));
+            }
+            DelayUtils.waitForElementToLoad(wait, categoryListElement);
+        }
+
+        private void collapse() {
+            if (isExpanded()) {
+                WebElementUtils.clickWebElement(driver, categoryListElement.findElement(By.cssSelector(COLLAPSE_ICON_CSS)));
+            }
+            DelayUtils.waitForElementToLoad(wait, categoryListElement);
+        }
+
+        private boolean isExpanded() {
+            return !categoryListElement.findElements(By.cssSelector(COLLAPSE_ICON_CSS)).isEmpty();
         }
     }
 }
