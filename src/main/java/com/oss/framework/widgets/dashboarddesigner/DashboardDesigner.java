@@ -15,13 +15,16 @@ import com.oss.framework.utils.DelayUtils;
 
 public class DashboardDesigner {
 
-    private static final String DASHBOARD_DESIGNER_VIEW_CSS = ".dashboard-designer__view-container";
+    private static final String DASHBOARD_DESIGNER_CSS = ".dashboard-designer__view-container";
     private static final String SIMPLE_CARD_CONTAINER_CSS = ".simple-card-container";
     private static final int GRID_PADDING = 32;
     private static final int COLUMNS_NUMBER_IN_GRID = 24;
     private static final String GRID_CONTAINER = ".grid-container";
     private static final int MIN_SIZE_CELL_PX = 20;
-    private static final int ROW_PADDING = 28;
+    private static final int ROW_PADDING_COMPACT = 28;
+    private static final int ROW_PADDING = 36;
+    private static final String COMPACT = "view-v2--compact";
+    private static final String DASHBOARD_DESIGNER_VIEW_CSS = ".dashboard-designer__view";
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement designerElement;
@@ -33,8 +36,8 @@ public class DashboardDesigner {
     }
 
     public static DashboardDesigner create(WebDriver driver, WebDriverWait wait) {
-        DelayUtils.waitForPresence(wait, By.cssSelector(DASHBOARD_DESIGNER_VIEW_CSS));
-        WebElement designerElement = driver.findElement(By.cssSelector(DASHBOARD_DESIGNER_VIEW_CSS));
+        DelayUtils.waitForPresence(wait, By.cssSelector(DASHBOARD_DESIGNER_CSS));
+        WebElement designerElement = driver.findElement(By.cssSelector(DASHBOARD_DESIGNER_CSS));
         return new DashboardDesigner(driver, wait, designerElement);
     }
 
@@ -84,11 +87,19 @@ public class DashboardDesigner {
         int position = MIN_SIZE_CELL_PX;
         if (ySize != 1) {
             for (int i = 1; i < ySize; i++) {
-                position = position + ROW_PADDING;
+                position = position + getRowPadding();
             }
             return position;
         }
         return position;
 
+    }
+
+    private int getRowPadding() {
+        List<String> allClasses = CSSUtils.getAllClasses(designerElement.findElement(By.cssSelector(DASHBOARD_DESIGNER_VIEW_CSS)));
+        if (allClasses.contains(COMPACT)) {
+            return ROW_PADDING_COMPACT;
+        } else
+            return ROW_PADDING;
     }
 }
