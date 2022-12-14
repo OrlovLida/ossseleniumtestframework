@@ -1,16 +1,16 @@
 package com.oss.framework.components.contextactions;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ActionsContainer implements ActionsInterface {
 
@@ -101,6 +101,15 @@ public class ActionsContainer implements ActionsInterface {
         WebElementUtils.clickWithRetry(webDriver, elementToClick, elementToWait);
     }
 
+    public boolean isActionVisibleById(String id) {
+        return isActionPresent(By.id(id));
+    }
+
+    public boolean isActionVisibleById(String groupId, String actionId) {
+        clickOnGroup(groupId);
+        return CSSUtils.isElementPresent(webDriver, actionId);
+    }
+
     private boolean isElementPresent(WebElement webElement, By by) {
         return WebElementUtils.isElementPresent(webElement, by);
     }
@@ -113,6 +122,18 @@ public class ActionsContainer implements ActionsInterface {
             clickWithRetry(webElement.findElement(By.cssSelector(ACTION_MORE_CSS)), By.className(ACTIONS_DROPDOWN_CLASS));
             return webDriver.findElement(By.className(ACTIONS_DROPDOWN_CLASS)).findElement(by);
         }
+    }
 
+    private boolean isActionPresent(By by) {
+        if (isElementPresent(webElement, by)) {
+            return true;
+        } else {
+            if (isElementPresent(webElement, By.cssSelector(ACTION_MORE_CSS))) {
+                clickWithRetry(webElement.findElement(By.cssSelector(ACTION_MORE_CSS)), By.className(ACTIONS_DROPDOWN_CLASS));
+                return isElementPresent(webDriver.findElement(By.className(ACTIONS_DROPDOWN_CLASS)), by);
+            } else {
+                return false;
+            }
+        }
     }
 }
