@@ -6,13 +6,6 @@
  */
 package com.oss.framework.widgets.treetable;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.attributechooser.AttributesChooser;
@@ -27,6 +20,12 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.table.TableInterface;
 import com.oss.framework.widgets.table.TableRow;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Gabriela Zaranek
@@ -227,6 +226,14 @@ public class TreeTableWidget extends Widget implements TableInterface {
     @Override
     public void callAction(String groupId, String actionId) {
         getContextActions().callActionById(groupId, actionId);
+    }
+
+    public boolean isActionVisible(String groupId, String actionId) {
+        return getContextActions().isActionVisibleById(groupId, actionId);
+    }
+
+    public boolean isActionVisible(String actionId) {
+        return getContextActions().isActionVisibleById(actionId);
     }
 
     @Override
