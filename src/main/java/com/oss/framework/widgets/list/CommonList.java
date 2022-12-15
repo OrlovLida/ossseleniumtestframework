@@ -31,6 +31,7 @@ public class CommonList extends Widget {
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
     private static final String INLINE_MENU_XPATH = ".//div[@class='contextButtonMenu'] | .//div[@id='frameworkObjectButtonsGroup']";
+    private static final String TITLE_CSS = "[title='%s']";
 
     private CommonList(WebDriver driver, WebDriverWait webDriverWait, String commonListAppId) {
         super(driver, webDriverWait, commonListAppId);
@@ -154,6 +155,9 @@ public class CommonList extends Widget {
 
     private void confirmFilter() {
         getAdvancedSearch().clickApply();
+    }
+    public void waitForCategory(String categoryName){
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(String.format(TITLE_CSS,categoryName)));
     }
 
     public static class Row {
