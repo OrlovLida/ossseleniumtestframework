@@ -549,7 +549,7 @@ public class TableComponent {
         private static final String TEXT_CONTENT = "textContent";
         private static final String LINK_IS_NOT_AVAILABLE_EXCEPTION = "Link is not available";
         private static final String A_HREF_CSS = "span a[href]";
-        private static final String CELL_EDIT_BUTTON = "[data-testid='name-btn-cells-edit']";
+        private static final String CELL_EDIT_BUTTON_PATTERN = "[data-testid='%s-btn-cells-edit']";
         private static final String INLINE_EDITOR_INPUT_ID = "-inline-editor-input";
         private static final String SAVE_BUTTON_INLINE_EDITOR_CSS = "[data-testid='save-inline-editor']";
         private static final String CELL_IS_NOT_EDITABLE_EXCEPTION = "Cell is not editable";
@@ -663,7 +663,7 @@ public class TableComponent {
         private void toggleCell(String character) {
             WebElement expandIcon = cellElement.findElement(By.cssSelector(TREE_NODE_EXPAND_CSS));
             WebElementUtils.clickWebElement(driver, expandIcon);
-            DelayUtils.waitForNestedElements(new WebDriverWait(driver,  Duration.ofSeconds(20)), expandIcon,
+            DelayUtils.waitForNestedElements(new WebDriverWait(driver, Duration.ofSeconds(20)), expandIcon,
                     By.cssSelector("[" + ARIA_LABEL_ATTRIBUTE + "='" + character + "']"));
         }
 
@@ -701,14 +701,14 @@ public class TableComponent {
 
         private void setValue(String value) {
             openInlineEditor();
-            WebDriverWait wait = new WebDriverWait(driver,  Duration.ofSeconds(15));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             ComponentFactory.create(columnId + INLINE_EDITOR_INPUT_ID, driver, wait).setSingleStringValue(value);
             driver.findElement(By.cssSelector(SAVE_BUTTON_INLINE_EDITOR_CSS)).click();
         }
 
         private void openInlineEditor() {
             moveToElement(driver, cellElement);
-            cellElement.findElements(By.cssSelector(CELL_EDIT_BUTTON)).stream()
+            cellElement.findElements(By.cssSelector(String.format(CELL_EDIT_BUTTON_PATTERN, columnId))).stream()
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException(CELL_IS_NOT_EDITABLE_EXCEPTION))
                     .click();
