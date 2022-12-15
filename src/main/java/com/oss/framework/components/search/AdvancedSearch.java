@@ -100,7 +100,7 @@ public class AdvancedSearch {
             return getFiltersBox();
         } else {
             if (!isSearchPanelOpen()) {
-                DelayUtils.waitForNestedElements(wait,webElement, By.xpath(SEARCH_PANEL_OPEN_BUTTON));
+                DelayUtils.waitForNestedElements(wait, webElement, By.xpath(SEARCH_PANEL_OPEN_BUTTON));
                 WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(SEARCH_PANEL_OPEN_BUTTON)));
             }
             return getSearchPanel();
