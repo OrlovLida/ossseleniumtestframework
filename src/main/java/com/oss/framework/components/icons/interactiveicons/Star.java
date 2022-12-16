@@ -8,41 +8,39 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Star extends InteractiveIcon {
+public class Star extends InteractiveIcon<Star.StarStatus> {
 
-    private Star(WebDriver driver, WebDriverWait wait, WebElement parent, WebElement icon) {
-        super(driver, wait, parent, icon);
+    private Star(WebDriver driver, WebDriverWait wait, WebElement parent) {
+        super(driver, wait, parent);
     }
 
     public static Star create(WebDriver driver, WebElement parent) {
         WebDriverWait webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(50));
-        WebElement icon = parent.findElement(By.cssSelector("i.OSSIcon"));
-        return new Star(driver, webDriverWait, parent, icon);
+        return new Star(driver, webDriverWait, parent);
     }
 
     @Override
-    public void setValue(IconValue value) {
-        if (!(value instanceof IconStatus)) throw new NoSuchElementException ("Provided value doesn't match for Star Icon");
-        if (value.equals(IconStatus.MARK)) {
+    public void setValue(StarStatus value) {
+        if (value.equals(StarStatus.MARK)) {
             mark();
         }
-        if (value.equals(IconStatus.UNMARK)) {
+        if (value.equals(StarStatus.UNMARK)) {
             unmark();
         }
 
     }
 
     @Override
-    public IconValue getValue() {
+    public StarStatus getValue() {
         String iconName = getIcon().getAttribute("data-icon-name");
         if (iconName.contains("FAVOURITE_MARKED")) {
-            return IconStatus.MARK;
+            return StarStatus.MARK;
         }
         if (iconName.contains("FAVOURITE_UNMARKED")) {
-            return IconStatus.UNMARK;
+            return StarStatus.UNMARK;
         }
         if (iconName.contains("FAVOURITE_UNDETERMINED")) {
-            return IconStatus.UNDETERMINED;
+            return StarStatus.UNDETERMINED;
         }
         throw new NoSuchElementException("Cannot find status for this icon");
 
@@ -60,7 +58,7 @@ public class Star extends InteractiveIcon {
         }
     }
 
-    public enum IconStatus implements IconValue {
+    public enum StarStatus {
         MARK,
         UNMARK,
         UNDETERMINED

@@ -4,21 +4,19 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public abstract class InteractiveIcon {
+public abstract class InteractiveIcon<T> {
     protected final WebDriver driver;
     protected final WebElement parent;
     protected final WebDriverWait wait;
-    protected final WebElement iconElement;
 
-    InteractiveIcon(WebDriver driver, WebDriverWait wait, WebElement parent, WebElement iconElement) {
+    InteractiveIcon(WebDriver driver, WebDriverWait wait, WebElement parent) {
         this.driver = driver;
         this.wait = wait;
         this.parent = parent;
-        this.iconElement = iconElement;
     }
 
-    public abstract void setValue(IconValue value);
+    public abstract void setValue(T value);
 
-    public abstract IconValue getValue();
+    public abstract T getValue();
 
 }
