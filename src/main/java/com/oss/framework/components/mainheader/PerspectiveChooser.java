@@ -20,7 +20,9 @@ public class PerspectiveChooser {
     private static final String NETWORK = "Network";
     private static final String PLAN = "Plan";
     private static final String WITH_REMOVE = "With removed";
+    private static final String WITH_REMOVE_URL = "withRemoved=true";
     private static final String WITHOUT_REMOVED = "Without removed";
+    private static final String WITHOUT_REMOVED_URL = "withRemoved=false";
     private static final String CURRENT_TASK = "Display my current Task";
     private static final String PLAN_CONTEXT_WIZARD_ID = "plaPlanChooserView_prompt-card";
     private static final String EXISTING_PROJECTS_INPUT_ID = "searchBoxId";
@@ -68,13 +70,17 @@ public class PerspectiveChooser {
     }
 
     public void setWithRemove() {
-        setPerspective(WITH_REMOVE);
-        wait.until(url -> driver.getCurrentUrl().contains("withRemoved=true"));
+        if (driver.getCurrentUrl().contains(WITHOUT_REMOVED_URL)) {
+            setPerspective(WITH_REMOVE);
+            wait.until(url -> driver.getCurrentUrl().contains(WITH_REMOVE_URL));
+        }
     }
 
     public void setWithoutRemoved() {
-        setPerspective(WITHOUT_REMOVED);
-        wait.until(url -> driver.getCurrentUrl().contains("withRemoved=false"));
+        if (driver.getCurrentUrl().contains(WITH_REMOVE_URL)) {
+            setPerspective(WITHOUT_REMOVED);
+            wait.until(url -> driver.getCurrentUrl().contains(WITHOUT_REMOVED_URL));
+        }
     }
 
     public void setCurrentTask() {
