@@ -27,6 +27,7 @@ public class ObjectSearchField extends Input {
     private static final String INPUT = ".//input";
     private static final String ADVANCED_SEARCH_ID = "advancedSearch";
     private static final String OSF_NOT_DISABLED_CSS = ".md-input-cont:not(.md-input-disabled)";
+    private static final String ICON_CHEVRON_UP_CSS = "[data-icon='chevron-up']";
 
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
@@ -117,8 +118,9 @@ public class ObjectSearchField extends Input {
             setMultiValues(value, By.xpath(OSF_INNER_INPUT), isContains);
         } else {
             setSingleValueDriver(value.getStringValue(), By.xpath(OSF_INNER_INPUT), isContains);
+            WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(ICON_CHEVRON_UP_CSS)));//TODO change to ESC after OSSWEB-20623
         }
-        WebElementUtils.clickWebElement(driver, webElement);//TODO change to ESC after OSSWEB-20623
+
     }
 
     private void setMultiValues(Data values, By by, boolean isContains) {
