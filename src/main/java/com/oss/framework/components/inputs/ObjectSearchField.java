@@ -118,9 +118,8 @@ public class ObjectSearchField extends Input {
             setMultiValues(value, By.xpath(OSF_INNER_INPUT), isContains);
         } else {
             setSingleValueDriver(value.getStringValue(), By.xpath(OSF_INNER_INPUT), isContains);
-            WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(ICON_CHEVRON_UP_CSS)));//TODO change to ESC after OSSWEB-20623
         }
-
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(ICON_CHEVRON_UP_CSS)));//TODO change to ESC after OSSWEB-20623
     }
 
     private void setMultiValues(Data values, By by, boolean isContains) {
