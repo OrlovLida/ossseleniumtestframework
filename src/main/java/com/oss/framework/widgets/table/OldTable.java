@@ -263,6 +263,11 @@ public class OldTable extends Widget implements TableInterface {
         getColumn(attributeLabel).unselectCellByValue(value);
     }
 
+    public void unselectRowContains(String attributeLabel, String value) {
+        DelayUtils.waitForPageToLoad(driver, webDriverWait);
+        getColumn(attributeLabel).unselectCellByValueContains(value);
+    }
+
     public Column clearColumnValue(String attributeLabel) {
         Column column = getColumn(attributeLabel);
         DelayUtils.waitForPageToLoad(driver, webDriverWait);
@@ -487,6 +492,10 @@ public class OldTable extends Widget implements TableInterface {
 
         private void unselectCellByValue(String value) {
             unselectCell(getCell(value));
+        }
+
+        private void unselectCellByValueContains(String value) {
+            unselectCell(getCellContains(value));
         }
 
         private void unselectCell(WebElement cell) {
