@@ -16,6 +16,10 @@ public class Star extends InteractiveIcon<Star.StarStatus> {
     private static final String FAVOURITE_UNDETERMINED = "FAVOURITE_UNDETERMINED";
     private static final String CANNOT_FIND_STATUS_FOR_THIS_ICON_EXCEPTION = "Cannot find status for this icon";
     private static final String DATA_ICON_NAME = "data-icon-name";
+    private static final String ICON_CSS = "i.OSSIcon";
+    private static final String FAVOURITE_MARKED_CSS = "commonIcon-FAVOURITE_MARKED";
+    private static final String ARIA_LABEL_STAR_CSS = "[aria-label='STAR']";
+    private static final String ARIA_LABEL_FAVOURITE_CSS = "[aria-label='FAVOURITE']";
 
     private Star(WebDriver driver, WebDriverWait wait, WebElement parent) {
         super(driver, wait, parent);
@@ -55,14 +59,14 @@ public class Star extends InteractiveIcon<Star.StarStatus> {
     private void mark() {
         if (!isMarked()) {
             getIcon().click();
-            DelayUtils.waitForNestedElements(wait, parent, By.cssSelector("[aria-label='FAVOURITE']"));
+            DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(ARIA_LABEL_FAVOURITE_CSS));
         }
     }
 
     private void unmark() {
         if (isMarked()) {
             getIcon().click();
-            DelayUtils.waitForNestedElements(wait, parent, By.cssSelector("[aria-label='STAR']"));
+            DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(ARIA_LABEL_STAR_CSS));
         }
     }
 
@@ -73,11 +77,11 @@ public class Star extends InteractiveIcon<Star.StarStatus> {
     }
 
     private boolean isMarked() {
-        return getIcon().getAttribute(DATA_ICON_NAME).equals("commonIcon-FAVOURITE_MARKED");
+        return getIcon().getAttribute(DATA_ICON_NAME).equals(FAVOURITE_MARKED_CSS);
     }
 
     private WebElement getIcon() {
-        return parent.findElement(By.cssSelector("i.OSSIcon"));
+        return parent.findElement(By.cssSelector(ICON_CSS));
 
     }
 }
