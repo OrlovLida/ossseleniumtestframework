@@ -72,6 +72,7 @@ public class Wizard {
         DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_DATA_TEST_ID_PATTERN, componentId));
         Input input = getComponent(componentId, componentType);
         input.setSingleStringValue(value);
+        waitForWizardToLoad();
         return input;
     }
 
@@ -79,6 +80,7 @@ public class Wizard {
         DelayUtils.waitForNestedElements(wait, webElement, String.format(BY_DATA_TEST_ID_PATTERN, componentId));
         Input input = getComponent(componentId);
         input.setSingleStringValue(value);
+        waitForWizardToLoad();
         return input;
     }
 
