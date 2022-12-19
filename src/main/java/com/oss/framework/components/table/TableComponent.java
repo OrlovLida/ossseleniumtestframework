@@ -20,6 +20,8 @@ import com.google.common.collect.Lists;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.attributechooser.ListAttributesChooser;
 import com.oss.framework.components.contextactions.InlineMenu;
+import com.oss.framework.components.icons.interactiveicons.InteractiveIcon;
+import com.oss.framework.components.icons.interactiveicons.InteractiveIconFactory;
 import com.oss.framework.components.inputs.ComponentFactory;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.pagination.PaginationComponent;
@@ -111,6 +113,10 @@ public class TableComponent {
 
     public boolean hasNoData() {
         return WebElementUtils.isElementPresent(webElement, By.xpath(EMPTY_DATA_ROW_XPATH));
+    }
+
+    public Cell getCell(int index, String columnId) {
+        return Cell.createFromParent(driver, webElement, index, columnId);
     }
 
     private Optional<Integer> getRowIndex(String value, String columnId) {
@@ -621,6 +627,10 @@ public class TableComponent {
                 return "false";
             }
             return cellElement.findElement(By.cssSelector(LONG_TEXT_WRAPPER_CSS)).getAttribute(TEXT_CONTENT);
+        }
+
+        public InteractiveIcon<?> getInteractiveIcon() {
+            return InteractiveIconFactory.create(driver, cellElement);
         }
 
         private int getIndex() {
