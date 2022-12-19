@@ -29,7 +29,6 @@ public class InteractiveIconFactory {
         if (iconName.contains(FAVOURITE)) {
             return Star.create(driver, webDriverWait, parent);
         }
-
         throw new NoSuchElementException(NOT_SUPPORTED_ICON_EXCEPTION + iconName);
     }
 }

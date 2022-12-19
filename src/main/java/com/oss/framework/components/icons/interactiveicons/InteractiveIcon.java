@@ -18,5 +18,4 @@ public abstract class InteractiveIcon<T> {
     public abstract void setValue(T value);
 
     public abstract T getValue();
-
 }
