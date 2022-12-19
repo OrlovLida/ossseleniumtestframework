@@ -17,7 +17,6 @@ public class Star extends InteractiveIcon<Star.StarStatus> {
     private static final String CANNOT_FIND_STATUS_FOR_THIS_ICON_EXCEPTION = "Cannot find status for this icon";
     private static final String DATA_ICON_NAME = "data-icon-name";
     private static final String ICON_CSS = "i.OSSIcon";
-    private static final String FAVOURITE_MARKED_CSS = "commonIcon-FAVOURITE_MARKED";
     private static final String ARIA_LABEL_STAR_CSS = "[aria-label='STAR']";
     private static final String ARIA_LABEL_FAVOURITE_CSS = "[aria-label='FAVOURITE']";
 
@@ -79,7 +78,7 @@ public class Star extends InteractiveIcon<Star.StarStatus> {
     }
 
     private boolean isMarked() {
-        return getIcon().getAttribute(DATA_ICON_NAME).equals(FAVOURITE_MARKED_CSS);
+        return getIcon().getAttribute(DATA_ICON_NAME).equals(FAVOURITE_MARKED);
     }
 
     private WebElement getIcon() {
