@@ -105,7 +105,7 @@ public class ObjectSearchField extends Input {
     }
 
     private boolean isSingleComponent() {
-        return !webElement.findElement(By.xpath(".//./ancestor::div[contains(@class,'component')]")).findElements(By.className(OSF_SINGLE)).isEmpty();
+        return !webElement.findElements(By.className(OSF_SINGLE)).isEmpty();
     }
 
     private boolean isMultiComponentEmpty() {
