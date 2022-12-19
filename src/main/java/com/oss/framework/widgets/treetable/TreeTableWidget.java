@@ -6,6 +6,13 @@
  */
 package com.oss.framework.widgets.treetable;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.attributechooser.AttributesChooser;
@@ -20,12 +27,6 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.table.TableInterface;
 import com.oss.framework.widgets.table.TableRow;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Gabriela Zaranek
@@ -182,6 +183,10 @@ public class TreeTableWidget extends Widget implements TableInterface {
     @Override
     public String getCellValue(int rowIndex, String columnId) {
         return getTableComponent().getCellValue(rowIndex, columnId);
+    }
+
+    public TableComponent.Cell getCell(int index, String columnId) {
+        return getTableComponent().getCell(index, columnId);
     }
 
     @Override
