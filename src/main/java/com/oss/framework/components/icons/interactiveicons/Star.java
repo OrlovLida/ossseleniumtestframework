@@ -33,6 +33,7 @@ public class Star extends InteractiveIcon<Star.StarStatus> {
     public void setValue(StarStatus value) {
         if (value.equals(StarStatus.MARK)) {
             mark();
+            return;
         }
         if (value.equals(StarStatus.UNMARK)) {
             unmark();
