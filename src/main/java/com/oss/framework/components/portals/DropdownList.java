@@ -3,6 +3,7 @@ package com.oss.framework.components.portals;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -64,29 +65,35 @@ public class DropdownList {
 
     public Set<String> getOptions() {
         DelayUtils.waitByElement(wait, dropdownListElement);
-        List<WebElement> visibleElements = driver.findElements(By.cssSelector(DROPDOWN_ELEMENT_CSS));
+        List<WebElement> visibleElements = getVisibleElements();
         Set<String> optionsLabels = new LinkedHashSet<>();
-
-        for (WebElement option : visibleElements) {
-            optionsLabels.add(option.getAttribute(TEXT_CONTENT_ATTRIBUTE));
-        }
-
-        String lastVisibleOption = visibleElements.get(visibleElements.size() - 1).getText();
-        WebElementUtils.moveToElement(driver, visibleElements.get(visibleElements.size() - 1));
-        visibleElements = driver.findElements(By.cssSelector(DROPDOWN_ELEMENT_CSS));
-        String temporaryLastOption = visibleElements.get(visibleElements.size() - 1).getText();
+        String lastVisibleOption = getLastOption(visibleElements);
+        String temporaryLastOption = null;
 
         while (!lastVisibleOption.equals(temporaryLastOption)) {
-            for (WebElement option : visibleElements) {
-                optionsLabels.add(option.getAttribute(TEXT_CONTENT_ATTRIBUTE));
-            }
-
-            lastVisibleOption = visibleElements.get(visibleElements.size() - 1).getText();
-            WebElementUtils.moveToElement(driver, visibleElements.get(visibleElements.size() - 1));
-            visibleElements = driver.findElements(By.cssSelector(DROPDOWN_ELEMENT_CSS));
-            temporaryLastOption = visibleElements.get(visibleElements.size() - 1).getText();
+            optionsLabels.addAll(getVisibleOption(visibleElements));
+            lastVisibleOption = getLastOption(visibleElements);
+            moveToLastOption(visibleElements);
+            visibleElements = getVisibleElements();
+            temporaryLastOption = getLastOption(visibleElements);
         }
         return optionsLabels;
+    }
+
+    List<WebElement> getVisibleElements() {
+        return driver.findElements(By.cssSelector(DROPDOWN_ELEMENT_CSS));
+    }
+
+    List<String> getVisibleOption(List<WebElement> visibleElements) {
+        return visibleElements.stream().map(option -> option.getAttribute(TEXT_CONTENT_ATTRIBUTE)).collect(Collectors.toList());
+    }
+
+    private void moveToLastOption(List<WebElement> visibleElements) {
+        WebElementUtils.moveToElement(driver, visibleElements.get(visibleElements.size() - 1));
+    }
+
+    private String getLastOption(List<WebElement> visibleElements) {
+        return visibleElements.get(visibleElements.size() - 1).getText();
     }
 
     public void selectOptionById(String optionId) {
