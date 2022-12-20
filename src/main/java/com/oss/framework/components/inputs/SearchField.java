@@ -1,5 +1,7 @@
 package com.oss.framework.components.inputs;
 
+import java.util.Set;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +17,7 @@ import com.oss.framework.utils.WebElementUtils;
 public class SearchField extends Input {
 
     private static final String INPUT_XPATH = ".//input";
+    private static final String MAGNIFIER_CSS = "i[aria-label='SEARCH']";
 
     private SearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
@@ -36,6 +39,20 @@ public class SearchField extends Input {
     public void setValueContains(Data value) {
         typeValue(value);
         DropdownList.create(driver, webDriverWait).selectOptionContains(value.getStringValue());
+    }
+
+    public Set<String> getOptionsContains(Data value) {
+        typeValue(value);
+        return DropdownList.create(driver, webDriverWait).getOptions();
+    }
+
+    public Set<String> getOptions() {
+        clickOnMagnifier();
+        return DropdownList.create(driver, webDriverWait).getOptions();
+    }
+
+    private void clickOnMagnifier() {
+        webElement.findElement(By.cssSelector(MAGNIFIER_CSS)).click();
     }
 
     @Override
