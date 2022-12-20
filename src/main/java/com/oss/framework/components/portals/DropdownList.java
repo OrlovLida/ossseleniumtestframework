@@ -67,24 +67,26 @@ public class DropdownList {
         DelayUtils.waitByElement(wait, dropdownListElement);
         List<WebElement> visibleElements = getVisibleElements();
         Set<String> optionsLabels = new LinkedHashSet<>();
-        String lastVisibleOption = getLastOption(visibleElements);
-        String temporaryLastOption = null;
+        if (!visibleElements.isEmpty()) {
+            String lastVisibleOption = getLastOption(visibleElements);
+            String temporaryLastOption = null;
 
-        while (!lastVisibleOption.equals(temporaryLastOption)) {
-            optionsLabels.addAll(getVisibleOption(visibleElements));
-            lastVisibleOption = getLastOption(visibleElements);
-            moveToLastOption(visibleElements);
-            visibleElements = getVisibleElements();
-            temporaryLastOption = getLastOption(visibleElements);
+            while (!lastVisibleOption.equals(temporaryLastOption)) {
+                optionsLabels.addAll(getVisibleOption(visibleElements));
+                lastVisibleOption = getLastOption(visibleElements);
+                moveToLastOption(visibleElements);
+                visibleElements = getVisibleElements();
+                temporaryLastOption = getLastOption(visibleElements);
+            }
         }
         return optionsLabels;
     }
 
-    List<WebElement> getVisibleElements() {
+    private List<WebElement> getVisibleElements() {
         return driver.findElements(By.cssSelector(DROPDOWN_ELEMENT_CSS));
     }
 
-    List<String> getVisibleOption(List<WebElement> visibleElements) {
+    private List<String> getVisibleOption(List<WebElement> visibleElements) {
         return visibleElements.stream().map(option -> option.getAttribute(TEXT_CONTENT_ATTRIBUTE)).collect(Collectors.toList());
     }
 
@@ -93,7 +95,7 @@ public class DropdownList {
     }
 
     private String getLastOption(List<WebElement> visibleElements) {
-        return visibleElements.get(visibleElements.size() - 1).getText();
+        return visibleElements.get(visibleElements.size() - 1).getAttribute(TEXT_CONTENT_ATTRIBUTE);
     }
 
     public void selectOptionById(String optionId) {
