@@ -6,12 +6,8 @@
  */
 package com.oss.framework.components.alerts;
 
-import java.time.Duration;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
@@ -22,8 +18,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
+import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Gabriela Kasza
@@ -46,9 +45,10 @@ public class SystemMessageContainer implements SystemMessageInterface {
     private static final String CANNOT_MAP_TO_MESSAGE_EXCEPTION = "Cannot map to message type.";
     private static final String NO_MESSAGE_TEXT_EXCEPTION = "Cannot get text from system message.";
     private static final String TEXT_CONTAINER_CSS = ".textContainer";
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private WebElement messageContainer;
+    private static final String MESSAGE_LINK_URL_XPATH = ".//a[contains(@href, '#')]";
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement messageContainer;
 
     private SystemMessageContainer(WebDriver driver, WebDriverWait wait, WebElement messageContainer) {
         this.driver = driver;
@@ -96,7 +96,19 @@ public class SystemMessageContainer implements SystemMessageInterface {
     @Override
     public void clickMessageLink() {
         DelayUtils.waitForPresence(wait, By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
-        messageContainer.findElement(By.xpath(".//a[contains(@href, '#')]")).click();
+        List<WebElement> webElements = messageContainer.findElements(By.xpath(MESSAGE_LINK_URL_XPATH));
+        if (!webElements.isEmpty()) {
+            webElements.get(0).click();
+        }
+    }
+
+    public Optional<String> getLinkURL() {
+        DelayUtils.waitForPresence(wait, By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
+        List<WebElement> webElements = messageContainer.findElements(By.xpath(MESSAGE_LINK_URL_XPATH));
+        if (!webElements.isEmpty()) {
+            return Optional.ofNullable(webElements.get(0).getAttribute("href"));
+        } else
+            return Optional.empty();
     }
 
     @Override
@@ -132,7 +144,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
             builder.moveToElement(messageContainer).moveByOffset(100, 20).build().perform();
             DelayUtils.sleep(100);
             builder.moveToElement(messageContainer).build().perform();
-            DelayUtils.waitForNestedElements(new WebDriverWait(driver,  Duration.ofSeconds(5)), messageContainer, closeButtonXpath);
+            DelayUtils.waitForNestedElements(new WebDriverWait(driver, Duration.ofSeconds(5)), messageContainer, closeButtonXpath);
             builder.click(messageContainer.findElement(By.xpath(closeButtonXpath))).build().perform();
             log.debug("System message closed");
         } catch (NoSuchElementException | TimeoutException e) {
