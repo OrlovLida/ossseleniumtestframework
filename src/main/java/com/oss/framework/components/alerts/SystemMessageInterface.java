@@ -15,8 +15,6 @@ public interface SystemMessageInterface {
 
     void clickMessageLink();
 
-    Optional<String> getMessageLinkURL();
-
     void waitForMessageDisappear();
 
 }

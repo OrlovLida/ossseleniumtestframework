@@ -102,8 +102,7 @@ public class SystemMessageContainer implements SystemMessageInterface {
         }
     }
 
-    @Override
-    public Optional<String> getMessageLinkURL() {
+    public Optional<String> getLinkURL() {
         DelayUtils.waitForPresence(wait, By.cssSelector(SYSTEM_MESSAGE_ITEM_CSS));
         List<WebElement> webElements = messageContainer.findElements(By.xpath(MESSAGE_LINK_URL_XPATH));
         if (!webElements.isEmpty()) {
