@@ -18,7 +18,7 @@ import com.oss.framework.widgets.Widget;
  * @author Bartosz Nowak
  */
 public class FMSMTable extends Widget {
-    private static final String TABLE_ROW_XPATH = "//div[@role='row']['table-row']";
+    private static final String TABLE_ROW_XPATH = ".//div[@role='row']['table-row']";
     private static final String CELL_CONTENT = "cell__content";
     
     private FMSMTable(WebDriver driver, WebDriverWait wait, String tableWidgetId) {
