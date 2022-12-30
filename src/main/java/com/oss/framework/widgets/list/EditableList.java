@@ -6,16 +6,6 @@
  */
 package com.oss.framework.widgets.list;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.categorylist.CategoryList;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.ComponentFactory;
@@ -25,6 +15,15 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 /**
  * @author Gabriela Kasza
@@ -33,6 +32,7 @@ public class EditableList extends Widget {
 
     private static final String LIST_WIDGET_CLASS = "ExtendedList";
     private static final String XPATH_ADD_ROW = "//button[contains(@class, 'add-row-button')]";
+    private static final String ROWS_OF_LIST_OR_NO_DATA_CSS = "li.list_row--editable, li.noData";
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'list_row--editable')]";
     private static final String EMPTY_RESULTS_XPATH =
             "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
@@ -91,7 +91,7 @@ public class EditableList extends Widget {
     }
 
     public List<Row> getVisibleRows() {
-        DelayUtils.waitByXPath(webDriverWait, XPATH_ROWS_OF_LIST);
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(ROWS_OF_LIST_OR_NO_DATA_CSS));
         List<WebElement> listElements = webElement.findElements(By.xpath(XPATH_ROWS_OF_LIST));
         List<Row> rows = new ArrayList<>();
         for (WebElement listElement : listElements) {
