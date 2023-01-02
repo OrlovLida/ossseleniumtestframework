@@ -1,6 +1,7 @@
 package com.oss.framework.components.inputs;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -28,6 +29,7 @@ public class ObjectSearchField extends Input {
     private static final String ADVANCED_SEARCH_ID = "advancedSearch";
     private static final String OSF_NOT_DISABLED_CSS = ".md-input-cont:not(.md-input-disabled)";
     private static final String ICON_CHEVRON_UP_CSS = "[data-icon='chevron-up']";
+    private static final String BUTTON_CLASS = "md-input-buttons";
 
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
@@ -163,4 +165,19 @@ public class ObjectSearchField extends Input {
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
     }
+
+    public Set<String> getOptions() {
+        expandDropDownList();
+        return DropdownList.create(driver, webDriverWait).getOptions();
+    }
+
+    public String getFirstOption() {
+        expandDropDownList();
+        return DropdownList.create(driver, webDriverWait).getFirstOption();
+    }
+
+    private void expandDropDownList() {
+        webElement.findElement(By.className(BUTTON_CLASS)).click();
+    }
+
 }
