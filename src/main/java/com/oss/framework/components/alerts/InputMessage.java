@@ -6,7 +6,10 @@ import java.util.stream.Collectors;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
+@Deprecated
+/**
+ * @Depracated - replace by ComponentMessage, will be removed in 4.0.x
+ */
 public class InputMessage {
     
     private static final String TEXT_CONTENT = "textContent";
