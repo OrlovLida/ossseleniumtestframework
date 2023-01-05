@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.oss.framework.components.alerts.InputMessage;
+import com.oss.framework.components.alerts.ElementMessage;
 import com.oss.framework.components.data.Data;
 import com.oss.framework.components.tooltip.Tooltip;
 import com.oss.framework.utils.DelayUtils;
@@ -79,8 +79,8 @@ public abstract class Input {
     }
 
     public final List<String> getMessages() {
-        InputMessage messages = InputMessage.create(driver, componentId);
-        return messages.getMessages();
+        ElementMessage messages = ElementMessage.create(driver, componentId);
+        return messages.getMessagesText();
     }
 
     public abstract void setValueContains(Data value);
