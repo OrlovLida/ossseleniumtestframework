@@ -16,6 +16,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.oss.framework.components.alerts.ComponentMessage;
+import com.oss.framework.components.alerts.ElementMessage;
+import com.oss.framework.components.alerts.Message;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.prompts.Popup;
@@ -115,6 +118,10 @@ public class TreeComponent {
                     .map(child -> Node.create(driver, webDriverWait, child))
                     .collect(Collectors.toList());
         }
+    }
+
+    public List<Message> getMessages() {
+        return ComponentMessage.create(driver, treeComponentElement.getAttribute(CSSUtils.TEST_ID)).getMessages();
     }
 
     private Node getLastVisibleNode(List<Node> visibleNodes) {
@@ -220,6 +227,9 @@ public class TreeComponent {
         private static final String LABEL_NODE_CSS = ".OSSRichText,.more-button";
         private static final String OSS_ICON_CLASS = "OSSIcon";
         private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
+        private static final String TREE_NODE_COMPONENT_CONTAINER_CSS = ".tree-node-component-container";
+        private static final String NODE_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION = "Node doesn't have Message Text";
+
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
         private final WebElement nodeElement;
@@ -367,6 +377,20 @@ public class TreeComponent {
 
         public boolean isExpandNextLevelPresent() {
             return !nodeElement.findElements(By.className(EXPAND_NEXT_LEVEL_ARROW_XPATH)).isEmpty();
+        }
+
+        public Optional<Message> getMessage() {
+            if (driver.findElements(By.cssSelector("[" + CSSUtils.DATA_PARENT_TEST_ID + "='" + nodeId + "']")).isEmpty()) {
+                return Optional.empty();
+            }
+            List<String> allClasses = CSSUtils.getAllClasses(nodeElement.findElement(By.cssSelector(TREE_NODE_COMPONENT_CONTAINER_CSS)));
+            return Optional.of(Message.create(getMessageText(), allClasses));
+        }
+
+        private String getMessageText() {
+            return ElementMessage.create(driver, nodeId).getMessagesText().stream()
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchElementException(NODE_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION));
         }
 
         private void clickFilter() {
