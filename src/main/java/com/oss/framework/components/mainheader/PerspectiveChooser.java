@@ -89,7 +89,7 @@ public class PerspectiveChooser {
     public void setWithoutRemoved() {
         if (driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true))) {
             setPerspective(WITHOUT_REMOVED);
-            wait.until(url -> driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, false)));
+            wait.until(url -> !driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true)));
         }
     }
 
