@@ -16,14 +16,15 @@ import com.oss.framework.wizard.Wizard;
  * @author Gabriela Kasza
  */
 public class PerspectiveChooser {
+    private static final String PERSPECTIVE_QUERY_PATTERN = "perspective=%s";
+    private static final String DATE_QUERY_PATTERN = "date=%s";
+    private static final String WITH_REMOVED_QUERY_PATTERN = "withRemoved=%b";
     private static final String LIVE = "Live";
     private static final String NETWORK = "Network";
     private static final String PLAN = "Plan";
     private static final String CURRENT_TASK = "current-task";
     private static final String WITH_REMOVE = "With removed";
-    private static final String WITH_REMOVE_URL = "withRemoved=true";
     private static final String WITHOUT_REMOVED = "Without removed";
-    private static final String WITHOUT_REMOVED_URL = "withRemoved=false";
     private static final String DISPLAY_CURRENT_TASK = "Display my current Task";
     private static final String PLAN_CONTEXT_WIZARD_ID = "plaPlanChooserView_prompt-card";
     private static final String EXISTING_PROJECTS_INPUT_ID = "searchBoxId";
@@ -44,51 +45,51 @@ public class PerspectiveChooser {
     }
 
     public void setLivePerspective() {
-        if (!driver.getCurrentUrl().contains(LIVE.toUpperCase())) {
+        if (!driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, LIVE.toUpperCase()))) {
             setPerspective(LIVE);
-            wait.until(url -> driver.getCurrentUrl().contains(LIVE.toUpperCase()));
+            wait.until(url -> driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, LIVE.toUpperCase())));
         }
     }
 
     public void setNetworkPerspective() {
-        if (!driver.getCurrentUrl().contains(NETWORK.toUpperCase())) {
+        if (!driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, NETWORK.toUpperCase()))) {
             setPerspective(NETWORK);
-            wait.until(url -> driver.getCurrentUrl().contains(NETWORK.toUpperCase()));
+            wait.until(url -> driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, NETWORK.toUpperCase())));
         }
     }
 
     public void setPlanPerspective(String processCodeOrName) {
-        if (!driver.getCurrentUrl().contains(PLAN.toUpperCase())) {
+        if (!driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, PLAN.toUpperCase()))) {
             setPerspective(PLAN);
             Wizard planChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
             planChooser.getComponent(EXISTING_PROJECTS_INPUT_ID).setSingleStringValueContains(processCodeOrName);
             planChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
-            wait.until(url -> driver.getCurrentUrl().contains(PLAN.toUpperCase()));
+            wait.until(url -> driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, PLAN.toUpperCase())));
         }
     }
 
     public void setPlanDatePerspective(String date) {
-        if (!driver.getCurrentUrl().contains(date)) {
+        if (!driver.getCurrentUrl().contains(String.format(DATE_QUERY_PATTERN, date))) {
             setPerspective(PLAN);
             Wizard dataChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
             dataChooser.setComponentValue(PLAN_CONTEXT_RADIOBUTTON_ID, DATE);
             dataChooser.setComponentValue(DATE_INPUT_ID, date);
             dataChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
-            wait.until(url -> driver.getCurrentUrl().contains(date));
+            wait.until(url -> driver.getCurrentUrl().contains(String.format(DATE_QUERY_PATTERN, date)));
         }
     }
 
     public void setWithRemove() {
-        if (driver.getCurrentUrl().contains(WITHOUT_REMOVED_URL)) {
+        if (!driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true))) {
             setPerspective(WITH_REMOVE);
-            wait.until(url -> driver.getCurrentUrl().contains(WITH_REMOVE_URL));
+            wait.until(url -> driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true)));
         }
     }
 
     public void setWithoutRemoved() {
-        if (driver.getCurrentUrl().contains(WITH_REMOVE_URL)) {
+        if (driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true))) {
             setPerspective(WITHOUT_REMOVED);
-            wait.until(url -> driver.getCurrentUrl().contains(WITHOUT_REMOVED_URL));
+            wait.until(url -> driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, false)));
         }
     }
 
