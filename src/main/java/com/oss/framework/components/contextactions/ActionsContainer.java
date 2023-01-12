@@ -1,16 +1,17 @@
 package com.oss.framework.components.contextactions;
 
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class ActionsContainer implements ActionsInterface {
 
@@ -119,7 +120,9 @@ public class ActionsContainer implements ActionsInterface {
         if (isElementPresent(webElement, by)) {
             return webElement.findElement(by);
         } else {
-            clickWithRetry(webElement.findElement(By.cssSelector(ACTION_MORE_CSS)), By.className(ACTIONS_DROPDOWN_CLASS));
+            if (isElementPresent(webElement, By.cssSelector(ACTION_MORE_CSS))) {
+                clickWithRetry(webElement.findElement(By.cssSelector(ACTION_MORE_CSS)), By.className(ACTIONS_DROPDOWN_CLASS));
+            }
             return webDriver.findElement(By.className(ACTIONS_DROPDOWN_CLASS)).findElement(by);
         }
     }
