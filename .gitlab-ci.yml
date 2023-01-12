@@ -1,2 +1,7 @@
-job:
-  script: "mvn compile"
+variables:
+  MVN_ARGS: "-DskipTests"
+
+include:
+  - project: toss/devops/cicd/citemplate
+    ref: stable
+    file: base-ci.yml
