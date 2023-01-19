@@ -17,10 +17,11 @@ public class DashboardDesigner {
 
     private static final String DASHBOARD_DESIGNER_CSS = ".dashboard-designer__view-container";
     private static final String SIMPLE_CARD_CONTAINER_CSS = ".simple-card-container";
-    private static final int GRID_PADDING = 32;
+    private static final float GRID_PADDING = 32f;
     private static final int COLUMNS_NUMBER_IN_GRID = 24;
     private static final String GRID_CONTAINER = ".grid-container";
-    private static final int ROWS_NUMBER_IN_GRID = 12;
+    private static final String DESIGN_WORKSPACE = ".react-grid-layout,.info-component";
+    private static final float ROW_NUMBER_IN_GRID = 12f;
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement designerElement;
@@ -42,6 +43,7 @@ public class DashboardDesigner {
     }
 
     public List<Card> getCards() {
+        DelayUtils.waitForNestedElements(wait, designerElement, By.cssSelector(DESIGN_WORKSPACE));
         List<WebElement> cards = designerElement.findElements(By.cssSelector(SIMPLE_CARD_CONTAINER_CSS));
         return cards.stream()
                 .map(card -> card.getAttribute(CSSUtils.TEST_ID))
@@ -65,7 +67,7 @@ public class DashboardDesigner {
     }
 
     private int getOffsetX(Card card, int xSize) {
-        return calculateOffset(getFrameWidthSize(), COLUMNS_NUMBER_IN_GRID, xSize, card.getWidthCard());
+        return calculateSizeX(xSize) - card.getWidthCard();
     }
 
     private int getFrameWidthSize() {
@@ -77,13 +79,18 @@ public class DashboardDesigner {
     }
 
     private int getOffsetY(Card card, int ySize) {
-        return calculateOffset(getFrameHeightSize(), ROWS_NUMBER_IN_GRID, ySize, card.getHeightCard());
+        return calculateSizeY(ySize) - card.getHeightCard();
     }
 
-    private int calculateOffset(int frameSizePx, int numberGrid, int targetSize, int currentCardSizePx) {
-        double grid = frameSizePx - GRID_PADDING;
-        double column = (grid / numberGrid);
-        int cardSize = (int) Math.ceil(column * targetSize);
-        return cardSize - currentCardSizePx;
+    private int calculateSizeY(int ySize) {
+        float rowHeight = getFrameHeightSize() / ROW_NUMBER_IN_GRID;
+        return (int) (rowHeight * ySize);
     }
+
+    private int calculateSizeX(int xSize) {
+        double grid = getFrameWidthSize() - GRID_PADDING;
+        double column = (grid / COLUMNS_NUMBER_IN_GRID);
+        return (int) Math.ceil(column * xSize);
+    }
+
 }
