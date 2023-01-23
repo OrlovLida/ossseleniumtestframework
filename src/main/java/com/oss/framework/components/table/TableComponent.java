@@ -693,15 +693,13 @@ public class TableComponent {
         private void expandCell() {
             if (!isCellExpanded()) {
                 toggleCell(MINUS);
-            } else
-                throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
+            }
         }
 
         private void collapseCell() {
             if (isCellExpanded()) {
                 toggleCell(ADD);
-            } else
-                throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
+            }
         }
 
         private void toggleCell(String character) {
