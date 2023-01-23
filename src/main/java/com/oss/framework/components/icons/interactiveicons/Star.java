@@ -82,6 +82,7 @@ public class Star extends InteractiveIcon<Star.StarStatus> {
     }
 
     private WebElement getIcon() {
+        DelayUtils.waitForNestedElements(wait, parent, By.cssSelector(ICON_CSS));
         return parent.findElement(By.cssSelector(ICON_CSS));
     }
 }
