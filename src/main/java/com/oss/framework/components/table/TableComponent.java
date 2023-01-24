@@ -17,6 +17,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import com.oss.framework.components.alerts.ComponentMessage;
+import com.oss.framework.components.alerts.ElementMessage;
+import com.oss.framework.components.alerts.Message;
 import com.oss.framework.components.attributechooser.AttributesChooser;
 import com.oss.framework.components.attributechooser.ListAttributesChooser;
 import com.oss.framework.components.contextactions.InlineMenu;
@@ -54,33 +57,36 @@ public class TableComponent {
     private static final String CELLS_IN_COLUMN_PATTERN = ".table-component__cell[data-col='%s']";
     private static final String COLUMN_MANAGER_BUTTON = ".table-component__management-btn button";
     private static final By ATTRIBUTES_CHOOSER_OPENED = By.xpath("//div[@id='attributes-management']");
+    private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
 
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
     private final WebElement webElement;
-    private final String id;
+    private final WebElement parent;
 
     private PaginationComponent paginationComponent;
 
-    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, String id) {
+    private TableComponent(WebDriver driver, WebDriverWait webDriverWait, WebElement component, WebElement parent) {
         this.driver = driver;
         this.webDriverWait = webDriverWait;
         this.webElement = component;
-        this.id = id;
+        this.parent = parent;
     }
 
     public static TableComponent create(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         DelayUtils.waitBy(webDriverWait,
                 By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId) + " " + TABLE_CONTENT_CSS));
         WebElement webElement = driver.findElement(By.cssSelector(String.format(TABLE_COMPONENT_PATTERN, widgetId)));
-        return new TableComponent(driver, webDriverWait, webElement, widgetId);
+        WebElement parent = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(widgetId)));
+        return new TableComponent(driver, webDriverWait, webElement, parent);
     }
 
     public static TableComponent createById(WebDriver driver, WebDriverWait webDriverWait, String tableComponentId) {
         DelayUtils.waitBy(webDriverWait,
                 By.cssSelector(String.format(TABLE_COMPONENT_ID_PATTERN, tableComponentId) + " " + TABLE_CONTENT_CSS));
         WebElement webElement = driver.findElement(By.cssSelector(String.format(TABLE_COMPONENT_ID_PATTERN, tableComponentId)));
-        return new TableComponent(driver, webDriverWait, webElement, tableComponentId);
+        WebElement parent = webElement.findElement(By.xpath(".."));
+        return new TableComponent(driver, webDriverWait, webElement, parent);
     }
 
     public void selectRow(int index) {
@@ -236,6 +242,11 @@ public class TableComponent {
         return cell.isBold();
     }
 
+    public Optional<Message> getCellMessage(int row, String columnId) {
+        Cell cell = Cell.createFromParent(driver, webElement, row, columnId);
+        return cell.getMessage();
+    }
+
     public AttributesChooser getAttributesChooser() {
         if (!isElementPresent(driver, ATTRIBUTES_CHOOSER_OPENED)) {
             clickWebElement(driver, getColumnsManagement());
@@ -279,14 +290,36 @@ public class TableComponent {
 
     public PaginationComponent getPaginationComponent() {
         if (paginationComponent == null) {
-            WebElement parent = driver.findElement(By.xpath("//div[@" + CSSUtils.TEST_ID + "='" + id + "']"));
             paginationComponent = PaginationComponent.createFromParent(parent);
         }
         return paginationComponent;
     }
 
+    public void scrollToFirstRow() {
+        if (!isScrollPresent()) {
+            return;
+        }
+        CustomScrolls scrolls = getCustomScrolls();
+        if (scrolls.getVerticalBarHeight() == 0) {
+            return;
+        }
+        int translateY = scrolls.getTranslateYValue();
+        if (translateY == 0) {
+            return;
+        }
+        scrolls.scrollVertically(-translateY);
+    }
+
+    public List<Message> getMessages() {
+        return ComponentMessage.create(driver, webElement.getAttribute(CSSUtils.TEST_ID)).getMessages();
+    }
+
     private CustomScrolls getCustomScrolls() {
         return CustomScrolls.create(driver, webDriverWait, webElement);
+    }
+
+    private boolean isScrollPresent() {
+        return WebElementUtils.isElementPresent(webElement, By.cssSelector(CUSTOM_SCROLLBARS_CSS));
     }
 
     private WebElement getColumnsManagement() {
@@ -559,6 +592,7 @@ public class TableComponent {
         private static final String INLINE_EDITOR_INPUT_ID = "-inline-editor-input";
         private static final String SAVE_BUTTON_INLINE_EDITOR_CSS = "[data-testid='save-inline-editor']";
         private static final String CELL_IS_NOT_EDITABLE_EXCEPTION = "Cell is not editable";
+        private static final String CELL_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION = "Cell doesn't have Message Text";
 
         private final WebDriver driver;
         private final WebElement cellElement;
@@ -659,15 +693,13 @@ public class TableComponent {
         private void expandCell() {
             if (!isCellExpanded()) {
                 toggleCell(MINUS);
-            } else
-                throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
+            }
         }
 
         private void collapseCell() {
             if (isCellExpanded()) {
                 toggleCell(ADD);
-            } else
-                throw new IllegalStateException(CELL_DOESN_T_HAVE_EXPAND_ICON_EXCEPTION);
+            }
         }
 
         private void toggleCell(String character) {
@@ -724,6 +756,19 @@ public class TableComponent {
                     .click();
         }
 
+        private Optional<Message> getMessage() {
+            if (driver.findElements(By.cssSelector("[" + CSSUtils.DATA_PARENT_TEST_ID + "='" + cellElement.getAttribute(CSSUtils.TEST_ID) + "']")).isEmpty()) {
+                return Optional.empty();
+            }
+            List<String> messageTypeClasses = CSSUtils.getAllClasses(cellElement);
+            return Optional.of(Message.create(getMessageText(), messageTypeClasses));
+        }
+
+        private String getMessageText() {
+            return ElementMessage.create(driver, cellElement.getAttribute(CSSUtils.TEST_ID)).getMessagesText().stream()
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchElementException(CELL_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION));
+        }
     }
 
     public static class Row implements TableRow {
@@ -830,3 +875,5 @@ public class TableComponent {
         }
     }
 }
+
+
