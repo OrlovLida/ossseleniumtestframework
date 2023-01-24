@@ -58,6 +58,7 @@ public class TableComponent {
     private static final String COLUMN_MANAGER_BUTTON = ".table-component__management-btn button";
     private static final By ATTRIBUTES_CHOOSER_OPENED = By.xpath("//div[@id='attributes-management']");
     private static final String CUSTOM_SCROLLBARS_CSS = ".custom-scrollbars";
+    private static final String PRELOADER_CSS = ".skeleton-preloader";
 
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
@@ -746,6 +747,7 @@ public class TableComponent {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             ComponentFactory.create(columnId + INLINE_EDITOR_INPUT_ID, driver, wait).setSingleStringValue(value);
             driver.findElement(By.cssSelector(SAVE_BUTTON_INLINE_EDITOR_CSS)).click();
+            DelayUtils.waitForElementDisappear(wait, By.cssSelector(PRELOADER_CSS));
         }
 
         private void openInlineEditor() {
