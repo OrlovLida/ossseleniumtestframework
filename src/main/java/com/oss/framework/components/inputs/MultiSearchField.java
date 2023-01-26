@@ -93,16 +93,16 @@ public class MultiSearchField extends Input {
         return dropdownList;
     }
 
-    private void setSingleValue(String value, boolean isSensitive) {
-        if (isSensitive) {
+    private void setSingleValue(String value, boolean isCaseSensitive) {
+        if (isCaseSensitive) {
             search(value).selectOptionCaseSensitive(value);
         } else {
             search(value).selectOption(value);
         }
     }
 
-    private void setMultiValue(Data values, boolean isSensitive) {
-        values.getStringValues().forEach(value -> setSingleValue(value, isSensitive));
+    private void setMultiValue(Data values, boolean isCaseSensitive) {
+        values.getStringValues().forEach(value -> setSingleValue(value, isCaseSensitive));
     }
 
     private void setValue(Data value, boolean isCaseSensitive) {
