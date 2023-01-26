@@ -62,8 +62,7 @@ public class SearchField extends Input {
 
     @Override
     public void setValue(Data value) {
-        typeValue(value);
-        DropdownList.create(driver, webDriverWait).selectOption(value.getStringValue());
+        setValue(value, false);
     }
 
     @Override
@@ -73,6 +72,18 @@ public class SearchField extends Input {
         input.sendKeys(Keys.DELETE);
     }
 
+    public void setValueCaseSensitive(Data value) {
+        setValue(value, true);
+    }
+
+    private void setValue(Data value, boolean isCaseSensitive) {
+        typeValue(value);
+        if (isCaseSensitive) {
+            DropdownList.create(driver, webDriverWait).selectOptionCaseSensitive(value.getStringValue());
+        } else {
+            DropdownList.create(driver, webDriverWait).selectOption(value.getStringValue());
+        }
+    }
 
     private void typeValue(Data value) {
         DelayUtils.waitForClickability(webDriverWait, webElement);
