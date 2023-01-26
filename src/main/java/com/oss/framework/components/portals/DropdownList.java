@@ -82,6 +82,11 @@ public class DropdownList {
         return optionsLabels;
     }
 
+    public void selectOptionSensitive(String optionLabel) {
+        DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.cssSelector(".portal [title='" + optionLabel + "' i]")));
+        dropdownListElement.findElement(By.cssSelector(".portal [title='" + optionLabel + "' i]")).click();
+    }
+
     private List<WebElement> getVisibleElements() {
         return driver.findElements(By.cssSelector(DROPDOWN_ELEMENT_CSS));
     }

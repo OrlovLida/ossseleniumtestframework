@@ -58,12 +58,7 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValue(Data value) {
-        if (value.isList()) {
-            setMultiValue(value);
-        } else {
-            setSingleValue(value.getStringValue());
-        }
-        webElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, SEARCH_ID))).click();
+        setValue(value, false);
     }
 
     @Override
@@ -75,6 +70,10 @@ public class MultiSearchField extends Input {
     @Override
     public String getLabel() {
         return webElement.findElement(By.cssSelector(INPUT_LABEL_CSS)).getText();
+    }
+
+    public void setValueSensitive(Data value) {
+        setValue(value, true);
     }
 
     private void clearSingle(WebElement closeButton) {
@@ -94,11 +93,24 @@ public class MultiSearchField extends Input {
         return dropdownList;
     }
 
-    private void setSingleValue(String value) {
-        search(value).selectOption(value);
+    private void setSingleValue(String value, boolean isSensitive) {
+        if (isSensitive) {
+            search(value).selectOptionSensitive(value);
+        } else {
+            search(value).selectOption(value);
+        }
     }
 
-    private void setMultiValue(Data values) {
-        values.getStringValues().forEach(this::setSingleValue);
+    private void setMultiValue(Data values, boolean isSensitive) {
+        values.getStringValues().forEach(value -> setSingleValue(value, isSensitive));
+    }
+
+    private void setValue(Data value, boolean isSensitive) {
+        if (value.isList()) {
+            setMultiValue(value, isSensitive);
+        } else {
+            setSingleValue(value.getStringValue(), isSensitive);
+        }
+        webElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, SEARCH_ID))).click();
     }
 }
