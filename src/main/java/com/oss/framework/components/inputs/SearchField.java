@@ -72,14 +72,14 @@ public class SearchField extends Input {
         input.sendKeys(Keys.DELETE);
     }
 
-    public void setValueSensitive(Data value) {
+    public void setValueCaseSensitive(Data value) {
         setValue(value, true);
     }
 
-    private void setValue(Data value, boolean isSensitive) {
+    private void setValue(Data value, boolean isCaseSensitive) {
         typeValue(value);
-        if (isSensitive) {
-            DropdownList.create(driver, webDriverWait).selectOptionSensitive(value.getStringValue());
+        if (isCaseSensitive) {
+            DropdownList.create(driver, webDriverWait).selectOptionCaseSensitive(value.getStringValue());
         } else {
             DropdownList.create(driver, webDriverWait).selectOption(value.getStringValue());
         }

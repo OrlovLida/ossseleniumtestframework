@@ -82,7 +82,7 @@ public class DropdownList {
         return optionsLabels;
     }
 
-    public void selectOptionSensitive(String optionLabel) {
+    public void selectOptionCaseSensitive(String optionLabel) {
         DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.cssSelector(".portal [title='" + optionLabel + "' i]")));
         dropdownListElement.findElement(By.cssSelector(".portal [title='" + optionLabel + "' i]")).click();
     }

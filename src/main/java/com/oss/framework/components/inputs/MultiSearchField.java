@@ -72,7 +72,7 @@ public class MultiSearchField extends Input {
         return webElement.findElement(By.cssSelector(INPUT_LABEL_CSS)).getText();
     }
 
-    public void setValueSensitive(Data value) {
+    public void setValueCaseSensitive(Data value) {
         setValue(value, true);
     }
 
@@ -95,7 +95,7 @@ public class MultiSearchField extends Input {
 
     private void setSingleValue(String value, boolean isSensitive) {
         if (isSensitive) {
-            search(value).selectOptionSensitive(value);
+            search(value).selectOptionCaseSensitive(value);
         } else {
             search(value).selectOption(value);
         }
@@ -105,11 +105,11 @@ public class MultiSearchField extends Input {
         values.getStringValues().forEach(value -> setSingleValue(value, isSensitive));
     }
 
-    private void setValue(Data value, boolean isSensitive) {
+    private void setValue(Data value, boolean isCaseSensitive) {
         if (value.isList()) {
-            setMultiValue(value, isSensitive);
+            setMultiValue(value, isCaseSensitive);
         } else {
-            setSingleValue(value.getStringValue(), isSensitive);
+            setSingleValue(value.getStringValue(), isCaseSensitive);
         }
         webElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, SEARCH_ID))).click();
     }
