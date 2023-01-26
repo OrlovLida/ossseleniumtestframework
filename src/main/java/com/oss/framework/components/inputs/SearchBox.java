@@ -73,7 +73,7 @@ public class SearchBox extends Input {
         input.sendKeys(Keys.DELETE);
     }
     
-    private void typeValue(String value) {
+    public void typeValue(String value) {
         clear();
         webElement.click();
         webElement.findElement(By.cssSelector(INPUT_CSS)).sendKeys(value);
