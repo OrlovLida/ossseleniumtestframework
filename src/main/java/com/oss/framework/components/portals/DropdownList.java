@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.CSSUtils;
@@ -46,7 +47,8 @@ public class DropdownList {
         DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.xpath(String.format(BY_TEXT_PATTERN, optionLabel))));
         WebElement foundedElement =
                 driver.findElement(By.xpath(String.format(BY_TEXT_PATTERN, optionLabel)));
-        foundedElement.click();
+        Actions actions = new Actions(driver);
+        actions.click(foundedElement).build().perform();
     }
 
     public void selectOptionByTitle(String title) {
