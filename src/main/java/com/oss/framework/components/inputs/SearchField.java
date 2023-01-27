@@ -67,6 +67,7 @@ public class SearchField extends Input {
 
     @Override
     public void clear() {
+        WebElementUtils.moveToElement(driver, webElement);
         if (isCloseIconPresent()) {
             webElement.findElement(By.cssSelector(BUTTON_CLOSE)).click();
         }
