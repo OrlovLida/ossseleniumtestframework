@@ -164,4 +164,4 @@ public class ObjectSearchField extends Input {
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
     }
-    }
+}
