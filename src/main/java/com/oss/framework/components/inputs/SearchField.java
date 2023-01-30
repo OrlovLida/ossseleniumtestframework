@@ -3,7 +3,6 @@ package com.oss.framework.components.inputs;
 import java.util.Set;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,6 +17,7 @@ public class SearchField extends Input {
 
     private static final String INPUT_XPATH = ".//input";
     private static final String MAGNIFIER_CSS = "i[aria-label='SEARCH']";
+    private static final String BUTTON_CLOSE = ".button-close";
 
     private SearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
@@ -67,9 +67,14 @@ public class SearchField extends Input {
 
     @Override
     public void clear() {
-        WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
-        input.sendKeys(Keys.CONTROL + "a");
-        input.sendKeys(Keys.DELETE);
+        WebElementUtils.moveToElement(driver, webElement);
+        if (isCloseIconPresent()) {
+            webElement.findElement(By.cssSelector(BUTTON_CLOSE)).click();
+        }
+    }
+
+    private boolean isCloseIconPresent() {
+        return !webElement.findElements(By.cssSelector(BUTTON_CLOSE)).isEmpty();
     }
 
     public void setValueCaseSensitive(Data value) {
