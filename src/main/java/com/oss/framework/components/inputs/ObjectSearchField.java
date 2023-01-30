@@ -100,7 +100,7 @@ public class ObjectSearchField extends Input {
 
     public AdvancedSearchWidget openAdvancedSearchWidget() {
         WebElement searchPlus = webElement.findElement(By.xpath(SEARCH_PLUS_ICON_XPATH));
-        searchPlus.click();
+        WebElementUtils.clickWithRetry(driver, searchPlus, By.className(ADVANCED_SEARCH_ID));
         return AdvancedSearchWidget.createById(driver, webDriverWait, ADVANCED_SEARCH_ID);
     }
 
