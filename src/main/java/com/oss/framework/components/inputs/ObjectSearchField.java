@@ -28,7 +28,6 @@ public class ObjectSearchField extends Input {
     private static final String ADVANCED_SEARCH_ID = "advancedSearch";
     private static final String OSF_NOT_DISABLED_CSS = ".md-input-cont:not(.md-input-disabled)";
     private static final String ICON_CHEVRON_UP_CSS = "[data-icon='chevron-up']";
-    private static final String BUTTON_CLASS = "md-input-buttons";
 
     private ObjectSearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
