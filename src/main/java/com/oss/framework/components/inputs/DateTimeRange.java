@@ -11,17 +11,19 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public class DateTimeRange extends Input {
-    
+
     private static final String INPUT_XPATH = ".//input";
     private static final String CLEAR_XPATH = ".//*[@class='OSSIcon ossfont-close']";
     private static final String CALENDAR_XPATH = ".//*[@aria-label='DATE']";
     private static final String DATE_TIME_PICKER_TO_ID = "dateTimePicker-to";
     private static final String DATE_TIME_PICKER_FROM_ID = "dateTimePicker-from";
+    private static final String DATA_VALUE_ATTRIBUTE = "data-value";
+    private static final String LABEL_CSS = ".md-input-label-text";
 
     private DateTimeRange(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
     }
-    
+
     static DateTimeRange create(WebDriver driver, WebDriverWait wait, String componentId) {
         WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         WebElementUtils.moveToElement(driver, webElement);
@@ -41,7 +43,8 @@ public class DateTimeRange extends Input {
     
     @Override
     public Data getValue() {
-        return Data.createSingleData(webElement.getAttribute("value"));
+        WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
+        return Data.createSingleData(input.getAttribute(DATA_VALUE_ATTRIBUTE));
     }
     
     @Override
@@ -62,10 +65,11 @@ public class DateTimeRange extends Input {
     
     @Override
     public String getLabel() {
-        return webElement.getText();
+        return webElement.findElement(By.cssSelector(LABEL_CSS)).getText();
     }
     
     public void chooseDatesFromCalendar(String fromDate, String toDate) {
+        clear();
         clickCalendar();
         DatePicker datePickerFrom = DatePicker.create(driver, webDriverWait, DATE_TIME_PICKER_FROM_ID);
         datePickerFrom.chooseDate(fromDate);
