@@ -105,14 +105,6 @@ public class DropdownList {
         return visibleElements.get(visibleElements.size() - 1).getAttribute(TEXT_CONTENT_ATTRIBUTE);
     }
 
-    private WebElement getFirstVisibleElement() {
-        return driver.findElement(By.cssSelector(DROPDOWN_ELEMENT_CSS));
-    }
-
-    public String getFirstOption() {
-        return getFirstVisibleElement().getAttribute(TEXT_CONTENT_ATTRIBUTE);
-    }
-
     public void selectOptionById(String optionId) {
         WebElement foundedElement = getOptionById(optionId);
         WebElementUtils.clickWebElement(driver, foundedElement);

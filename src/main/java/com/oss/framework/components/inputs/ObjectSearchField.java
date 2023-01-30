@@ -1,7 +1,6 @@
 package com.oss.framework.components.inputs;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -165,19 +164,4 @@ public class ObjectSearchField extends Input {
         List<WebElement> dropdownElement = driver.findElements(By.xpath(OSF_DROP_DOWN_LIST));
         dropdownElement.get(0).click();
     }
-
-    public Set<String> getOptions() {
-        expandDropDownList();
-        return DropdownList.create(driver, webDriverWait).getOptions();
     }
-
-    public String getFirstOption() {
-        expandDropDownList();
-        return DropdownList.create(driver, webDriverWait).getFirstOption();
-    }
-
-    private void expandDropDownList() {
-        webElement.findElement(By.className(BUTTON_CLASS)).click();
-    }
-
-}
