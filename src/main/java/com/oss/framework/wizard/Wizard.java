@@ -28,8 +28,8 @@ public class Wizard {
     private static final String ACCEPT_BUTTON_XPATH = ".//button[text()='Accept']";
     private static final String CANCEL_BUTTON_XPATH = ".//button[text()='Cancel']";
     private static final String OK_BUTTON_XPATH = ".//a[text()='OK']";
-    private static final String UPDATE_BUTTON_XPATH = ".//a[text()='Update']";
     private static final String SAVE_BUTTON_XPATH = ".//a[text()='Save']";
+    private static final String UPDATE_BUTTON_XPATH = ".//a[text()='Update']";
     private static final String PROCEED_BUTTON_XPATH = ".//a[text()='Proceed']";
     private static final String BY_TEXT_PATTERN = "//*[text()='%s']";
     private static final String BY_DATA_TEST_ID_PATTERN = "//*[@" + CSSUtils.TEST_ID + "='%s']";

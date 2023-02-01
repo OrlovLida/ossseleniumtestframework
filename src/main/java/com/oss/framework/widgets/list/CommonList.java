@@ -121,6 +121,10 @@ public class CommonList extends Widget {
         return getRows().stream().anyMatch(row -> row.getValue(attributeName).contains(value));
     }
 
+    public boolean isRowDisplayedEquals(String attributeName, String value) {
+        return getRows().stream().anyMatch(row -> row.getValue(attributeName).equals(value));
+    }
+
     public Row getRow(String attributeName, String value) {
         return getRows().stream().filter(row -> row.getValue(attributeName).equals(value))
                 .findFirst()
