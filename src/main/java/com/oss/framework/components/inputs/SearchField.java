@@ -17,7 +17,7 @@ public class SearchField extends Input {
 
     private static final String INPUT_XPATH = ".//input";
     private static final String MAGNIFIER_CSS = "i[aria-label='SEARCH']";
-    private static final String BUTTON_CLOSE = ".button-close";
+    private static final String BUTTON_CLOSE = ".ossfont-close";
 
     private SearchField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
