@@ -50,6 +50,7 @@ public class ComponentFactory {
             case FILE_CHOOSER: {
                 return FileChooser.create(webDriver, wait, componentId);
             }
+            case HTML_EDITOR_COMPONENT:
             case HTML_EDITOR: {
                 return HtmlEditor.create(webDriver, wait, componentId);
             }
@@ -144,6 +145,7 @@ public class ComponentFactory {
             case FILE_CHOOSER: {
                 return FileChooser.create(webDriver, wait, componentId);
             }
+            case HTML_EDITOR_COMPONENT:
             case HTML_EDITOR: {
                 return HtmlEditor.createFromParent(parent, webDriver, wait, componentId);
             }

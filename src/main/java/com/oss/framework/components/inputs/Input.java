@@ -151,7 +151,12 @@ public abstract class Input {
         DATE_TIME,
         DATE_TIME_RANGE,
         FILE_CHOOSER,
+        /**
+         * @Deprecated use HTML_EDITOR_COMPONENT, HTML_EDITOR will be removed in 4.0.x release
+         */
+        @Deprecated
         HTML_EDITOR,
+        HTML_EDITOR_COMPONENT,
         MULTI_COMBOBOX,
         MULTI_SEARCH_FIELD,
         MULTI_SEARCHBOX,
