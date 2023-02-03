@@ -1,9 +1,10 @@
 package com.oss.framework.components.mainheader;
 
-import com.google.common.base.Preconditions;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,10 +13,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.google.common.base.Preconditions;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class Notifications implements NotificationsInterface {
 
@@ -33,7 +34,7 @@ public class Notifications implements NotificationsInterface {
     private static final By EMPTY_NOTIFICATION = By.cssSelector(".notificationEmpty");
     private static final By NOTIFICATION_LIST = By.cssSelector(".notification:not(.notificationEmpty)");
     private static final By NOTIFICATION_DETAILS = By.xpath("(.//a[@class='detailsLink'])[1]");
-    private static final By DOWNLOAD_FILE = By.xpath(".//div[@class='notificationWrapper']//a[contains (text(), 'Download file')]");
+    private static final By DOWNLOAD_FILE = By.xpath(".//a[contains (text(), 'Download file')]");
     private static final String SUCCESS_NOTIFICATION_TYPE_CLASS = "success";
     private static final String FAILED_NOTIFICATION_TYPE_CLASS = "danger";
     private static final String WARNING_NOTIFICATION_TYPE_CLASS = "warning";
