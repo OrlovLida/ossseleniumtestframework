@@ -55,8 +55,12 @@ public class ObjectSearchField extends Input {
     }
 
     public void setFirstResult(String value) {
-        setSingleValueWebElement(value, By.xpath(INPUT));
-        chooseFirstResult();
+        if (!isSingleComponent()) {
+            setValueForMultiComponent(Data.createFindFirst(value), false);
+        } else {
+            setSingleValueWebElement(value, By.xpath(INPUT));
+            chooseFirstResult();
+        }
     }
 
     @Override
