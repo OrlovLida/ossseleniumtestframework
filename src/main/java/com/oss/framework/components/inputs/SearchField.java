@@ -3,6 +3,7 @@ package com.oss.framework.components.inputs;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -93,9 +94,10 @@ public class SearchField extends Input {
     private void typeValue(Data value) {
         DelayUtils.waitForClickability(webDriverWait, webElement);
         webElement.click();
-        DelayUtils.sleep();// wait for cursor
-        clear();
-        webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
+        WebElement input = webElement.findElement(By.xpath(INPUT_XPATH));
+        input.sendKeys(Keys.CONTROL + "a");
+        input.sendKeys(Keys.DELETE);
+        input.sendKeys(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
     }
 }
