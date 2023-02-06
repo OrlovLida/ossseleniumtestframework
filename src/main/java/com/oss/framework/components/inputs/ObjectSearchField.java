@@ -20,7 +20,7 @@ public class ObjectSearchField extends Input {
     private static final String OSF_LABEL = ".//span[@class='md-input-label-text']";
     private static final String OSF_INNER_INPUT = ".//*[@class='object-input-component__multi__dropdown']//input";
     private static final String OSF_DROP_DOWN_LIST = ".//div[@class='dropdown-element__label']";
-    private static final String OSF_VALUE_LIST = ".//div[@class='md-input-multi']";
+    private static final String OSF_VALUE_LIST = ".//div[@class='md-input-multi']//span[@class='md-input-value']";
     private static final String OSF_VALUE_CLEAR_BTN = ".//div[@class='md-input-multi']";
     private static final String OSF_SINGLE = "object-input-component__single__dropdown";
     private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
@@ -74,7 +74,7 @@ public class ObjectSearchField extends Input {
             return Data.createSingleData(webElement.findElement(By.xpath(INPUT)).getAttribute("value"));
         }
         if (!isMultiComponentEmpty()) {
-            List<WebElement> values = webElement.findElements(By.xpath(OSF_VALUE_LIST + "//span//span"));
+            List<WebElement> values = webElement.findElements(By.xpath(OSF_VALUE_LIST));
             return Data.createMultiData(values.stream().map(WebElement::getText).collect(Collectors.toList()));
         }
         return Data.createSingleData("");
