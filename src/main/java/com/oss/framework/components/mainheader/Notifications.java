@@ -1,10 +1,9 @@
 package com.oss.framework.components.mainheader;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,10 +12,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Notifications implements NotificationsInterface {
 
@@ -164,7 +163,6 @@ public class Notifications implements NotificationsInterface {
 
     public List<Notification> getNotifications() {
         openNotificationContainer();
-        DelayUtils.waitBy(wait, By.cssSelector(NOTIFICATION_LABEL_CSS_SELECTOR));
         List<WebElement> notifications = getNotificationsContainer().findElements(NOTIFICATION_LIST);
         return notifications.stream().map(this::toNotification).collect(Collectors.toList());
     }
