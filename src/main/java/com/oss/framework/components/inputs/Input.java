@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.oss.framework.components.alerts.ElementMessage;
 import com.oss.framework.components.data.Data;
 import com.oss.framework.components.tooltip.Tooltip;
+import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
@@ -23,6 +24,7 @@ public abstract class Input {
     private static final String NOT_ALLOWED = "not-allowed";
     private static final String CANNOT_FIND_MOUSE_COURSE_EXCEPTION = "Cannot find mouse course for your input";
     private static final String LABEL = ".//label";
+    private static final String DATA_PARENT_TEST_ID_PATTERN = "[" + CSSUtils.DATA_PARENT_TEST_ID + "='%s']";
     static final String NOT_SUPPORTED_EXCEPTION = "Not supported for this type of input";
     protected final WebDriver driver;
     protected final WebDriverWait webDriverWait;
@@ -81,6 +83,10 @@ public abstract class Input {
     public final List<String> getMessages() {
         ElementMessage messages = ElementMessage.create(driver, componentId);
         return messages.getMessagesText();
+    }
+
+    public final boolean isMessagePresent() {
+        return !driver.findElements(By.cssSelector(String.format(DATA_PARENT_TEST_ID_PATTERN, componentId))).isEmpty();
     }
 
     public abstract void setValueContains(Data value);
