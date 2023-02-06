@@ -15,9 +15,9 @@ import com.oss.framework.utils.WebElementUtils;
 public class PhoneField extends Input {
 
     private static final String INPUT = ".//input";
-    public static final String BUTTON_SELECTED_FLAG_CSS = "button.selected-flag";
-    public static final String INPUT_LABEL_FILTER_XPATH = ".//input[@label='Filter']";
-    public static final String BY_TEXT_PATTERN = "//div[starts-with(@class, 'country-list')]//*[text()='%s']";
+    private static final String BUTTON_SELECTED_FLAG_CSS = "button.selected-flag";
+    private static final String INPUT_LABEL_FILTER_XPATH = ".//input[@label='Filter']";
+    private static final String BY_TEXT_PATTERN = "//div[starts-with(@class, 'country-list')]//*[text()='%s']";
 
     private PhoneField(WebDriver driver, WebDriverWait wait, WebElement webElement, String componentId) {
         super(driver, wait, webElement, componentId);
