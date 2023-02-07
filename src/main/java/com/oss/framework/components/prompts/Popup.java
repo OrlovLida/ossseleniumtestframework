@@ -54,7 +54,7 @@ public class Popup {
     }
 
     public GlobalNotificationContainer getGlobalNotificationContainer() {
-        return GlobalNotificationContainer.createFromParent(webElement, wait);
+        return GlobalNotificationContainer.createFromParent(driver, webElement, wait);
     }
 
     public Input getComponent(String componentId) {
