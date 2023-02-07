@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class CommonList extends Widget {
 
     private static final String COMMON_LIST_CLASS = "CommonListApp";
-    private static final String HEADERS_XPATH = ".//div[@class='header left']";
+    private static final String HEADERS_CSS = ".header[data-testid]";
     private static final String LIST_ELEMENT_XPATH = ".//li[contains(@class, 'list_row') and not(contains(@class, 'headers'))]";
     private static final String NO_DATA_TEXT_XPATH = ".//h3[contains(@class,'emptyResultsText')]";
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
@@ -98,7 +98,7 @@ public class CommonList extends Widget {
     }
 
     public List<String> getRowHeaders() {
-        List<WebElement> headers = webElement.findElements(By.xpath(HEADERS_XPATH));
+        List<WebElement> headers = webElement.findElements(By.cssSelector(HEADERS_CSS));
         if (!headers.isEmpty()) {
             ((JavascriptExecutor) driver).executeScript(SCROLL_INTO_VIEW_SCRIPT, headers.get(headers.size() - 1));
         }
@@ -160,8 +160,9 @@ public class CommonList extends Widget {
     private void confirmFilter() {
         getAdvancedSearch().clickApply();
     }
-    public void waitForCategory(String categoryName){
-        DelayUtils.waitBy(webDriverWait, By.cssSelector(String.format(TITLE_CSS,categoryName)));
+
+    public void waitForCategory(String categoryName) {
+        DelayUtils.waitBy(webDriverWait, By.cssSelector(String.format(TITLE_CSS, categoryName)));
     }
 
     public static class Row {
