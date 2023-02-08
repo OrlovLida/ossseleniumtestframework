@@ -6,22 +6,21 @@
  */
 package com.oss.framework.widgets.treetable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
 import com.oss.framework.widgets.table.OldTable;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Comarch
@@ -63,6 +62,14 @@ public class OldTreeTableWidget extends Widget {
 
     public void unselectNode(String value, String attributeNameLabel) {
         createTable().unselectRow(attributeNameLabel, value);
+    }
+
+    public void unselectAllNodes() {
+        createTable().unselectAllRows();
+    }
+
+    public void selectAllNodes() {
+        createTable().selectAllRows();
     }
 
     public void collapseNode(String value, String attributeNameLabel) {
