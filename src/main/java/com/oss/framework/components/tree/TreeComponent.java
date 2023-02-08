@@ -229,6 +229,8 @@ public class TreeComponent {
         private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
         private static final String TREE_NODE_COMPONENT_CONTAINER_CSS = ".tree-node-component-container";
         private static final String NODE_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION = "Node doesn't have Message Text";
+        private static final String NODE_LABEL_CSS = ".tree-node-default-component-label";
+        private static final String NODE_SELECTED_CLASS_CSS = ".tree-node-default-component--selected";
 
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
@@ -257,14 +259,17 @@ public class TreeComponent {
         }
 
         public boolean isToggled() {
-            WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_XPATH));
-            return input.isSelected();
+            return !nodeElement.findElements(By.cssSelector(NODE_SELECTED_CLASS_CSS)).isEmpty();
         }
 
         public void toggleNode() {
             moveToNode();
-            WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
-            input.click();
+            if (isCheckboxPresent()) {
+                WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
+                input.click();
+            } else {
+                clickLabel();
+            }
         }
 
         public void expandNode() {
@@ -422,6 +427,14 @@ public class TreeComponent {
         @Override
         public int hashCode() {
             return Objects.hash(nodeId);
+        }
+
+        private void clickLabel() {
+            nodeElement.findElement(By.cssSelector(NODE_LABEL_CSS)).click();
+        }
+
+        private boolean isCheckboxPresent() {
+            return !nodeElement.findElements(By.xpath(NODE_CHECKBOX_LABEL_XPATH)).isEmpty();
         }
 
         public enum DecoratorStatus {
