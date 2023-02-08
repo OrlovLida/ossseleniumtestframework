@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
@@ -24,21 +25,33 @@ public class GlobalNotificationContainer {
     private static final String NO_NOTIFICATION_EXCEPTION = "No notification is present.";
 
     private final List<WebElement> notificationContainers;
+    private final WebDriver driver;
 
-    private GlobalNotificationContainer(List<WebElement> notificationContainers) {
+    private GlobalNotificationContainer(WebDriver driver, List<WebElement> notificationContainers) {
         this.notificationContainers = notificationContainers;
+        this.driver = driver;
     }
 
     public static GlobalNotificationContainer create(WebDriver driver, WebDriverWait wait) {
         DelayUtils.waitForPresence(wait, By.className(NOTIFICATION_CONTAINER_CLASS));
         List<WebElement> notificationContainers = driver.findElements(By.className(NOTIFICATION_CONTAINER_CLASS));
-        return new GlobalNotificationContainer(notificationContainers);
+        return new GlobalNotificationContainer(driver, notificationContainers);
     }
 
+    public static GlobalNotificationContainer createFromParent(WebDriver driver, WebElement parent, WebDriverWait wait) {
+        DelayUtils.waitForNestedElements(wait, parent, By.className(NOTIFICATION_CONTAINER_CLASS));
+        List<WebElement> notificationContainers = parent.findElements(By.className(NOTIFICATION_CONTAINER_CLASS));
+        return new GlobalNotificationContainer(driver, notificationContainers);
+    }
+
+    /**
+     * @deprecated method will be removed in 4.0.x release, please use method createFromParent(WebDriver driver, WebElement parent, WebDriverWait wait)
+     */
+    @Deprecated
     public static GlobalNotificationContainer createFromParent(WebElement parent, WebDriverWait wait) {
         DelayUtils.waitForNestedElements(wait, parent, By.className(NOTIFICATION_CONTAINER_CLASS));
         List<WebElement> notificationContainers = parent.findElements(By.className(NOTIFICATION_CONTAINER_CLASS));
-        return new GlobalNotificationContainer(notificationContainers);
+        return new GlobalNotificationContainer(null, notificationContainers);
     }
 
     public NotificationInformation getNotificationInformation() {
@@ -50,7 +63,7 @@ public class GlobalNotificationContainer {
         List<WebElement> getNotificationsList = getNotificationsList();
         if (!getNotificationsList.isEmpty()) {
             for (WebElement notificationContainerWithMessage : getNotificationsList) {
-                notificationInformations.add(new NotificationInformation(notificationContainerWithMessage));
+                notificationInformations.add(new NotificationInformation(driver, notificationContainerWithMessage));
             }
         }
         return notificationInformations;
@@ -89,11 +102,15 @@ public class GlobalNotificationContainer {
         private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
         private static final String MESSAGE_CLASS = "message-text";
         private static final String CLASS = "class";
+        private static final String CLOSE_BUTTON_CSS = ".delete-button";
+        private static final String ERROR_MESSAGES = "Driver is null, use static method create/createFromParent with parameter WebDrive";
 
         private final WebElement notification;
+        private final WebDriver driver;
 
-        private NotificationInformation(WebElement notificationContainer) {
+        private NotificationInformation(WebDriver driver, WebElement notificationContainer) {
             this.notification = notificationContainer.findElement(By.cssSelector(LI_CSS));
+            this.driver = driver;
         }
 
         public String getType() {
@@ -102,6 +119,11 @@ public class GlobalNotificationContainer {
 
         public String getMessage() {
             return notification.findElement(By.className(MESSAGE_CLASS)).getAttribute(TEXT_CONTENT_ATTRIBUTE);
+        }
+
+        public void close() {
+            Preconditions.checkArgument(driver != null, ERROR_MESSAGES);
+            WebElementUtils.clickWebElement(driver, notification.findElement(By.cssSelector(CLOSE_BUTTON_CSS)));
         }
     }
 }
