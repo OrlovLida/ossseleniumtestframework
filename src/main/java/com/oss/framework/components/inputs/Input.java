@@ -85,7 +85,7 @@ public abstract class Input {
         return messages.getMessagesText();
     }
 
-    public final boolean isMessagePresent() {
+    public boolean isMessagePresent() {
         return !driver.findElements(By.cssSelector(String.format(DATA_PARENT_TEST_ID_PATTERN, componentId))).isEmpty();
     }
 
