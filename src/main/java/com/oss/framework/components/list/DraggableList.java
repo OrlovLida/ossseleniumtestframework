@@ -6,18 +6,19 @@
  */
 package com.oss.framework.components.list;
 
-import com.google.common.base.Preconditions;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.DragAndDrop;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.google.common.base.Preconditions;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
+import com.oss.framework.utils.WebElementUtils;
 
 /**
  * @author Gabriela Kasza
@@ -32,6 +33,7 @@ public class DraggableList {
     private static final String OBJECT_NOT_AVAILABLE_EXCEPTION = "Object not available on the list";
     private static final String POSITION_OUT_OF_RANGE_EXCEPTION = "Position is out of Rows size range. Provided %1$d, but list size is: %2$d.";
     private static final String CATEGORY_LIST_CSS = ".category";
+    private static final String LABEL_CSS = "span p";
     private final WebDriver driver;
     private final WebElement dropdownListElement;
     private final WebDriverWait wait;
@@ -55,6 +57,7 @@ public class DraggableList {
     }
 
     public DragAndDrop.DraggableElement getDraggableElement(String value) {
+        DelayUtils.waitForNestedElements(wait, dropdownListElement, By.cssSelector(LABEL_CSS));
         List<WebElement> allSource = dropdownListElement.findElements(By.xpath(DRAGGABLE_ELEMENT_XPATH));
         WebElement row = allSource.stream().filter(object -> object.getText().contains(value)).findFirst()
                 .orElseThrow(() -> new NoSuchElementException(OBJECT_NOT_AVAILABLE_EXCEPTION));

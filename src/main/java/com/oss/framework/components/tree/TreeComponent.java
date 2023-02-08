@@ -26,6 +26,7 @@ import com.oss.framework.components.scrolls.CustomScrolls;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.WebElementUtils;
 
 public class TreeComponent {
@@ -106,6 +107,15 @@ public class TreeComponent {
     public Optional<Node> findNodeByPath(String path) {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(path));
         return getNodeByPath(pathElements, false);
+    }
+
+    public void dropAsChild(DragAndDrop.DraggableElement source, Node parent) {
+        DragAndDrop.dragAndDrop(source, parent.getDropElement(), 0, 30, driver);
+    }
+
+    public void dropAsRoot(DragAndDrop.DraggableElement source) {
+        Node node = getVisibleNodes().get(0);
+        DragAndDrop.dragAndDrop(source, node.getDropElement(), driver);
     }
 
     private List<Node> getNodesByPathContains(String path, boolean isLabel) {
@@ -385,6 +395,15 @@ public class TreeComponent {
             }
             List<String> allClasses = CSSUtils.getAllClasses(nodeElement.findElement(By.cssSelector(TREE_NODE_COMPONENT_CONTAINER_CSS)));
             return Optional.of(Message.create(getMessageText(), allClasses));
+        }
+
+        public DragAndDrop.DraggableElement getDraggableElement() {
+            WebElement source = nodeElement.findElement(By.cssSelector(".btn-drag"));
+            return new DragAndDrop.DraggableElement(source);
+        }
+
+        private DragAndDrop.DropElement getDropElement() {
+            return new DragAndDrop.DropElement(nodeElement.findElement(By.cssSelector(".tree-node-default-component-label")));
         }
 
         private String getMessageText() {
