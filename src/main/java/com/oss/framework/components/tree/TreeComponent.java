@@ -26,6 +26,7 @@ import com.oss.framework.components.scrolls.CustomScrolls;
 import com.oss.framework.components.search.AdvancedSearch;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.WebElementUtils;
 
 public class TreeComponent {
@@ -106,6 +107,15 @@ public class TreeComponent {
     public Optional<Node> findNodeByPath(String path) {
         List<String> pathElements = Lists.newArrayList(Splitter.on(".").split(path));
         return getNodeByPath(pathElements, false);
+    }
+
+    public void dropAsChild(DragAndDrop.DraggableElement source, Node parent) {
+        DragAndDrop.dragAndDrop(source, parent.getDropElement(), 0, 30, driver);
+    }
+
+    public void dropAsRoot(DragAndDrop.DraggableElement source) {
+        Node node = getVisibleNodes().get(0);
+        DragAndDrop.dragAndDrop(source, node.getDropElement(), driver);
     }
 
     private List<Node> getNodesByPathContains(String path, boolean isLabel) {
@@ -229,6 +239,8 @@ public class TreeComponent {
         private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
         private static final String TREE_NODE_COMPONENT_CONTAINER_CSS = ".tree-node-component-container";
         private static final String NODE_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION = "Node doesn't have Message Text";
+        private static final String NODE_LABEL_CSS = ".tree-node-default-component-label";
+        private static final String NODE_SELECTED_CLASS_CSS = ".tree-node-default-component--selected";
 
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
@@ -257,14 +269,17 @@ public class TreeComponent {
         }
 
         public boolean isToggled() {
-            WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_XPATH));
-            return input.isSelected();
+            return !nodeElement.findElements(By.cssSelector(NODE_SELECTED_CLASS_CSS)).isEmpty();
         }
 
         public void toggleNode() {
             moveToNode();
-            WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
-            input.click();
+            if (isCheckboxPresent()) {
+                WebElement input = nodeElement.findElement(By.xpath(NODE_CHECKBOX_LABEL_XPATH));
+                input.click();
+            } else {
+                clickLabel();
+            }
         }
 
         public void expandNode() {
@@ -387,6 +402,15 @@ public class TreeComponent {
             return Optional.of(Message.create(getMessageText(), allClasses));
         }
 
+        public DragAndDrop.DraggableElement getDraggableElement() {
+            WebElement source = nodeElement.findElement(By.cssSelector(".btn-drag"));
+            return new DragAndDrop.DraggableElement(source);
+        }
+
+        private DragAndDrop.DropElement getDropElement() {
+            return new DragAndDrop.DropElement(nodeElement.findElement(By.cssSelector(".tree-node-default-component-label")));
+        }
+
         private String getMessageText() {
             return ElementMessage.create(driver, nodeId).getMessagesText().stream()
                     .findFirst()
@@ -422,6 +446,14 @@ public class TreeComponent {
         @Override
         public int hashCode() {
             return Objects.hash(nodeId);
+        }
+
+        private void clickLabel() {
+            nodeElement.findElement(By.cssSelector(NODE_LABEL_CSS)).click();
+        }
+
+        private boolean isCheckboxPresent() {
+            return !nodeElement.findElements(By.xpath(NODE_CHECKBOX_LABEL_XPATH)).isEmpty();
         }
 
         public enum DecoratorStatus {

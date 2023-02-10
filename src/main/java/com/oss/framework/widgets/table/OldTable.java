@@ -1,21 +1,5 @@
 package com.oss.framework.widgets.table;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -31,6 +15,21 @@ import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.DragAndDrop;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class OldTable extends Widget implements TableInterface {
 
@@ -455,6 +454,8 @@ public class OldTable extends Widget implements TableInterface {
         private static final String CELL_STILL_UNSELECTED_LOG = "The cell you want to select is still unselected. Retrying...";
         private static final String CELL_STILL_SELECTED_LOG = "The cell you want to unselect is still selected. Retrying...";
         private static final String CHECKBOX_ALL_CSS = ".checkbox";
+        private static final String CHECKBOX_ALL_EMPTY_XPATH = ".//div[@class='checkbox']";
+        private static final String CHECKBOX_ALL_MINUS_XPATH = ".//div[@class='checkbox minus']";
 
         private final WebElement columnElement;
         private final WebDriverWait wait;
@@ -690,19 +691,21 @@ public class OldTable extends Widget implements TableInterface {
 
         private void selectAllRows() {
             WebElement selectAllCheckbox = getSelectAllCheckbox();
-            if (!isAllRowsSelected(selectAllCheckbox)) {
+            if (isAnyRowSelected(selectAllCheckbox)) {
+                WebElementUtils.clickWithRetry(driver, selectAllCheckbox, By.xpath(CHECKBOX_ALL_MINUS_XPATH));
+            } else {
                 selectAllCheckbox.click();
             }
         }
 
         private void unselectAllRows() {
             WebElement selectAllCheckbox = getSelectAllCheckbox();
-            if (isAllRowsSelected(selectAllCheckbox)) {
-                selectAllCheckbox.click();
+            if (isAnyRowSelected(selectAllCheckbox)) {
+                WebElementUtils.clickWithRetry(driver, selectAllCheckbox, By.xpath(CHECKBOX_ALL_EMPTY_XPATH));
             }
         }
 
-        private boolean isAllRowsSelected(WebElement selectAllCheckbox) {
+        private boolean isAnyRowSelected(WebElement selectAllCheckbox) {
             return selectAllCheckbox.getAttribute(CLASS_ATTRIBUTE).endsWith("minus");
         }
 
