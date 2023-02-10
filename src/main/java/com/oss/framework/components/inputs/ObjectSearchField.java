@@ -20,7 +20,7 @@ public class ObjectSearchField extends Input {
     private static final String OSF_LABEL = ".//span[@class='md-input-label-text']";
     private static final String OSF_INNER_INPUT = ".//*[@class='object-input-component__multi__dropdown']//input";
     private static final String OSF_DROP_DOWN_LIST = ".//div[@class='dropdown-element__label']";
-    private static final String OSF_VALUE_LIST = ".//div[@class='md-input-multi']//span[@class='md-input-value']";
+    private static final String OSF_VALUE_LIST_CSS = ".md-input-value";
     private static final String OSF_VALUE_CLEAR_BTN = ".//div[@class='md-input-multi']";
     private static final String OSF_SINGLE = "object-input-component__single__dropdown";
     private static final String SEARCH_PLUS_ICON_XPATH = ".//button[@id='btn-as-modal']";
@@ -76,7 +76,7 @@ public class ObjectSearchField extends Input {
             return Data.createSingleData(webElement.findElement(By.xpath(INPUT)).getAttribute("value"));
         }
         if (!isMultiComponentEmpty()) {
-            List<WebElement> values = webElement.findElements(By.xpath(OSF_VALUE_LIST));
+            List<WebElement> values = webElement.findElements(By.cssSelector(OSF_VALUE_LIST_CSS));
             return Data.createMultiData(values.stream().map(WebElement::getText).collect(Collectors.toList()));
         }
         return Data.createSingleData("");
@@ -134,16 +134,16 @@ public class ObjectSearchField extends Input {
         if (value.isList()) {
             setMultiValues(value, By.xpath(OSF_INNER_INPUT), isContains);
         } else {
-            setSingleValueDriver(value.getStringValue(), By.xpath(OSF_INNER_INPUT), isContains);
+            setSingleValue(value.getStringValue(), By.xpath(OSF_INNER_INPUT), isContains);
         }
         WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(ICON_CHEVRON_UP_CSS)));//TODO change to ESC after OSSWEB-20623
     }
 
     private void setMultiValues(Data values, By by, boolean isContains) {
-        values.getStringValues().forEach(value -> setSingleValueDriver(value, by, isContains));
+        values.getStringValues().forEach(value -> setSingleValue(value, by, isContains));
     }
 
-    private void setSingleValueDriver(String singleValue, By by, boolean isContains) {
+    private void setSingleValue(String singleValue, By by, boolean isContains) {
         driver.findElement(by).sendKeys(Keys.CONTROL + "a");
         driver.findElement(by).sendKeys(Keys.DELETE);
         DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
