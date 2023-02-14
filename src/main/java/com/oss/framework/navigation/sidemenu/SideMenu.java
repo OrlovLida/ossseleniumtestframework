@@ -71,6 +71,7 @@ public class SideMenu {
     }
 
     private void callAction(String testid) {
+        DelayUtils.waitForLoadBars(wait, getSideMenu());
         LOGGER.info("Search {}", testid);
         String actionXpath = String.format(ACTION_NAME_PATH_PATTERN, testid);
         searchWithRetry(actionXpath);
