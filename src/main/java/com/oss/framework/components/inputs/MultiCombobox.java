@@ -83,7 +83,7 @@ public class MultiCombobox extends Input {
 
     @Override
     public void clear() {
-        webElement.findElement(By.xpath(String.format(CLEAR_XPATH, componentId))).click();
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(String.format(CLEAR_XPATH, componentId))));
         Actions actions = new Actions(driver);
         actions.sendKeys(Keys.ESCAPE).build().perform();
     }

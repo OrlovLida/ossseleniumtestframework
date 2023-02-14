@@ -17,6 +17,8 @@ public class Switcher extends Input {
     private static final String SWITCHER_ON_TEXT = ".switcher-onText";
     private static final String INPUT_XPATH = ".//input";
     private static final String VALUE = "value";
+    private static final String FALSE = "false";
+    private static final String TRUE = "true";
 
     private Switcher(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, String componentId) {
         super(driver, webDriverWait, webElement, componentId);
@@ -51,7 +53,7 @@ public class Switcher extends Input {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_EXCEPTION);
+        setSwitcherValue(Data.createSingleData(FALSE));
     }
 
     public String getOffLabel() {
@@ -65,12 +67,12 @@ public class Switcher extends Input {
     private void setSwitcherValue(Data value) {
         Boolean valueToSet = Boolean.valueOf(value.getStringValue());
         if (!valueToSet.equals(isSwitched())) {
-            this.webElement.findElement(By.className(SWITCHER_CLASS)).click();
+            WebElementUtils.clickWebElement(driver, webElement.findElement(By.className(SWITCHER_CLASS)));
         }
     }
 
     private boolean isSwitched() {
         String switched = this.webElement.findElement(By.xpath(INPUT_XPATH)).getAttribute(VALUE);
-        return switched.equals("true");
+        return switched.equals(TRUE);
     }
 }
