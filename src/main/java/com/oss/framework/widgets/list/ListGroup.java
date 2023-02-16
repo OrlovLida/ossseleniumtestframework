@@ -11,6 +11,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class ListGroup {
     private static final String LIST_GROUP_CLASS = "list-group";
@@ -63,7 +64,7 @@ public class ListGroup {
             WebElement itemList = driver.findElements(By.className(ITEM_LIST_CLASS)).stream()
                     .filter(item -> item.getText().equals(itemName))
                     .findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_ITEM_WITH_NAME_EXCEPTION + itemName));
-
+            WebElementUtils.moveToElement(driver, itemList);
             return new Item(driver, itemList);
         }
 
