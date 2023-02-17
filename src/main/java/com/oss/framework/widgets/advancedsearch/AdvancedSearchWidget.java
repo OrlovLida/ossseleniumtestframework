@@ -1,5 +1,8 @@
 package com.oss.framework.widgets.advancedsearch;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,6 +20,9 @@ public class AdvancedSearchWidget extends Widget {
 
     private static final String ADD_BTN_ID = "addButton";
     private static final String CANCEL_BTN_ID = "cancelButton";
+    private static final String INPUT_PATH = ".//div[@class='input-wrapper']";
+    private static final String INPUT_LABEL_CSS = ".md-input-label-text";
+    private static final String NEW_COMBOBOX_LABEL_PATH = ".oss-input__input-label";
 
     private AdvancedSearchWidget(WebDriver driver, WebDriverWait webDriverWait, String widgetId, WebElement webElement) {
         super(driver, webDriverWait, widgetId, webElement);
@@ -51,6 +57,13 @@ public class AdvancedSearchWidget extends Widget {
     public Multimap<String, String> getAppliedFilters() {
         return getAdvancedSearch().getAppliedFilters();
 
+    }
+
+    public List<String> getAllVisibleFilters() {
+        return this.webElement
+                .findElements(By.xpath(INPUT_PATH)).stream()
+                .map(filter -> filter.findElement(By.cssSelector(INPUT_LABEL_CSS + "," + NEW_COMBOBOX_LABEL_PATH)).getText())
+                .collect(Collectors.toList());
     }
 
     private AdvancedSearch getAdvancedSearch() {
