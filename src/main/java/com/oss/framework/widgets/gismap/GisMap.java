@@ -22,10 +22,14 @@ public class GisMap implements GisMapInterface {
     private static final String CANVAS_XPATH = "//canvas";
     private static final String MAP_CHOOSER_WRAPPER_CLASS = "mapChooserWrapper";
     private static final String CHOOSE_MAP_PATTERN = ".//div[text()='%s']";
+    private static final String ZOOM_IN_CLASS = "ol-zoom-in";
+    private static final String ZOOM_OUT_CLASS = "ol-zoom-out";
+    private static final String SCALE_CLASS = "ol-scale-line-inner";
+    private static final String TEXT_CONTENT = "textContent";
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private WebElement gisMapElement;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement gisMapElement;
 
     private GisMap(WebDriver driver, WebDriverWait wait, WebElement gisMapElement) {
         this.driver = driver;
@@ -121,6 +125,21 @@ public class GisMap implements GisMapInterface {
     @Override
     public void setMap(String mapLabel) {
         openMapChooser().findElement(By.xpath(String.format(CHOOSE_MAP_PATTERN, mapLabel))).click();
+    }
+
+    @Override
+    public String getScale() {
+        return gisMapElement.findElement(By.className(SCALE_CLASS)).getAttribute(TEXT_CONTENT);
+    }
+
+    @Override
+    public void zoomIn() {
+        gisMapElement.findElement(By.className(ZOOM_IN_CLASS)).click();
+    }
+
+    @Override
+    public void zoomOut() {
+        gisMapElement.findElement(By.className(ZOOM_OUT_CLASS)).click();
     }
 
     private WebElement openMapChooser() {
