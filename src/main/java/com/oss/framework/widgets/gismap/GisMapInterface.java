@@ -25,4 +25,10 @@ public interface GisMapInterface {
     String getCanvasObject();
 
     void setMap(String mapLabel);
+
+    String getScale();
+
+    void zoomIn();
+
+    void zoomOut();
 }
