@@ -6,6 +6,20 @@
  */
 package com.oss.framework.widgets.list;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.oss.framework.components.alerts.ComponentMessage;
+import com.oss.framework.components.alerts.ElementMessage;
+import com.oss.framework.components.alerts.Message;
 import com.oss.framework.components.categorylist.CategoryList;
 import com.oss.framework.components.contextactions.InlineMenu;
 import com.oss.framework.components.inputs.ComponentFactory;
@@ -15,15 +29,6 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * @author Gabriela Kasza
@@ -111,6 +116,10 @@ public class EditableList extends Widget {
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryName));
         category.expandCategory();
+    }
+
+    public List<Message> getMessages() {
+        return ComponentMessage.create(driver, id).getMessages();
     }
 
     private List<CategoryList> getCategories() {
@@ -203,6 +212,10 @@ public class EditableList extends Widget {
             private static final String EDIT_XPATH = ".//ancestor::div[contains(@class, 'list__cell--editable')]//i[@aria-label='EDIT']";
             private static final String CHECKBOX_INPUT_XPATH = ".//input[@type='checkbox']";
             private static final String CHECKBOX_INPUT_ATTRIBUTE_NAME = "value";
+            private static final String LIST_XPATH = ".//ancestor::div[@class='DropdownList']";
+            private static final String CELL_INDEX = "data-index";
+            private static final String CANNOT_FIND_MESSAGE_FOR_CELL_EXCEPTION = "Cannot find message for Cell";
+            private static final String PARENT_DATA_TESTID_PATTERN = "%s_%s_%s";
             private final WebDriver driver;
             private final WebDriverWait wait;
             private final WebElement webElement;
@@ -276,6 +289,27 @@ public class EditableList extends Widget {
 
             public boolean isAttributeEditable() {
                 return webElement.findElement(By.xpath(PARENT_XPATH)).getAttribute(CLASS_TAG_VALUE).contains(EDITABLE_TAG_VALUE);
+            }
+
+            public Optional<Message> getMessage() {
+                if (driver.findElements(By.cssSelector("[" + CSSUtils.DATA_PARENT_TEST_ID + "='" + getParentDataPath() + "']")).isEmpty()) {
+                    return Optional.empty();
+                } else {
+                    List<String> messageTypeClasses = CSSUtils.getAllClasses(webElement.findElement(By.xpath("..")));
+                    return Optional.of(Message.create(getMessageText(), messageTypeClasses));
+                }
+            }
+
+            private String getMessageText() {
+                String parentPath = getParentDataPath();
+                return ElementMessage.create(driver, parentPath).getMessagesText().stream().findFirst().orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_MESSAGE_FOR_CELL_EXCEPTION));
+            }
+
+            private String getParentDataPath() {
+                String cellIndex = webElement.getAttribute(CELL_INDEX);
+                String cellId = webElement.getAttribute(CSSUtils.TEST_ID);
+                String listId = webElement.findElement(By.xpath(LIST_XPATH)).getAttribute(CSSUtils.TEST_ID);
+                return String.format(PARENT_DATA_TESTID_PATTERN, listId, cellId, cellIndex);
             }
 
             private Input getCheckbox(String componentId) {
