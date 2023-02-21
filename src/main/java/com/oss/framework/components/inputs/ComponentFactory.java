@@ -128,7 +128,7 @@ public class ComponentFactory {
             }
             case OLD_TEXT_FIELD_APP:
             case COMMENT_TEXT_FIELD: {
-                return CommentTextField.create(webDriver, wait, componentId);
+                return CommentTextField.createFromParent(parent, webDriver, wait, componentId);
             }
             case COORDINATES: {
                 return Coordinates.create(parent, webDriver, wait, componentId);

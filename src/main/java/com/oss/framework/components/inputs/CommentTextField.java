@@ -14,13 +14,20 @@ public class CommentTextField extends Input {
 
     private static final String TEXT_FIELD_XPATH = ".//div[starts-with(@class, 'textFieldCont')]";
     private static final String ACCEPT_BUTTON_CSS = ".fa-check";
+    private static final String LINK_XPATH_PATTERN = ".//a[@href and text()='%s']";
 
     private CommentTextField(WebDriver driver, WebDriverWait webDriverWait, WebElement webElement, String componentId) {
         super(driver, webDriverWait, webElement, componentId);
     }
 
-    static CommentTextField create(WebDriver driver, WebDriverWait wait, String componentId) {
+    public static CommentTextField create(WebDriver driver, WebDriverWait wait, String componentId) {
         WebElement webElement = driver.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
+        WebElementUtils.moveToElement(driver, webElement);
+        return new CommentTextField(driver, wait, webElement, componentId);
+    }
+
+    public static CommentTextField createFromParent(WebElement parent, WebDriver driver, WebDriverWait wait, String componentId) {
+        WebElement webElement = parent.findElement(By.cssSelector(CSSUtils.getElementCssSelector(componentId)));
         WebElementUtils.moveToElement(driver, webElement);
         return new CommentTextField(driver, wait, webElement, componentId);
     }
@@ -55,5 +62,9 @@ public class CommentTextField extends Input {
 
     private void acceptInputValue() {
         WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(ACCEPT_BUTTON_CSS)));
+    }
+
+    public void clickLink(String linkText) {
+        webElement.findElement(By.xpath(String.format(LINK_XPATH_PATTERN, linkText))).click();
     }
 }
