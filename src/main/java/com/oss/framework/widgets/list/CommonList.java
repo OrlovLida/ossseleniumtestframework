@@ -1,5 +1,16 @@
 package com.oss.framework.widgets.list;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.oss.framework.components.categorylist.CategoryList;
 import com.oss.framework.components.contextactions.ActionsContainer;
 import com.oss.framework.components.contextactions.InlineMenu;
@@ -11,16 +22,6 @@ import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 import com.oss.framework.widgets.Widget;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 public class CommonList extends Widget {
 
@@ -172,7 +173,7 @@ public class CommonList extends Widget {
         private static final String FAVOURITE_BUTTON_XPATH = ".//button[@class='favouriteButton favourite']";
         private static final String STAR_BUTTON_XPATH = ".//button[contains(@class, 'favourite')]";
         private static final String PLACE_HOLDERS_XPATH = ".//div[contains(@class,'placeholders')]";
-        private static final String LINK_PATTERN = ".//div[contains(@class,'hyperlink placeholder')]//*[contains(text(),'%s')]";
+        private static final String LINK_PATTERN = ".//div[contains(@class,'hyperlink placeholder')]//*[contains(text(),'%s')] | .//a[@href and text()='%s']";
         private static final String ICON_BY_ARIA_LABEL_PATTERN = ".//i[@aria-label='%s']";
         private static final String ICON_BY_ID_PATTERN = ".//button[@" + CSSUtils.TEST_ID + "= '%s']";
 
@@ -269,7 +270,7 @@ public class CommonList extends Widget {
 
         public void clickLink(String linkText) {
             DelayUtils.waitForElementToLoad(wait, rowElement);
-            WebElement link = rowElement.findElement(By.xpath(String.format(LINK_PATTERN, linkText)));
+            WebElement link = rowElement.findElement(By.xpath(String.format(LINK_PATTERN, linkText, linkText)));
             WebElementUtils.clickWebElement(driver, link);
         }
 
