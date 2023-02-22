@@ -594,6 +594,8 @@ public class TableComponent {
         private static final String SAVE_BUTTON_INLINE_EDITOR_CSS = "[data-testid='save-inline-editor']";
         private static final String CELL_IS_NOT_EDITABLE_EXCEPTION = "Cell is not editable";
         private static final String CELL_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION = "Cell doesn't have Message Text";
+        private static final String TABLE_COMPONENT_XPATH = ".//ancestor::div[starts-with(@class,'table-component')]";
+        private static final String PARENT_DATA_TEST_ID_PATTERN = "%s_%s";
 
         private final WebDriver driver;
         private final WebElement cellElement;
@@ -759,7 +761,7 @@ public class TableComponent {
         }
 
         private Optional<Message> getMessage() {
-            if (driver.findElements(By.cssSelector("[" + CSSUtils.DATA_PARENT_TEST_ID + "='" + cellElement.getAttribute(CSSUtils.TEST_ID) + "']")).isEmpty()) {
+            if (driver.findElements(By.cssSelector("[" + CSSUtils.DATA_PARENT_TEST_ID + "='" + getParentDataPath() + "']")).isEmpty()) {
                 return Optional.empty();
             }
             List<String> messageTypeClasses = CSSUtils.getAllClasses(cellElement);
@@ -767,9 +769,15 @@ public class TableComponent {
         }
 
         private String getMessageText() {
-            return ElementMessage.create(driver, cellElement.getAttribute(CSSUtils.TEST_ID)).getMessagesText().stream()
+            return ElementMessage.create(driver, getParentDataPath()).getMessagesText().stream()
                     .findFirst()
                     .orElseThrow(() -> new NoSuchElementException(CELL_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION));
+        }
+
+        private String getParentDataPath() {
+            String cellId = cellElement.getAttribute(CSSUtils.TEST_ID);
+            String componentId = cellElement.findElement(By.xpath(TABLE_COMPONENT_XPATH)).getAttribute(CSSUtils.TEST_ID);
+            return String.format(PARENT_DATA_TEST_ID_PATTERN, componentId, cellId);
         }
     }
 
