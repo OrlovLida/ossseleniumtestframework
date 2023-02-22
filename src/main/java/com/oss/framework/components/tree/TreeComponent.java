@@ -241,6 +241,8 @@ public class TreeComponent {
         private static final String NODE_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION = "Node doesn't have Message Text";
         private static final String NODE_LABEL_CSS = ".tree-node-default-component-label";
         private static final String NODE_SELECTED_CLASS_CSS = ".tree-node-default-component--selected";
+        private static final String TREE_COMPONENT_XPATH = ".//ancestor::div[@class='tree-component']";
+        private static final String PATERN_DATA_TEST_ID_PATTERN = "%s_%s";
 
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
@@ -395,7 +397,7 @@ public class TreeComponent {
         }
 
         public Optional<Message> getMessage() {
-            if (driver.findElements(By.cssSelector("[" + CSSUtils.DATA_PARENT_TEST_ID + "='" + nodeId + "']")).isEmpty()) {
+            if (driver.findElements(By.cssSelector("[" + CSSUtils.DATA_PARENT_TEST_ID + "='" + getParentDataPath() + "']")).isEmpty()) {
                 return Optional.empty();
             }
             List<String> allClasses = CSSUtils.getAllClasses(nodeElement.findElement(By.cssSelector(TREE_NODE_COMPONENT_CONTAINER_CSS)));
@@ -408,13 +410,18 @@ public class TreeComponent {
         }
 
         private DragAndDrop.DropElement getDropElement() {
-            return new DragAndDrop.DropElement(nodeElement.findElement(By.cssSelector(".tree-node-default-component-label")));
+            return new DragAndDrop.DropElement(nodeElement.findElement(By.cssSelector(NODE_LABEL_CSS)));
         }
 
         private String getMessageText() {
-            return ElementMessage.create(driver, nodeId).getMessagesText().stream()
+            return ElementMessage.create(driver, getParentDataPath()).getMessagesText().stream()
                     .findFirst()
                     .orElseThrow(() -> new NoSuchElementException(NODE_DOESN_T_HAVE_MESSAGE_TEXT_EXCEPTION));
+        }
+
+        private String getParentDataPath() {
+            String componentId = nodeElement.findElement(By.xpath(TREE_COMPONENT_XPATH)).getAttribute(CSSUtils.TEST_ID);
+            return String.format(PATERN_DATA_TEST_ID_PATTERN, componentId, nodeId);
         }
 
         private void clickFilter() {
