@@ -1,5 +1,6 @@
 variables:
   MVN_ARGS: "-DskipTests"
+  JAVA_VERSION: '11'
 
 include:
   - project: toss/devops/cicd/citemplate
