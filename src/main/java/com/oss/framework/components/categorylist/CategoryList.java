@@ -41,9 +41,10 @@ public class CategoryList {
     }
 
     public static List<CategoryList> create(WebDriver driver, WebDriverWait wait, String widgetId) {
-        DelayUtils.waitBy(wait, By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
-        WebElement widget = driver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
-        DelayUtils.waitForElementDisappear(wait, By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId) + SKELETON_PRELOADER_CSS));
+        String listWidgetCss = String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId);
+        DelayUtils.waitBy(wait, By.cssSelector(listWidgetCss));
+        WebElement widget = driver.findElement(By.cssSelector(listWidgetCss));
+        DelayUtils.waitForElementDisappear(wait, By.cssSelector(listWidgetCss + SKELETON_PRELOADER_CSS));
         return widget.findElements(By.cssSelector(CATEGORY_LIST_ELEMENT_CSS)).stream()
                 .map(category -> new CategoryList(driver, wait, category)).collect(Collectors.toList());
     }
