@@ -28,10 +28,11 @@ public class CategoryList {
     private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
     private static final String CATEGORY_LIST_ELEMENT_CSS = ".categoryListElement";
     private static final String ICON_BY_ID_PATTERN = ".//button[@" + CSSUtils.TEST_ID + "= '%s']";
+    private static final String SKELETON_PRELOADER_CSS = " .skeleton-preloader";
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private WebElement categoryElement;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final WebElement categoryElement;
 
     private CategoryList(WebDriver driver, WebDriverWait wait, WebElement categoryElement) {
         this.driver = driver;
@@ -42,6 +43,7 @@ public class CategoryList {
     public static List<CategoryList> create(WebDriver driver, WebDriverWait wait, String widgetId) {
         DelayUtils.waitBy(wait, By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
         WebElement widget = driver.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId)));
+        DelayUtils.waitForElementDisappear(wait, By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, widgetId) + SKELETON_PRELOADER_CSS));
         return widget.findElements(By.cssSelector(CATEGORY_LIST_ELEMENT_CSS)).stream()
                 .map(category -> new CategoryList(driver, wait, category)).collect(Collectors.toList());
     }
