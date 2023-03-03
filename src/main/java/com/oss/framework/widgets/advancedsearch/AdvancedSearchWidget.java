@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.collect.Multimap;
 import com.oss.framework.components.inputs.Input;
 import com.oss.framework.components.search.AdvancedSearch;
+import com.oss.framework.components.selectionbar.SelectionBarComponent;
 import com.oss.framework.components.table.TableComponent;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.WebElementUtils;
@@ -56,7 +57,6 @@ public class AdvancedSearchWidget extends Widget {
 
     public Multimap<String, String> getAppliedFilters() {
         return getAdvancedSearch().getAppliedFilters();
-
     }
 
     public List<String> getAllVisibleFilters() {
@@ -66,7 +66,15 @@ public class AdvancedSearchWidget extends Widget {
                 .collect(Collectors.toList());
     }
 
+    public String getSelectedObjectCount() {
+        return getSelectionBarComponent().getSelectedObjectsCount();
+    }
+
     private AdvancedSearch getAdvancedSearch() {
         return AdvancedSearch.createByWidgetId(driver, webDriverWait, id);
+    }
+
+    private SelectionBarComponent getSelectionBarComponent() {
+        return SelectionBarComponent.create(this.driver, this.webDriverWait, id);
     }
 }
