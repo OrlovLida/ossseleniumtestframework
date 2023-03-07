@@ -79,6 +79,20 @@ public class EditableList extends Widget {
         row.setValue(value, columnId, componentId);
     }
 
+    public void selectRow(int rowIndex) {
+        Row row = getRow(rowIndex);
+        if (!row.isSelected()) {
+            row.click();
+        }
+    }
+
+    public void unSelectRow(int rowIndex) {
+        Row row = getRow(rowIndex);
+        if (row.isSelected()) {
+            row.click();
+        }
+    }
+
     public Row getRow(int row) {
         return getVisibleRows().get(row);
     }
@@ -118,6 +132,32 @@ public class EditableList extends Widget {
         category.expandCategory();
     }
 
+    public boolean isCategoryDisplayed(String name) {
+        return getCategories().stream().anyMatch(category -> category.getValue().equals(name));
+    }
+
+    public boolean isCategoryLabelVisible(String categoryId) {
+        CategoryList category = getCategories().stream().filter(categoryList -> categoryList.getCategoryId().equals(categoryId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryId));
+        return category.isCategoryLabelVisible();
+    }
+
+    public boolean isCategoryChevronVisible(String categoryId) {
+        CategoryList category = getCategories().stream().filter(categoryList -> categoryList.getCategoryId().equals(categoryId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryId));
+        return category.isCategoryChevronVisible();
+    }
+
+    public void collapseCategory(String categoryName) {
+        CategoryList category = getCategories().stream()
+                .filter(categoryList -> categoryList.getValue().equals(categoryName))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryName));
+        category.collapseCategory();
+    }
+
     public List<Message> getMessages() {
         return ComponentMessage.create(driver, id).getMessages();
     }
@@ -131,6 +171,8 @@ public class EditableList extends Widget {
         private static final String CELL_PATTERN = ".//div[@" + CSSUtils.TEST_ID + "='%s']";
         private static final String PLACEHOLDERS_XPATH = ".//div[contains(@class,'placeholders')]";
         private static final String ARIA_LABEL_PATTERN = ".//i[@aria-label='%s']";
+        public static final String CLASS = "class";
+        public static final String LIST_ROW_SELECTED = "list_row--selected";
 
         private final WebDriver driver;
         private final WebDriverWait wait;
@@ -149,6 +191,10 @@ public class EditableList extends Widget {
             } else {
                 webElement.click();
             }
+        }
+
+        public boolean isSelected() {
+            return webElement.getAttribute(CLASS).contains(LIST_ROW_SELECTED);
         }
 
         public Cell getCell(String columnId) {
