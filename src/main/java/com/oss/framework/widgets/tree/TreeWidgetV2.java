@@ -87,7 +87,10 @@ public class TreeWidgetV2 extends Widget {
     }
 
     public void selectNodeByLabel(String label) {
-        getNode(label).toggleNode();
+        Node node = getNode(label);
+        if (!node.isToggled()) {
+            node.toggleNode();
+        }
     }
 
     public void unselectNodeByLabel(String label) {
