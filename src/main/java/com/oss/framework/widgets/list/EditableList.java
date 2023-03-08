@@ -352,7 +352,6 @@ public class EditableList extends Widget {
             }
 
             private Input getCheckbox(String componentId) {
-                WebElementUtils.clickWebElement(driver, webElement);
                 return ComponentFactory.createFromParent(componentId, Input.ComponentType.CHECKBOX, driver, wait, webElement);
             }
         }
