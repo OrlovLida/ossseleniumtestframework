@@ -24,14 +24,13 @@ import com.oss.framework.utils.WebElementUtils;
  */
 public class CategoryList {
     private static final String COLLAPSE_ICON_XPATH = ".//i[contains(@class,'chevron-up')]";
-    private static final String CATEGORY_LABEL_TEXT_CLASS = "categoryLabel-text";
-    private static final String CATEGORY_LABEL_CLASS = "categoryLabel";
     private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
     private static final String CATEGORY_LIST_ELEMENT_CSS = ".categoryListElement";
     private static final String ICON_BY_ID_PATTERN = ".//button[@" + CSSUtils.TEST_ID + "= '%s']";
     private static final String SKELETON_PRELOADER_CSS = " .skeleton-preloader";
     private static final String DROPDOWN_LIST = "DropdownList";
     private static final String CHEVRON_XPATH = ".//i[contains(@class,'chevron fa')]";
+    private static final String TITLE_CSS = "[title]";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -53,13 +52,7 @@ public class CategoryList {
     }
 
     public String getValue() {
-        WebElement categoryLabel;
-        if (!categoryElement.findElements(By.className(CATEGORY_LABEL_TEXT_CLASS)).isEmpty()) {
-            categoryLabel = categoryElement.findElement(By.className(CATEGORY_LABEL_TEXT_CLASS));
-        } else {
-            categoryLabel = categoryElement.findElement(By.className(CATEGORY_LABEL_CLASS));
-        }
-        return categoryLabel.getAttribute("title");
+        return categoryElement.findElements(By.cssSelector(TITLE_CSS)).stream().map(WebElement::getText).findFirst().orElse("");
     }
 
     public void callAction(String groupId, String actionId) {
@@ -95,10 +88,6 @@ public class CategoryList {
 
     public String getCategoryId() {
         return categoryElement.findElement(By.className(DROPDOWN_LIST)).getAttribute(CSSUtils.TEST_ID);
-    }
-
-    public boolean isCategoryLabelVisible() {
-        return !categoryElement.findElements(By.className(CATEGORY_LABEL_CLASS)).isEmpty();
     }
 
     public boolean isCategoryChevronVisible() {

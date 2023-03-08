@@ -132,22 +132,15 @@ public class EditableList extends Widget {
         category.expandCategory();
     }
 
-    public boolean isCategoryDisplayed(String name) {
-        return getCategories().stream().anyMatch(category -> category.getValue().equals(name));
-    }
-
-    public boolean isCategoryLabelVisible(String categoryId) {
-        CategoryList category = getCategories().stream().filter(categoryList -> categoryList.getCategoryId().equals(categoryId))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryId));
-        return category.isCategoryLabelVisible();
-    }
-
     public boolean isCategoryChevronVisible(String categoryId) {
         CategoryList category = getCategories().stream().filter(categoryList -> categoryList.getCategoryId().equals(categoryId))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryId));
         return category.isCategoryChevronVisible();
+    }
+
+    public List<String> getCategoryLabels() {
+        return getCategories().stream().map(CategoryList::getValue).collect(Collectors.toList());
     }
 
     public void collapseCategory(String categoryName) {
@@ -252,6 +245,7 @@ public class EditableList extends Widget {
         public static class Cell {
             private static final String TEXT_XPATH = ".//div[@class='text-wrapper' or 'textContainer']";
             private static final String SAVE_BUTTON = "Save";
+            private static final String CANCEL_BUTTON = "Cancel";
             private static final String PARENT_XPATH = ".//parent::div";
             private static final String CLASS_TAG_VALUE = "class";
             private static final String EDITABLE_TAG_VALUE = "editable";
@@ -295,15 +289,23 @@ public class EditableList extends Widget {
 
             public void setValue(String value, String componentId) {
                 if (WebElementUtils.isElementPresent(webElement, By.xpath(EDIT_XPATH))) {
-                    WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
-                    InlineForm inlineForm = InlineForm.create(driver, wait);
-                    Input component = inlineForm.getComponent(componentId);
-                    DelayUtils.sleep(500);
-                    component.setSingleStringValue(value);
-                    inlineForm.clickButtonByLabel(SAVE_BUTTON);
+                    typeValue(value, componentId).clickButtonByLabel(SAVE_BUTTON);
                     return;
                 }
                 getCheckbox(componentId).setSingleStringValue(value);
+            }
+
+            public void changeValueAndClickCancel(String value, String componentId) {
+                typeValue(value, componentId).clickButtonByLabel(CANCEL_BUTTON);
+            }
+
+            private InlineForm typeValue(String value, String componentId) {
+                WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
+                InlineForm inlineForm = InlineForm.create(driver, wait);
+                Input component = inlineForm.getComponent(componentId);
+                DelayUtils.sleep(500);
+                component.setSingleStringValue(value);
+                return inlineForm;
             }
 
             public void clearValue(String componentId, Input.ComponentType componentType) {
