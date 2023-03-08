@@ -275,12 +275,7 @@ public class EditableList extends Widget {
                     getCheckbox(componentId).setSingleStringValue(value);
                     return;
                 }
-                WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
-                InlineForm inlineForm = InlineForm.create(driver, wait);
-                Input component = inlineForm.getComponent(componentId, componentType);
-                DelayUtils.sleep(500);
-                component.setSingleStringValue(value);
-                inlineForm.clickButtonByLabel(SAVE_BUTTON);
+                typeValue(value, componentId).clickButtonByLabel(SAVE_BUTTON);
             }
 
             public void setValue(String value, String componentId) {
