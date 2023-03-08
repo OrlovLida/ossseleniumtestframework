@@ -125,18 +125,18 @@ public class EditableList extends Widget {
     }
 
     public void expandCategory(String categoryName) {
-        CategoryList category = getCategories().stream()
+        getCategoryWithName(categoryName).expandCategory();
+    }
+
+    private CategoryList getCategoryWithName(String categoryName) {
+        return getCategories().stream()
                 .filter(categoryList -> categoryList.getValue().equals(categoryName))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryName));
-        category.expandCategory();
     }
 
     public boolean isCategoryChevronVisible(String categoryName) {
-        CategoryList category = getCategories().stream().filter(categoryList -> categoryList.getValue().equals(categoryName))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryName));
-        return category.isCategoryChevronVisible();
+        return getCategoryWithName(categoryName).isCategoryChevronVisible();
     }
 
     public List<String> getCategoryLabels() {
@@ -144,11 +144,7 @@ public class EditableList extends Widget {
     }
 
     public void collapseCategory(String categoryName) {
-        CategoryList category = getCategories().stream()
-                .filter(categoryList -> categoryList.getValue().equals(categoryName))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryName));
-        category.collapseCategory();
+        getCategoryWithName(categoryName).collapseCategory();
     }
 
     public List<Message> getMessages() {
