@@ -132,10 +132,10 @@ public class EditableList extends Widget {
         category.expandCategory();
     }
 
-    public boolean isCategoryChevronVisible(String categoryId) {
-        CategoryList category = getCategories().stream().filter(categoryList -> categoryList.getCategoryId().equals(categoryId))
+    public boolean isCategoryChevronVisible(String categoryName) {
+        CategoryList category = getCategories().stream().filter(categoryList -> categoryList.getValue().equals(categoryName))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryId));
+                .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryName));
         return category.isCategoryChevronVisible();
     }
 

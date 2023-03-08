@@ -28,7 +28,6 @@ public class CategoryList {
     private static final String CATEGORY_LIST_ELEMENT_CSS = ".categoryListElement";
     private static final String ICON_BY_ID_PATTERN = ".//button[@" + CSSUtils.TEST_ID + "= '%s']";
     private static final String SKELETON_PRELOADER_CSS = " .skeleton-preloader";
-    private static final String DROPDOWN_LIST = "DropdownList";
     private static final String CHEVRON_XPATH = ".//i[contains(@class,'chevron fa')]";
     private static final String TITLE_CSS = "[title]";
 
@@ -84,10 +83,6 @@ public class CategoryList {
 
     private boolean isExpanded() {
         return !categoryElement.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
-    }
-
-    public String getCategoryId() {
-        return categoryElement.findElement(By.className(DROPDOWN_LIST)).getAttribute(CSSUtils.TEST_ID);
     }
 
     public boolean isCategoryChevronVisible() {
