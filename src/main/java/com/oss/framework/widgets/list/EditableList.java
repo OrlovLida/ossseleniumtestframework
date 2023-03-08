@@ -125,10 +125,10 @@ public class EditableList extends Widget {
     }
 
     public void expandCategory(String categoryName) {
-        getCategoryWithName(categoryName).expandCategory();
+        getCategoryByName(categoryName).expandCategory();
     }
 
-    private CategoryList getCategoryWithName(String categoryName) {
+    private CategoryList getCategoryByName(String categoryName) {
         return getCategories().stream()
                 .filter(categoryList -> categoryList.getValue().equals(categoryName))
                 .findFirst()
@@ -136,7 +136,7 @@ public class EditableList extends Widget {
     }
 
     public boolean isCategoryChevronVisible(String categoryName) {
-        return getCategoryWithName(categoryName).isCategoryChevronVisible();
+        return getCategoryByName(categoryName).isCategoryChevronVisible();
     }
 
     public List<String> getCategoryLabels() {
@@ -144,7 +144,7 @@ public class EditableList extends Widget {
     }
 
     public void collapseCategory(String categoryName) {
-        getCategoryWithName(categoryName).collapseCategory();
+        getCategoryByName(categoryName).collapseCategory();
     }
 
     public List<Message> getMessages() {
@@ -160,8 +160,8 @@ public class EditableList extends Widget {
         private static final String CELL_PATTERN = ".//div[@" + CSSUtils.TEST_ID + "='%s']";
         private static final String PLACEHOLDERS_XPATH = ".//div[contains(@class,'placeholders')]";
         private static final String ARIA_LABEL_PATTERN = ".//i[@aria-label='%s']";
-        public static final String CLASS = "class";
-        public static final String LIST_ROW_SELECTED = "list_row--selected";
+        private static final String CLASS = "class";
+        private static final String LIST_ROW_SELECTED = "list_row--selected";
 
         private final WebDriver driver;
         private final WebDriverWait wait;
@@ -275,28 +275,34 @@ public class EditableList extends Widget {
                     getCheckbox(componentId).setSingleStringValue(value);
                     return;
                 }
-                typeValue(value, componentId).clickButtonByLabel(SAVE_BUTTON);
+                WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
+                InlineForm inlineForm = InlineForm.create(driver, wait);
+                typeValue(value, componentId, inlineForm);
+                inlineForm.clickButtonByLabel(SAVE_BUTTON);
             }
 
             public void setValue(String value, String componentId) {
                 if (WebElementUtils.isElementPresent(webElement, By.xpath(EDIT_XPATH))) {
-                    typeValue(value, componentId).clickButtonByLabel(SAVE_BUTTON);
+                    WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
+                    InlineForm inlineForm = InlineForm.create(driver, wait);
+                    typeValue(value, componentId, inlineForm);
+                    inlineForm.clickButtonByLabel(SAVE_BUTTON);
                     return;
                 }
                 getCheckbox(componentId).setSingleStringValue(value);
             }
 
-            public void changeValueAndClickCancel(String value, String componentId) {
-                typeValue(value, componentId).clickButtonByLabel(CANCEL_BUTTON);
-            }
-
-            private InlineForm typeValue(String value, String componentId) {
+            public void setValueAndCancel(String value, String componentId) {
                 WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
                 InlineForm inlineForm = InlineForm.create(driver, wait);
+                typeValue(value, componentId, inlineForm);
+                inlineForm.clickButtonByLabel(CANCEL_BUTTON);
+            }
+
+            private void typeValue(String value, String componentId, InlineForm inlineForm) {
                 Input component = inlineForm.getComponent(componentId);
                 DelayUtils.sleep(500);
                 component.setSingleStringValue(value);
-                return inlineForm;
             }
 
             public void clearValue(String componentId, Input.ComponentType componentType) {
