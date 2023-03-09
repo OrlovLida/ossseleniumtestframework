@@ -7,7 +7,6 @@
 package com.oss.framework.components.mainheader;
 
 import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.wizard.Wizard;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -49,7 +48,6 @@ public class PerspectiveChooser {
         if (!driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, LIVE.toUpperCase()))) {
             setPerspective(LIVE);
             wait.until(url -> driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, LIVE.toUpperCase())));
-            DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
 
@@ -57,7 +55,6 @@ public class PerspectiveChooser {
         if (!driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, NETWORK.toUpperCase()))) {
             setPerspective(NETWORK);
             wait.until(url -> driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, NETWORK.toUpperCase())));
-            DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
 
@@ -67,7 +64,6 @@ public class PerspectiveChooser {
         planChooser.getComponent(EXISTING_PROJECTS_INPUT_ID).setSingleStringValueContains(processCodeOrName);
         planChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
         wait.until(url -> driver.getCurrentUrl().contains(PROJECT_ID_QUERY));
-        DelayUtils.waitForPageToLoad(driver, wait);
     }
 
     public void setPlanDatePerspective(String date) {
@@ -78,7 +74,6 @@ public class PerspectiveChooser {
             dataChooser.setComponentValue(DATE_INPUT_ID, date);
             dataChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
             wait.until(url -> driver.getCurrentUrl().contains(String.format(DATE_QUERY_PATTERN, date)));
-            DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
 
@@ -86,7 +81,6 @@ public class PerspectiveChooser {
         if (!driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true))) {
             setPerspective(WITH_REMOVE);
             wait.until(url -> driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true)));
-            DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
 
@@ -94,7 +88,6 @@ public class PerspectiveChooser {
         if (driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true))) {
             setPerspective(WITHOUT_REMOVED);
             wait.until(url -> !driver.getCurrentUrl().contains(String.format(WITH_REMOVED_QUERY_PATTERN, true)));
-            DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
 
@@ -102,7 +95,6 @@ public class PerspectiveChooser {
         if (!driver.getCurrentUrl().contains(CURRENT_TASK)) {
             setPerspective(DISPLAY_CURRENT_TASK);
             wait.until(url -> driver.getCurrentUrl().contains(CURRENT_TASK));
-            DelayUtils.waitForPageToLoad(driver, wait);
         }
     }
 
