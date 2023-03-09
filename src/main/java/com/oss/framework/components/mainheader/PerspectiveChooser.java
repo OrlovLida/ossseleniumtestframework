@@ -6,11 +6,10 @@
  */
 package com.oss.framework.components.mainheader;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.wizard.Wizard;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author Gabriela Kasza
@@ -19,6 +18,7 @@ public class PerspectiveChooser {
     private static final String PERSPECTIVE_QUERY_PATTERN = "perspective=%s";
     private static final String DATE_QUERY_PATTERN = "date=%s";
     private static final String WITH_REMOVED_QUERY_PATTERN = "withRemoved=%b";
+    private static final String PROJECT_ID_QUERY = "project_id=";
     private static final String LIVE = "Live";
     private static final String NETWORK = "Network";
     private static final String PLAN = "Plan";
@@ -59,13 +59,11 @@ public class PerspectiveChooser {
     }
 
     public void setPlanPerspective(String processCodeOrName) {
-        if (!driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, PLAN.toUpperCase()))) {
-            setPerspective(PLAN);
-            Wizard planChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
-            planChooser.getComponent(EXISTING_PROJECTS_INPUT_ID).setSingleStringValueContains(processCodeOrName);
-            planChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
-            wait.until(url -> driver.getCurrentUrl().contains(String.format(PERSPECTIVE_QUERY_PATTERN, PLAN.toUpperCase())));
-        }
+        setPerspective(PLAN);
+        Wizard planChooser = Wizard.createByComponentId(driver, wait, PLAN_CONTEXT_WIZARD_ID);
+        planChooser.getComponent(EXISTING_PROJECTS_INPUT_ID).setSingleStringValueContains(processCodeOrName);
+        planChooser.clickButtonById(SAVE_PLAN_CONTEXT_WIZARD_BUTTON_ID);
+        wait.until(url -> driver.getCurrentUrl().contains(PROJECT_ID_QUERY));
     }
 
     public void setPlanDatePerspective(String date) {
