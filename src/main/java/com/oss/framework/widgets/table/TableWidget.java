@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.Lists;
@@ -259,11 +260,15 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public void clearAllFilters() {
+        WebElement tableContent = getTableContent();
         getAdvancedSearch().clearAllFilters();
+        DelayUtils.waitForElementDisappear(webDriverWait, tableContent);
     }
 
     public void clearFilter(String filterName) {
+        WebElement tableContent = getTableContent();
         getAdvancedSearch().clearFilter(filterName);
+        DelayUtils.waitForElementDisappear(webDriverWait, tableContent);
     }
 
     public void markFavoriteFilter(String label) {
@@ -273,9 +278,11 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public void chooseSavedFiltersByLabel(String label) {
+        WebElement tableContent = getTableContent();
         openAdvancedSearch();
         getAdvancedSearch().selectSavedFilterByLabel(label);
         getAdvancedSearch().clickApply();
+        DelayUtils.waitForElementDisappear(webDriverWait, tableContent);
     }
 
     public void saveAsNewFilter(String name) {
@@ -313,11 +320,15 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     public void fullTextSearch(String text) {
+        WebElement tableContent = getTableContent();
         getAdvancedSearch().fullTextSearch(text);
+        DelayUtils.waitForElementDisappear(webDriverWait, tableContent);
     }
 
     public void setQuickFilter(String name) {
+        WebElement tableContent = getTableContent();
         getAdvancedSearch().setQuickFilter(name);
+        DelayUtils.waitForElementDisappear(webDriverWait, tableContent);
     }
 
     public void scrollHorizontally(int offset) {
@@ -375,7 +386,9 @@ public class TableWidget extends Widget implements TableInterface {
     }
 
     private void confirmFilter() {
+        WebElement tableContent = getTableContent();
         getAdvancedSearch().clickApply();
+        DelayUtils.waitForElementDisappear(webDriverWait, tableContent);
     }
 
     private void setFilterContains(String componentId, ComponentType componentType, String value) {
@@ -384,5 +397,10 @@ public class TableWidget extends Widget implements TableInterface {
 
     private void setFilterContains(String componentId, String value) {
         getAdvancedSearch().setFilter(componentId, value);
+    }
+
+    private WebElement getTableContent() {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(TABLE_CONTENT_CSS));
+        return webElement.findElement(By.cssSelector(TABLE_CONTENT_CSS));
     }
 }
