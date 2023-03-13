@@ -276,14 +276,15 @@ public class EditableList extends Widget {
                     return;
                 }
                 WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
-                typeValueAndSave(value, componentId);
-
+                typeValue(value, componentId);
+                InlineForm.create(driver, wait).clickButtonByLabel(SAVE_BUTTON);
             }
 
             public void setValue(String value, String componentId) {
                 if (WebElementUtils.isElementPresent(webElement, By.xpath(EDIT_XPATH))) {
                     WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
-                    typeValueAndSave(value, componentId);
+                    typeValue(value, componentId);
+                    InlineForm.create(driver, wait).clickButtonByLabel(SAVE_BUTTON);
                     return;
                 }
                 getCheckbox(componentId).setSingleStringValue(value);
@@ -291,19 +292,15 @@ public class EditableList extends Widget {
 
             public void setValueAndCancel(String value, String componentId) {
                 WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
-                InlineForm inlineForm = InlineForm.create(driver, wait);
-                Input component = inlineForm.getComponent(componentId);
-                DelayUtils.sleep(500);
-                component.setSingleStringValue(value);
-                inlineForm.clickButtonByLabel(CANCEL_BUTTON);
+                typeValue(value, componentId);
+                InlineForm.create(driver, wait).clickButtonByLabel(CANCEL_BUTTON);
             }
 
-            private void typeValueAndSave(String value, String componentId) {
+            private void typeValue(String value, String componentId) {
                 InlineForm inlineForm = InlineForm.create(driver, wait);
                 Input component = inlineForm.getComponent(componentId);
                 DelayUtils.sleep(500);
                 component.setSingleStringValue(value);
-                inlineForm.clickButtonByLabel(SAVE_BUTTON);
             }
 
             public void clearValue(String componentId, Input.ComponentType componentType) {
