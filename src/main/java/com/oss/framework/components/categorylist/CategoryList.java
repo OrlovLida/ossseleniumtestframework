@@ -24,11 +24,12 @@ import com.oss.framework.utils.WebElementUtils;
  */
 public class CategoryList {
     private static final String COLLAPSE_ICON_XPATH = ".//i[contains(@class,'chevron-up')]";
-    private static final String CATEGORY_NAME_XPATH = "categoryLabel-text";
     private static final String EXPAND_ICON_XPATH = ".//i[contains(@class,'chevron-down')]";
     private static final String CATEGORY_LIST_ELEMENT_CSS = ".categoryListElement";
     private static final String ICON_BY_ID_PATTERN = ".//button[@" + CSSUtils.TEST_ID + "= '%s']";
     private static final String SKELETON_PRELOADER_CSS = " .skeleton-preloader";
+    private static final String CHEVRON_XPATH = ".//i[contains(@class,'chevron fa')]";
+    private static final String TITLE_CSS = "[title]";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -50,7 +51,7 @@ public class CategoryList {
     }
 
     public String getValue() {
-        return categoryElement.findElement(By.className(CATEGORY_NAME_XPATH)).getText();
+        return categoryElement.findElements(By.cssSelector(TITLE_CSS)).stream().map(WebElement::getText).findFirst().orElse("");
     }
 
     public void callAction(String groupId, String actionId) {
@@ -82,5 +83,9 @@ public class CategoryList {
 
     private boolean isExpanded() {
         return !categoryElement.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
+    }
+
+    public boolean isCategoryChevronVisible() {
+        return !categoryElement.findElements(By.xpath(CHEVRON_XPATH)).isEmpty();
     }
 }

@@ -79,6 +79,20 @@ public class EditableList extends Widget {
         row.setValue(value, columnId, componentId);
     }
 
+    public void selectRow(int rowIndex) {
+        Row row = getRow(rowIndex);
+        if (!row.isSelected()) {
+            row.click();
+        }
+    }
+
+    public void unSelectRow(int rowIndex) {
+        Row row = getRow(rowIndex);
+        if (row.isSelected()) {
+            row.click();
+        }
+    }
+
     public Row getRow(int row) {
         return getVisibleRows().get(row);
     }
@@ -111,11 +125,26 @@ public class EditableList extends Widget {
     }
 
     public void expandCategory(String categoryName) {
-        CategoryList category = getCategories().stream()
+        getCategoryByName(categoryName).expandCategory();
+    }
+
+    private CategoryList getCategoryByName(String categoryName) {
+        return getCategories().stream()
                 .filter(categoryList -> categoryList.getValue().equals(categoryName))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException(CANNOT_FIND_CATEGORY_EXCEPTION + categoryName));
-        category.expandCategory();
+    }
+
+    public boolean isCategoryChevronVisible(String categoryName) {
+        return getCategoryByName(categoryName).isCategoryChevronVisible();
+    }
+
+    public List<String> getCategoryLabels() {
+        return getCategories().stream().map(CategoryList::getValue).collect(Collectors.toList());
+    }
+
+    public void collapseCategory(String categoryName) {
+        getCategoryByName(categoryName).collapseCategory();
     }
 
     public List<Message> getMessages() {
@@ -131,6 +160,8 @@ public class EditableList extends Widget {
         private static final String CELL_PATTERN = ".//div[@" + CSSUtils.TEST_ID + "='%s']";
         private static final String PLACEHOLDERS_XPATH = ".//div[contains(@class,'placeholders')]";
         private static final String ARIA_LABEL_PATTERN = ".//i[@aria-label='%s']";
+        private static final String CLASS = "class";
+        private static final String LIST_ROW_SELECTED = "list_row--selected";
 
         private final WebDriver driver;
         private final WebDriverWait wait;
@@ -149,6 +180,10 @@ public class EditableList extends Widget {
             } else {
                 webElement.click();
             }
+        }
+
+        public boolean isSelected() {
+            return webElement.getAttribute(CLASS).contains(LIST_ROW_SELECTED);
         }
 
         public Cell getCell(String columnId) {
@@ -206,6 +241,7 @@ public class EditableList extends Widget {
         public static class Cell {
             private static final String TEXT_XPATH = ".//div[@class='text-wrapper' or 'textContainer']";
             private static final String SAVE_BUTTON = "Save";
+            private static final String CANCEL_BUTTON = "Cancel";
             private static final String PARENT_XPATH = ".//parent::div";
             private static final String CLASS_TAG_VALUE = "class";
             private static final String EDITABLE_TAG_VALUE = "editable";
@@ -240,24 +276,31 @@ public class EditableList extends Widget {
                     return;
                 }
                 WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
-                InlineForm inlineForm = InlineForm.create(driver, wait);
-                Input component = inlineForm.getComponent(componentId, componentType);
-                DelayUtils.sleep(500);
-                component.setSingleStringValue(value);
-                inlineForm.clickButtonByLabel(SAVE_BUTTON);
+                typeValue(value, componentId);
+                InlineForm.create(driver, wait).clickButtonByLabel(SAVE_BUTTON);
             }
 
             public void setValue(String value, String componentId) {
                 if (WebElementUtils.isElementPresent(webElement, By.xpath(EDIT_XPATH))) {
                     WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
-                    InlineForm inlineForm = InlineForm.create(driver, wait);
-                    Input component = inlineForm.getComponent(componentId);
-                    DelayUtils.sleep(500);
-                    component.setSingleStringValue(value);
-                    inlineForm.clickButtonByLabel(SAVE_BUTTON);
+                    typeValue(value, componentId);
+                    InlineForm.create(driver, wait).clickButtonByLabel(SAVE_BUTTON);
                     return;
                 }
                 getCheckbox(componentId).setSingleStringValue(value);
+            }
+
+            public void setValueAndCancel(String value, String componentId) {
+                WebElementUtils.clickWebElement(driver, webElement.findElement(By.xpath(EDIT_XPATH)));
+                typeValue(value, componentId);
+                InlineForm.create(driver, wait).clickButtonByLabel(CANCEL_BUTTON);
+            }
+
+            private void typeValue(String value, String componentId) {
+                InlineForm inlineForm = InlineForm.create(driver, wait);
+                Input component = inlineForm.getComponent(componentId);
+                DelayUtils.sleep(500);
+                component.setSingleStringValue(value);
             }
 
             public void clearValue(String componentId, Input.ComponentType componentType) {
@@ -313,7 +356,6 @@ public class EditableList extends Widget {
             }
 
             private Input getCheckbox(String componentId) {
-                WebElementUtils.clickWebElement(driver, webElement);
                 return ComponentFactory.createFromParent(componentId, Input.ComponentType.CHECKBOX, driver, wait, webElement);
             }
         }
