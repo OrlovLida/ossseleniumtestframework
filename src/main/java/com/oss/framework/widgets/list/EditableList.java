@@ -139,6 +139,10 @@ public class EditableList extends Widget {
         return getCategoryByName(categoryName).isCategoryChevronVisible();
     }
 
+    public boolean isCategoryExpanded(String categoryName) {
+        return getCategoryByName(categoryName).isExpanded();
+    }
+
     public List<String> getCategoryLabels() {
         return getCategories().stream().map(CategoryList::getValue).collect(Collectors.toList());
     }
@@ -156,7 +160,7 @@ public class EditableList extends Widget {
     }
 
     public static class Row {
-        private static final String ROW_CHECKBOX_XPATH = ".//div[contains(@class,'checkbox')]";
+        private static final String ROW_CHECKBOX_XPATH = ".//div[@class='checkbox']";
         private static final String CELL_PATTERN = ".//div[@" + CSSUtils.TEST_ID + "='%s']";
         private static final String PLACEHOLDERS_XPATH = ".//div[contains(@class,'placeholders')]";
         private static final String ARIA_LABEL_PATTERN = ".//i[@aria-label='%s']";
