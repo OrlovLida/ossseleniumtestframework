@@ -81,7 +81,7 @@ public class CategoryList {
         DelayUtils.waitForElementToLoad(wait, categoryElement);
     }
 
-    private boolean isExpanded() {
+    public boolean isExpanded() {
         return !categoryElement.findElements(By.xpath(COLLAPSE_ICON_XPATH)).isEmpty();
     }
 
