@@ -40,7 +40,7 @@ public class EditableList extends Widget {
     private static final String ROWS_OF_LIST_OR_NO_DATA_CSS = "li.list_row--editable, li.noData";
     private static final String XPATH_ROWS_OF_LIST = ".//li[contains(@class,'list_row--editable')]";
     private static final String EMPTY_RESULTS_XPATH =
-            "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')]";
+            "//div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//h3[contains(@class,'emptyResultsText')] | //div[contains(@class, '" + LIST_WIDGET_CLASS + "')]//span[contains(@class,'noDataText')] ";
     private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
     private static final String HEADERS_SELECTOR_CSS = ".list_row--headers";
     private static final String LIST_HEADERS_SELECTOR_CSS = ".list_row--headers > .header";
@@ -157,6 +157,10 @@ public class EditableList extends Widget {
 
     private List<CategoryList> getCategories() {
         return CategoryList.create(driver, webDriverWait, id);
+    }
+
+    public String getNoDataMessage() {
+        return webElement.findElement(By.xpath(EMPTY_RESULTS_XPATH)).getText();
     }
 
     public static class Row {

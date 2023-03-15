@@ -30,6 +30,7 @@ public class CategoryList {
     private static final String SKELETON_PRELOADER_CSS = " .skeleton-preloader";
     private static final String CHEVRON_XPATH = ".//i[contains(@class,'chevron fa')]";
     private static final String TITLE_CSS = "[title]";
+    private static final String TITLE = "title";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -51,7 +52,7 @@ public class CategoryList {
     }
 
     public String getValue() {
-        return categoryElement.findElements(By.cssSelector(TITLE_CSS)).stream().map(WebElement::getText).findFirst().orElse("");
+        return categoryElement.findElements(By.cssSelector(TITLE_CSS)).stream().map(element -> element.getAttribute(TITLE)).findFirst().orElse("");
     }
 
     public void callAction(String groupId, String actionId) {
