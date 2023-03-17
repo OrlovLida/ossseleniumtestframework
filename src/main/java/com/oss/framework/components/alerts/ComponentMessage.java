@@ -16,6 +16,9 @@ public class ComponentMessage {
     private static final String SHOW_MORE_ID = "-show-more-id";
     private static final String COMPONENT_XPATH = ".//ancestor::div[@class='component']";
     private static final String BUTTON_MORE = ".//button[contains(@" + CSSUtils.TEST_ID + ",'show-more-id')]";
+    private static final String WIZARD_MESSAGE_TEXT_CSS = ".wizard-message__element__text";
+    private static final String INNER_HTML = "innerHTML";
+    private static final String REGEX = "<.*>";
     private final WebElement webElement;
 
     private ComponentMessage(WebElement webElement) {
@@ -34,7 +37,7 @@ public class ComponentMessage {
     public List<Message> getMessages() {
         clickAllMore();
         return webElement.findElements(By.cssSelector(WIZARD_MESSAGE_ELEMENT_CSS)).stream()
-                .map(message -> Message.create(message.getAttribute(TEXT_CONTENT), CSSUtils.getAllClasses(message)))
+                .map(message -> Message.create(getText(message), CSSUtils.getAllClasses(message)))
                 .collect(Collectors.toList());
     }
 
@@ -43,6 +46,10 @@ public class ComponentMessage {
         if (isMorePresent(type)) {
             webElement.findElement(By.cssSelector(CSSUtils.getElementCssSelector(type + SHOW_MORE_ID))).click();
         }
+    }
+
+    private String getText(WebElement message) {
+        return message.findElement(By.cssSelector(WIZARD_MESSAGE_TEXT_CSS)).getAttribute(INNER_HTML).replaceAll(REGEX, "");
     }
 
     private void clickAllMore() {
