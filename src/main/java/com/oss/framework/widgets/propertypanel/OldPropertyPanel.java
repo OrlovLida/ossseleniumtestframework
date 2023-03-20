@@ -29,6 +29,7 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     private static final String TAB_CSS = ".defaultCssClass";
     private static final String TAB_IS_NOT_AVAILABLE_EXCEPTION = "Tab is not available";
     private static final String ACTIVE_TAB_XPATH = ".//li[@class='active propertyPanelTab']//p[text()='%s']";
+    private static final String EMPTY_VALUE_CODING = "\u00a0";
 
     private OldPropertyPanel(WebDriver driver, WebDriverWait wait, String widgetId) {
         super(driver, wait, widgetId);
@@ -76,7 +77,7 @@ public class OldPropertyPanel extends Widget implements PropertyPanelInterface {
     }
 
     private List<String> getPropertyValues() {
-        return getCellValue(PROPERTY_VALUES_CSS).stream().map(value -> value.replace("\u00a0", "")).collect(Collectors.toList());
+        return getCellValue(PROPERTY_VALUES_CSS).stream().map(value -> value.replace(EMPTY_VALUE_CODING, "")).collect(Collectors.toList());
     }
 
     private List<String> getCellValue(String selector) {
