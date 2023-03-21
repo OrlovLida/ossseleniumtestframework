@@ -1,5 +1,8 @@
 package com.oss.framework.components.attributechooser;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,14 +35,12 @@ public class AttributesChooser {
     }
 
     public void enableAttributeByLabel(String attributeLabel, String... path) {
-        String nodePath = getAttributePath(attributeLabel, path);
-        Node attributeByLabelsPath = getAttributeByLabelsPath(nodePath);
+        Node attributeByLabelsPath = getAttributeByLabelsPath(attributeLabel, path);
         enableAttributesByLabel(attributeByLabelsPath);
     }
 
     public void disableAttributeByLabel(String attributeLabel, String... path) {
-        String nodePath = getAttributePath(attributeLabel, path);
-        Node attributeByLabelsPath = getAttributeByLabelsPath(nodePath);
+        Node attributeByLabelsPath = getAttributeByLabelsPath(attributeLabel, path);
         disableAttributesByLabel(attributeByLabelsPath);
     }
 
@@ -56,12 +57,20 @@ public class AttributesChooser {
     }
 
     public void toggleAttributeByLabel(String attributeLabel, String... pathLabel) {
-        String attributePath = getAttributePath(attributeLabel, pathLabel);
-        toggleAttributeByPath(attributePath);
+        getAttributeByLabelsPath(attributeLabel, pathLabel).toggleNode();
     }
 
     public void toggleAttributeByPath(String path) {
         getTreeComponent().toggleNodeByPath(path);
+    }
+
+    public List<String> getVisibleAttributes() {
+        return getTreeComponent().getVisibleNodes().stream().map(Node::getLabel).collect(Collectors.toList());
+    }
+
+    public void expandAttribute(String attributeLabel, String... path) {
+        Node attributeByLabelsPath = getAttributeByLabelsPath(attributeLabel, path);
+        attributeByLabelsPath.expandNode();
     }
 
     private String getAttributePath(String attributeLabel, String... path) {
@@ -88,7 +97,8 @@ public class AttributesChooser {
         }
     }
 
-    private Node getAttributeByLabelsPath(String attributeLabel) {
-        return getTreeComponent().getNodeByLabelsPath(attributeLabel);
+    private Node getAttributeByLabelsPath(String attributeLabel, String... path) {
+        String nodePath = getAttributePath(attributeLabel, path);
+        return getTreeComponent().getNodeByLabelsPath(nodePath);
     }
 }
