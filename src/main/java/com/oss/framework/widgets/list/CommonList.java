@@ -33,6 +33,7 @@ public class CommonList extends Widget {
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
     private static final String INLINE_MENU_XPATH = ".//div[@class='contextButtonMenu'] | .//div[@id='frameworkObjectButtonsGroup']";
     private static final String TITLE_CSS = "[title='%s']";
+    private static final String ROW_OR_NO_DATA_OR_CATEGORY = "[data-testid='%s'] .list_row,[data-testid='%s'] .noData,[data-testid='%s'] .category";
 
     private CommonList(WebDriver driver, WebDriverWait webDriverWait, String commonListAppId) {
         super(driver, webDriverWait, commonListAppId);
@@ -41,6 +42,7 @@ public class CommonList extends Widget {
     public static CommonList create(WebDriver driver, WebDriverWait wait, String widgetId) {
         waitForWidget(wait, COMMON_LIST_CLASS);
         waitForWidgetById(wait, widgetId);
+        DelayUtils.waitForPresence(wait, By.cssSelector(String.format(ROW_OR_NO_DATA_OR_CATEGORY, widgetId, widgetId, widgetId)));
         return new CommonList(driver, wait, widgetId);
     }
 
