@@ -33,7 +33,7 @@ public class CommonList extends Widget {
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
     private static final String INLINE_MENU_XPATH = ".//div[@class='contextButtonMenu'] | .//div[@id='frameworkObjectButtonsGroup']";
     private static final String TITLE_CSS = "[title='%s']";
-    private static final String ROW_OR_NO_DATA_OR_CATEGORY = "[data-testid='%s'] .list_row,[data-testid='%s'] .noData,[data-testid='%s'] .category";
+    private static final String ROW_OR_NO_DATA = ".list_row,.noData";
 
     private CommonList(WebDriver driver, WebDriverWait webDriverWait, String commonListAppId) {
         super(driver, webDriverWait, commonListAppId);
@@ -42,7 +42,6 @@ public class CommonList extends Widget {
     public static CommonList create(WebDriver driver, WebDriverWait wait, String widgetId) {
         waitForWidget(wait, COMMON_LIST_CLASS);
         waitForWidgetById(wait, widgetId);
-        DelayUtils.waitForPresence(wait, By.cssSelector(String.format(ROW_OR_NO_DATA_OR_CATEGORY, widgetId, widgetId, widgetId)));
         return new CommonList(driver, wait, widgetId);
     }
 
@@ -115,6 +114,7 @@ public class CommonList extends Widget {
     }
 
     public List<Row> getRows() {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(ROW_OR_NO_DATA));
         List<String> headers = getRowHeaders();
         return webElement.findElements(By.xpath(LIST_ELEMENT_XPATH))
                 .stream().map(row -> new Row(driver, webDriverWait, row, headers)).collect(Collectors.toList());
