@@ -47,6 +47,10 @@ public interface TableInterface {
 
     void searchByAttribute(String attributeId, Input.ComponentType componentType, String value);
 
+    /**
+     * @Depracated Method will be removed in 5.0.x release, use method searchByColumn(String attributeLabel, String value) -> OldTable instead
+     */
+    @Deprecated
     void searchByAttributeWithLabel(String attributeLabel, Input.ComponentType componentType, String value);
 
     void searchByAttribute(String attributeId, String value);

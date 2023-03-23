@@ -32,6 +32,7 @@ public class CommonList extends Widget {
     private static final String PROVIDED_VALUE_DOESN_T_EXIST_EXCEPTION = "Provided value doesn't exist";
     private static final String SCROLL_INTO_VIEW_SCRIPT = "arguments[0].scrollIntoView(true);";
     private static final String INLINE_MENU_XPATH = ".//div[@class='contextButtonMenu'] | .//div[@id='frameworkObjectButtonsGroup']";
+    private static final String ROW_OR_NO_DATA = ".list_row,.noData";
     private static final String TITLE_CSS = "[title='%s']";
 
     private CommonList(WebDriver driver, WebDriverWait webDriverWait, String commonListAppId) {
@@ -113,6 +114,7 @@ public class CommonList extends Widget {
     }
 
     public List<Row> getRows() {
+        DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(ROW_OR_NO_DATA));
         List<String> headers = getRowHeaders();
         return webElement.findElements(By.xpath(LIST_ELEMENT_XPATH))
                 .stream().map(row -> new Row(driver, webDriverWait, row, headers)).collect(Collectors.toList());
