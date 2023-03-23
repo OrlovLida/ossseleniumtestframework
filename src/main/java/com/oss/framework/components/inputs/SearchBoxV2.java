@@ -48,7 +48,7 @@ public class SearchBoxV2 extends Input {
     @Override
     public void setValue(Data value) {
         typeValue(value);
-        DropdownList.create(driver, webDriverWait).selectOptionByTitle(value.getStringValue());
+        DropdownList.create(driver, webDriverWait).selectOptionById(value.getStringValue());
     }
     
     @Override
