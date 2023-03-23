@@ -44,6 +44,7 @@ public class EditableList extends Widget {
     private static final String CANNOT_FIND_CATEGORY_EXCEPTION = "Cannot find category ";
     private static final String HEADERS_SELECTOR_CSS = ".list_row--headers";
     private static final String LIST_HEADERS_SELECTOR_CSS = ".list_row--headers > .header";
+    private static final String DELETE_BUTTON_ID = "deleteButton";
 
     private EditableList(WebDriver driver, WebDriverWait webDriverWait, String widgetId) {
         super(driver, webDriverWait, widgetId);
@@ -91,6 +92,10 @@ public class EditableList extends Widget {
         if (row.isSelected()) {
             row.click();
         }
+    }
+
+    public void deleteRow(int rowIndex) {
+        getRow(rowIndex).callAction(DELETE_BUTTON_ID);
     }
 
     public Row getRow(int row) {
