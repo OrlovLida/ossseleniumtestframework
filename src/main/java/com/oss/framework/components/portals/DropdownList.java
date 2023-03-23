@@ -20,7 +20,7 @@ public class DropdownList {
 
     public static final String PORTAL_CLASS = "portal";
     private static final String INPUT_CSS = ".portal .dropdown__search input, .portal .search-cont input";
-    private static final String BY_ID_PATTERN = ".portal [" + CSSUtils.TEST_ID + "='%s'],.portal #%s";
+    private static final String BY_ID_PATTERN = ".portal [" + CSSUtils.TEST_ID + "='%s'],.portal [id='%s']";
     private static final String BY_TEXT_PATTERN = "//div[starts-with(@class, 'portal')]//*[text()='%s']";
     private static final String BY_TITLE_PATTERN = ".portal [title='%s']";
     private static final String BY_TEXT_CONTAINS_PATTERN = "//div[starts-with(@class, 'portal')]//*[contains(text(), '%s')]";
