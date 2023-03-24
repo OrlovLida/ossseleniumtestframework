@@ -290,10 +290,7 @@ public class TableComponent {
     }
 
     public PaginationComponent getPaginationComponent() {
-        if (paginationComponent == null) {
-            paginationComponent = PaginationComponent.createFromParent(parent);
-        }
-        return paginationComponent;
+        return PaginationComponent.createFromParent(parent);
     }
 
     public void scrollToFirstRow() {
