@@ -31,7 +31,6 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String ADD_TAB_ICON_XPATH = ".//i[@class ='OSSIcon fa fa-plus']";
     private static final String DROPDOWN_TAB_XPATH = ".//div[contains(@class, 'dropdown-tab')]";
     private static final String TABS_CONTAINER_XPATH = ".//div[contains(@class,'tabsContainerTabs')]";
-    private static final String DRAGGABLE_ELEMENT_XPATH = ".//div[@class = 'btn-drag']";
     private static final String ACTIONS_CONTAINER_CSS = ".actionsContainer";
     private static final String WINDOW_TOOLBAR_CSS = ".windowToolbar";
     private static final String CONTEXT_ACTIONS_CSS = WINDOW_TOOLBAR_CSS + "," + ACTIONS_CONTAINER_CSS;
@@ -48,6 +47,7 @@ public class TabsWidget extends Widget implements TabsInterface {
             TABS_HEADER_CSS + " " + TOOLBAR_CONTENT_CSS + "," + TABS_HEADER_CSS + " " + ACTIONS_CONTAINER_CSS;
     private static final String TAB_MORE_DROPDOWN_CSS = ".tabsContainerTabBtnDropdown";
     private static final String TEXT_CONTENT = "textContent";
+    private static final String DRAG_CSS = ".btn-drag";
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
@@ -200,11 +200,11 @@ public class TabsWidget extends Widget implements TabsInterface {
         WebElement tab = getTabByLabel(tabLabel);
         Actions action = new Actions(driver);
         action.moveToElement(tab).perform();
-        return new DragAndDrop.DraggableElement(tab.findElement(By.xpath(DRAGGABLE_ELEMENT_XPATH)));
+        return new DragAndDrop.DraggableElement(tab.findElement(By.cssSelector(DRAG_CSS)));
     }
 
     private DragAndDrop.DropElement getDropElement(int position) {
-        WebElement target = createTabs().findElements(By.cssSelector(CHILD_TABS_CSS)).get(position);
+        WebElement target = createTabs().findElements(By.cssSelector(DRAG_CSS)).get(position);
         return new DragAndDrop.DropElement(target);
     }
 
