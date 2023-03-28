@@ -28,6 +28,7 @@ public class SelectionBarComponent {
 
     public static SelectionBarComponent create(WebDriver driver, WebDriverWait wait, String widgetId) {
         WebElement widget = driver.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
+        DelayUtils.waitForNestedElements(wait, widget, By.cssSelector(VISIBLE_SELECTION_BAR_CSS));
         return new SelectionBarComponent(wait, widget);
     }
 
