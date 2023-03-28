@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -23,6 +24,7 @@ import com.oss.framework.widgets.Widget;
 
 public class TreeWidgetV2 extends Widget {
 
+    private static final String PRELOADER_CSS = "[" + CSSUtils.TEST_ID + " = '%s'] .appPreloader";
     private TreeComponent treeComponent;
     private AdvancedSearch advancedSearch;
 
@@ -32,6 +34,7 @@ public class TreeWidgetV2 extends Widget {
 
     public static TreeWidgetV2 create(WebDriver driver, WebDriverWait wait, String widgetId) {
         Widget.waitForWidgetById(wait, widgetId);
+        DelayUtils.waitForElementDisappear(wait, By.cssSelector(String.format(PRELOADER_CSS, widgetId)));
         return new TreeWidgetV2(driver, wait, widgetId);
     }
 
