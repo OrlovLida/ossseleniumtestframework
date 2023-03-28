@@ -17,6 +17,7 @@ public class SelectionBarComponent {
     private static final String VISIBLE_SELECTION_BAR_CSS = ".selection-bar";
     private static final String TOGGLE_BUTTON_CSS = "[" + CSSUtils.TEST_ID + "=selection-bar-toggler-button]";
     private static final String SHOW_ONLY_SELECTED_BUTTON_ACTIVE_XPATH = "//*[@ " + CSSUtils.TEST_ID + "='show-selected-only-button' and text() = 'Show Selected']";
+    private static final String SELECTION_BAR_TOGGLER_CSS = ".selection-bar-toggler";
 
     private final WebDriverWait wait;
     private final WebElement widget;
@@ -28,7 +29,7 @@ public class SelectionBarComponent {
 
     public static SelectionBarComponent create(WebDriver driver, WebDriverWait wait, String widgetId) {
         WebElement widget = driver.findElement(By.cssSelector("[" + CSSUtils.TEST_ID + "='" + widgetId + "']"));
-        DelayUtils.waitForNestedElements(wait, widget, By.cssSelector(VISIBLE_SELECTION_BAR_CSS));
+        DelayUtils.waitForNestedElements(wait, widget, By.cssSelector(VISIBLE_SELECTION_BAR_CSS + "," + SELECTION_BAR_TOGGLER_CSS));
         return new SelectionBarComponent(wait, widget);
     }
 
