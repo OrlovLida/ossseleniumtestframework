@@ -8,11 +8,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
 
 public class InlineMenu implements InlineMenuInterface {
 
     private static final String GROUP_BUTTON_ID = "frameworkObjectButtonsGroup";
+    private static final String NOT_DISABLED_INLINE_ACTIONS_GROUP_CSS = ":not(.actionsGroup-inline.disabled";
 
     private final WebDriver driver;
     private final WebElement webElement;
@@ -54,6 +56,7 @@ public class InlineMenu implements InlineMenuInterface {
 
     private void expandKebabMenu() {
         WebElement inlineKebab = webElement.findElement(By.id(GROUP_BUTTON_ID));
+        DelayUtils.waitForNestedElements(wait, webElement, By.cssSelector("#" + GROUP_BUTTON_ID + NOT_DISABLED_INLINE_ACTIONS_GROUP_CSS));
         WebElementUtils.clickWebElement(driver, inlineKebab);
     }
 
