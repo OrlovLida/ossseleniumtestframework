@@ -289,7 +289,8 @@ public class TreeComponent {
                 moveToNode();
                 WebElement button = nodeElement.findElement(By.xpath(EXPANDER_BUTTON_XPATH));
                 WebElementUtils.clickWebElement(driver, button);
-                DelayUtils.waitForNestedElements(webDriverWait, nodeElement, By.cssSelector(ARIA_LABEL_MINUS_CSS));
+                DelayUtils.waitBy(webDriverWait, By.cssSelector("[data-path='" + nodeId + "'] " + ARIA_LABEL_MINUS_CSS));
+
             }
         }
 
