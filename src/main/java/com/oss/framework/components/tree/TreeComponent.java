@@ -243,7 +243,6 @@ public class TreeComponent {
         private static final String NODE_SELECTED_CLASS_CSS = ".tree-node-default-component--selected";
         private static final String TREE_COMPONENT_XPATH = ".//ancestor::div[@class='tree-component']";
         private static final String PATERN_DATA_TEST_ID_PATTERN = "%s_%s";
-        private static final String DATA_PATH = "[data-path='";
 
         private final WebDriver driver;
         private final WebDriverWait webDriverWait;
@@ -290,7 +289,7 @@ public class TreeComponent {
                 moveToNode();
                 WebElement button = nodeElement.findElement(By.xpath(EXPANDER_BUTTON_XPATH));
                 WebElementUtils.clickWebElement(driver, button);
-                DelayUtils.waitBy(webDriverWait, By.cssSelector(DATA_PATH + nodeId + "'] " + ARIA_LABEL_MINUS_CSS));
+                DelayUtils.waitBy(webDriverWait, By.cssSelector("[" + DATA_PATH_ATTR + "'" + nodeId + "'] " + ARIA_LABEL_MINUS_CSS));
             }
         }
 
