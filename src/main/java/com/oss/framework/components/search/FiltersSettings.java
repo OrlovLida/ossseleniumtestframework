@@ -23,7 +23,7 @@ public class FiltersSettings {
             ".//div[@class='filters-settings-btn']//a | .//div[@class='filters-component-buttons']//a";
     private static final String SAVED_FILTERS_CSS = ".filters-element-list > div.filters-element";
     private static final String ATTRIBUTE_PATH = ".//div[@class='custom-light-checkbox']";
-    private static final String SAVED_FILTERS_TAB_CSS = "div.filters-buttons-container > div:last-child";
+    private static final String SAVED_FILTERS_TAB_CSS = "div.filters-buttons-container > :last-child";
     private static final String SAVED_FILTER_LABEL = ".//div[@class='filter-label']";
     private static final String NO_FILTERS = ".//div[@class='no-filters-text']";
     private static final String FAVORITE = "FAVOURITE";
