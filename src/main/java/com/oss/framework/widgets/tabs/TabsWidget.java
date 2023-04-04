@@ -48,6 +48,7 @@ public class TabsWidget extends Widget implements TabsInterface {
     private static final String TAB_MORE_DROPDOWN_CSS = ".tabsContainerTabBtnDropdown";
     private static final String TEXT_CONTENT = "textContent";
     private static final String DRAG_CSS = ".btn-drag";
+    private static final String ANCESTOR_TO_TAB_CONTAINER_XPATH = ".//ancestor::*[contains(@class,'tabsContainerTabBtn')]";
 
     private TabsWidget(WebDriver driver, WebDriverWait wait, String id) {
         super(driver, wait, id);
@@ -212,7 +213,7 @@ public class TabsWidget extends Widget implements TabsInterface {
         DelayUtils.waitByXPath(webDriverWait,
                 String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel));
         return createTabs().findElement(By
-                .xpath(String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel) + "/.."));
+                .xpath(String.format(TAB_BY_LABEL_PATTERN, tabLabel, tabLabel))).findElement(By.xpath(ANCESTOR_TO_TAB_CONTAINER_XPATH));
     }
 
     @Override
