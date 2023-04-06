@@ -11,6 +11,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.oss.framework.components.data.Data;
+import com.oss.framework.components.portals.DropdownList;
 import com.oss.framework.utils.CSSUtils;
 import com.oss.framework.utils.DelayUtils;
 import com.oss.framework.utils.WebElementUtils;
@@ -138,9 +139,9 @@ public class MultiCombobox extends Input {
             searchItem(value, isContains);
         } else {
             if (isContains) {
-                chooseItem(String.format(TITLE_ITEM_CONTAINS_XPATH, value));
+                DropdownList.create(driver, webDriverWait).selectOptionByDataValueContains(value);
             } else
-                chooseItem(String.format(TITLE_ITEM_EQUAL_XPATH, value));
+                DropdownList.create(driver, webDriverWait).selectOptionByDataValue(value);
         }
 
     }

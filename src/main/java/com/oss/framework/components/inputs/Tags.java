@@ -1,18 +1,19 @@
 package com.oss.framework.components.inputs;
 
-import com.oss.framework.components.data.Data;
-import com.oss.framework.components.portals.DropdownList;
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.DelayUtils;
-import com.oss.framework.utils.WebElementUtils;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.oss.framework.components.data.Data;
+import com.oss.framework.components.portals.DropdownList;
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.DelayUtils;
+import com.oss.framework.utils.WebElementUtils;
 
 public class Tags extends Input {
     private static final String CLOSE_XPATH = ".//span[contains(@class, 'close')]";
@@ -49,7 +50,7 @@ public class Tags extends Input {
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
-        dropdownList.selectOptionContains(value.getStringValue());
+        dropdownList.selectOptionByDataValueContains(value.getStringValue());
         WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_CSS)));
     }
 
@@ -64,7 +65,7 @@ public class Tags extends Input {
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         dropdownList.search(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
-        dropdownList.selectOption(value.getStringValue());
+        dropdownList.selectOptionByDataValue(value.getStringValue());
         WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(SEARCH_CSS)));
     }
 

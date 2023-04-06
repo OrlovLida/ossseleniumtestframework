@@ -44,7 +44,7 @@ public class Combobox extends Input {
         webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
-        dropdownList.selectOptionContains(value.getStringValue());
+        dropdownList.selectOptionByDataValueContains(value.getStringValue());
     }
     
     @Override
@@ -62,7 +62,7 @@ public class Combobox extends Input {
         webElement.findElement(By.xpath(INPUT_XPATH)).sendKeys(value.getStringValue());
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
-        dropdownList.selectOptionByTitle(value.getStringValue());
+        dropdownList.selectOptionByDataValue(value.getStringValue());
     }
     
     @Override

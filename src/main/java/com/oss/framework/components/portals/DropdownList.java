@@ -23,6 +23,8 @@ public class DropdownList {
     private static final String BY_ID_PATTERN = ".portal [" + CSSUtils.TEST_ID + "='%s'],.portal [id='%s']";
     private static final String BY_TEXT_PATTERN = "//div[starts-with(@class, 'portal')]//*[text()='%s']";
     private static final String BY_TITLE_PATTERN = ".portal [title='%s']";
+    private static final String BY_DATA_VALUE_PATTERN = ".portal [data-value='%s']:not(input)";
+    private static final String BY_DATA_VALUE_CONTAINS_PATTERN = ".portal [data-value*='%s']:not(input)";
     private static final String BY_TEXT_CONTAINS_PATTERN = "//div[starts-with(@class, 'portal')]//*[contains(text(), '%s')]";
     private static final String TEXT_CONTENT_ATTRIBUTE = "textContent";
     private static final String DROPDOWN_ELEMENT_CSS = ".portal .list-item, .portal .dropdown-element";
@@ -51,11 +53,26 @@ public class DropdownList {
         actions.click(foundedElement).build().perform();
     }
 
+    @Deprecated
     public void selectOptionByTitle(String title) {
         DelayUtils.waitByElement(wait, driver.findElement(By.cssSelector(String.format(BY_TITLE_PATTERN, title))));
         WebElement foundedElement =
                 driver.findElement(By.cssSelector(String.format(BY_TITLE_PATTERN, title)));
         foundedElement.click();
+    }
+
+    public void selectOptionByDataValue(String value) {
+        DelayUtils.waitByElement(wait, driver.findElement(By.cssSelector(String.format(BY_DATA_VALUE_PATTERN, value))));
+        WebElement foundedElement =
+                driver.findElement(By.cssSelector(String.format(BY_DATA_VALUE_PATTERN, value)));
+        foundedElement.click();
+    }
+
+    public void selectOptionByDataValueContains(String value) {
+        DelayUtils.waitByElement(wait, driver.findElement(By.cssSelector(String.format(BY_DATA_VALUE_CONTAINS_PATTERN, value))));
+        WebElement foundedElement =
+                driver.findElement(By.cssSelector(String.format(BY_DATA_VALUE_CONTAINS_PATTERN, value)));
+        WebElementUtils.clickWebElement(driver, foundedElement);
     }
 
     public void selectOptionContains(String optionLabel) {
@@ -86,7 +103,7 @@ public class DropdownList {
 
     public void selectOptionCaseSensitive(String optionLabel) {
         DelayUtils.waitByElement(wait, dropdownListElement.findElement(By.cssSelector(".portal [title='" + optionLabel + "' i]")));
-        dropdownListElement.findElement(By.cssSelector(".portal [title='" + optionLabel + "' i]")).click();
+        dropdownListElement.findElement(By.cssSelector(".portal [data-value='" + optionLabel + "' i]")).click();
     }
 
     private List<WebElement> getVisibleElements() {

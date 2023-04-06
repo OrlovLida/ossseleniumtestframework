@@ -39,7 +39,7 @@ public class SearchField extends Input {
     @Override
     public void setValueContains(Data value) {
         typeValue(value);
-        DropdownList.create(driver, webDriverWait).selectOptionContains(value.getStringValue());
+        DropdownList.create(driver, webDriverWait).selectOptionByDataValueContains(value.getStringValue());
     }
 
     public Set<String> getOptionsContains(Data value) {
@@ -87,7 +87,7 @@ public class SearchField extends Input {
         if (isCaseSensitive) {
             DropdownList.create(driver, webDriverWait).selectOptionCaseSensitive(value.getStringValue());
         } else {
-            DropdownList.create(driver, webDriverWait).selectOption(value.getStringValue());
+            DropdownList.create(driver, webDriverWait).selectOptionByDataValue(value.getStringValue());
         }
     }
 

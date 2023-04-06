@@ -47,7 +47,7 @@ public class MultiSearchField extends Input {
 
     @Override
     public void setValueContains(Data value) {
-        search(value.getStringValue()).selectOptionContains(value.getStringValue());
+        search(value.getStringValue()).selectOptionByDataValueContains(value.getStringValue());
         webElement.findElement(By.cssSelector(String.format(CSSUtils.WEB_ELEMENT_PATTERN, SEARCH_ID))).click();
     }
 
@@ -97,7 +97,7 @@ public class MultiSearchField extends Input {
         if (isCaseSensitive) {
             search(value).selectOptionCaseSensitive(value);
         } else {
-            search(value).selectOption(value);
+            search(value).selectOptionByDataValue(value);
         }
     }
 
