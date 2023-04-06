@@ -157,6 +157,7 @@ public class ObjectSearchField extends Input {
     }
 
     private void setSingleValueWebElement(String singleValue, By by) {
+        DelayUtils.waitForClickability(webDriverWait, webElement.findElement(by));
         webElement.findElement(by).sendKeys(Keys.CONTROL + "a");
         webElement.findElement(by).sendKeys(Keys.DELETE);
         DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
@@ -168,10 +169,10 @@ public class ObjectSearchField extends Input {
         DelayUtils.waitForSpinners(webDriverWait, webElement);
         DropdownList dropdownList = DropdownList.create(driver, webDriverWait);
         if (isContains) {
-            dropdownList.selectOptionContains(singleValue);
+            dropdownList.selectOptionByDataValueContains(singleValue);
             return;
         }
-        dropdownList.selectOption(singleValue);
+        dropdownList.selectOptionByDataValue(singleValue);
     }
 
     private void chooseFirstResult() {

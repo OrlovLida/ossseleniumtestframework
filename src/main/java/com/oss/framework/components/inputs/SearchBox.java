@@ -48,7 +48,7 @@ public class SearchBox extends Input {
     public void setValueContains(Data value) {
         typeValue(value.getStringValue());
         if (isDropdownPresent()) {
-            getDropdown().selectOptionContains(value.getStringValue());
+            getDropdown().selectOptionByDataValueContains(value.getStringValue());
         }
     }
     
@@ -61,7 +61,7 @@ public class SearchBox extends Input {
     public void setValue(Data value) {
         typeValue(value.getStringValue());
         if (isDropdownPresent()) {
-            getDropdown().selectOptionByTitle(value.getStringValue());
+            getDropdown().selectOptionByDataValue(value.getStringValue());
         }
     }
     

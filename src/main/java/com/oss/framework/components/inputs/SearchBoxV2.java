@@ -37,7 +37,7 @@ public class SearchBoxV2 extends Input {
     @Override
     public void setValueContains(Data value) {
         typeValue(value);
-        DropdownList.create(driver, webDriverWait).selectOptionContains(value.getStringValue());
+        DropdownList.create(driver, webDriverWait).selectOptionByDataValueContains(value.getStringValue());
     }
 
     @Override
@@ -48,14 +48,8 @@ public class SearchBoxV2 extends Input {
     @Override
     public void setValue(Data value) {
         typeValue(value);
-        //TODO workaround till OSSWEB-23245 will be fixed
-        String byIdPattern = ".portal [" + CSSUtils.TEST_ID + "='%s' i],.portal [id='%s' i],.portal [" + CSSUtils.TEST_ID + "='%s-item' i],.portal [id='%s-item' i],.portal [" + CSSUtils.TEST_ID + "='%s-item' i],.portal [id='%s-item' i],.portal [title='%s']";
-        String stringValue = value.getStringValue();
-        String trimmedValue = stringValue.trim();
-        String byId = String.format(byIdPattern, stringValue, stringValue, stringValue, stringValue, trimmedValue, trimmedValue, stringValue);
-        DelayUtils.waitBy(webDriverWait, By.cssSelector(byId));
-        WebElement foundedElement = driver.findElement(By.cssSelector(byId));
-        WebElementUtils.clickWebElement(driver, foundedElement);
+        DropdownList.create(driver, webDriverWait).selectOptionByDataValue(value.getStringValue());
+
     }
 
     @Override
