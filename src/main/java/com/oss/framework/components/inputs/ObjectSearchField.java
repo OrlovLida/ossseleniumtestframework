@@ -58,11 +58,14 @@ public class ObjectSearchField extends Input {
 
     public void setFirstResult(String value) {
         if (!isSingleComponent()) {
-            setValueForMultiComponent(Data.createFindFirst(value), false);
+            WebElementUtils.clickWebElement(driver, webElement);
+            typeValueForMultiComponent(value, By.xpath(OSF_INNER_INPUT));
+            chooseFirstResult();
         } else {
-            setSingleValueWebElement(value, By.xpath(INPUT));
+            typeValueForSingleComponent(value, By.xpath(INPUT));
             chooseFirstResult();
         }
+        closeDropdown();
     }
 
     @Override
@@ -136,7 +139,11 @@ public class ObjectSearchField extends Input {
         } else {
             setSingleValue(value.getStringValue(), By.xpath(OSF_INNER_INPUT), isContains);
         }
-        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(ICON_CHEVRON_UP_CSS)));//TODO change to ESC after OSSWEB-20623
+        closeDropdown();
+    }
+
+    private void closeDropdown() {
+        WebElementUtils.clickWebElement(driver, webElement.findElement(By.cssSelector(ICON_CHEVRON_UP_CSS)));//TODO change to ESC after OSSWEB-18557
     }
 
     private void setMultiValues(Data values, By by, boolean isContains) {
@@ -144,19 +151,25 @@ public class ObjectSearchField extends Input {
     }
 
     private void setSingleValue(String singleValue, By by, boolean isContains) {
+        typeValueForMultiComponent(singleValue, by);
+        chooseResult(singleValue, isContains);
+    }
+
+    private void typeValueForMultiComponent(String singleValue, By by) {
+        DelayUtils.waitBy(webDriverWait, by);
+        DelayUtils.waitForClickability(webDriverWait, driver.findElement(by));
         driver.findElement(by).sendKeys(Keys.CONTROL + "a");
         driver.findElement(by).sendKeys(Keys.DELETE);
         DelayUtils.waitForNestedElements(webDriverWait, webElement, By.cssSelector(OSF_NOT_DISABLED_CSS));
         driver.findElement(by).sendKeys(singleValue);
-        chooseResult(singleValue, isContains);
     }
 
     private void setSingleValueWebElement(String singleValue, By by, boolean isContains) {
-        setSingleValueWebElement(singleValue, by);
+        typeValueForSingleComponent(singleValue, by);
         chooseResult(singleValue, isContains);
     }
 
-    private void setSingleValueWebElement(String singleValue, By by) {
+    private void typeValueForSingleComponent(String singleValue, By by) {
         DelayUtils.waitForClickability(webDriverWait, webElement.findElement(by));
         webElement.findElement(by).sendKeys(Keys.CONTROL + "a");
         webElement.findElement(by).sendKeys(Keys.DELETE);
