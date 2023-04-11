@@ -66,7 +66,6 @@ public class ObjectSearchField extends Input {
             typeValueForSingleComponent(value, By.xpath(INPUT));
             chooseFirstResult();
         }
-        closeDropdown();
     }
 
     @Override
