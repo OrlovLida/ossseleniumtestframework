@@ -61,6 +61,7 @@ public class ObjectSearchField extends Input {
             WebElementUtils.clickWebElement(driver, webElement);
             typeValueForMultiComponent(value, By.xpath(OSF_INNER_INPUT));
             chooseFirstResult();
+            closeDropdown();
         } else {
             typeValueForSingleComponent(value, By.xpath(INPUT));
             chooseFirstResult();
