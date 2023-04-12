@@ -392,6 +392,7 @@ public class TableComponent {
     public static class Header {
         private static final String RESIZE_XPATH = "[" + CSSUtils.TEST_ID + "='col-%s-resizer']";
         private static final String SETTINGS_XPATH = "[" + CSSUtils.TEST_ID + "='col-%s-settings']";
+        private static final String DRAG_BTN_CSS = ".btn-drag";
 
         private final WebElement tableComponent;
         private final String columnId;
@@ -461,7 +462,7 @@ public class TableComponent {
         }
 
         public DropElement getDropElement() {
-            return new DropElement(getHeader(tableComponent, columnId));
+            return new DropElement(getHeader(tableComponent, columnId).findElement(By.cssSelector(DRAG_BTN_CSS)));
         }
 
         public DraggableElement getDragElement() {
