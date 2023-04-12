@@ -71,6 +71,10 @@ public class TabsWidget extends Widget implements TabsInterface {
         return createTabs().findElement(By.xpath(ACTIVE_TAB_XPATH)).getText();
     }
 
+    public String getActiveTabId() {
+        return createTabs().findElement(By.xpath(ACTIVE_TAB_XPATH)).getAttribute(CSSUtils.TEST_ID);
+    }
+
     @Override
     public void selectTabByLabel(String tabLabel) {
         DelayUtils.waitByXPath(webDriverWait, TABS_CONTAINER_XPATH);
