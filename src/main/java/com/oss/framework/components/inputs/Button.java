@@ -1,11 +1,10 @@
 package com.oss.framework.components.inputs;
 
+import com.oss.framework.utils.CSSUtils;
+import com.oss.framework.utils.WebElementUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
-import com.oss.framework.utils.CSSUtils;
-import com.oss.framework.utils.WebElementUtils;
 
 public class Button {
 
@@ -43,5 +42,9 @@ public class Button {
 
     public void click() {
         WebElementUtils.clickWebElement(webDriver, webElement);
+    }
+
+    public void clickWithRetry(String elementToWaitId) {
+        WebElementUtils.clickWithRetry(webDriver, webElement, By.cssSelector(CSSUtils.getElementCssSelector(elementToWaitId)));
     }
 }
